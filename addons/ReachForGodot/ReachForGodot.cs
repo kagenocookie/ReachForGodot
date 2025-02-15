@@ -13,26 +13,29 @@ public partial class ReachForGodot : EditorPlugin
     public static readonly string[] GameList = ["DragonsDogma2"];
     private const string SettingBase = "reach_for_godot";
     private const string Setting_BlenderPath = "filesystem/import/blender/blender_path";
-    private const string Setting_GameChunkPath = $"{SettingBase}/paths/game_chunk_paths/{{game}}";
+    private const string Setting_GameChunkPath = $"{SettingBase}/paths/{{game}}/game_chunk_path";
+    private const string Setting_Il2cppPath = $"{SettingBase}/paths/{{game}}/il2cpp_dump_file";
+    private const string Setting_RszJsonPath = $"{SettingBase}/paths/{{game}}/rsz_json_file";
 
-    private static readonly Dictionary<string, string> paths = new();
+    private static readonly Dictionary<string, GamePaths> paths = new();
 
     public static string BlenderPath => EditorInterface.Singleton.GetEditorSettings().GetSetting(Setting_BlenderPath).AsString()
         ?? throw new System.Exception("Blender path not defined in editor settings");
 
-    public static string? GetChunkPath(string game)
+    public static GamePaths? GetPaths(string game)
     {
         if (paths.Count == 0) OnProjectSettingsChanged();
         return paths.TryGetValue(game, out var path) ? path : null;
     }
 
+    public static string? GetChunkPath(string game) => GetPaths(game)?.ChunkPath;
+
     private static string ChunkPathSetting(string game) => Setting_GameChunkPath.Replace("{game}", game);
+    private static string Il2cppPathSetting(string game) => Setting_Il2cppPath.Replace("{game}", game);
+    private static string RszPathSetting(string game) => Setting_RszJsonPath.Replace("{game}", game);
 
     public override void _EnterTree()
     {
-        base._EnterTree();
-
-        //Add plugin settings
         AddSettings();
 
         EditorInterface.Singleton.GetEditorSettings().SettingsChanged += OnProjectSettingsChanged;
@@ -42,25 +45,29 @@ public partial class ReachForGodot : EditorPlugin
     private void AddSettings()
     {
         foreach (var game in GameList) {
-            AddEditorSetting(ChunkPathSetting(game), Variant.Type.String, string.Empty);
+            AddEditorSetting(ChunkPathSetting(game), Variant.Type.String, string.Empty, PropertyHint.GlobalDir);
+            AddEditorSetting(Il2cppPathSetting(game), Variant.Type.String, string.Empty, PropertyHint.GlobalFile, "*.json");
+            AddEditorSetting(RszPathSetting(game), Variant.Type.String, string.Empty, PropertyHint.GlobalFile, "*.json");
         }
-        // AddEditorSetting(Setting_BlenderPath, Variant.Type.String, "C:/Program Files/Blender Foundation/Blender 4.3/blender.exe", PropertyHint.File, "*.exe");
     }
 
     private static void OnProjectSettingsChanged()
     {
+        var settings = EditorInterface.Singleton.GetEditorSettings();
         foreach (var game in GameList) {
-            var setting = ChunkPathSetting(game);
-            var path = EditorInterface.Singleton.GetEditorSettings().GetSetting(setting).AsString() ?? string.Empty;
-            if (string.IsNullOrWhiteSpace(path)) {
+            var pathChunks = settings.GetSetting(ChunkPathSetting(game)).AsString() ?? string.Empty;
+            var pathIl2cpp = settings.GetSetting(Il2cppPathSetting(game)).AsString();
+            var pathRsz = settings.GetSetting(RszPathSetting(game)).AsString();
+
+            if (string.IsNullOrWhiteSpace(pathChunks)) {
                 paths.Remove(game);
             } else {
-                path = path.Replace('\\', '/');
-                if (!path.EndsWith('/')) {
-                    path = path + '/';
+                pathChunks = pathChunks.Replace('\\', '/');
+                if (!pathChunks.EndsWith('/')) {
+                    pathChunks = pathChunks + '/';
                 }
 
-                paths[game] = path;
+                paths[game] = new GamePaths(pathChunks, pathIl2cpp, pathRsz);
             }
         }
     }
@@ -84,8 +91,8 @@ public partial class ReachForGodot : EditorPlugin
     private void AddEditorSetting(string name, Variant.Type type, Variant initialValue, PropertyHint hint = PropertyHint.None, string? hintstring = null)
     {
         var settings = EditorInterface.Singleton.GetEditorSettings();
-        if (settings.HasSetting(name)) {
-            return;
+        if (!settings.HasSetting(name)) {
+            settings.Set(name, initialValue);
         }
 
         var dict = new GC.Dictionary();
@@ -96,9 +103,11 @@ public partial class ReachForGodot : EditorPlugin
             dict.Add("hint_string", hintstring);
         }
 
-        settings.Set(name, initialValue);
         settings.SetInitialValue(name, initialValue, false);
         settings.AddPropertyInfo(dict);
     }
 }
+
+public record GamePaths(string ChunkPath, string? Il2cppPath, string? RszJsonPath);
+
 #endif //TOOLS
