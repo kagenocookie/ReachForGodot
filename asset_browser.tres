@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="AssetBrowser" load_steps=2 format=3 uid="uid://0qnm18y53oc3"]
+
+[ext_resource type="Script" uid="uid://c35arpw180ebe" path="res://addons/ReachForGodot/AssetBrowser.cs" id="1_1liff"]
+
+[resource]
+script = ExtResource("1_1liff")
+Game = "DragonsDogma2"
+ImportDirectory = "imported/"
+ImportFile = ""
+metadata/_custom_type_script = ExtResource("1_1liff")
