@@ -18,15 +18,57 @@ public partial class ReachForGodot : EditorPlugin
     private const string Setting_Il2cppPath = $"{SettingBase}/paths/{{game}}/il2cpp_dump_file";
     private const string Setting_RszJsonPath = $"{SettingBase}/paths/{{game}}/rsz_json_file";
 
-    private static readonly Dictionary<string, GamePaths> paths = new();
+    private static readonly Dictionary<string, (AssetConfig? config, GamePaths paths)> assetConfigData = new();
 
     public static string BlenderPath => EditorInterface.Singleton.GetEditorSettings().GetSetting(Setting_BlenderPath).AsString()
         ?? throw new System.Exception("Blender path not defined in editor settings");
 
     public static GamePaths? GetPaths(string game)
     {
-        if (paths.Count == 0) OnProjectSettingsChanged();
-        return paths.TryGetValue(game, out var path) ? path : null;
+        if (assetConfigData.Count == 0) OnProjectSettingsChanged();
+        return assetConfigData.TryGetValue(game, out var data) ? data.paths : null;
+    }
+
+    public static AssetConfig GetAssetConfig(string? game)
+    {
+        if (assetConfigData.Count == 0) OnProjectSettingsChanged();
+        if (game == null) return AssetConfig.DefaultInstance;
+
+        if (assetConfigData.TryGetValue(game, out var data)) {
+            if (data.config != null) {
+                return data.config;
+            }
+        }
+
+        var defaultResourcePath = "res://asset_config_" + game.ToSnakeCase();
+        if (ResourceLoader.Exists(defaultResourcePath)) {
+            data.config = ResourceLoader.Load<AssetConfig>(defaultResourcePath);
+        } else {
+            var da = DirAccess.Open("res://");
+            string file;
+            da.ListDirBegin();
+            while ((file = da.GetNext()) != string.Empty) {
+                if (ResourceLoader.Exists(file, nameof(AssetConfig))) {
+                    var cfg = ResourceLoader.Load<Resource>(file) as AssetConfig;
+                    if (cfg != null && cfg.Game == game) {
+                        da.ListDirEnd();
+                        data.config = cfg;
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (data.config == null) {
+            data.config = new AssetConfig() { ResourcePath = defaultResourcePath, AssetDirectory = data.paths.GetRszToolGameEnum().ToString() };
+            ResourceSaver.Save(data.config);
+        }
+
+        if (data.paths != null) {
+            assetConfigData[game] = data;
+        }
+
+        return data.config;
     }
 
     public static string? GetChunkPath(string game) => GetPaths(game)?.ChunkPath;
@@ -61,14 +103,14 @@ public partial class ReachForGodot : EditorPlugin
             var pathRsz = settings.GetSetting(RszPathSetting(game)).AsString();
 
             if (string.IsNullOrWhiteSpace(pathChunks)) {
-                paths.Remove(game);
+                assetConfigData.Remove(game);
             } else {
                 pathChunks = pathChunks.Replace('\\', '/');
                 if (!pathChunks.EndsWith('/')) {
                     pathChunks = pathChunks + '/';
                 }
 
-                paths[game] = new GamePaths(game, pathChunks, pathIl2cpp, pathRsz);
+                assetConfigData[game] = (null, new GamePaths(game, pathChunks, pathIl2cpp, pathRsz));
             }
         }
     }

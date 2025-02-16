@@ -10,3 +10,5 @@ obj/
 .vs/
 .DS_Store
 build/*
+
+dd2/

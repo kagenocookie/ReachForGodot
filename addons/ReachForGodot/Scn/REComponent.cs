@@ -5,7 +5,7 @@ using Godot;
 using RszTool;
 
 [GlobalClass, Tool]
-public partial class REComponentPlaceholder : Node
+public partial class REComponent : Node
 {
     [Export] public int ObjectId = -1;
     [Export] public bool Enabled { get; set; } = true;

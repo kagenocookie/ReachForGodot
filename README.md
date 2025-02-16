@@ -28,6 +28,14 @@ Godot-based editor for RE Engine games.
     - Components[] -> GameObject/Components (Node)
 - scene file export
 
+## Hard blockers
+- mesh textures don't show up (requires Godot DDS image format support - https://github.com/godotengine/godot/pull/101994)
+- no MPLY format support (meaning levels are mostly empty)
+- some meshes fail to import on RE Mesh Editor's side (AttributeError: 'NoneType' object has no attribute 'count' - if reMesh.skeletonHeader.remapCount != reMesh.boneBoundingBoxHeader.count)
+
+## Self notes
+- Nice and chunky env: AppData/Contents/TWN01_02/Env_6216/Environment.scn.20
+
 ## Credits
 - RE Mesh Editor - NSACloud
 - RszTool - czastack

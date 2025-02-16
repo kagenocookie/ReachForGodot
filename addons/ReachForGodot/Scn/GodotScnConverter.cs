@@ -10,9 +10,9 @@ public class GodotScnConverter : IDisposable
 {
     private static bool hasSafetyHooked;
 
-    private static readonly Dictionary<string, Func<ScnFile, REGameObject, RszInstance, Node?>> factories = new();
+    private static readonly Dictionary<string, Func<SceneFolder, REGameObject, RszInstance, Node?>> factories = new();
 
-    public GamePaths Paths { get; }
+    public AssetConfig AssetConfig { get; }
     public ScnFile? ScnFile { get; private set; }
 
     public static void EnsureSafeJsonLoadContext()
@@ -34,38 +34,34 @@ public class GodotScnConverter : IDisposable
         ComponentTypes.Init();
     }
 
-    public GodotScnConverter(GamePaths paths)
+    public GodotScnConverter(AssetConfig paths)
     {
-        Paths = paths;
+        AssetConfig = paths;
     }
 
-    public void CreateProxyScene(string sourceScnFile, string outputSceneFile)
+    public void CreateProxyScene(string sourceScnFilePath, string importFilepath)
     {
-        EnsureSafeJsonLoadContext();
-        var relativeSource = string.IsNullOrEmpty(Paths.ChunkPath) ? sourceScnFile : sourceScnFile.Replace(Paths.ChunkPath, "");
+        var relativeSourceFile = string.IsNullOrEmpty(AssetConfig.Paths.ChunkPath) ? sourceScnFilePath : sourceScnFilePath.Replace(AssetConfig.Paths.ChunkPath, "");
 
-        Directory.CreateDirectory(outputSceneFile.GetBaseDir());
-        var localizedOutput = ProjectSettings.LocalizePath(outputSceneFile);
+        Directory.CreateDirectory(ProjectSettings.GlobalizePath(importFilepath.GetBaseDir()));
 
-        var name = sourceScnFile.GetFile().GetBaseName().GetBaseName();
+        var name = sourceScnFilePath.GetFile().GetBaseName().GetBaseName();
         // opening the scene file mostly just to verify that it's valid
-        using var scn = OpenScn(sourceScnFile);
+        using var scn = OpenScn(sourceScnFilePath);
         scn.Read();
 
-        if (!ResourceLoader.Exists(localizedOutput)) {
+        if (!ResourceLoader.Exists(importFilepath)) {
             var scene = new PackedScene();
-            scene.Pack(new SceneNodeRoot() { Name = name, Asset = new AssetReference() { AssetFilename = relativeSource } });
-            ResourceSaver.Save(scene, localizedOutput);
+            scene.Pack(new SceneFolder() { Game = AssetConfig.Game, Name = name, Asset = new AssetReference() { AssetFilename = relativeSourceFile } });
+            ResourceSaver.Save(scene, importFilepath);
         }
-
-        EditorInterface.Singleton.CallDeferred(EditorInterface.MethodName.OpenSceneFromPath, localizedOutput);
     }
 
-    public void GenerateSceneTree(SceneNodeRoot root)
+    public void GenerateSceneTree(SceneFolder root)
     {
-        EnsureSafeJsonLoadContext();
-        var scnFullPath = Path.Combine(Paths.ChunkPath, root.Asset!.AssetFilename);
+        var scnFullPath = Importer.ResolveSourceFilePath(root.Asset!.AssetFilename, AssetConfig);
 
+        ScnFile?.Dispose();
         GD.Print("Opening scn file " + scnFullPath);
         ScnFile = OpenScn(scnFullPath);
         ScnFile.Read();
@@ -75,32 +71,100 @@ public class GodotScnConverter : IDisposable
 
         foreach (var folder in ScnFile.FolderDatas!.OrderBy(o => o.Instance!.Index)) {
             Debug.Assert(folder.Info != null);
-            GenerateFolder(ScnFile, folder, root);
+            GenerateFolder(root, folder);
         }
 
-        root.Resources = ScnFile.ResourceInfoList.Where(rr => rr.Path != null).Select(rr => rr.Path!).ToArray();
+        GenerateResources(root, AssetConfig);
 
         foreach (var gameObj in ScnFile.GameObjectDatas!.OrderBy(o => o.Instance!.Index)) {
             Debug.Assert(gameObj.Info != null);
-            GenerateGameObject(ScnFile, gameObj, root);
+            GenerateGameObject(root, gameObj);
         }
     }
 
-    private void GenerateFolder(ScnFile file, ScnFile.FolderData folder, SceneNodeRoot root, REFolder? parent = null)
+    private void GenerateResources(SceneFolder root, AssetConfig config)
+    {
+        Debug.Assert(ScnFile != null);
+
+        var resources = new List<REResource>();
+        foreach (var res in ScnFile.ResourceInfoList) {
+            if (res.Path != null) {
+                var format = Importer.GetFileFormat(res.Path);
+                var newres = new REResource() {
+                    SourcePath = res.Path,
+                    ResourceType = format.format,
+                    ResourceName = res.Path.GetFile()
+                };
+                resources.Add(newres);
+                if (format.format == RESupportedFileFormats.Unknown) {
+                    continue;
+                }
+
+                newres.ImportedPath = Importer.GetDefaultImportPath(res.Path, format, config);
+                if (ResourceLoader.Exists(newres.ImportedPath)) {
+                    newres.ImportedResource = ResourceLoader.Load(newres.ImportedPath);
+                    continue;
+                }
+
+                if (format.version == -1) {
+                    format.version = Importer.GuessFileVersion(res.Path, format.format, config);
+                }
+                var sourceWithVersion = Importer.ResolveSourceFilePath(res.Path, config);
+                // var sourceWithVersion = Path.Join(config.Paths.ChunkPath, newres.SourcePath + "." + format.version).Replace('\\', '/');
+                if (!File.Exists(sourceWithVersion)) {
+                    GD.Print("Resource not found: " + sourceWithVersion);
+                    continue;
+                }
+                switch (newres.ResourceType) {
+                    case RESupportedFileFormats.Mesh:
+                        Importer.ImportMesh(sourceWithVersion, ProjectSettings.GlobalizePath(newres.ImportedPath)).Wait();
+                        // Importer.Import(format, sourceWithVersion, ProjectSettings.GlobalizePath(newres.ImportedPath), config).Wait();
+                        break;
+                }
+            } else {
+                GD.Print("Found a resource with null path: " + resources.Count);
+            }
+        }
+        root.Resources = resources.ToArray();
+    }
+
+    private void GenerateFolder(SceneFolder root, ScnFile.FolderData folder, SceneFolder? parent = null)
     {
         Debug.Assert(folder.Info != null);
-        var newFolder = new REFolder() {
-            ObjectId = folder.Info.Data.objectId,
-            Name = folder.Name ?? "UnnamedFolder"
-        };
-        root.AddFolder(newFolder, parent);
+        SceneFolder newFolder;
+        if (folder.Instance?.GetFieldValue("v5") is string scnPath && !string.IsNullOrWhiteSpace(scnPath)) {
+            var importPath = Importer.GetDefaultImportPath(scnPath, AssetConfig);
+            if (!ResourceLoader.Exists(importPath)) {
+                Importer.ImportScene(Importer.ResolveSourceFilePath(scnPath, AssetConfig), importPath, AssetConfig);
+                // var instFolder = new SceneFolder() {
+                //     ObjectId = folder.Info.Data.objectId,
+                //     Game = root.Game,
+                //     Name = folder.Name ?? "UnnamedFolder"
+                // };
+                // instFolder.Asset = new AssetReference() { AssetFilename = scnPath };
+                // var childScn = new PackedScene() { ResourcePath = importPath };
+                // childScn.Pack(instFolder);
+                // Directory.CreateDirectory(ProjectSettings.GlobalizePath(importPath).GetBaseDir());
+                // ResourceSaver.Save(childScn, importPath);
+            }
+
+            newFolder = ResourceLoader.Load<PackedScene>(importPath).Instantiate<SceneFolder>(PackedScene.GenEditState.Instance);
+            (parent ?? root).AddFolder(newFolder);
+        } else {
+            newFolder = new SceneFolder() {
+                ObjectId = folder.Info.Data.objectId,
+                Game = root.Game,
+                Name = folder.Name ?? "UnnamedFolder"
+            };
+            (parent ?? root).AddFolder(newFolder);
+        }
 
         foreach (var child in folder.Children) {
-            GenerateFolder(file, child, root, newFolder);
+            GenerateFolder(root, child, newFolder);
         }
     }
 
-    private void GenerateGameObject(ScnFile file, ScnFile.GameObjectData data, SceneNodeRoot root, REGameObject? parent = null)
+    private void GenerateGameObject(SceneFolder root, ScnFile.GameObjectData data, REGameObject? parent = null)
     {
         Debug.Assert(data.Info != null);
 
@@ -115,43 +179,44 @@ public class GodotScnConverter : IDisposable
         root.AddGameObject(newGameobj, parent);
 
         foreach (var child in data.Children.OrderBy(o => o.Instance!.Index)) {
-            GenerateGameObject(file, child, root, newGameobj);
+            GenerateGameObject(root, child, newGameobj);
         }
 
         var meshComponent = data.Components.FirstOrDefault(c => c.RszClass.name == "via.render.Mesh" || c.RszClass.name == "via.render.CompositeMesh");
         if (meshComponent != null) {
-            newGameobj.Root3D = SetupComponent(meshComponent, newGameobj) as Node3D;
+            newGameobj.Node3D = SetupComponent(root, meshComponent, newGameobj) as Node3D;
         }
 
         foreach (var comp in data.Components.OrderBy(o => o.Index)) {
             if (comp != meshComponent) {
-                SetupComponent(comp, newGameobj);
+                SetupComponent(root, comp, newGameobj);
             }
         }
     }
 
     private ScnFile OpenScn(string filename)
     {
-        return new ScnFile(new RszFileOption(Paths.GetRszToolGameEnum(), Paths.RszJsonPath ?? throw new Exception("Rsz json file not specified for game " + Paths.Game)), new FileHandler(filename));
+        EnsureSafeJsonLoadContext();
+        return new ScnFile(new RszFileOption(AssetConfig.Paths.GetRszToolGameEnum(), AssetConfig.Paths.RszJsonPath ?? throw new Exception("Rsz json file not specified for game " + AssetConfig.Game)), new FileHandler(filename));
     }
 
-    private Node SetupComponent(RszInstance instance, REGameObject gameObject)
+    private Node SetupComponent(SceneFolder root, RszInstance instance, REGameObject gameObject)
     {
         Debug.Assert(ScnFile != null);
-        REComponentPlaceholder? componentInfo;
+        REComponent? componentInfo;
         Node? child;
         if (factories.TryGetValue(instance.RszClass.name, out var factory)) {
-            child = factory.Invoke(ScnFile, gameObject, instance);
-            componentInfo = child as REComponentPlaceholder;
+            child = factory.Invoke(root, gameObject, instance);
+            componentInfo = child as REComponent;
             if (componentInfo != null) {
                 child = componentInfo;
             } else if (child != null) {
-                child.AddOwnedChild(componentInfo = new REComponentPlaceholder() { Name = "ComponentInfo" });
+                child.AddOwnedChild(componentInfo = new REComponent() { Name = "ComponentInfo" });
             } else {
-                child = componentInfo = gameObject.AddOwnedChild(new REComponentPlaceholder() { Name = instance.RszClass.name });
+                child = componentInfo = gameObject.AddOwnedChild(new REComponent() { Name = instance.RszClass.name });
             }
         } else {
-            child = componentInfo = gameObject.AddOwnedChild(new REComponentPlaceholder() { Name = instance.RszClass.name });
+            child = componentInfo = gameObject.AddOwnedChild(new REComponent() { Name = instance.RszClass.name });
         }
 
         componentInfo.Classname = instance.RszClass.name;
@@ -159,7 +224,7 @@ public class GodotScnConverter : IDisposable
         return child;
     }
 
-    public static void DefineComponentFactory(string componentType, Func<ScnFile, REGameObject, RszInstance, Node?> factory)
+    public static void DefineComponentFactory(string componentType, Func<SceneFolder, REGameObject, RszInstance, Node?> factory)
     {
         factories[componentType] = factory;
     }

@@ -13,7 +13,17 @@ namespace RFG;
 [GlobalClass, Tool]
 public partial class AssetBrowser : Resource
 {
-    [Export] public AssetConfig? Assets { get; private set; }
+    private AssetConfig? _assets;
+    [Export] public AssetConfig? Assets
+    {
+        get => _assets;
+        set {
+            if (value != null && value != _assets && _dialog != null) {
+                _dialog.CurrentPath = ReachForGodot.GetChunkPath(value.Game);
+            }
+            _assets = value;
+        }
+    }
 
     [ExportToolButton("Import Assets")]
     private Callable ImportAssets => Callable.From(ShowFilePicker);
@@ -63,7 +73,12 @@ public partial class AssetBrowser : Resource
 
         ImportMultipleAssets(files).Wait();
         var firstImport = Importer.GetDefaultImportPath(files[0]);
-        GD.Print("Files imported to:\n" + string.Join('\n', files.Select(f => Importer.GetDefaultImportPath(f, Assets))));
+        var importPaths = files.Select(f => Importer.GetDefaultImportPath(f, Assets));
+        GD.Print("Files imported to:\n" + string.Join('\n', importPaths));
+
+        if (importPaths.FirstOrDefault(x => x != null) is string str) {
+            EditorInterface.Singleton.CallDeferred(EditorInterface.MethodName.OpenSceneFromPath, str);
+        }
     }
 
     private Task ImportMultipleAssets(string[] files)

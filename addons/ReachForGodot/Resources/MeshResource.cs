@@ -5,7 +5,7 @@ using Godot;
 using RszTool;
 
 [GlobalClass, Tool]
-public partial class REFolder : Node
+public partial class MeshResource : REResource
 {
-    [Export] public int ObjectId = -1;
 }
+

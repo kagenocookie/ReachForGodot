@@ -12,7 +12,9 @@ public partial class REGameObject : Node
     [Export] public string Uuid { get; set; } = "00000000-0000-0000-0000-000000000000";
     [Export] public string? Prefab { get; set; }
     [Export] public Node? ChildContainer { get; set; }
-    [Export] public Node3D? Root3D { get; set; }
+    [Export] public Node3D? Node3D { get; set; }
+
+    public SceneFolder? SceneRoot => this.FindNodeInParents<SceneFolder>();
 
     public Node EnsureChildContainerSetup()
     {
