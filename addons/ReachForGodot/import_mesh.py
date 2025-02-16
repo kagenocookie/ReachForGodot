@@ -28,7 +28,19 @@ def wait_for_import_finish():
         bpy.ops.wm.save_as_mainfile(filepath=outpath)
         bpy.ops.wm.quit_blender()
 
+def clear_file():
+    print('clearing file...')
+    bpy.ops.object.select_all(action='DESELECT')
+    for coll in bpy.data.collections:
+        print(coll.name)
+        bpy.data.collections.remove(coll, do_unlink=True)
+    for obj in bpy.context.scene.objects:
+        if obj.type == 'MESH':
+            obj.select = True
+    bpy.ops.object.delete()
+
 try:
+    clear_file()
     bpy.ops.re_mesh.importfile('INVOKE_DEFAULT', filepath=filename, files=files, directory=dir)
     bpy.app.timers.register(wait_for_import_finish)
 finally:

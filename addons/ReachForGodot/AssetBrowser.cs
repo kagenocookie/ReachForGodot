@@ -75,12 +75,16 @@ public partial class AssetBrowser : Resource
         }
 
         ImportMultipleAssets(files).Wait();
-        var firstImport = Importer.GetDefaultImportPath(files[0], Assets);
         var importPaths = files.Select(f => Importer.GetDefaultImportPath(f, Assets));
         GD.Print("Files imported to:\n" + string.Join('\n', importPaths));
 
         if (importPaths.FirstOrDefault(x => x != null) is string str && ResourceLoader.Exists(str)) {
-            EditorInterface.Singleton.CallDeferred(EditorInterface.MethodName.OpenSceneFromPath, str);
+            var fmt = Importer.GetFileFormat(files.First(x => x != null));
+            if (fmt.format == RESupportedFileFormats.Scene) {
+                EditorInterface.Singleton.CallDeferred(EditorInterface.MethodName.OpenSceneFromPath, str);
+            } else {
+                EditorInterface.Singleton.CallDeferred(EditorInterface.MethodName.SelectFile, str);
+            }
         }
     }
 

@@ -20,13 +20,13 @@ Godot-based editor for RE Engine games.
 - basic import of tex and mesh files
 
 ## Planned features
-- scene import
-- scene file editing
-    - parse into godot nodes
-    - Folder -> RENode (Folder)
-    - GameObject -> RENode (GameObject)
-    - Components[] -> GameObject/Components (Node)
-- scene file export
+- export scenes/prefabs back over their original files (and into a different folder so we don't override the source files)
+- make component fields viewable and editable (plan: override GetPropertyList() and keep a DB of field lists somewhere)
+- user.2 files
+
+## Room for improvement
+- import files in batches, keep blender open and just re-clear the file
+- force blend file import afterwards, so the .blend files are immediately usable as packed scenes
 
 ## Hard blockers
 - mesh textures don't show up (requires Godot DDS image format support - https://github.com/godotengine/godot/pull/101994)
