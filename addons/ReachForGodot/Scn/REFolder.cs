@@ -7,5 +7,5 @@ using RszTool;
 [GlobalClass, Tool]
 public partial class REFolder : Node
 {
-    [Export] public int ObjectId;
+    [Export] public int ObjectId = -1;
 }

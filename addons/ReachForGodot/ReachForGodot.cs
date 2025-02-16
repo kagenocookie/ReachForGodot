@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using Godot;
+using RszTool;
 using GC = Godot.Collections;
 
 #if TOOLS
@@ -10,7 +11,7 @@ namespace RFG;
 [Tool]
 public partial class ReachForGodot : EditorPlugin
 {
-    public static readonly string[] GameList = ["DragonsDogma2"];
+    public static readonly string[] GameList = ["DragonsDogma2", "DevilMayCry5", "MonsterHunterWilds"];
     private const string SettingBase = "reach_for_godot";
     private const string Setting_BlenderPath = "filesystem/import/blender/blender_path";
     private const string Setting_GameChunkPath = $"{SettingBase}/paths/{{game}}/game_chunk_path";
@@ -108,6 +109,27 @@ public partial class ReachForGodot : EditorPlugin
     }
 }
 
-public record GamePaths(string Game, string ChunkPath, string? Il2cppPath, string? RszJsonPath);
+public record GamePaths(string Game, string ChunkPath, string? Il2cppPath, string? RszJsonPath)
+{
+    public GameName GetRszToolGameEnum()
+    {
+        switch (Game) {
+            case "DragonsDogma2": return GameName.dd2;
+            case "DevilMayCry5": return GameName.dmc5;
+            case "ResidentEvil2": return GameName.re2;
+            case "ResidentEvil2RT": return GameName.re2rt;
+            case "ResidentEvil3": return GameName.re3;
+            case "ResidentEvil3RT": return GameName.re3rt;
+            case "ResidentEvil4": return GameName.re4;
+            case "ResidentEvil7": return GameName.re7;
+            case "ResidentEvil7RT": return GameName.re7rt;
+            case "ResidentEvil8": return GameName.re8;
+            case "MonsterHunterRise": return GameName.mhrise;
+            case "StreetFighter6": return GameName.sf6;
+            case "MonsterHunterWilds": return GameName.unknown;
+            default: return GameName.unknown;
+        }
+    }
+}
 
 #endif //TOOLS

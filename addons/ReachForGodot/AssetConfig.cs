@@ -16,7 +16,7 @@ public partial class AssetConfig : Resource
     private const string ConfigResource = "res://asset_config.tres";
 
     private static AssetConfig? _instance;
-    public static AssetConfig Instance {
+    public static AssetConfig DefaultInstance {
         get {
             if (_instance == null) {
                 if (!ResourceLoader.Exists(ConfigResource)) {
@@ -30,7 +30,7 @@ public partial class AssetConfig : Resource
         }
     }
 
-    public static GamePaths Paths => ReachForGodot.GetPaths(Instance.Game) ?? throw new Exception("Paths not defined for game " + Instance.Game);
+    public GamePaths Paths => ReachForGodot.GetPaths(Game) ?? throw new Exception("Paths not defined for game " + Game);
 
     [Export(PropertyHint.EnumSuggestion)] public string Game = string.Empty;
     [Export(PropertyHint.Dir)] public string AssetDirectory = "assets/";

@@ -180,6 +180,36 @@ public static class GodotObjectExtensions
         }
     }
 
+    public static void FreeAllChildrenImmediately(this Node node)
+    {
+        foreach (var child in node.GetChildren()) {
+            child.Free();
+        }
+    }
+
+    public static T AddOwnedChild<T>(this Node parent, T child) where T : Node
+    {
+        parent.AddChild(child);
+        child.Owner = parent.Owner ?? parent;
+        return child;
+    }
+
+    public static T AddUniqueNamedChild<T>(this Node parent, T child, string separator = "___") where T : Node
+    {
+        var basename = child.Name;
+        if (parent.FindChild(basename) != null) {
+            var index = 1;
+            string nextname;
+            do {
+                nextname = basename + separator + (index++);
+            } while (parent.FindChild(nextname) != null);
+            child.Name = nextname;
+        }
+        parent.AddChild(child);
+        child.Owner = parent.Owner ?? parent;
+        return child;
+    }
+
     /// <summary>
     /// Find a node of a specific type in any parent node.
     /// </summary>

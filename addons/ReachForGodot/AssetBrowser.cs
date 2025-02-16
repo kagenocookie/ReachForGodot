@@ -13,6 +13,8 @@ namespace RFG;
 [GlobalClass, Tool]
 public partial class AssetBrowser : Resource
 {
+    [Export] public AssetConfig? Assets { get; private set; }
+
     [ExportToolButton("Import Assets")]
     private Callable ImportAssets => Callable.From(ShowFilePicker);
 
@@ -20,12 +22,13 @@ public partial class AssetBrowser : Resource
 
     private void ShowFilePicker()
     {
-        if (string.IsNullOrWhiteSpace(AssetConfig.Instance.Game)) {
-            GD.PrintErr($"Please select a game in the asset config file: {AssetConfig.Instance.ResourcePath}");
+        var config = Assets ?? AssetConfig.DefaultInstance;
+        if (string.IsNullOrWhiteSpace(config.Game)) {
+            GD.PrintErr($"Please select a game in the asset config file: {config.ResourcePath}");
             return;
         }
 
-        var basepath = ReachForGodot.GetChunkPath(AssetConfig.Instance.Game);
+        var basepath = ReachForGodot.GetChunkPath(config.Game);
         if (basepath == null) {
             GD.PrintErr("Chunk path not configured. Set the path to the game in editor settings and select the game in the asset browser.");
             return;
@@ -60,12 +63,12 @@ public partial class AssetBrowser : Resource
 
         ImportMultipleAssets(files).Wait();
         var firstImport = Importer.GetDefaultImportPath(files[0]);
-        GD.Print("Files imported to:\n" + string.Join('\n', files.Select(f => Importer.GetDefaultImportPath(f))));
+        GD.Print("Files imported to:\n" + string.Join('\n', files.Select(f => Importer.GetDefaultImportPath(f, Assets))));
     }
 
-    public static Task ImportMultipleAssets(string[] files)
+    private Task ImportMultipleAssets(string[] files)
     {
-        return Task.WhenAll(files.Select(file => Importer.Import(file)));
+        return Task.WhenAll(files.Select(file => Importer.Import(file, null, Assets)));
     }
 }
 #endif

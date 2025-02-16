@@ -39,14 +39,15 @@ public class Importer
         return REFileFormat.Unknown;
     }
 
-    public static string GetDefaultImportPath(string filepath)
+    public static string GetDefaultImportPath(string filepath, AssetConfig? config = null)
     {
-        var basepath = ReachForGodot.GetChunkPath(AssetConfig.Instance.Game);
+        config ??= AssetConfig.DefaultInstance;
+        var basepath = ReachForGodot.GetChunkPath(config.Game);
         if (basepath == null) {
-            throw new ArgumentException($"{AssetConfig.Instance.Game} chunk path not configured");
+            throw new ArgumentException($"{config.Game} chunk path not configured");
         }
         var relativePath = filepath.Replace(basepath, "");
-        var targetPath = Path.Combine(AssetConfig.Instance.AssetDirectory, relativePath);
+        var targetPath = Path.Combine(config.AssetDirectory, relativePath);
         var fmt = GetFileFormat(filepath);
 
         switch (fmt.format) {
@@ -61,23 +62,25 @@ public class Importer
         }
     }
 
-    public static Task Import(string filepath, string? outputFilePath = null)
+    public static Task Import(string filepath, string? outputFilePath = null, AssetConfig? config = null)
     {
+        config ??= AssetConfig.DefaultInstance;
         outputFilePath ??= GetDefaultImportPath(filepath);
         var format = Importer.GetFileFormat(filepath);
-        Directory.CreateDirectory(ProjectSettings.GlobalizePath(AssetConfig.Instance.AssetDirectory));
-        return Importer.Import(format, filepath, outputFilePath);
+        Directory.CreateDirectory(ProjectSettings.GlobalizePath(config.AssetDirectory));
+        return Importer.Import(format, filepath, outputFilePath, config);
     }
 
-    public static Task Import(REFileFormat format, string sourceFilePath, string outputFilePath)
+    public static Task Import(REFileFormat format, string sourceFilePath, string outputFilePath, AssetConfig? config = null)
     {
+        config ??= AssetConfig.DefaultInstance;
         switch (format.format) {
             case RESupportedFileFormats.Mesh:
                 return ImportMesh(sourceFilePath, outputFilePath);
             case RESupportedFileFormats.Texture:
                 return ImportTexture(sourceFilePath, outputFilePath);
             case RESupportedFileFormats.Scene:
-                return ImportScene(sourceFilePath, outputFilePath);
+                return ImportScene(sourceFilePath, outputFilePath, config);
             default:
                 GD.Print("Unsupported file format " + format.format);
                 return Task.CompletedTask;
@@ -132,9 +135,9 @@ public class Importer
         });
     }
 
-    public static Task ImportScene(string sourceFilePath, string outputFilePath)
+    public static Task ImportScene(string sourceFilePath, string outputFilePath, AssetConfig config)
     {
-        var conv = new GodotScnConverter(AssetConfig.Paths);
+        var conv = new GodotScnConverter(config.Paths);
         conv.CreateProxyScene(sourceFilePath, outputFilePath);
         return Task.CompletedTask;
     }
