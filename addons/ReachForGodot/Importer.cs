@@ -8,6 +8,9 @@ namespace RFG;
 
 public class Importer
 {
+    private const string meshImportScriptPath = "addons/ReachForGodot/import_mesh.py";
+    private const string texImportScriptPath = "addons/ReachForGodot/import_tex.py";
+
     public static REFileFormat GetFileFormat(string filename)
     {
         var versionDot = filename.LastIndexOf('.');
@@ -29,6 +32,10 @@ public class Importer
             return new REFileFormat(RESupportedFileFormats.Texture, version);
         }
 
+        if (ext.SequenceEqual("scn")) {
+            return new REFileFormat(RESupportedFileFormats.Scene, version);
+        }
+
         return REFileFormat.Unknown;
     }
 
@@ -47,6 +54,8 @@ public class Importer
                 return targetPath + ".blend";
             case RESupportedFileFormats.Texture:
                 return targetPath + ".dds";
+            case RESupportedFileFormats.Scene:
+                return targetPath + ".tscn";
             default:
                 return targetPath;
         }
@@ -67,14 +76,14 @@ public class Importer
                 return ImportMesh(sourceFilePath, outputFilePath);
             case RESupportedFileFormats.Texture:
                 return ImportTexture(sourceFilePath, outputFilePath);
-            case RESupportedFileFormats.Unknown:
+            case RESupportedFileFormats.Scene:
+                return ImportScene(sourceFilePath, outputFilePath);
             default:
                 GD.Print("Unsupported file format " + format.format);
                 return Task.CompletedTask;
         }
     }
 
-    private const string meshImportScriptPath = "addons/ReachForGodot/import_mesh.py";
     public static Task ImportMesh(string sourceFilePath, string outputFilePath)
     {
         var path = Directory.GetCurrentDirectory();
@@ -99,7 +108,6 @@ public class Importer
         return ExecuteBlenderScript(tempFn);
     }
 
-    private const string texImportScriptPath = "addons/ReachForGodot/import_tex.py";
     public static Task ImportTexture(string sourceFilePath, string outputFilePath)
     {
         var path = Directory.GetCurrentDirectory();
@@ -124,6 +132,13 @@ public class Importer
         });
     }
 
+    public static Task ImportScene(string sourceFilePath, string outputFilePath)
+    {
+        var conv = new GodotScnConverter(AssetConfig.Paths);
+        conv.CreateProxyScene(sourceFilePath, outputFilePath);
+        return Task.CompletedTask;
+    }
+
     private static Task ExecuteBlenderScript(string scriptFilename)
     {
         var process = Process.Start(new ProcessStartInfo() {
@@ -141,6 +156,7 @@ public enum RESupportedFileFormats
     Unknown,
     Mesh,
     Texture,
+    Scene,
 }
 
 public record struct REFileFormat(RESupportedFileFormats format, int version)

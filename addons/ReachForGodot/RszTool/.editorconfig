@@ -1,0 +1,1 @@
+dotnet_code_quality.CA1708.api_surface = private

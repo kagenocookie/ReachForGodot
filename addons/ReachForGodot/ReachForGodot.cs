@@ -67,7 +67,7 @@ public partial class ReachForGodot : EditorPlugin
                     pathChunks = pathChunks + '/';
                 }
 
-                paths[game] = new GamePaths(pathChunks, pathIl2cpp, pathRsz);
+                paths[game] = new GamePaths(game, pathChunks, pathIl2cpp, pathRsz);
             }
         }
     }
@@ -108,6 +108,6 @@ public partial class ReachForGodot : EditorPlugin
     }
 }
 
-public record GamePaths(string ChunkPath, string? Il2cppPath, string? RszJsonPath);
+public record GamePaths(string Game, string ChunkPath, string? Il2cppPath, string? RszJsonPath);
 
 #endif //TOOLS

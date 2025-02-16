@@ -27,3 +27,7 @@ Godot-based editor for RE Engine games.
     - GameObject -> RENode (GameObject)
     - Components[] -> GameObject/Components (Node)
 - scene file export
+
+## Credits
+- RE Mesh Editor - NSACloud
+- RszTool - czastack

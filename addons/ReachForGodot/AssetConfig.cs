@@ -30,6 +30,8 @@ public partial class AssetConfig : Resource
         }
     }
 
+    public static GamePaths Paths => ReachForGodot.GetPaths(Instance.Game) ?? throw new Exception("Paths not defined for game " + Instance.Game);
+
     [Export(PropertyHint.EnumSuggestion)] public string Game = string.Empty;
     [Export(PropertyHint.Dir)] public string AssetDirectory = "assets/";
 
@@ -40,6 +42,11 @@ public partial class AssetConfig : Resource
         }
 
         base._ValidateProperty(property);
+    }
+
+    private void InvokeCallback(Callable callable)
+    {
+        callable.Call();
     }
 }
 #endif
