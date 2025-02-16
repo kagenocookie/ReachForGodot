@@ -47,7 +47,7 @@ public partial class AssetBrowser : Resource
 
         if (_dialog == null) {
             _dialog = new FileDialog();
-            _dialog.Filters = ["*.mesh.*", "*.tex.*", "*.scn.*"];
+            _dialog.Filters = ["*.mesh.*", "*.tex.*", "*.scn.*", "*.pfb.*"];
             _dialog.Access = FileDialog.AccessEnum.Filesystem;
             _dialog.UseNativeDialog = true;
             _dialog.FileMode = FileDialog.FileModeEnum.OpenFiles;
@@ -62,7 +62,7 @@ public partial class AssetBrowser : Resource
     private void ImportAssetSync(string filepath)
     {
         Debug.Assert(Assets != null);
-        Importer.Import(filepath).Wait();
+        Importer.Import(filepath, Assets).Wait();
         GD.Print("File imported to " + Importer.GetDefaultImportPath(filepath, Assets));
     }
 
@@ -79,14 +79,15 @@ public partial class AssetBrowser : Resource
         var importPaths = files.Select(f => Importer.GetDefaultImportPath(f, Assets));
         GD.Print("Files imported to:\n" + string.Join('\n', importPaths));
 
-        if (importPaths.FirstOrDefault(x => x != null) is string str) {
+        if (importPaths.FirstOrDefault(x => x != null) is string str && ResourceLoader.Exists(str)) {
             EditorInterface.Singleton.CallDeferred(EditorInterface.MethodName.OpenSceneFromPath, str);
         }
     }
 
     private Task ImportMultipleAssets(string[] files)
     {
-        return Task.WhenAll(files.Select(file => Importer.Import(file, null, Assets)));
+        Debug.Assert(Assets != null);
+        return Task.WhenAll(files.Select(file => Importer.Import(file, Assets)));
     }
 }
 #endif

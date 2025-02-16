@@ -1,0 +1,8 @@
+[gd_resource type="Resource" script_class="AssetConfig" load_steps=2 format=3 uid="uid://bivbmmqpcti8g"]
+
+[ext_resource type="Script" uid="uid://beytbdxq62mcp" path="res://addons/ReachForGodot/AssetConfig.cs" id="1_gs25j"]
+
+[resource]
+script = ExtResource("1_gs25j")
+Game = "DevilMayCry5"
+AssetDirectory = "dmc5/"

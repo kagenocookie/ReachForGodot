@@ -12,6 +12,8 @@ public class Importer
     private const string meshImportScriptPath = "addons/ReachForGodot/import_mesh.py";
     private const string texImportScriptPath = "addons/ReachForGodot/import_tex.py";
 
+    private static readonly byte[] MPLY_mesh_bytes = Encoding.ASCII.GetBytes("MPLY");
+
     public static REFileFormat GetFileFormat(string filename)
     {
         var versionDot = filename.LastIndexOf('.');
@@ -44,6 +46,10 @@ public class Importer
             return RESupportedFileFormats.Scene;
         }
 
+        if (extension.SequenceEqual("pfb")) {
+            return RESupportedFileFormats.Prefab;
+        }
+
         return RESupportedFileFormats.Unknown;
     }
 
@@ -51,6 +57,7 @@ public class Importer
         RESupportedFileFormats.Mesh => "mesh",
         RESupportedFileFormats.Texture => "tex",
         RESupportedFileFormats.Scene => "scn",
+        RESupportedFileFormats.Prefab => "pfb",
         _ => string.Empty,
     };
 
@@ -93,6 +100,7 @@ public class Importer
             case RESupportedFileFormats.Texture:
                 return targetPath + ".dds";
             case RESupportedFileFormats.Scene:
+            case RESupportedFileFormats.Prefab:
                 return targetPath + ".tscn";
             default:
                 return targetPath;
@@ -113,18 +121,16 @@ public class Importer
         return extractedFilePath;
     }
 
-    public static Task Import(string filepath, string? importFilepath = null, AssetConfig? config = null)
+    public static Task Import(string filepath, AssetConfig config, string? importFilepath = null)
     {
-        config ??= AssetConfig.DefaultInstance;
         importFilepath ??= GetDefaultImportPath(filepath, config);
         var format = Importer.GetFileFormat(filepath);
         Directory.CreateDirectory(ProjectSettings.GlobalizePath(config.AssetDirectory));
         return Importer.Import(format, filepath, importFilepath, config);
     }
 
-    public static Task Import(REFileFormat format, string sourceFilePath, string outputFilePath, AssetConfig? config = null)
+    public static Task Import(REFileFormat format, string sourceFilePath, string outputFilePath, AssetConfig config)
     {
-        config ??= AssetConfig.DefaultInstance;
         switch (format.format) {
             case RESupportedFileFormats.Mesh:
                 return ImportMesh(sourceFilePath, outputFilePath);
@@ -132,13 +138,13 @@ public class Importer
                 return ImportTexture(sourceFilePath, outputFilePath);
             case RESupportedFileFormats.Scene:
                 return ImportScene(sourceFilePath, outputFilePath, config);
+            case RESupportedFileFormats.Prefab:
+                return ImportPrefab(sourceFilePath, outputFilePath, config);
             default:
                 GD.Print("Unsupported file format " + format.format);
                 return Task.CompletedTask;
         }
     }
-
-    private static byte[] MPLY_mesh_bytes = Encoding.ASCII.GetBytes("MPLY");
 
     public static Task ImportMesh(string sourceFilePath, string importFilepath)
     {
@@ -209,6 +215,13 @@ public class Importer
         return Task.CompletedTask;
     }
 
+    public static Task ImportPrefab(string sourceFilePath, string outputFilePath, AssetConfig config)
+    {
+        var conv = new GodotScnConverter(config, false);
+        conv.CreateProxyPrefab(sourceFilePath, outputFilePath);
+        return Task.CompletedTask;
+    }
+
     private static Task ExecuteBlenderScript(string scriptFilename, bool background)
     {
         var process = Process.Start(new ProcessStartInfo() {
@@ -227,6 +240,7 @@ public enum RESupportedFileFormats
     Mesh,
     Texture,
     Scene,
+    Prefab,
 }
 
 public record struct REFileFormat(RESupportedFileFormats format, int version)

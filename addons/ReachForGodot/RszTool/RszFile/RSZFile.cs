@@ -367,7 +367,7 @@ namespace RszTool
                             }
                         }
                     }
-                    else if (instance.Values[i] is int instanceId)
+                    else if (instance.Values[i] is int instanceId && instanceId != -1)
                     {
                         if (instanceId >= instance.Index && field.IsTypeInferred)
                         {

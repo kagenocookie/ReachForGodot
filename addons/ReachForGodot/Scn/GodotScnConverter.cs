@@ -10,11 +10,12 @@ public class GodotScnConverter : IDisposable
 {
     private static bool hasSafetyHooked;
 
-    private static readonly Dictionary<string, Func<SceneFolder, REGameObject, RszInstance, Node?>> factories = new();
+    private static readonly Dictionary<string, Func<RszContainerNode, REGameObject, RszInstance, Node?>> factories = new();
 
     public AssetConfig AssetConfig { get; }
     public bool FullImport { get; }
     public ScnFile? ScnFile { get; private set; }
+    public PfbFile? PfbFile { get; private set; }
 
     public static void EnsureSafeJsonLoadContext()
     {
@@ -59,6 +60,24 @@ public class GodotScnConverter : IDisposable
         }
     }
 
+    public void CreateProxyPrefab(string sourceScnFilePath, string importFilepath)
+    {
+        var relativeSourceFile = string.IsNullOrEmpty(AssetConfig.Paths.ChunkPath) ? sourceScnFilePath : sourceScnFilePath.Replace(AssetConfig.Paths.ChunkPath, "");
+
+        Directory.CreateDirectory(ProjectSettings.GlobalizePath(importFilepath.GetBaseDir()));
+
+        var name = sourceScnFilePath.GetFile().GetBaseName().GetBaseName();
+        // opening the scene file mostly just to verify that it's valid
+        using var file = OpenPfb(sourceScnFilePath);
+        file.Read();
+
+        if (!ResourceLoader.Exists(importFilepath)) {
+            var scene = new PackedScene();
+            scene.Pack(new PrefabNode() { Game = AssetConfig.Game, Name = name, Asset = new AssetReference() { AssetFilename = relativeSourceFile } });
+            ResourceSaver.Save(scene, importFilepath);
+        }
+    }
+
     public void GenerateSceneTree(SceneFolder root)
     {
         var scnFullPath = Importer.ResolveSourceFilePath(root.Asset!.AssetFilename, AssetConfig);
@@ -76,7 +95,7 @@ public class GodotScnConverter : IDisposable
             GenerateFolder(root, folder);
         }
 
-        GenerateResources(root, AssetConfig);
+        GenerateResources(root, ScnFile.ResourceInfoList, AssetConfig);
 
         foreach (var gameObj in ScnFile.GameObjectDatas!.OrderBy(o => o.Instance!.Index)) {
             Debug.Assert(gameObj.Info != null);
@@ -84,12 +103,30 @@ public class GodotScnConverter : IDisposable
         }
     }
 
-    private void GenerateResources(SceneFolder root, AssetConfig config)
+    public void GeneratePrefabTree(PrefabNode root)
     {
-        Debug.Assert(ScnFile != null);
+        var scnFullPath = Importer.ResolveSourceFilePath(root.Asset!.AssetFilename, AssetConfig);
 
+        PfbFile?.Dispose();
+        GD.Print("Opening scn file " + scnFullPath);
+        PfbFile = OpenPfb(scnFullPath);
+        PfbFile.Read();
+        PfbFile.SetupGameObjects();
+
+        root.Clear();
+
+        GenerateResources(root, PfbFile.ResourceInfoList, AssetConfig);
+
+        foreach (var gameObj in PfbFile.GameObjectDatas!.OrderBy(o => o.Instance!.Index)) {
+            Debug.Assert(gameObj.Info != null);
+            GenerateGameObject(root, gameObj);
+        }
+    }
+
+    private void GenerateResources(RszContainerNode root, List<ResourceInfo> resourceInfos, AssetConfig config)
+    {
         var resources = new List<REResource>();
-        foreach (var res in ScnFile.ResourceInfoList) {
+        foreach (var res in resourceInfos) {
             if (res.Path != null) {
                 var format = Importer.GetFileFormat(res.Path);
                 var newres = new REResource() {
@@ -168,7 +205,36 @@ public class GodotScnConverter : IDisposable
         }
     }
 
-    private void GenerateGameObject(SceneFolder root, ScnFile.GameObjectData data, REGameObject? parent = null)
+    private void GenerateGameObject(RszContainerNode root, PfbFile.GameObjectData data, REGameObject? parent = null)
+    {
+        Debug.Assert(data.Info != null);
+
+        var newGameobj = new REGameObject() {
+            ObjectId = data.Info.Data.objectId,
+            Name = data.Name ?? "UnnamedGameobject",
+            Uuid = Guid.NewGuid().ToString(),
+            Enabled = true, // TODO which gameobject field is enabled?
+            // Enabled = gameObj.Instance.GetFieldValue("v2")
+        };
+        root.AddGameObject(newGameobj, parent);
+
+        foreach (var child in data.Children.OrderBy(o => o.Instance!.Index)) {
+            GenerateGameObject(root, child, newGameobj);
+        }
+
+        var meshComponent = data.Components.FirstOrDefault(c => c.RszClass.name == "via.render.Mesh" || c.RszClass.name == "via.render.CompositeMesh");
+        if (meshComponent != null) {
+            newGameobj.Node3D = SetupComponent(root, meshComponent, newGameobj) as Node3D;
+        }
+
+        foreach (var comp in data.Components.OrderBy(o => o.Index)) {
+            if (comp != meshComponent) {
+                SetupComponent(root, comp, newGameobj);
+            }
+        }
+    }
+
+    private void GenerateGameObject(RszContainerNode root, ScnFile.GameObjectData data, REGameObject? parent = null)
     {
         Debug.Assert(data.Info != null);
 
@@ -204,9 +270,14 @@ public class GodotScnConverter : IDisposable
         return new ScnFile(new RszFileOption(AssetConfig.Paths.GetRszToolGameEnum(), AssetConfig.Paths.RszJsonPath ?? throw new Exception("Rsz json file not specified for game " + AssetConfig.Game)), new FileHandler(filename));
     }
 
-    private Node SetupComponent(SceneFolder root, RszInstance instance, REGameObject gameObject)
+    private PfbFile OpenPfb(string filename)
     {
-        Debug.Assert(ScnFile != null);
+        EnsureSafeJsonLoadContext();
+        return new PfbFile(new RszFileOption(AssetConfig.Paths.GetRszToolGameEnum(), AssetConfig.Paths.RszJsonPath ?? throw new Exception("Rsz json file not specified for game " + AssetConfig.Game)), new FileHandler(filename));
+    }
+
+    private Node SetupComponent(RszContainerNode root, RszInstance instance, REGameObject gameObject)
+    {
         REComponent? componentInfo;
         Node? child;
         if (factories.TryGetValue(instance.RszClass.name, out var factory)) {
@@ -228,7 +299,7 @@ public class GodotScnConverter : IDisposable
         return child;
     }
 
-    public static void DefineComponentFactory(string componentType, Func<SceneFolder, REGameObject, RszInstance, Node?> factory)
+    public static void DefineComponentFactory(string componentType, Func<RszContainerNode, REGameObject, RszInstance, Node?> factory)
     {
         factories[componentType] = factory;
     }

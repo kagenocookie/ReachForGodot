@@ -13,21 +13,26 @@ public static class ComponentTypes
         GodotScnConverter.DefineComponentFactory("via.Transform", SetupTransform);
     }
 
-    private static Node? SetupMesh(SceneFolder root, REGameObject gameObject, RszInstance rsz)
+    private static Node? SetupMesh(RszContainerNode root, REGameObject gameObject, RszInstance rsz)
     {
-        var node = gameObject.AddOwnedChild(new MeshInstance3D() { Name = "via.render.Mesh" });
         var meshPath = rsz.GetFieldValue("v2") as string ?? rsz.GetFieldValue("v20") as string ?? rsz.Values.FirstOrDefault(v => v is string) as string;
 
+        Node3D node;
         if (root.Resources?.FirstOrDefault(r => r.SourcePath == meshPath) is REResource mr && mr.ImportedResource is PackedScene scene) {
-            var sourceMeshInstance = scene.Instantiate()?.FindChildByType<MeshInstance3D>();
-            if (sourceMeshInstance != null) {
-                node.Mesh = sourceMeshInstance.Mesh;
+            node = scene.Instantiate<Node3D>(PackedScene.GenEditState.Instance);
+            if (node == null) {
+                GD.PrintErr("Invalid mesh source scene " + mr.ImportedPath);
+                return gameObject.AddOwnedChild(node = new Node3D() { Name = rsz.RszClass.name });
             }
+            gameObject.AddOwnedChild(node);
+        } else {
+            GD.Print("Missing mesh " + meshPath + " at path: " + gameObject.Owner.GetPathTo(gameObject));
+            gameObject.AddOwnedChild(node = new Node3D() { Name = rsz.RszClass.name });
         }
         return node;
     }
 
-    private static Node? SetupCompositeMesh(SceneFolder root, REGameObject gameObject, RszInstance rsz)
+    private static Node? SetupCompositeMesh(RszContainerNode root, REGameObject gameObject, RszInstance rsz)
     {
         var node = gameObject.AddOwnedChild(new Node3D() { Name = "via.render.CompositeMesh" });
         var compositeInstanceGroup = rsz.GetFieldValue("v15") as List<object>;
@@ -52,7 +57,7 @@ public static class ComponentTypes
         return node;
     }
 
-    private static Node? SetupTransform(SceneFolder root, REGameObject gameObject, RszInstance rsz)
+    private static Node? SetupTransform(RszContainerNode root, REGameObject gameObject, RszInstance rsz)
     {
         if (gameObject.Node3D != null) {
             var row1 = (System.Numerics.Vector4)rsz.Values[0];
