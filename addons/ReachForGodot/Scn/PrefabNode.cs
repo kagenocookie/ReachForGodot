@@ -6,9 +6,13 @@ using Godot;
 using RszTool;
 
 [GlobalClass, Tool]
-public partial class PrefabNode : RszContainerNode
+public partial class PrefabNode : REGameObject, IRszContainerNode
 {
-    public Node? FolderContainer { get; private set; }
+    [Export] public string? Game { get; set; }
+    [Export] public AssetReference? Asset { get; set; }
+    [Export] public REResource[]? Resources { get; set; }
+
+    public bool IsEmpty => GetChildCount() == 0;
 
     [ExportToolButton("Regenerate tree")]
     private Callable BuildTreeButton => Callable.From(BuildTree);
@@ -16,11 +20,11 @@ public partial class PrefabNode : RszContainerNode
     [ExportToolButton("Regenerate tree + Children")]
     private Callable BuildFullTreeButton => Callable.From(BuildTreeDeep);
 
-    public override void Clear()
-    {
-        FolderContainer = null;
-        base.Clear();
-    }
+    [ExportToolButton("Open source file")]
+    private Callable OpenSourceFile => Callable.From(() => ((IRszContainerNode)this).OpenSourceFile());
+
+    [ExportToolButton("Find me something to look at")]
+    public Callable Find3DNodeButton => Callable.From(() => ((IRszContainerNode)this).Find3DNode());
 
     public void BuildTree()
     {

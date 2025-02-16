@@ -13,7 +13,7 @@ public static class ComponentTypes
         GodotScnConverter.DefineComponentFactory("via.Transform", SetupTransform);
     }
 
-    private static Node? SetupMesh(RszContainerNode root, REGameObject gameObject, RszInstance rsz)
+    private static Node? SetupMesh(IRszContainerNode root, REGameObject gameObject, RszInstance rsz)
     {
         var meshPath = rsz.GetFieldValue("v2") as string ?? rsz.GetFieldValue("v20") as string ?? rsz.Values.FirstOrDefault(v => v is string) as string;
 
@@ -32,7 +32,7 @@ public static class ComponentTypes
         return node;
     }
 
-    private static Node? SetupCompositeMesh(RszContainerNode root, REGameObject gameObject, RszInstance rsz)
+    private static Node? SetupCompositeMesh(IRszContainerNode root, REGameObject gameObject, RszInstance rsz)
     {
         var node = gameObject.AddOwnedChild(new Node3D() { Name = "via.render.CompositeMesh" });
         var compositeInstanceGroup = rsz.GetFieldValue("v15") as List<object>;
@@ -57,25 +57,16 @@ public static class ComponentTypes
         return node;
     }
 
-    private static Node? SetupTransform(RszContainerNode root, REGameObject gameObject, RszInstance rsz)
+    private static Node? SetupTransform(IRszContainerNode root, REGameObject gameObject, RszInstance rsz)
     {
-        if (gameObject.Node3D != null) {
-            var row1 = (System.Numerics.Vector4)rsz.Values[0];
-            var row2 = (System.Numerics.Vector4)rsz.Values[1];
-            var row3 = (System.Numerics.Vector4)rsz.Values[2];
-            var scale = new Vector3(row3.X, row3.Y, row3.Z);
-            gameObject.Node3D.Transform = new Transform3D(
-                // new Basis(),
-                new Basis(new Quaternion(row2.X, row2.Y, row2.Z, row2.W)).Scaled(scale),
-                new Vector3(row1.X, row1.Y, row1.Z)
-            );
-            // gameObject.Node3D.Transform = new Transform3D(
-            //     new Vector3(row1.X, row2.X, row3.X),
-            //     new Vector3(row1.Y, row2.Y, row3.Y),
-            //     new Vector3(row1.Z, row2.Z, row3.Z),
-            //     new Vector3(row1.W, row2.W, row3.W)
-            // );
-        }
+        var row1 = (System.Numerics.Vector4)rsz.Values[0];
+        var row2 = (System.Numerics.Vector4)rsz.Values[1];
+        var row3 = (System.Numerics.Vector4)rsz.Values[2];
+        var scale = new Vector3(row3.X, row3.Y, row3.Z);
+        gameObject.Transform = new Transform3D(
+            new Basis(new Quaternion(row2.X, row2.Y, row2.Z, row2.W)).Scaled(scale),
+            new Vector3(row1.X, row1.Y, row1.Z)
+        );
         return null;
     }
 }

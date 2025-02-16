@@ -10,7 +10,7 @@ public class GodotScnConverter : IDisposable
 {
     private static bool hasSafetyHooked;
 
-    private static readonly Dictionary<string, Func<RszContainerNode, REGameObject, RszInstance, Node?>> factories = new();
+    private static readonly Dictionary<string, Func<IRszContainerNode, REGameObject, RszInstance, Node?>> factories = new();
 
     public AssetConfig AssetConfig { get; }
     public bool FullImport { get; }
@@ -42,15 +42,19 @@ public class GodotScnConverter : IDisposable
         FullImport = fullImport;
     }
 
-    public void CreateProxyScene(string sourceScnFilePath, string importFilepath)
+    public void CreateProxyScene(string sourceFilePath, string importFilepath)
     {
-        var relativeSourceFile = string.IsNullOrEmpty(AssetConfig.Paths.ChunkPath) ? sourceScnFilePath : sourceScnFilePath.Replace(AssetConfig.Paths.ChunkPath, "");
+        if (!File.Exists(sourceFilePath)) {
+            GD.PrintErr("Invalid scene source file, does not exist: " + sourceFilePath);
+            return;
+        }
+        var relativeSourceFile = string.IsNullOrEmpty(AssetConfig.Paths.ChunkPath) ? sourceFilePath : sourceFilePath.Replace(AssetConfig.Paths.ChunkPath, "");
 
         Directory.CreateDirectory(ProjectSettings.GlobalizePath(importFilepath.GetBaseDir()));
 
-        var name = sourceScnFilePath.GetFile().GetBaseName().GetBaseName();
+        var name = sourceFilePath.GetFile().GetBaseName().GetBaseName();
         // opening the scene file mostly just to verify that it's valid
-        using var scn = OpenScn(sourceScnFilePath);
+        using var scn = OpenScn(sourceFilePath);
         scn.Read();
 
         if (!ResourceLoader.Exists(importFilepath)) {
@@ -60,15 +64,19 @@ public class GodotScnConverter : IDisposable
         }
     }
 
-    public void CreateProxyPrefab(string sourceScnFilePath, string importFilepath)
+    public void CreateProxyPrefab(string sourceFilePath, string importFilepath)
     {
-        var relativeSourceFile = string.IsNullOrEmpty(AssetConfig.Paths.ChunkPath) ? sourceScnFilePath : sourceScnFilePath.Replace(AssetConfig.Paths.ChunkPath, "");
+        if (!File.Exists(sourceFilePath)) {
+            GD.PrintErr("Invalid prefab source file, does not exist: " + sourceFilePath);
+            return;
+        }
+        var relativeSourceFile = string.IsNullOrEmpty(AssetConfig.Paths.ChunkPath) ? sourceFilePath : sourceFilePath.Replace(AssetConfig.Paths.ChunkPath, "");
 
         Directory.CreateDirectory(ProjectSettings.GlobalizePath(importFilepath.GetBaseDir()));
 
-        var name = sourceScnFilePath.GetFile().GetBaseName().GetBaseName();
+        var name = sourceFilePath.GetFile().GetBaseName().GetBaseName();
         // opening the scene file mostly just to verify that it's valid
-        using var file = OpenPfb(sourceScnFilePath);
+        using var file = OpenPfb(sourceFilePath);
         file.Read();
 
         if (!ResourceLoader.Exists(importFilepath)) {
@@ -113,17 +121,21 @@ public class GodotScnConverter : IDisposable
         PfbFile.Read();
         PfbFile.SetupGameObjects();
 
-        root.Clear();
+        ((IRszContainerNode)root).Clear();
 
         GenerateResources(root, PfbFile.ResourceInfoList, AssetConfig);
 
-        foreach (var gameObj in PfbFile.GameObjectDatas!.OrderBy(o => o.Instance!.Index)) {
+        var rootGOs = PfbFile.GameObjectDatas!.OrderBy(o => o.Instance!.Index);
+        if (rootGOs.Count() > 1) {
+            GD.PrintErr("WTF Capcom, why do you have multiple GameObjects in the PFB root???");
+        }
+        foreach (var gameObj in rootGOs) {
             Debug.Assert(gameObj.Info != null);
-            GenerateGameObject(root, gameObj);
+            GenerateGameObject(root, gameObj, root);
         }
     }
 
-    private void GenerateResources(RszContainerNode root, List<ResourceInfo> resourceInfos, AssetConfig config)
+    private void GenerateResources(IRszContainerNode root, List<ResourceInfo> resourceInfos, AssetConfig config)
     {
         var resources = new List<REResource>();
         foreach (var res in resourceInfos) {
@@ -205,7 +217,7 @@ public class GodotScnConverter : IDisposable
         }
     }
 
-    private void GenerateGameObject(RszContainerNode root, PfbFile.GameObjectData data, REGameObject? parent = null)
+    private void GenerateGameObject(PrefabNode root, PfbFile.GameObjectData data, REGameObject? parent = null)
     {
         Debug.Assert(data.Info != null);
 
@@ -216,31 +228,24 @@ public class GodotScnConverter : IDisposable
             Enabled = true, // TODO which gameobject field is enabled?
             // Enabled = gameObj.Instance.GetFieldValue("v2")
         };
-        root.AddGameObject(newGameobj, parent);
+        ((IRszContainerNode)root).AddGameObject(newGameobj, parent);
+
+        foreach (var comp in data.Components.OrderBy(o => o.Index)) {
+            SetupComponent(root, comp, newGameobj);
+        }
 
         foreach (var child in data.Children.OrderBy(o => o.Instance!.Index)) {
             GenerateGameObject(root, child, newGameobj);
         }
-
-        var meshComponent = data.Components.FirstOrDefault(c => c.RszClass.name == "via.render.Mesh" || c.RszClass.name == "via.render.CompositeMesh");
-        if (meshComponent != null) {
-            newGameobj.Node3D = SetupComponent(root, meshComponent, newGameobj) as Node3D;
-        }
-
-        foreach (var comp in data.Components.OrderBy(o => o.Index)) {
-            if (comp != meshComponent) {
-                SetupComponent(root, comp, newGameobj);
-            }
-        }
     }
 
-    private void GenerateGameObject(RszContainerNode root, ScnFile.GameObjectData data, REGameObject? parent = null)
+    private void GenerateGameObject(IRszContainerNode root, ScnFile.GameObjectData data, REGameObject? parent = null)
     {
         Debug.Assert(data.Info != null);
 
         var newGameobj = new REGameObject() {
             ObjectId = data.Info.Data.objectId,
-            Name = data.Name ?? "UnnamedFolder",
+            Name = data.Name ?? "UnnamedObject",
             Uuid = data.Info.Data.guid.ToString(),
             Prefab = data.Prefab?.Path,
             Enabled = true, // TODO which gameobject field is enabled?
@@ -248,19 +253,22 @@ public class GodotScnConverter : IDisposable
         };
         root.AddGameObject(newGameobj, parent);
 
-        foreach (var child in data.Children.OrderBy(o => o.Instance!.Index)) {
-            GenerateGameObject(root, child, newGameobj);
-        }
-
-        var meshComponent = data.Components.FirstOrDefault(c => c.RszClass.name == "via.render.Mesh" || c.RszClass.name == "via.render.CompositeMesh");
-        if (meshComponent != null) {
-            newGameobj.Node3D = SetupComponent(root, meshComponent, newGameobj) as Node3D;
+        if (data.Prefab?.Path != null) {
+            var importPath = Importer.GetDefaultImportPath(data.Prefab.Path, AssetConfig);
+            if (!ResourceLoader.Exists(importPath)) {
+                var sourcePath = Importer.ResolveSourceFilePath(data.Prefab.Path, AssetConfig);
+                if (!string.IsNullOrEmpty(sourcePath)) {
+                    Importer.ImportPrefab(sourcePath, importPath, AssetConfig).Wait();
+                }
+            }
         }
 
         foreach (var comp in data.Components.OrderBy(o => o.Index)) {
-            if (comp != meshComponent) {
-                SetupComponent(root, comp, newGameobj);
-            }
+            SetupComponent(root, comp, newGameobj);
+        }
+
+        foreach (var child in data.Children.OrderBy(o => o.Instance!.Index)) {
+            GenerateGameObject(root, child, newGameobj);
         }
     }
 
@@ -276,30 +284,34 @@ public class GodotScnConverter : IDisposable
         return new PfbFile(new RszFileOption(AssetConfig.Paths.GetRszToolGameEnum(), AssetConfig.Paths.RszJsonPath ?? throw new Exception("Rsz json file not specified for game " + AssetConfig.Game)), new FileHandler(filename));
     }
 
-    private Node SetupComponent(RszContainerNode root, RszInstance instance, REGameObject gameObject)
+    private void SetupComponent(IRszContainerNode root, RszInstance instance, REGameObject gameObject)
     {
         REComponent? componentInfo;
-        Node? child;
+        Node? child = null;
         if (factories.TryGetValue(instance.RszClass.name, out var factory)) {
             child = factory.Invoke(root, gameObject, instance);
             componentInfo = child as REComponent;
             if (componentInfo != null) {
-                child = componentInfo;
+                if (gameObject.GetComponent(instance.RszClass.name) == null) {
+                    gameObject.AddComponent(componentInfo);
+                }
             } else if (child != null) {
-                child.AddOwnedChild(componentInfo = new REComponent() { Name = "ComponentInfo" });
+                componentInfo = new REComponent() { Name = "ComponentInfo" };
+                child.AddOwnedChild(componentInfo);
             } else {
-                child = componentInfo = gameObject.AddOwnedChild(new REComponent() { Name = instance.RszClass.name });
+                componentInfo = new REComponent() { Name = instance.RszClass.name };
+                gameObject.AddComponent(componentInfo);
             }
         } else {
-            child = componentInfo = gameObject.AddOwnedChild(new REComponent() { Name = instance.RszClass.name });
+            componentInfo = new REComponent() { Name = instance.RszClass.name };
+            gameObject.AddComponent(componentInfo);
         }
 
         componentInfo.Classname = instance.RszClass.name;
         componentInfo.ObjectId = instance.Index;
-        return child;
     }
 
-    public static void DefineComponentFactory(string componentType, Func<RszContainerNode, REGameObject, RszInstance, Node?> factory)
+    public static void DefineComponentFactory(string componentType, Func<IRszContainerNode, REGameObject, RszInstance, Node?> factory)
     {
         factories[componentType] = factory;
     }

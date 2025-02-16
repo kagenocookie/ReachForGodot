@@ -70,6 +70,13 @@ public class Importer
 
         var fullpath = Path.Join(config.Paths.ChunkPath, relativePath);
         var ext = GetFileExtensionFromFormat(format);
+        var dir = fullpath.GetBaseDir();
+        if (!Directory.Exists(dir)) {
+            // TODO: this is where we try to retool it out of the pak files
+            GD.PrintErr("Asset not found: " + fullpath);
+            return -1;
+        }
+
         var first = Directory.EnumerateFiles(fullpath.GetBaseDir(), $"*.{ext}.*").FirstOrDefault();
         if (first != null) {
             return int.TryParse(first.GetExtension(), out var ver) ? ver : -1;
@@ -90,6 +97,10 @@ public class Importer
         }
         var relativePath = osFilepath.Replace(basepath, "");
         var realOsFilepath = ResolveSourceFilePath(relativePath, config);
+        if (string.IsNullOrEmpty(realOsFilepath)) {
+            GD.PrintErr($"{config.Game} file not found: " + relativePath);
+            return string.Empty;
+        }
 
         relativePath = realOsFilepath.Replace(basepath, "");
         var targetPath = Path.Combine(config.AssetDirectory, relativePath);
@@ -113,6 +124,9 @@ public class Importer
         string extractedFilePath;
         if (fmt.version == -1) {
             fmt.version = GuessFileVersion(assetRelativePath, fmt.format, config);
+            if (fmt.version == -1) {
+                return string.Empty;
+            }
             extractedFilePath = Path.Join(config.Paths.ChunkPath, assetRelativePath + "." + fmt.version).Replace('\\', '/');
         } else {
             extractedFilePath = Path.Join(config.Paths.ChunkPath, assetRelativePath).Replace('\\', '/');
@@ -210,6 +224,13 @@ public class Importer
 
     public static Task ImportScene(string sourceFilePath, string outputFilePath, AssetConfig config)
     {
+        if (!System.IO.Path.IsPathRooted(sourceFilePath)) {
+            sourceFilePath = ResolveSourceFilePath(sourceFilePath, config);
+        }
+        if (!File.Exists(sourceFilePath)) {
+            GD.PrintErr("Invalid scene source file, does not exist: " + sourceFilePath);
+            return Task.CompletedTask;
+        }
         var conv = new GodotScnConverter(config, false);
         conv.CreateProxyScene(sourceFilePath, outputFilePath);
         return Task.CompletedTask;
@@ -217,6 +238,13 @@ public class Importer
 
     public static Task ImportPrefab(string sourceFilePath, string outputFilePath, AssetConfig config)
     {
+        if (!System.IO.Path.IsPathRooted(sourceFilePath)) {
+            sourceFilePath = ResolveSourceFilePath(sourceFilePath, config);
+        }
+        if (!File.Exists(sourceFilePath)) {
+            GD.PrintErr("Invalid prefab source file, does not exist: " + sourceFilePath);
+            return Task.CompletedTask;
+        }
         var conv = new GodotScnConverter(config, false);
         conv.CreateProxyPrefab(sourceFilePath, outputFilePath);
         return Task.CompletedTask;

@@ -6,8 +6,15 @@ using Godot;
 using RszTool;
 
 [GlobalClass, Tool]
-public partial class SceneFolder : RszContainerNode
+public partial class SceneFolder : Node, IRszContainerNode
 {
+    [Export] public string? Game { get; set; }
+    [Export] public AssetReference? Asset { get; set; }
+    [Export] public REResource[]? Resources { get; set; }
+    [Export] public int ObjectId { get; set; }
+
+    public bool IsEmpty => GetChildCount() == 0;
+
     public Node? FolderContainer { get; private set; }
 
     [ExportToolButton("Regenerate tree")]
@@ -16,10 +23,16 @@ public partial class SceneFolder : RszContainerNode
     [ExportToolButton("Regenerate tree + Children")]
     private Callable BuildFullTreeButton => Callable.From(BuildTreeDeep);
 
-    public override void Clear()
+    [ExportToolButton("Open source file")]
+    private Callable OpenSourceFile => Callable.From(() => ((IRszContainerNode)this).OpenSourceFile());
+
+    [ExportToolButton("Find me something to look at")]
+    public Callable Find3DNodeButton => Callable.From(() => ((IRszContainerNode)this).Find3DNode());
+
+    public void Clear()
     {
         FolderContainer = null;
-        base.Clear();
+        this.FreeAllChildrenImmediately();
     }
 
     public void AddFolder(SceneFolder folder)
