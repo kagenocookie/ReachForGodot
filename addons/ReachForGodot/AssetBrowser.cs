@@ -2,6 +2,7 @@
 #nullable enable
 
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Security.Principal;
@@ -32,13 +33,13 @@ public partial class AssetBrowser : Resource
 
     private void ShowFilePicker()
     {
-        var config = Assets ?? AssetConfig.DefaultInstance;
-        if (string.IsNullOrWhiteSpace(config.Game)) {
-            GD.PrintErr($"Please select a game in the asset config file: {config.ResourcePath}");
+        Assets ??= AssetConfig.DefaultInstance;
+        if (string.IsNullOrWhiteSpace(Assets.Game)) {
+            GD.PrintErr($"Please select a game in the asset config file: {Assets.ResourcePath}");
             return;
         }
 
-        var basepath = ReachForGodot.GetChunkPath(config.Game);
+        var basepath = ReachForGodot.GetChunkPath(Assets.Game);
         if (basepath == null) {
             GD.PrintErr("Chunk path not configured. Set the path to the game in editor settings and select the game in the asset browser.");
             return;
@@ -60,19 +61,21 @@ public partial class AssetBrowser : Resource
 
     private void ImportAssetSync(string filepath)
     {
+        Debug.Assert(Assets != null);
         Importer.Import(filepath).Wait();
-        GD.Print("File imported to " + Importer.GetDefaultImportPath(filepath));
+        GD.Print("File imported to " + Importer.GetDefaultImportPath(filepath, Assets));
     }
 
     private void ImportAssetsSync(string[] files)
     {
+        Debug.Assert(Assets != null);
         if (files.Length == 0) {
             GD.PrintErr("Empty import file list");
             return;
         }
 
         ImportMultipleAssets(files).Wait();
-        var firstImport = Importer.GetDefaultImportPath(files[0]);
+        var firstImport = Importer.GetDefaultImportPath(files[0], Assets);
         var importPaths = files.Select(f => Importer.GetDefaultImportPath(f, Assets));
         GD.Print("Files imported to:\n" + string.Join('\n', importPaths));
 

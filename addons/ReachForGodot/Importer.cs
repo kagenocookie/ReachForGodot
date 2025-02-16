@@ -70,14 +70,13 @@ public class Importer
         return -1;
     }
 
-    public static string GetDefaultImportPath(string osFilepath, AssetConfig? config = null)
+    public static string GetDefaultImportPath(string osFilepath, AssetConfig config)
     {
         return ProjectSettings.LocalizePath(GetDefaultImportPath(osFilepath, GetFileFormat(osFilepath), config));
     }
 
-    public static string GetDefaultImportPath(string osFilepath, REFileFormat fmt, AssetConfig? config = null)
+    public static string GetDefaultImportPath(string osFilepath, REFileFormat fmt, AssetConfig config)
     {
-        config ??= AssetConfig.DefaultInstance;
         var basepath = ReachForGodot.GetChunkPath(config.Game);
         if (basepath == null) {
             throw new ArgumentException($"{config.Game} chunk path not configured");
@@ -86,11 +85,7 @@ public class Importer
         var realOsFilepath = ResolveSourceFilePath(relativePath, config);
 
         relativePath = realOsFilepath.Replace(basepath, "");
-        // var targetPath = ResolveSourceFilePath(relativePath, config);
         var targetPath = Path.Combine(config.AssetDirectory, relativePath);
-        // if (fmt.version == -1) {
-        //     fmt.version = GuessFileVersion(relativePath, fmt.format, config);
-        // }
 
         switch (fmt.format) {
             case RESupportedFileFormats.Mesh:
@@ -121,7 +116,7 @@ public class Importer
     public static Task Import(string filepath, string? importFilepath = null, AssetConfig? config = null)
     {
         config ??= AssetConfig.DefaultInstance;
-        importFilepath ??= GetDefaultImportPath(filepath);
+        importFilepath ??= GetDefaultImportPath(filepath, config);
         var format = Importer.GetFileFormat(filepath);
         Directory.CreateDirectory(ProjectSettings.GlobalizePath(config.AssetDirectory));
         return Importer.Import(format, filepath, importFilepath, config);
@@ -175,7 +170,7 @@ public class Importer
         tmpfile.Flush();
         tmpfile.Close();
 
-        return ExecuteBlenderScript(tempFn).ContinueWith((_) => {
+        return ExecuteBlenderScript(tempFn, false).ContinueWith((_) => {
             if (!File.Exists(blendPath)) {
                 GD.Print("Unsuccessfully imported mesh " + sourceFilePath);
             }
@@ -202,24 +197,24 @@ public class Importer
         tmpfile.Flush();
         tmpfile.Close();
 
-        return ExecuteBlenderScript(tempFn).ContinueWith((_) => {
+        return ExecuteBlenderScript(tempFn, true).ContinueWith((_) => {
             File.Move(convertedFilepath, outputGlobalized, true);
         });
     }
 
     public static Task ImportScene(string sourceFilePath, string outputFilePath, AssetConfig config)
     {
-        var conv = new GodotScnConverter(config);
+        var conv = new GodotScnConverter(config, false);
         conv.CreateProxyScene(sourceFilePath, outputFilePath);
         return Task.CompletedTask;
     }
 
-    private static Task ExecuteBlenderScript(string scriptFilename)
+    private static Task ExecuteBlenderScript(string scriptFilename, bool background)
     {
         var process = Process.Start(new ProcessStartInfo() {
             UseShellExecute = false,
             FileName = ReachForGodot.BlenderPath,
-            Arguments = $"--python \"{scriptFilename}\"",
+            Arguments = background ? $"--background --python \"{scriptFilename}\"" : $"--python \"{scriptFilename}\"",
         });
 
         return process!.WaitForExitAsync();

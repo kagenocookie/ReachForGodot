@@ -13,6 +13,7 @@ public class GodotScnConverter : IDisposable
     private static readonly Dictionary<string, Func<SceneFolder, REGameObject, RszInstance, Node?>> factories = new();
 
     public AssetConfig AssetConfig { get; }
+    public bool FullImport { get; }
     public ScnFile? ScnFile { get; private set; }
 
     public static void EnsureSafeJsonLoadContext()
@@ -34,9 +35,10 @@ public class GodotScnConverter : IDisposable
         ComponentTypes.Init();
     }
 
-    public GodotScnConverter(AssetConfig paths)
+    public GodotScnConverter(AssetConfig paths, bool fullImport)
     {
         AssetConfig = paths;
+        FullImport = fullImport;
     }
 
     public void CreateProxyScene(string sourceScnFilePath, string importFilepath)
@@ -134,21 +136,23 @@ public class GodotScnConverter : IDisposable
         SceneFolder newFolder;
         if (folder.Instance?.GetFieldValue("v5") is string scnPath && !string.IsNullOrWhiteSpace(scnPath)) {
             var importPath = Importer.GetDefaultImportPath(scnPath, AssetConfig);
+            PackedScene scene;
             if (!ResourceLoader.Exists(importPath)) {
                 Importer.ImportScene(Importer.ResolveSourceFilePath(scnPath, AssetConfig), importPath, AssetConfig);
-                // var instFolder = new SceneFolder() {
-                //     ObjectId = folder.Info.Data.objectId,
-                //     Game = root.Game,
-                //     Name = folder.Name ?? "UnnamedFolder"
-                // };
-                // instFolder.Asset = new AssetReference() { AssetFilename = scnPath };
-                // var childScn = new PackedScene() { ResourcePath = importPath };
-                // childScn.Pack(instFolder);
-                // Directory.CreateDirectory(ProjectSettings.GlobalizePath(importPath).GetBaseDir());
-                // ResourceSaver.Save(childScn, importPath);
+                scene = ResourceLoader.Load<PackedScene>(importPath);
+                newFolder = scene.Instantiate<SceneFolder>(PackedScene.GenEditState.Instance);
+            } else {
+                scene = ResourceLoader.Load<PackedScene>(importPath);
+                newFolder = scene.Instantiate<SceneFolder>(PackedScene.GenEditState.Instance);
             }
 
-            newFolder = ResourceLoader.Load<PackedScene>(importPath).Instantiate<SceneFolder>(PackedScene.GenEditState.Instance);
+            if (FullImport && newFolder.IsEmpty) {
+                using var childConf = new GodotScnConverter(AssetConfig, FullImport);
+                childConf.GenerateSceneTree(newFolder);
+                scene.Pack(newFolder);
+                ResourceSaver.Save(scene);
+            }
+
             (parent ?? root).AddFolder(newFolder);
         } else {
             newFolder = new SceneFolder() {

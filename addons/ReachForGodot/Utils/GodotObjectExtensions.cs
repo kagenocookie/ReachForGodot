@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Godot;
+using RszTool.via;
 
 public static class GodotObjectExtensions
 {
@@ -354,6 +355,30 @@ public static class GodotObjectExtensions
     public static string ToStringForPropertyList(this Godot.Collections.Array<Godot.Collections.Dictionary> list)
     {
         return string.Join("\n", list.Select(dict => string.Join(", ", dict.Select(kv => kv.Key + "=" + kv.Value))));
+    }
+
+    public static Godot.Aabb GetNode3DAABB(this Node parent, bool excludeTopLevel)
+    {
+        var bounds = new Godot.Aabb();
+        if (parent is VisualInstance3D vis) {
+            bounds = vis.GetAabb();
+        }
+
+        for (var i = 0; i < parent!.GetChildCount(); ++i) {
+            var child = parent.GetChild(i);
+            var child_bounds = GetNode3DAABB(child, false);
+            if (bounds.Size == Vector3.Zero && parent != null) {
+                bounds = child_bounds;
+            } else if (child_bounds.Size != Vector3.Zero) {
+                bounds = bounds.Merge(child_bounds);
+            }
+        }
+
+        if (!excludeTopLevel && parent is Node3D parent3d) {
+            bounds = parent3d.Transform * bounds;
+        }
+
+        return bounds;
     }
 
     /// <summary>

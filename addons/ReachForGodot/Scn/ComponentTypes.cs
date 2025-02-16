@@ -16,8 +16,7 @@ public static class ComponentTypes
     private static Node? SetupMesh(SceneFolder root, REGameObject gameObject, RszInstance rsz)
     {
         var node = gameObject.AddOwnedChild(new MeshInstance3D() { Name = "via.render.Mesh" });
-        var meshPath = (rsz.GetFieldValue("v2") as string);
-        var mdfPath = (rsz.GetFieldValue("v3") as string);
+        var meshPath = rsz.GetFieldValue("v2") as string ?? rsz.GetFieldValue("v20") as string ?? rsz.Values.FirstOrDefault(v => v is string) as string;
 
         if (root.Resources?.FirstOrDefault(r => r.SourcePath == meshPath) is REResource mr && mr.ImportedResource is PackedScene scene) {
             var sourceMeshInstance = scene.Instantiate()?.FindChildByType<MeshInstance3D>();
@@ -32,15 +31,7 @@ public static class ComponentTypes
     {
         var node = gameObject.AddOwnedChild(new Node3D() { Name = "via.render.CompositeMesh" });
         var compositeInstanceGroup = rsz.GetFieldValue("v15") as List<object>;
-        // var meshPath = (rsz.GetFieldValue("v2") as string);
-        // var mdfPath = (rsz.GetFieldValue("v3") as string);
 
-        // if (root.Resources?.FirstOrDefault(r => r.SourcePath == meshPath) is REResource mr && mr.ImportedResource is PackedScene scene) {
-        //     var sourceMeshInstance = scene.Instantiate()?.FindChildByType<MeshInstance3D>();
-        //     if (sourceMeshInstance != null) {
-        //         node.Mesh = sourceMeshInstance.Mesh;
-        //     }
-        // }
         if (compositeInstanceGroup != null) {
             foreach (var inst in compositeInstanceGroup.OfType<RszInstance>()) {
                 if (inst.GetFieldValue("v0") is string meshFilename && meshFilename != "") {
@@ -64,9 +55,9 @@ public static class ComponentTypes
     private static Node? SetupTransform(SceneFolder root, REGameObject gameObject, RszInstance rsz)
     {
         if (gameObject.Node3D != null) {
-            var row1 = (System.Numerics.Vector4)rsz.GetFieldValue("v0")!;
-            var row2 = (System.Numerics.Vector4)rsz.GetFieldValue("v1")!;
-            var row3 = (System.Numerics.Vector4)rsz.GetFieldValue("v2")!;
+            var row1 = (System.Numerics.Vector4)rsz.Values[0];
+            var row2 = (System.Numerics.Vector4)rsz.Values[1];
+            var row3 = (System.Numerics.Vector4)rsz.Values[2];
             var scale = new Vector3(row3.X, row3.Y, row3.Z);
             gameObject.Node3D.Transform = new Transform3D(
                 // new Basis(),

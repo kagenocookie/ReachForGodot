@@ -15,8 +15,13 @@ lastDragDropOptions = bpy.context.preferences.addons[prefName].preferences.dragD
 
 bpy.context.preferences.addons[prefName].preferences.dragDropImportOptions = False
 
+timelimit = 30.0
 def wait_for_import_finish():
     if bpy.context.window.modal_operators.get("re_mesh.importfile"):
+        timelimit -= timelimit
+        if timelimit <= 0:
+            print('import probably failed, timeouting')
+            bpy.ops.wm.quit_blender()
         return 0.1
     else:
         print('import finished!')
