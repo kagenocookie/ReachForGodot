@@ -10,7 +10,7 @@ public class RszGodotConverter : IDisposable
 {
     private static bool hasSafetyHooked;
 
-    private static readonly Dictionary<string, Func<IRszContainerNode, REGameObject, RszInstance, Node?>> factories = new();
+    private static readonly Dictionary<string, Dictionary<string, Func<IRszContainerNode, REGameObject, RszInstance, REComponent?>>> perGameFactories = new();
 
     public AssetConfig AssetConfig { get; }
     public bool FullImport { get; }
@@ -26,7 +26,7 @@ public class RszGodotConverter : IDisposable
                 var updateHandlerType = assembly.GetType("System.Text.Json.JsonSerializerOptionsUpdateHandler");
                 var clearCacheMethod = updateHandlerType?.GetMethod("ClearCache", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public);
                 clearCacheMethod!.Invoke(null, new object?[] { null });
-                factories.Clear();
+                perGameFactories.Clear();
             };
         }
     }
@@ -286,24 +286,25 @@ public class RszGodotConverter : IDisposable
 
     private void SetupComponent(IRszContainerNode root, RszInstance instance, REGameObject gameObject)
     {
+        if (root.Game == null) {
+            GD.PrintErr("Game required on rsz container root for SetupComponent");
+            return;
+        }
+
         REComponent? componentInfo;
-        Node? child = null;
+        if (!perGameFactories.TryGetValue(root.Game, out var factories)) {
+            return;
+        }
         if (factories.TryGetValue(instance.RszClass.name, out var factory)) {
-            child = factory.Invoke(root, gameObject, instance);
-            componentInfo = child as REComponent;
-            if (componentInfo != null) {
-                if (gameObject.GetComponent(instance.RszClass.name) == null) {
-                    gameObject.AddComponent(componentInfo);
-                }
-            } else if (child != null) {
-                componentInfo = new REComponent() { Name = "ComponentInfo" };
-                child.AddOwnedChild(componentInfo);
-            } else {
-                componentInfo = new REComponent() { Name = instance.RszClass.name };
+            componentInfo = factory.Invoke(root, gameObject, instance);
+            if (componentInfo == null) {
+                componentInfo = new REComponentPlaceholder() { Name = instance.RszClass.name };
+                gameObject.AddComponent(componentInfo);
+            } else if (gameObject.GetComponent(instance.RszClass.name) == null) {
                 gameObject.AddComponent(componentInfo);
             }
         } else {
-            componentInfo = new REComponent() { Name = instance.RszClass.name };
+            componentInfo = new REComponentPlaceholder() { Name = instance.RszClass.name };
             gameObject.AddComponent(componentInfo);
         }
 
@@ -311,9 +312,19 @@ public class RszGodotConverter : IDisposable
         componentInfo.ObjectId = instance.Index;
     }
 
-    public static void DefineComponentFactory(string componentType, Func<IRszContainerNode, REGameObject, RszInstance, Node?> factory)
+    public static void DefineComponentFactory(string componentType, Func<IRszContainerNode, REGameObject, RszInstance, REComponent?> factory, params string[] supportedGames)
     {
-        factories[componentType] = factory;
+        if (supportedGames.Length == 0) {
+            supportedGames = ReachForGodot.GameList;
+        }
+
+        foreach (var game in supportedGames) {
+            if (!perGameFactories.TryGetValue(game, out var factories)) {
+                perGameFactories[game] = factories = new();
+            }
+
+            factories[componentType] = factory;
+        }
     }
 
     public void Dispose()

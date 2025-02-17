@@ -20,7 +20,7 @@ public partial class SceneFolder : Node, IRszContainerNode
     [ExportToolButton("Regenerate tree")]
     private Callable BuildTreeButton => Callable.From(BuildTree);
 
-    [ExportToolButton("Regenerate tree + Children")]
+    [ExportToolButton("Regenerate tree + Children (can take a while)")]
     private Callable BuildFullTreeButton => Callable.From(BuildTreeDeep);
 
     [ExportToolButton("Open source file")]
