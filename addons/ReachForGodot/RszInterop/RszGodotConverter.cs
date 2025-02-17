@@ -10,7 +10,7 @@ public class RszGodotConverter : IDisposable
 {
     private static bool hasSafetyHooked;
 
-    private static readonly Dictionary<string, Dictionary<string, Func<IRszContainerNode, REGameObject, RszInstance, REComponent?>>> perGameFactories = new();
+    private static readonly Dictionary<SupportedGame, Dictionary<string, Func<IRszContainerNode, REGameObject, RszInstance, REComponent?>>> perGameFactories = new();
 
     public AssetConfig AssetConfig { get; }
     public bool FullImport { get; }
@@ -312,7 +312,7 @@ public class RszGodotConverter : IDisposable
         componentInfo.ObjectId = instance.Index;
     }
 
-    public static void DefineComponentFactory(string componentType, Func<IRszContainerNode, REGameObject, RszInstance, REComponent?> factory, params string[] supportedGames)
+    public static void DefineComponentFactory(string componentType, Func<IRszContainerNode, REGameObject, RszInstance, REComponent?> factory, params SupportedGame[] supportedGames)
     {
         if (supportedGames.Length == 0) {
             supportedGames = ReachForGodot.GameList;

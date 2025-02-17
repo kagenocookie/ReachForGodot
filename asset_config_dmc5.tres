@@ -4,5 +4,5 @@
 
 [resource]
 script = ExtResource("1_gs25j")
-Game = "DevilMayCry5"
+Game = 2
 AssetDirectory = "dmc5/"

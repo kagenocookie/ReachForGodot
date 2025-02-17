@@ -34,7 +34,7 @@ public partial class AssetBrowser : Resource
     private void ShowFilePicker()
     {
         Assets ??= AssetConfig.DefaultInstance;
-        if (string.IsNullOrWhiteSpace(Assets.Game)) {
+        if (Assets.Game == SupportedGame.Unknown) {
             GD.PrintErr($"Please select a game in the asset config file: {Assets.ResourcePath}");
             return;
         }

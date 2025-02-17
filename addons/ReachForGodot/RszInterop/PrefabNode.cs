@@ -8,7 +8,7 @@ using RszTool;
 [GlobalClass, Tool]
 public partial class PrefabNode : REGameObject, IRszContainerNode
 {
-    [Export] public string? Game { get; set; }
+    [Export] public SupportedGame Game { get; set; }
     [Export] public AssetReference? Asset { get; set; }
     [Export] public REResource[]? Resources { get; set; }
 

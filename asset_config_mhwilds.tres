@@ -4,5 +4,5 @@
 
 [resource]
 script = ExtResource("1_3rh5h")
-Game = "MonsterHunterWilds"
+Game = 13
 AssetDirectory = "mhwilds/"

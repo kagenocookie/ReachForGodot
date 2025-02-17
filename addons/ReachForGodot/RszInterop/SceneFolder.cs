@@ -8,7 +8,7 @@ using RszTool;
 [GlobalClass, Tool]
 public partial class SceneFolder : Node, IRszContainerNode
 {
-    [Export] public string? Game { get; set; }
+    [Export] public SupportedGame Game { get; set; }
     [Export] public AssetReference? Asset { get; set; }
     [Export] public REResource[]? Resources { get; set; }
     [Export] public int ObjectId { get; set; }

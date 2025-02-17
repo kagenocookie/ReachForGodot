@@ -32,13 +32,13 @@ public partial class AssetConfig : Resource
 
     public GamePaths Paths => ReachForGodot.GetPaths(Game) ?? throw new Exception("Paths not defined for game " + Game);
 
-    [Export(PropertyHint.EnumSuggestion)] public string Game = string.Empty;
+    [Export] public SupportedGame Game = SupportedGame.Unknown;
     [Export(PropertyHint.Dir)] public string AssetDirectory = "assets/";
 
     public override void _ValidateProperty(Godot.Collections.Dictionary property)
     {
         if (property["name"].AsStringName() == PropertyName.Game) {
-            property["hint_string"] = ReachForGodot.GameList.Join(",");
+            property["hint_string"] = ReachForGodot.GameNames.Join(",");
         }
 
         base._ValidateProperty(property);

@@ -11,28 +11,29 @@ namespace RFG;
 [Tool]
 public partial class ReachForGodot : EditorPlugin
 {
-    public static readonly string[] GameList = ["DragonsDogma2", "DevilMayCry5", "MonsterHunterWilds"];
+    public static readonly SupportedGame[] GameList = Enum.GetValues<SupportedGame>().Where(n => n != SupportedGame.Unknown).ToArray();
+    public static readonly string[] GameNames = Enum.GetNames<SupportedGame>().Where(n => n != SupportedGame.Unknown.ToString()).ToArray();
     private const string SettingBase = "reach_for_godot";
     private const string Setting_BlenderPath = "filesystem/import/blender/blender_path";
     private const string Setting_GameChunkPath = $"{SettingBase}/paths/{{game}}/game_chunk_path";
     private const string Setting_Il2cppPath = $"{SettingBase}/paths/{{game}}/il2cpp_dump_file";
     private const string Setting_RszJsonPath = $"{SettingBase}/paths/{{game}}/rsz_json_file";
 
-    private static readonly Dictionary<string, (AssetConfig? config, GamePaths paths)> assetConfigData = new();
+    private static readonly Dictionary<SupportedGame, (AssetConfig? config, GamePaths paths)> assetConfigData = new();
 
     public static string BlenderPath => EditorInterface.Singleton.GetEditorSettings().GetSetting(Setting_BlenderPath).AsString()
         ?? throw new System.Exception("Blender path not defined in editor settings");
 
-    public static GamePaths? GetPaths(string game)
+    public static GamePaths? GetPaths(SupportedGame game)
     {
         if (assetConfigData.Count == 0) OnProjectSettingsChanged();
         return assetConfigData.TryGetValue(game, out var data) ? data.paths : null;
     }
 
-    public static AssetConfig GetAssetConfig(string? game)
+    public static AssetConfig GetAssetConfig(SupportedGame game)
     {
         if (assetConfigData.Count == 0) OnProjectSettingsChanged();
-        if (game == null) return AssetConfig.DefaultInstance;
+        if (game == SupportedGame.Unknown) return AssetConfig.DefaultInstance;
 
         if (assetConfigData.TryGetValue(game, out var data)) {
             if (data.config != null) {
@@ -40,7 +41,7 @@ public partial class ReachForGodot : EditorPlugin
             }
         }
 
-        var defaultResourcePath = "res://asset_config_" + game.ToSnakeCase();
+        var defaultResourcePath = "res://asset_config_" + game.ToString()!.ToSnakeCase();
         if (ResourceLoader.Exists(defaultResourcePath)) {
             data.config = ResourceLoader.Load<AssetConfig>(defaultResourcePath);
         } else {
@@ -71,11 +72,11 @@ public partial class ReachForGodot : EditorPlugin
         return data.config;
     }
 
-    public static string? GetChunkPath(string game) => GetPaths(game)?.ChunkPath;
+    public static string? GetChunkPath(SupportedGame game) => GetPaths(game)?.ChunkPath;
 
-    private static string ChunkPathSetting(string game) => Setting_GameChunkPath.Replace("{game}", game);
-    private static string Il2cppPathSetting(string game) => Setting_Il2cppPath.Replace("{game}", game);
-    private static string RszPathSetting(string game) => Setting_RszJsonPath.Replace("{game}", game);
+    private static string ChunkPathSetting(SupportedGame game) => Setting_GameChunkPath.Replace("{game}", game.ToString());
+    private static string Il2cppPathSetting(SupportedGame game) => Setting_Il2cppPath.Replace("{game}", game.ToString());
+    private static string RszPathSetting(SupportedGame game) => Setting_RszJsonPath.Replace("{game}", game.ToString());
 
     public override void _EnterTree()
     {
@@ -151,24 +152,24 @@ public partial class ReachForGodot : EditorPlugin
     }
 }
 
-public record GamePaths(string Game, string ChunkPath, string? Il2cppPath, string? RszJsonPath)
+public record GamePaths(SupportedGame Game, string ChunkPath, string? Il2cppPath, string? RszJsonPath)
 {
     public GameName GetRszToolGameEnum()
     {
         switch (Game) {
-            case "DragonsDogma2": return GameName.dd2;
-            case "DevilMayCry5": return GameName.dmc5;
-            case "ResidentEvil2": return GameName.re2;
-            case "ResidentEvil2RT": return GameName.re2rt;
-            case "ResidentEvil3": return GameName.re3;
-            case "ResidentEvil3RT": return GameName.re3rt;
-            case "ResidentEvil4": return GameName.re4;
-            case "ResidentEvil7": return GameName.re7;
-            case "ResidentEvil7RT": return GameName.re7rt;
-            case "ResidentEvil8": return GameName.re8;
-            case "MonsterHunterRise": return GameName.mhrise;
-            case "StreetFighter6": return GameName.sf6;
-            case "MonsterHunterWilds": return GameName.unknown;
+            case SupportedGame.DragonsDogma2: return GameName.dd2;
+            case SupportedGame.DevilMayCry5: return GameName.dmc5;
+            case SupportedGame.ResidentEvil2: return GameName.re2;
+            case SupportedGame.ResidentEvil2RT: return GameName.re2rt;
+            case SupportedGame.ResidentEvil3: return GameName.re3;
+            case SupportedGame.ResidentEvil3RT: return GameName.re3rt;
+            case SupportedGame.ResidentEvil4: return GameName.re4;
+            case SupportedGame.ResidentEvil7: return GameName.re7;
+            case SupportedGame.ResidentEvil7RT: return GameName.re7rt;
+            case SupportedGame.ResidentEvil8: return GameName.re8;
+            case SupportedGame.MonsterHunterRise: return GameName.mhrise;
+            case SupportedGame.StreetFighter6: return GameName.sf6;
+            case SupportedGame.MonsterHunterWilds: return GameName.unknown;
             default: return GameName.unknown;
         }
     }

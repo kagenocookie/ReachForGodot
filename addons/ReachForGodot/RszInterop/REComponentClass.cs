@@ -4,9 +4,9 @@ namespace RFG;
 public sealed class REComponentClassAttribute : System.Attribute
 {
     public string Classname { get; }
-    public string[] SupportedGames { get; }
+    public SupportedGame[] SupportedGames { get; }
 
-    public REComponentClassAttribute(string classname, params string[] supportedGames)
+    public REComponentClassAttribute(string classname, params SupportedGame[] supportedGames)
     {
         Classname = classname;
         SupportedGames = supportedGames;

@@ -8,7 +8,7 @@ using RszTool;
 
 public interface IRszContainerNode
 {
-    public string? Game { get; set; }
+    public SupportedGame Game { get; set; }
     public AssetReference? Asset { get; set; }
     public REResource[]? Resources { get; set; }
     public int ObjectId { get; set; }
