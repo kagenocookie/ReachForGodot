@@ -5,7 +5,7 @@ using Godot;
 using RszTool;
 
 [GlobalClass, Tool]
-public partial class REResource : Resource
+public partial class REResource : REObject
 {
     [Export] public string? SourcePath { get; set; }
     [Export] public string? ImportedPath { get; set; }

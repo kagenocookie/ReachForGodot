@@ -2,9 +2,10 @@ namespace RFG;
 
 using System;
 using Godot;
+using Godot.Collections;
 using RszTool;
 
-[GlobalClass, REComponentClass("via.render.Mesh")]
+[GlobalClass, Tool, REComponentClass("via.render.Mesh")]
 public partial class REMeshComponent : REComponent
 {
     [Export] public Node3D? meshNode;

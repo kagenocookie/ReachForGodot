@@ -75,7 +75,7 @@ public static class ReachForGodot
 #if TOOLS
     public static void ReloadSettings()
     {
-        EditorInterface.Singleton.GetEditorSettings().MarkSettingChanged("filesystem/import/blender/blender_path");
+        ReachForGodotPlugin.ReloadSettings();
     }
 
     public static void SetConfiguration(SupportedGame game, AssetConfig? config, GamePaths? paths)

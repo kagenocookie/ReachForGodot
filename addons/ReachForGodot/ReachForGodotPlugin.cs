@@ -40,6 +40,11 @@ public partial class ReachForGodotPlugin : EditorPlugin
         }
     }
 
+    public static void ReloadSettings()
+    {
+        OnProjectSettingsChanged();
+    }
+
     private static void OnProjectSettingsChanged()
     {
         var settings = EditorInterface.Singleton.GetEditorSettings();

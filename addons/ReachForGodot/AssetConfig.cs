@@ -35,15 +35,6 @@ public partial class AssetConfig : Resource
     [Export] public SupportedGame Game = SupportedGame.Unknown;
     [Export(PropertyHint.Dir)] public string AssetDirectory = "assets/";
 
-    public override void _ValidateProperty(Godot.Collections.Dictionary property)
-    {
-        if (property["name"].AsStringName() == PropertyName.Game) {
-            property["hint_string"] = ReachForGodot.GameNames.Join(",");
-        }
-
-        base._ValidateProperty(property);
-    }
-
     private void InvokeCallback(Callable callable)
     {
         callable.Call();

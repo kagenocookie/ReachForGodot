@@ -286,7 +286,7 @@ public class RszGodotConverter : IDisposable
 
     private void SetupComponent(IRszContainerNode root, RszInstance instance, REGameObject gameObject)
     {
-        if (root.Game == null) {
+        if (root.Game == SupportedGame.Unknown) {
             GD.PrintErr("Game required on rsz container root for SetupComponent");
             return;
         }
@@ -310,6 +310,7 @@ public class RszGodotConverter : IDisposable
 
         componentInfo.Classname = instance.RszClass.name;
         componentInfo.ObjectId = instance.Index;
+        componentInfo.Data = new REObject(root.Game, instance.RszClass.name, instance);
     }
 
     public static void DefineComponentFactory(string componentType, Func<IRszContainerNode, REGameObject, RszInstance, REComponent?> factory, params SupportedGame[] supportedGames)

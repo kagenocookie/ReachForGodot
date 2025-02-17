@@ -4,7 +4,7 @@ using System;
 using Godot;
 using RszTool;
 
-[GlobalClass, REComponentClass("via.Transform")]
+[GlobalClass, Tool, REComponentClass("via.Transform")]
 public partial class RETransformComponent : REComponent
 {
     public override void Setup(IRszContainerNode root, REGameObject gameObject, RszInstance rsz)
