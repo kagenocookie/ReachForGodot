@@ -50,26 +50,26 @@ public class Importer
             return RESupportedFileFormats.Prefab;
         }
 
+        if (extension.SequenceEqual("user")) {
+            return RESupportedFileFormats.Userdata;
+        }
+
         return RESupportedFileFormats.Unknown;
     }
 
-    public static string GetFileExtensionFromFormat(RESupportedFileFormats format) => format switch {
+    public static string? GetFileExtensionFromFormat(RESupportedFileFormats format) => format switch {
         RESupportedFileFormats.Mesh => "mesh",
         RESupportedFileFormats.Texture => "tex",
         RESupportedFileFormats.Scene => "scn",
         RESupportedFileFormats.Prefab => "pfb",
-        _ => string.Empty,
+        RESupportedFileFormats.Userdata => "user",
+        _ => null,
     };
 
     public static int GuessFileVersion(string relativePath, RESupportedFileFormats format, AssetConfig config)
     {
-        switch (format) {
-            case RESupportedFileFormats.Mesh:
-                break;
-        }
-
         var fullpath = Path.Join(config.Paths.ChunkPath, relativePath);
-        var ext = GetFileExtensionFromFormat(format);
+        var ext = GetFileExtensionFromFormat(format) ?? relativePath.GetExtension();
         var dir = fullpath.GetBaseDir();
         if (!Directory.Exists(dir)) {
             // TODO: this is where we try to retool it out of the pak files
@@ -87,6 +87,17 @@ public class Importer
     public static string GetDefaultImportPath(string osFilepath, AssetConfig config)
     {
         return ProjectSettings.LocalizePath(GetDefaultImportPath(osFilepath, GetFileFormat(osFilepath), config));
+    }
+
+    public static T FindOrImportResource<T>(string sourceFile, AssetConfig config) where T : class
+    {
+        var importPath = Importer.GetDefaultImportPath(sourceFile, config);
+        if (!ResourceLoader.Exists(importPath)) {
+            var sourcePath = ResolveSourceFilePath(sourceFile, config);
+            Importer.Import(sourcePath, config, importPath).Wait();
+        }
+
+        return ResourceLoader.Load<T>(importPath);
     }
 
     public static string GetDefaultImportPath(string osFilepath, REFileFormat fmt, AssetConfig config)
@@ -113,6 +124,8 @@ public class Importer
             case RESupportedFileFormats.Scene:
             case RESupportedFileFormats.Prefab:
                 return targetPath + ".tscn";
+            case RESupportedFileFormats.Userdata:
+                return targetPath + ".tres";
             default:
                 return targetPath;
         }
@@ -154,6 +167,8 @@ public class Importer
                 return ImportScene(sourceFilePath, outputFilePath, config);
             case RESupportedFileFormats.Prefab:
                 return ImportPrefab(sourceFilePath, outputFilePath, config);
+            case RESupportedFileFormats.Userdata:
+                return ImportUserdata(sourceFilePath, outputFilePath, config);
             default:
                 GD.Print("Unsupported file format " + format.format);
                 return Task.CompletedTask;
@@ -250,6 +265,20 @@ public class Importer
         return Task.CompletedTask;
     }
 
+    public static Task ImportUserdata(string sourceFilePath, string outputFilePath, AssetConfig config)
+    {
+        if (!System.IO.Path.IsPathRooted(sourceFilePath)) {
+            sourceFilePath = ResolveSourceFilePath(sourceFilePath, config);
+        }
+        if (!File.Exists(sourceFilePath)) {
+            GD.PrintErr("Invalid prefab source file, does not exist: " + sourceFilePath);
+            return Task.CompletedTask;
+        }
+        var conv = new RszGodotConverter(config, false);
+        conv.CreateUserdata(sourceFilePath, outputFilePath);
+        return Task.CompletedTask;
+    }
+
     private static Task ExecuteBlenderScript(string scriptFilename, bool background)
     {
         var process = Process.Start(new ProcessStartInfo() {
@@ -269,6 +298,7 @@ public enum RESupportedFileFormats
     Texture,
     Scene,
     Prefab,
+    Userdata,
 }
 
 public record struct REFileFormat(RESupportedFileFormats format, int version)

@@ -39,6 +39,24 @@ public static class RszTypeConverter
     private static Variant FromRszValueSingleValue(REField field, object value, SupportedGame game)
     {
         switch (field.RszField.type) {
+            case RszFieldType.UserData:
+                if (value is RszInstance rsz) {
+                    if (rsz.RSZUserData is RSZUserDataInfo ud1) {
+                        if (!string.IsNullOrEmpty(ud1.Path)) {
+                            return Importer.FindOrImportResource<UserdataResource>(ud1.Path, ReachForGodot.GetAssetConfig(game));
+                        }
+                    } else if (rsz.RSZUserData is RSZUserDataInfo_TDB_LE_67 ud2) {
+                        GD.PrintErr("Unsupported userdata reference TDB_LE_67");
+                    }
+                    return new REObject(game, rsz.RszClass.name);
+                }
+
+                if (value is not string path || path == "") {
+                    return default;
+                }
+
+                GD.Print("Fetching userdata file " + path);
+                return Importer.FindOrImportResource<UserdataResource>(path, ReachForGodot.GetAssetConfig(game));
             case RszFieldType.Object:
                 if (value is RszInstance rszInstance) {
                     return new REObject(game, rszInstance.RszClass.name, rszInstance);

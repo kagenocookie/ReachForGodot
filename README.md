@@ -20,9 +20,13 @@ Godot-based editor for RE Engine games.
 - basic import of tex and mesh files
 
 ## Planned features
-- export scenes/prefabs back over their original files (and into a different folder so we don't override the source files)
-- make component fields viewable and editable (plan: override GetPropertyList() and keep a DB of field lists somewhere)
-- user.2 files
+- enums
+    - autodetect if it's a flag enum
+    - configurable place for overriding enum settings (IsFlags, custom entries)
+- scn/pfb
+    - properly show and resolve guid gameobject references
+- support all remaining rsz types
+- export any changes back over their original file formats (into a configurable output folder so we don't override the source files)
 
 ## Room for improvement
 - import files in batches, keep blender open and just re-clear the file

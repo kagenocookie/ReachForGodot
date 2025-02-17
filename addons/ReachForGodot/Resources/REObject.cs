@@ -10,7 +10,7 @@ public partial class REObject : Resource
 {
     [Export] public SupportedGame Game { get; set; }
     [Export] public string? Classname { get; set; }
-    Godot.Collections.Dictionary Data = new();
+    protected Godot.Collections.Dictionary Data = new();
 
     private REObjectTypeCache? cache;
 
@@ -39,6 +39,12 @@ public partial class REObject : Resource
             property["usage"] = (int)(PropertyUsageFlags.Storage|PropertyUsageFlags.ScriptVariable);
         }
         base._ValidateProperty(property);
+    }
+
+    public void Rebuild(string classname, RszInstance instance)
+    {
+        Classname = classname;
+        LoadProperties(instance);
     }
 
     public void LoadProperties(RszInstance instance)

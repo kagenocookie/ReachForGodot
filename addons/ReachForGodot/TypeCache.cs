@@ -301,6 +301,7 @@ public class TypeCache
 
             // TODO add file cache for specific il2cpp data (enums, anything else we might need) since it's slow
 
+            RszGodotConverter.EnsureSafeJsonLoadContext();
             using var fs = File.OpenRead(inputFilepath);
             var entries = System.Text.Json.JsonSerializer.Deserialize<REFDumpFormatter.SourceDumpRoot>(fs)
                 ?? throw new Exception("File is not a valid dump json file");
@@ -440,6 +441,12 @@ public class REObjectTypeCache
         Fields = fields;
         PropertyList = new();
         FieldsByName = new(fields.Length);
+        PropertyList.Add(new Godot.Collections.Dictionary()
+        {
+            { "name", "RSZ Data" },
+            { "type", (int)Variant.Type.Nil },
+            { "usage", (int)(PropertyUsageFlags.Category|PropertyUsageFlags.ScriptVariable) }
+        });
         foreach (var f in fields) {
             FieldsByName[f.SerializedName] = f;
 

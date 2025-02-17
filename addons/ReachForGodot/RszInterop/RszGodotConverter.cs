@@ -16,6 +16,7 @@ public class RszGodotConverter : IDisposable
     public bool FullImport { get; }
     public ScnFile? ScnFile { get; private set; }
     public PfbFile? PfbFile { get; private set; }
+    public UserFile? UserFile { get; private set; }
 
     public static void EnsureSafeJsonLoadContext()
     {
@@ -86,6 +87,33 @@ public class RszGodotConverter : IDisposable
         }
     }
 
+    public void CreateUserdata(string sourceFilePath, string importFilepath)
+    {
+        if (!File.Exists(sourceFilePath)) {
+            GD.PrintErr("Invalid prefab source file, does not exist: " + sourceFilePath);
+            return;
+        }
+        var relativeSourceFile = string.IsNullOrEmpty(AssetConfig.Paths.ChunkPath) ? sourceFilePath : sourceFilePath.Replace(AssetConfig.Paths.ChunkPath, "");
+
+        Directory.CreateDirectory(ProjectSettings.GlobalizePath(importFilepath.GetBaseDir()));
+
+        var name = sourceFilePath.GetFile().GetBaseName().GetBaseName();
+
+        UserdataResource userdata;
+        if (ResourceLoader.Exists(importFilepath)) {
+            userdata = ResourceLoader.Load<UserdataResource>(importFilepath);
+        } else {
+            userdata = new UserdataResource() {
+                ResourceName = name,
+                ResourcePath = importFilepath,
+                ResourceType = RESupportedFileFormats.Userdata,
+                Game = AssetConfig.Game,
+                Asset = new AssetReference() { AssetFilename = relativeSourceFile }
+            };
+            ResourceSaver.Save(userdata);
+        }
+        GenerateUserdata(userdata);
+    }
     public void GenerateSceneTree(SceneFolder root)
     {
         var scnFullPath = Importer.ResolveSourceFilePath(root.Asset!.AssetFilename, AssetConfig);
@@ -135,6 +163,30 @@ public class RszGodotConverter : IDisposable
         }
     }
 
+    public void GenerateUserdata(UserdataResource root)
+    {
+        var scnFullPath = Importer.ResolveSourceFilePath(root.Asset!.AssetFilename, AssetConfig);
+
+        UserFile?.Dispose();
+        GD.Print("Opening user file " + scnFullPath);
+        UserFile = OpenUserdata(scnFullPath);
+        UserFile.Read();
+
+        root.Clear();
+
+        GenerateResources(root, UserFile.ResourceInfoList, AssetConfig);
+
+        if (UserFile.RSZ!.ObjectList.Skip(1).Any()) {
+            GD.PrintErr("WTF Capcom, why do you have multiple objects in the userfile root???");
+        }
+
+        foreach (var instance in UserFile.RSZ!.ObjectList) {
+            root.Rebuild(instance.RszClass.name, instance);
+            ResourceSaver.Save(root);
+            break;
+        }
+    }
+
     private void GenerateResources(IRszContainerNode root, List<ResourceInfo> resourceInfos, AssetConfig config)
     {
         var resources = new List<REResource>();
@@ -142,8 +194,9 @@ public class RszGodotConverter : IDisposable
             if (res.Path != null) {
                 var format = Importer.GetFileFormat(res.Path);
                 var newres = new REResource() {
-                    SourcePath = res.Path,
+                    Asset = new AssetReference() { AssetFilename = res.Path },
                     ResourceType = format.format,
+                    Game = AssetConfig.Game,
                     ResourceName = res.Path.GetFile()
                 };
                 resources.Add(newres);
@@ -272,16 +325,24 @@ public class RszGodotConverter : IDisposable
         }
     }
 
+    private RszFileOption CreateFileOption() => new RszFileOption(AssetConfig.Paths.GetRszToolGameEnum(), AssetConfig.Paths.RszJsonPath ?? throw new Exception("Rsz json file not specified for game " + AssetConfig.Game));
+
     private ScnFile OpenScn(string filename)
     {
         EnsureSafeJsonLoadContext();
-        return new ScnFile(new RszFileOption(AssetConfig.Paths.GetRszToolGameEnum(), AssetConfig.Paths.RszJsonPath ?? throw new Exception("Rsz json file not specified for game " + AssetConfig.Game)), new FileHandler(filename));
+        return new ScnFile(CreateFileOption(), new FileHandler(filename));
     }
 
     private PfbFile OpenPfb(string filename)
     {
         EnsureSafeJsonLoadContext();
-        return new PfbFile(new RszFileOption(AssetConfig.Paths.GetRszToolGameEnum(), AssetConfig.Paths.RszJsonPath ?? throw new Exception("Rsz json file not specified for game " + AssetConfig.Game)), new FileHandler(filename));
+        return new PfbFile(CreateFileOption(), new FileHandler(filename));
+    }
+
+    private UserFile OpenUserdata(string filename)
+    {
+        EnsureSafeJsonLoadContext();
+        return new UserFile(CreateFileOption(), new FileHandler(filename));
     }
 
     private void SetupComponent(IRszContainerNode root, RszInstance instance, REGameObject gameObject)
