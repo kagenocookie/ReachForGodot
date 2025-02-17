@@ -6,7 +6,7 @@ using System.Runtime.Loader;
 using Godot;
 using RszTool;
 
-public class GodotScnConverter : IDisposable
+public class RszGodotConverter : IDisposable
 {
     private static bool hasSafetyHooked;
 
@@ -21,7 +21,7 @@ public class GodotScnConverter : IDisposable
     {
         if (!hasSafetyHooked && Engine.IsEditorHint()) {
             hasSafetyHooked = true;
-            AssemblyLoadContext.GetLoadContext(typeof(GodotScnConverter).Assembly)!.Unloading += (c) => {
+            AssemblyLoadContext.GetLoadContext(typeof(RszGodotConverter).Assembly)!.Unloading += (c) => {
                 var assembly = typeof(System.Text.Json.JsonSerializerOptions).Assembly;
                 var updateHandlerType = assembly.GetType("System.Text.Json.JsonSerializerOptionsUpdateHandler");
                 var clearCacheMethod = updateHandlerType?.GetMethod("ClearCache", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public);
@@ -31,12 +31,12 @@ public class GodotScnConverter : IDisposable
         }
     }
 
-    static GodotScnConverter()
+    static RszGodotConverter()
     {
         ComponentTypes.Init();
     }
 
-    public GodotScnConverter(AssetConfig paths, bool fullImport)
+    public RszGodotConverter(AssetConfig paths, bool fullImport)
     {
         AssetConfig = paths;
         FullImport = fullImport;
@@ -196,7 +196,7 @@ public class GodotScnConverter : IDisposable
             }
 
             if (FullImport && newFolder.IsEmpty) {
-                using var childConf = new GodotScnConverter(AssetConfig, FullImport);
+                using var childConf = new RszGodotConverter(AssetConfig, FullImport);
                 childConf.GenerateSceneTree(newFolder);
                 scene.Pack(newFolder);
                 ResourceSaver.Save(scene);

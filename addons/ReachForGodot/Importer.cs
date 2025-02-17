@@ -231,7 +231,7 @@ public class Importer
             GD.PrintErr("Invalid scene source file, does not exist: " + sourceFilePath);
             return Task.CompletedTask;
         }
-        var conv = new GodotScnConverter(config, false);
+        var conv = new RszGodotConverter(config, false);
         conv.CreateProxyScene(sourceFilePath, outputFilePath);
         return Task.CompletedTask;
     }
@@ -245,7 +245,7 @@ public class Importer
             GD.PrintErr("Invalid prefab source file, does not exist: " + sourceFilePath);
             return Task.CompletedTask;
         }
-        var conv = new GodotScnConverter(config, false);
+        var conv = new RszGodotConverter(config, false);
         conv.CreateProxyPrefab(sourceFilePath, outputFilePath);
         return Task.CompletedTask;
     }

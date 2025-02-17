@@ -28,13 +28,13 @@ public partial class PrefabNode : REGameObject, IRszContainerNode
 
     public void BuildTree()
     {
-        using var conv = new GodotScnConverter(ReachForGodot.GetAssetConfig(Game!)!, false);
+        using var conv = new RszGodotConverter(ReachForGodot.GetAssetConfig(Game!)!, false);
         conv.GeneratePrefabTree(this);
     }
 
     public void BuildTreeDeep()
     {
-        using var conv = new GodotScnConverter(ReachForGodot.GetAssetConfig(Game!)!, true);
+        using var conv = new RszGodotConverter(ReachForGodot.GetAssetConfig(Game!)!, true);
         conv.GeneratePrefabTree(this);
     }
 }

@@ -8,9 +8,9 @@ public static class ComponentTypes
 {
     public static void Init()
     {
-        GodotScnConverter.DefineComponentFactory("via.render.Mesh", SetupMesh);
-        GodotScnConverter.DefineComponentFactory("via.render.CompositeMesh", SetupCompositeMesh);
-        GodotScnConverter.DefineComponentFactory("via.Transform", SetupTransform);
+        RszGodotConverter.DefineComponentFactory("via.render.Mesh", SetupMesh);
+        RszGodotConverter.DefineComponentFactory("via.render.CompositeMesh", SetupCompositeMesh);
+        RszGodotConverter.DefineComponentFactory("via.Transform", SetupTransform);
     }
 
     private static Node? SetupMesh(IRszContainerNode root, REGameObject gameObject, RszInstance rsz)
