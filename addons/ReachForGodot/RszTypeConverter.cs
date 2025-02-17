@@ -11,9 +11,11 @@ public static class RszTypeConverter
 {
     private static Type baseList = typeof(List<>);
 
-    public static Variant FromRszValue(REField field, object value)
+    public static Variant FromRszValue(REField field, object value, SupportedGame game)
     {
         if (field.RszField.array) {
+            if (value == null) return new Godot.Collections.Array();
+
             var type = value.GetType();
             object[] arr;
             if (type.IsArray) {
@@ -24,21 +26,25 @@ public static class RszTypeConverter
                 GD.Print("Unhandled array type " + type.FullName);
                 arr = Array.Empty<object>();
             }
-
-            if (field.RszField.type == RszFieldType.Object) {
-                // TODO
-                return new Variant();
-            } else {
-                return new Godot.Collections.Array(arr.Select(v => FromRszValueSingleValue(field, v)));
+            var newArray = new Godot.Collections.Array();
+            foreach (var v in arr) {
+                newArray.Add(FromRszValueSingleValue(field, v, game));
             }
+            return newArray;
         }
 
-        return FromRszValueSingleValue(field, value);
+        return FromRszValueSingleValue(field, value, game);
     }
 
-    private static Variant FromRszValueSingleValue(REField field, object value)
+    private static Variant FromRszValueSingleValue(REField field, object value, SupportedGame game)
     {
         switch (field.RszField.type) {
+            case RszFieldType.Object:
+                if (value is RszInstance rszInstance) {
+                    return new REObject(game, rszInstance.RszClass.name, rszInstance);
+                }
+                GD.Print("Unhandled rsz object type " + value?.GetType().FullName);
+                return default;
             case RszFieldType.Sfix:
                 return ((sfix)value).v;
             case RszFieldType.Sfix2:

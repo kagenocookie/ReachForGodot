@@ -49,7 +49,7 @@ public partial class REObject : Resource
             if (field.Hint == PropertyHint.ResourceType) {
                 Data[field.SerializedName] = new Variant();
             } else {
-                Data[field.SerializedName] = RszTypeConverter.FromRszValue(field, value);
+                Data[field.SerializedName] = RszTypeConverter.FromRszValue(field, value, Game);
             }
         }
     }
@@ -67,7 +67,7 @@ public partial class REObject : Resource
     public override Variant _Get(StringName property)
     {
         if (string.IsNullOrWhiteSpace(Classname)) {
-            return base._Get(property);
+            return default;
         }
 
         cache ??= TypeCache.GetData(Game, Classname);
@@ -76,13 +76,7 @@ public partial class REObject : Resource
             return val;
         }
 
-//           at RFG.REObject._Get(Godot.StringName)
-//    at Godot.Bridge.CSharpInstanceBridge.Get(IntPtr, Godot.NativeInterop.godot_string_name*, Godot.NativeInterop.godot_variant*)
-//    at Godot.NativeInterop.NativeFuncs.godotsharp_method_bind_ptrcall(IntPtr, IntPtr, Void**, Void*)
-//    at Godot.NativeCalls.godot_icall_1_143(IntPtr, IntPtr, Godot.NativeInterop.godot_string_name)
-//    at Godot.GodotObject.Get(Godot.StringName)
-//    at RFG.REObject._Get(Godot.StringName)
-        return base._Get(property);
+        return default;
     }
 
     public override bool _Set(StringName property, Variant value)

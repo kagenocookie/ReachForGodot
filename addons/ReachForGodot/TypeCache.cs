@@ -299,6 +299,8 @@ public class TypeCache
                 return EnumDescriptor<int>.Default;
             }
 
+            // TODO add file cache for specific il2cpp data (enums, anything else we might need) since it's slow
+
             using var fs = File.OpenRead(inputFilepath);
             var entries = System.Text.Json.JsonSerializer.Deserialize<REFDumpFormatter.SourceDumpRoot>(fs)
                 ?? throw new Exception("File is not a valid dump json file");
