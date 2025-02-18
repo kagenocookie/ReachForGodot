@@ -203,7 +203,7 @@ public class RszGodotConverter : IDisposable
                     var resource = ResourceLoader.Load(importPath);
                     if (resource is REResource newres) {
                         resources.Add(newres);
-                    } else {
+                    } else if (resource != null) {
                         switch (format.format) {
                             case RESupportedFileFormats.Mesh:
                                 resources.Add(new MeshResource() {
@@ -216,7 +216,7 @@ public class RszGodotConverter : IDisposable
                                 });
                                 break;
                             default:
-                                resources.Add(new REResource() {
+                                resources.Add(new REResourceProxy() {
                                     Asset = new AssetReference(res.Path),
                                     ResourceType = format.format,
                                     Game = AssetConfig.Game,
@@ -226,6 +226,13 @@ public class RszGodotConverter : IDisposable
                                 });
                                 break;
                         }
+                    } else {
+                        resources.Add(new REResource() {
+                            Asset = new AssetReference(res.Path),
+                            ResourceType = format.format,
+                            Game = AssetConfig.Game,
+                            ResourceName = res.Path.GetFile(),
+                        });
                     }
                     continue;
                 } else {

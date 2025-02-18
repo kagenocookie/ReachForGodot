@@ -5,7 +5,7 @@ using Godot;
 using RszTool;
 
 [GlobalClass, Tool]
-public partial class MeshResource : REResource
+public partial class MeshResource : REResourceProxy
 {
 }
 
