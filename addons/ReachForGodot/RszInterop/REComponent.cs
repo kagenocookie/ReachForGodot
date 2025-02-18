@@ -9,7 +9,6 @@ using RszTool;
 public abstract partial class REComponent : Node
 {
     [Export] public int ObjectId = -1;
-    [Export] public bool Enabled { get; set; } = true;
     [Export] public REObject? Data { get; set; }
 
     public string? Classname => Data?.Classname;

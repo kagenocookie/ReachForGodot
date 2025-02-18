@@ -1,0 +1,18 @@
+{
+    "via.Transform": {
+        "FieldPatches": [
+            {
+                "Name": "v0",
+                "ReplaceName": "LocalPosition"
+            },
+            {
+                "Name": "v1",
+                "ReplaceName": "LocalRotation"
+            },
+            {
+                "Name": "v2",
+                "ReplaceName": "LocalScale"
+            }
+        ]
+    }
+}

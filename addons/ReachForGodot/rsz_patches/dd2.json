@@ -12,14 +12,5 @@
                 "OriginalType": "via.navigation.map.InteractionShapeBase"
             }
         ]
-    },
-    "via.navigation.map.NodeCollectShapeOBB": {
-        "FieldPatches": [
-            {
-                "Name": "v0_Shape",
-                "Type": "OBB",
-                "OriginalType": "via.OBB"
-            }
-        ]
     }
 }

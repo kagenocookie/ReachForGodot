@@ -228,10 +228,10 @@ public class TypeCache
 
             // TODO see if we can rename the individual inputs maybe?
             case RszFieldType.Sphere:
-                refield.VariantType = Variant.Type.Quaternion;
+                refield.VariantType = Variant.Type.Vector4;
                 break;
             case RszFieldType.Rect:
-                refield.VariantType = Variant.Type.Quaternion;
+                refield.VariantType = Variant.Type.Vector4;
                 break;
 
             // TODO unhandled types
@@ -388,14 +388,12 @@ public abstract class EnumDescriptor
 public sealed class EnumDescriptor<T> : EnumDescriptor where T : struct
 {
     public readonly Dictionary<T, string> ValueToLabels = new();
-    // public readonly Dictionary<string, T> LabelToValues = new();
 
     public static readonly EnumDescriptor<T> Default = new();
     private static readonly object DefaultValue = default(T);
 
     public override string GetLabel(object value) => ValueToLabels.TryGetValue((T)value, out var val) ? val : string.Empty;
 
-    // public override object GetValue(string label) => LabelToValues.TryGetValue(label, out var val) ? val : DefaultValue;
     private static Func<JsonElement, T>? converter;
 
     protected override IEnumerable<string> LabelValuePairs => ValueToLabels.Select((pair) => $"{pair.Value}:{pair.Key}");
