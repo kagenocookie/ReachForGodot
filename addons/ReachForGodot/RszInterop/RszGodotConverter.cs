@@ -388,9 +388,8 @@ public class RszGodotConverter : IDisposable
             gameObject.AddComponent(componentInfo);
         }
 
-        componentInfo.Classname = instance.RszClass.name;
-        componentInfo.ObjectId = instance.Index;
         componentInfo.Data = new REObject(root.Game, instance.RszClass.name, instance);
+        componentInfo.ObjectId = instance.Index;
     }
 
     public static void DefineComponentFactory(string componentType, Func<IRszContainerNode, REGameObject, RszInstance, REComponent?> factory, params SupportedGame[] supportedGames)
