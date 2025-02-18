@@ -32,26 +32,11 @@ public class Importer
 
     public static RESupportedFileFormats GetFileFormatFromExtension(ReadOnlySpan<char> extension)
     {
-        if (extension.SequenceEqual("mesh")) {
-            return RESupportedFileFormats.Mesh;
-        }
-
-        if (extension.SequenceEqual("tex")) {
-            return RESupportedFileFormats.Texture;
-        }
-
-        if (extension.SequenceEqual("scn")) {
-            return RESupportedFileFormats.Scene;
-        }
-
-        if (extension.SequenceEqual("pfb")) {
-            return RESupportedFileFormats.Prefab;
-        }
-
-        if (extension.SequenceEqual("user")) {
-            return RESupportedFileFormats.Userdata;
-        }
-
+        if (extension.SequenceEqual("mesh")) return RESupportedFileFormats.Mesh;
+        if (extension.SequenceEqual("tex")) return RESupportedFileFormats.Texture;
+        if (extension.SequenceEqual("scn")) return RESupportedFileFormats.Scene;
+        if (extension.SequenceEqual("pfb")) return RESupportedFileFormats.Prefab;
+        if (extension.SequenceEqual("user")) return RESupportedFileFormats.Userdata;
         return RESupportedFileFormats.Unknown;
     }
 
@@ -245,7 +230,7 @@ public class Importer
             sourceFilePath = ResolveSourceFilePath(sourceFilePath, config);
         }
         if (!File.Exists(sourceFilePath)) {
-            GD.PrintErr("Invalid scene source file, does not exist: " + sourceFilePath);
+            GD.PrintErr("Scene file not found: " + sourceFilePath);
             return Task.CompletedTask;
         }
         var conv = new RszGodotConverter(config, false);
@@ -259,7 +244,7 @@ public class Importer
             sourceFilePath = ResolveSourceFilePath(sourceFilePath, config);
         }
         if (!File.Exists(sourceFilePath)) {
-            GD.PrintErr("Invalid prefab source file, does not exist: " + sourceFilePath);
+            GD.PrintErr("Prefab file not found: " + sourceFilePath);
             return Task.CompletedTask;
         }
         var conv = new RszGodotConverter(config, false);
@@ -273,12 +258,11 @@ public class Importer
             sourceFilePath = ResolveSourceFilePath(sourceFilePath, config);
         }
         if (!File.Exists(sourceFilePath)) {
-            GD.PrintErr("Invalid prefab source file, does not exist: " + sourceFilePath);
+            GD.PrintErr("Userdata file not found: " + sourceFilePath);
             return Task.CompletedTask;
         }
         var conv = new RszGodotConverter(config, false);
         conv.CreateUserdata(sourceFilePath, outputFilePath);
-        // EditorInterface.Singleton.GetResourceFilesystem().Scan();
         return Task.CompletedTask;
     }
 
@@ -294,7 +278,7 @@ public class Importer
             sourceFilePath = ResolveSourceFilePath(sourceFilePath, config);
         }
         if (!File.Exists(sourceFilePath)) {
-            GD.PrintErr("Invalid prefab source file, does not exist: " + sourceFilePath);
+            GD.PrintErr("Resource file not found: " + sourceFilePath);
             return Task.CompletedTask;
         }
 
@@ -313,6 +297,7 @@ public class Importer
             ResourcePath = ProjectSettings.LocalizePath(outputFilePath),
         };
         ResourceSaver.Save(newres);
+        // if we later end up adding a proper resource type, call newres.TakeOverPath() to replace the placeholder instance
         QueueFileRescan();
         return Task.CompletedTask;
     }
