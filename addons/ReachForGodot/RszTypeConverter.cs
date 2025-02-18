@@ -17,6 +17,9 @@ public static class RszTypeConverter
         } catch (NotSupportedException exception) {
             GD.PrintErr("Could not deserialize rsz value of type " + field.RszField.original_type + ":\n" + exception);
             return new Variant();
+        } catch (RszRetryOpenException retryException) {
+            GD.PrintErr("Could not deserialize rsz value of type " + field.RszField.original_type + ":\n" + retryException);
+            return new Variant();
         }
     }
 
@@ -52,7 +55,7 @@ public static class RszTypeConverter
                 if (value is RszInstance rsz) {
                     if (rsz.RSZUserData is RSZUserDataInfo ud1) {
                         if (!string.IsNullOrEmpty(ud1.Path)) {
-                            return Importer.FindOrImportResource<UserdataResource>(ud1.Path, ReachForGodot.GetAssetConfig(game));
+                            return Importer.FindOrImportResource<UserdataResource>(ud1.Path, ReachForGodot.GetAssetConfig(game))!;
                         }
                     } else if (rsz.RSZUserData is RSZUserDataInfo_TDB_LE_67 ud2) {
                         GD.PrintErr("Unsupported userdata reference TDB_LE_67");
@@ -60,12 +63,12 @@ public static class RszTypeConverter
                     return new REObject(game, rsz.RszClass.name);
                 }
 
-                if (value is not string path || path == "") {
+                if (value is not string path || string.IsNullOrWhiteSpace(path)) {
                     return default;
                 }
 
                 GD.Print("Fetching userdata file " + path);
-                return Importer.FindOrImportResource<UserdataResource>(path, ReachForGodot.GetAssetConfig(game));
+                return Importer.FindOrImportResource<UserdataResource>(path, ReachForGodot.GetAssetConfig(game))!;
             case RszFieldType.Object:
                 if (value is RszInstance rszInstance) {
                     return new REObject(game, rszInstance.RszClass.name, rszInstance);
@@ -174,8 +177,8 @@ public static class RszTypeConverter
             case RszFieldType.GameObjectRef:
                 return ((Guid)value).ToString();
             case RszFieldType.Resource:
-                if (value is string str && str != "") {
-                    return Importer.FindOrImportResource<Resource>(str, ReachForGodot.GetAssetConfig(game));
+                if (value is string str && !string.IsNullOrWhiteSpace(str)) {
+                    return Importer.FindOrImportResource<Resource>(str, ReachForGodot.GetAssetConfig(game))!;
                 } else {
                     GD.Print("Empty resource path " + value);
                     return new Variant();

@@ -34,6 +34,17 @@ public interface IRszContainerNode
         gameObject.Owner = (this as Node)?.Owner ?? this as Node;
     }
 
+    public T? FindResource<T>(string? filepath) where T : REResource
+    {
+        if (Resources == null || string.IsNullOrEmpty(filepath)) return null;
+        foreach (var res in Resources) {
+            if (res is T cast && cast.Asset?.IsSameAsset(filepath) == true) {
+                return cast;
+            }
+        }
+        return null;
+    }
+
     public void Find3DNode()
     {
         if (this is Node thisnode) {

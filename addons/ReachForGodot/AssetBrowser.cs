@@ -62,8 +62,11 @@ public partial class AssetBrowser : Resource
     private void ImportAssetSync(string filepath)
     {
         Debug.Assert(Assets != null);
-        Importer.Import(filepath, Assets).Wait();
-        GD.Print("File imported to " + Importer.GetDefaultImportPath(filepath, Assets));
+        var resource = Importer.Import(filepath, Assets);
+        GD.Print("File imported to " + Importer.GetLocalizedImportPath(filepath, Assets));
+        if (resource is REResourceProxy proxy) {
+            proxy.Import(true).Wait();
+        }
     }
 
     private void ImportAssetsSync(string[] files)
@@ -75,7 +78,7 @@ public partial class AssetBrowser : Resource
         }
 
         ImportMultipleAssets(files).Wait();
-        var importPaths = files.Select(f => Importer.GetDefaultImportPath(f, Assets));
+        var importPaths = files.Select(f => Importer.GetLocalizedImportPath(f, Assets));
         GD.Print("Files imported to:\n" + string.Join('\n', importPaths));
 
         if (importPaths.FirstOrDefault(x => x != null) is string str && ResourceLoader.Exists(str)) {
@@ -91,7 +94,8 @@ public partial class AssetBrowser : Resource
     private Task ImportMultipleAssets(string[] files)
     {
         Debug.Assert(Assets != null);
-        return Task.WhenAll(files.Select(file => Importer.Import(file, Assets)));
+        return Task.WhenAll(files.Select(file => Importer.Import(file, Assets))
+            .Select(res => (res as REResourceProxy)?.Import(true) ?? Task.CompletedTask));
     }
 }
 #endif

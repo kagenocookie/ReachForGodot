@@ -141,6 +141,21 @@ public static class GodotObjectExtensions
     /// <summary>
     /// Find a node of a specific type in any parent node.
     /// </summary>
+    public static IEnumerable<T> FindParentsByType<T>(this Node node) where T : class
+    {
+        var parent = node.GetParent();
+        while (parent != null) {
+            if (parent is T cast) {
+                yield return cast;
+            }
+
+            parent = parent.GetParent();
+        }
+    }
+
+    /// <summary>
+    /// Find a node of a specific type in any parent node.
+    /// </summary>
     public static bool TryFindNodeInParents<T>(this Node node, [MaybeNullWhen(false)] out T? result) where T : class
     {
         var parent = node.GetParent();

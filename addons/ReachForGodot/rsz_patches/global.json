@@ -12,6 +12,10 @@
             {
                 "Name": "v2",
                 "ReplaceName": "LocalScale"
+            },
+            {
+                "Name": "v3",
+                "ReplaceName": "ParentJoint"
             }
         ]
     }

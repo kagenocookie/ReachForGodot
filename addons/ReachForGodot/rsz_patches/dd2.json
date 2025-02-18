@@ -12,5 +12,13 @@
                 "OriginalType": "via.navigation.map.InteractionShapeBase"
             }
         ]
+    },
+    "app.QuestTreeData.NodeData": {
+        "FieldPatches": [
+            {
+                "Name": "_QuestID",
+                "OriginalType": "app.QuestDefine.ID"
+            }
+        ]
     }
 }

@@ -118,5 +118,5 @@ public partial class REObject : Resource
         return dict;
     }
 
-    public override string ToString() => Classname ?? "REObject";
+    public override string ToString() => !string.IsNullOrEmpty(Classname) ? Classname : !string.IsNullOrEmpty(ResourceName) ? ResourceName : "REObject";
 }

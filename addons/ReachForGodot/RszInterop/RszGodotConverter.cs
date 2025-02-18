@@ -71,11 +71,11 @@ public class RszGodotConverter : IDisposable
         FullImport = fullImport;
     }
 
-    public void CreateProxyScene(string sourceFilePath, string importFilepath)
+    public PackedScene? CreateProxyScene(string sourceFilePath, string importFilepath)
     {
         if (!File.Exists(sourceFilePath)) {
             GD.PrintErr("Invalid scene source file, does not exist: " + sourceFilePath);
-            return;
+            return null;
         }
         var relativeSourceFile = string.IsNullOrEmpty(AssetConfig.Paths.ChunkPath) ? sourceFilePath : sourceFilePath.Replace(AssetConfig.Paths.ChunkPath, "");
 
@@ -90,14 +90,16 @@ public class RszGodotConverter : IDisposable
             var scene = new PackedScene();
             scene.Pack(new SceneFolder() { Game = AssetConfig.Game, Name = name, Asset = new AssetReference(relativeSourceFile) });
             ResourceSaver.Save(scene, importFilepath);
+            return scene;
         }
+        return ResourceLoader.Load<PackedScene>(importFilepath);
     }
 
-    public void CreateProxyPrefab(string sourceFilePath, string importFilepath)
+    public PackedScene? CreateProxyPrefab(string sourceFilePath, string importFilepath)
     {
         if (!File.Exists(sourceFilePath)) {
             GD.PrintErr("Invalid prefab source file, does not exist: " + sourceFilePath);
-            return;
+            return null;
         }
         var relativeSourceFile = string.IsNullOrEmpty(AssetConfig.Paths.ChunkPath) ? sourceFilePath : sourceFilePath.Replace(AssetConfig.Paths.ChunkPath, "");
 
@@ -112,14 +114,16 @@ public class RszGodotConverter : IDisposable
             var scene = new PackedScene();
             scene.Pack(new PrefabNode() { Game = AssetConfig.Game, Name = name, Asset = new AssetReference(relativeSourceFile) });
             ResourceSaver.Save(scene, importFilepath);
+            return scene;
         }
+        return ResourceLoader.Load<PackedScene>(importFilepath);
     }
 
-    public void CreateUserdata(string sourceFilePath, string importFilepath)
+    public UserdataResource? CreateUserdata(string sourceFilePath, string importFilepath)
     {
         if (!File.Exists(sourceFilePath)) {
             GD.PrintErr("Invalid prefab source file, does not exist: " + sourceFilePath);
-            return;
+            return null;
         }
         var relativeSourceFile = string.IsNullOrEmpty(AssetConfig.Paths.ChunkPath) ? sourceFilePath : sourceFilePath.Replace(AssetConfig.Paths.ChunkPath, "");
 
@@ -141,7 +145,9 @@ public class RszGodotConverter : IDisposable
             ResourceSaver.Save(userdata);
         }
         GenerateUserdata(userdata);
+        return userdata;
     }
+
     public void GenerateSceneTree(SceneFolder root)
     {
         var scnFullPath = Importer.ResolveSourceFilePath(root.Asset!.AssetFilename, AssetConfig);
@@ -219,58 +225,25 @@ public class RszGodotConverter : IDisposable
     {
         var resources = new List<REResource>();
         foreach (var res in resourceInfos) {
-            if (res.Path != null) {
-                var format = Importer.GetFileFormat(res.Path);
-                var importPath = Importer.GetDefaultImportPath(res.Path, format, config);
-                if (!ResourceLoader.Exists(importPath)) {
-                    var source = Importer.ResolveSourceFilePath(res.Path, config);
-                    Importer.Import(format, source, importPath, config).Wait();
-                }
-
-                if (ResourceLoader.Exists(importPath)) {
-                    var resource = ResourceLoader.Load(importPath);
-                    if (resource is REResource newres) {
-                        resources.Add(newres);
-                    } else if (resource != null) {
-                        switch (format.format) {
-                            case RESupportedFileFormats.Mesh:
-                                resources.Add(new MeshResource() {
-                                    Asset = new AssetReference(res.Path),
-                                    ResourceType = RESupportedFileFormats.Mesh,
-                                    Game = AssetConfig.Game,
-                                    ResourceName = res.Path.GetFile(),
-                                    ImportedPath = importPath,
-                                    ImportedResource = resource,
-                                });
-                                break;
-                            default:
-                                resources.Add(new REResourceProxy() {
-                                    Asset = new AssetReference(res.Path),
-                                    ResourceType = format.format,
-                                    Game = AssetConfig.Game,
-                                    ResourceName = res.Path.GetFile(),
-                                    ImportedPath = importPath,
-                                    ImportedResource = resource,
-                                });
-                                break;
-                        }
-                    } else {
-                        resources.Add(new REResource() {
-                            Asset = new AssetReference(res.Path),
-                            ResourceType = format.format,
-                            Game = AssetConfig.Game,
-                            ResourceName = res.Path.GetFile(),
-                        });
-                    }
-                    continue;
-                } else {
-                    resources.Add(new REResource() {
+            if (!string.IsNullOrWhiteSpace(res.Path)) {
+                var resource = Importer.FindOrImportResource<Resource>(res.Path, config);
+                if (resource == null) {
+                    resource ??= new REResource() {
                         Asset = new AssetReference(res.Path),
-                        ResourceType = format.format,
+                        ResourceType = Importer.GetFileFormat(res.Path).format,
+                        Game = AssetConfig.Game,
+                        ResourceName = res.Path.GetFile()
+                    };
+                } else if (resource is REResource reres) {
+                    resources.Add(reres);
+                } else {
+                    resources.Add(new REResourceProxy() {
+                        Asset = new AssetReference(res.Path),
+                        ResourceType = Importer.GetFileFormat(res.Path).format,
+                        ImportedResource = resource,
                         Game = AssetConfig.Game,
                         ResourceName = res.Path.GetFile()
                     });
-                    continue;
                 }
             } else {
                 GD.Print("Found a resource with null path: " + resources.Count);
@@ -284,11 +257,10 @@ public class RszGodotConverter : IDisposable
         Debug.Assert(folder.Info != null);
         SceneFolder newFolder;
         if (folder.Instance?.GetFieldValue("v5") is string scnPath && !string.IsNullOrWhiteSpace(scnPath)) {
-            var importPath = Importer.GetDefaultImportPath(scnPath, AssetConfig);
+            var importPath = Importer.GetLocalizedImportPath(scnPath, AssetConfig);
             PackedScene scene;
             if (!ResourceLoader.Exists(importPath)) {
-                Importer.ImportScene(Importer.ResolveSourceFilePath(scnPath, AssetConfig), importPath, AssetConfig);
-                scene = ResourceLoader.Load<PackedScene>(importPath);
+                scene = Importer.ImportScene(Importer.ResolveSourceFilePath(scnPath, AssetConfig), importPath, AssetConfig)!;
                 newFolder = scene.Instantiate<SceneFolder>(PackedScene.GenEditState.Instance);
             } else {
                 scene = ResourceLoader.Load<PackedScene>(importPath);
@@ -343,7 +315,16 @@ public class RszGodotConverter : IDisposable
     {
         Debug.Assert(data.Info != null);
 
-        var newGameobj = new REGameObject() {
+        REGameObject? newGameobj = null;
+        if (data.Prefab?.Path != null) {
+            var res = Importer.FindOrImportResource<PackedScene>(data.Prefab.Path, AssetConfig);
+            // TODO should we require instantiation here?
+            if (res != null) {
+                newGameobj = res.Instantiate<PrefabNode>(PackedScene.GenEditState.Instance);
+            }
+        }
+
+        newGameobj ??= new REGameObject() {
             ObjectId = data.Info.Data.objectId,
             Name = data.Name ?? "UnnamedObject",
             Uuid = data.Info.Data.guid.ToString(),
@@ -352,16 +333,6 @@ public class RszGodotConverter : IDisposable
             // Enabled = gameObj.Instance.GetFieldValue("v2")
         };
         root.AddGameObject(newGameobj, parent);
-
-        if (data.Prefab?.Path != null) {
-            var importPath = Importer.GetDefaultImportPath(data.Prefab.Path, AssetConfig);
-            if (!ResourceLoader.Exists(importPath)) {
-                var sourcePath = Importer.ResolveSourceFilePath(data.Prefab.Path, AssetConfig);
-                if (!string.IsNullOrEmpty(sourcePath)) {
-                    Importer.ImportPrefab(sourcePath, importPath, AssetConfig).Wait();
-                }
-            }
-        }
 
         foreach (var comp in data.Components.OrderBy(o => o.Index)) {
             SetupComponent(root, comp, newGameobj);

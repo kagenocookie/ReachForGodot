@@ -67,23 +67,48 @@ public class Importer
         return -1;
     }
 
-    public static string GetDefaultImportPath(string osFilepath, AssetConfig config)
+    public static bool EnsureResourceImported(string sourceFile, AssetConfig config)
     {
-        return ProjectSettings.LocalizePath(GetDefaultImportPath(osFilepath, GetFileFormat(osFilepath), config));
-    }
+        if (string.IsNullOrEmpty(sourceFile)) {
+            return false;
+        }
 
-    public static T FindOrImportResource<T>(string sourceFile, AssetConfig config) where T : class
-    {
-        var importPath = Importer.GetDefaultImportPath(sourceFile, config);
+        var importPath = Importer.GetLocalizedImportPath(sourceFile, config);
         if (!ResourceLoader.Exists(importPath)) {
             var sourcePath = ResolveSourceFilePath(sourceFile, config);
-            Importer.Import(sourcePath, config, importPath).Wait();
+            Importer.Import(sourcePath, config, importPath);
+            return true;
+        }
+
+        return true;
+    }
+
+    public static T? FindOrImportResource<T>(string sourceFile, AssetConfig config) where T : Resource
+    {
+        if (string.IsNullOrEmpty(sourceFile)) {
+            GD.PrintErr("Empty import path for resource " + typeof(T) + ": " + sourceFile);
+            return null;
+        }
+
+        var importPath = Importer.GetLocalizedImportPath(sourceFile, config);
+        if (importPath == "res://") {
+            GD.PrintErr("EMPTY RESOURCE WTFFFFFFFF " + typeof(T) + ": " + sourceFile);
+        }
+
+        if (!ResourceLoader.Exists(importPath)) {
+            var sourcePath = ResolveSourceFilePath(sourceFile, config);
+            return Importer.Import(sourcePath, config, importPath) as T;
         }
 
         return ResourceLoader.Load<T>(importPath);
     }
 
-    public static string GetDefaultImportPath(string osFilepath, REFileFormat fmt, AssetConfig config)
+    public static string GetLocalizedImportPath(string osFilepath, AssetConfig config)
+    {
+        return ProjectSettings.LocalizePath(GetDefaultImportPath(osFilepath, GetFileFormat(osFilepath).format, config, true));
+    }
+
+    private static string GetDefaultImportPath(string osFilepath, RESupportedFileFormats fmt, AssetConfig config, bool resource)
     {
         var basepath = ReachForGodot.GetChunkPath(config.Game);
         if (basepath == null) {
@@ -99,11 +124,11 @@ public class Importer
         relativePath = realOsFilepath.Replace(basepath, "");
         var targetPath = Path.Combine(config.AssetDirectory, relativePath);
 
-        switch (fmt.format) {
+        switch (fmt) {
             case RESupportedFileFormats.Mesh:
-                return targetPath + ".blend";
+                return targetPath + (resource ? ".tres" : ".blend");
             case RESupportedFileFormats.Texture:
-                return targetPath + ".dds";
+                return targetPath + (resource ? ".tres" : ".dds");
             case RESupportedFileFormats.Scene:
             case RESupportedFileFormats.Prefab:
                 return targetPath + ".tscn";
@@ -131,21 +156,17 @@ public class Importer
         return extractedFilePath;
     }
 
-    public static Task Import(string filepath, AssetConfig config, string? importFilepath = null)
+    public static Resource? Import(string sourceFilePath, AssetConfig config, string? importFilepath = null)
     {
-        importFilepath ??= GetDefaultImportPath(filepath, config);
-        var format = Importer.GetFileFormat(filepath);
-        Directory.CreateDirectory(ProjectSettings.GlobalizePath(config.AssetDirectory));
-        return Importer.Import(format, filepath, importFilepath, config);
-    }
+        importFilepath ??= GetLocalizedImportPath(sourceFilePath, config);
+        var format = Importer.GetFileFormat(sourceFilePath);
+        var outputFilePath = ProjectSettings.GlobalizePath(importFilepath);
 
-    public static Task Import(REFileFormat format, string sourceFilePath, string outputFilePath, AssetConfig config)
-    {
         switch (format.format) {
             case RESupportedFileFormats.Mesh:
-                return ImportMesh(sourceFilePath, outputFilePath);
+                return ImportResource<MeshResource>(sourceFilePath, outputFilePath, config);
             case RESupportedFileFormats.Texture:
-                return ImportTexture(sourceFilePath, outputFilePath);
+                return ImportResource<TextureResource>(sourceFilePath, outputFilePath, config);
             case RESupportedFileFormats.Scene:
                 return ImportScene(sourceFilePath, outputFilePath, config);
             case RESupportedFileFormats.Prefab:
@@ -153,13 +174,17 @@ public class Importer
             case RESupportedFileFormats.Userdata:
                 return ImportUserdata(sourceFilePath, outputFilePath, config);
             default:
-                // GD.Print("Unsupported file format " + format.format);
-                return ImportResource(sourceFilePath, outputFilePath, config);
+                return ImportResource<REResource>(sourceFilePath, outputFilePath, config);
         }
     }
 
-    public static Task ImportMesh(string sourceFilePath, string importFilepath)
+    public static Task<Resource?> ImportMesh(string sourceFilePath, SupportedGame game)
     {
+        var config = ReachForGodot.GetAssetConfig(game);
+        var importFilepath = ProjectSettings.LocalizePath(GetDefaultImportPath(sourceFilePath, RESupportedFileFormats.Mesh, config, false));
+        if (!System.IO.Path.IsPathRooted(sourceFilePath)) {
+            sourceFilePath = ResolveSourceFilePath(sourceFilePath, config);
+        }
         var path = Directory.GetCurrentDirectory();
         var outputGlobalized = ProjectSettings.GlobalizePath(importFilepath);
         var blendPath = Path.GetFullPath(outputGlobalized).Replace('\\', '/');
@@ -172,7 +197,7 @@ public class Importer
             meshPreview.ReadExactly(bytes);
             if (bytes.AsSpan().SequenceEqual(MPLY_mesh_bytes)) {
                 GD.Print("Unsupported MPLY mesh " + sourceFilePath);
-                return Task.CompletedTask;
+                return Task.FromResult((Resource?)null);
             }
         }
 
@@ -191,16 +216,23 @@ public class Importer
         return ExecuteBlenderScript(tempFn, false).ContinueWith((_) => {
             if (!File.Exists(blendPath)) {
                 GD.Print("Unsuccessfully imported mesh " + sourceFilePath);
+                return (Resource?)null;
             }
 
             QueueFileRescan();
+            return ResourceLoader.Load<Resource>(ProjectSettings.LocalizePath(blendPath));
         });
     }
 
-    public static Task ImportTexture(string sourceFilePath, string outputFilePath)
+    public static Task ImportTexture(string sourceFilePath, SupportedGame game)
     {
+        var config = ReachForGodot.GetAssetConfig(game);
+        var importFilepath = ProjectSettings.LocalizePath(GetDefaultImportPath(sourceFilePath, RESupportedFileFormats.Texture, config, false));
+        if (!System.IO.Path.IsPathRooted(sourceFilePath)) {
+            sourceFilePath = ResolveSourceFilePath(sourceFilePath, config);
+        }
         var path = Directory.GetCurrentDirectory();
-        var outputGlobalized = ProjectSettings.GlobalizePath(outputFilePath);
+        var outputGlobalized = ProjectSettings.GlobalizePath(importFilepath);
         var importDir = Path.GetFullPath(outputGlobalized.GetBaseDir());
         var convertedFilepath = sourceFilePath.GetBaseName().GetBaseName() + ".dds";
 
@@ -227,46 +259,43 @@ public class Importer
         });
     }
 
-    public static Task ImportScene(string sourceFilePath, string outputFilePath, AssetConfig config)
+    public static PackedScene? ImportScene(string sourceFilePath, string outputFilePath, AssetConfig config)
     {
         if (!System.IO.Path.IsPathRooted(sourceFilePath)) {
             sourceFilePath = ResolveSourceFilePath(sourceFilePath, config);
         }
         if (!File.Exists(sourceFilePath)) {
             GD.PrintErr("Scene file not found: " + sourceFilePath);
-            return Task.CompletedTask;
+            return null;
         }
         var conv = new RszGodotConverter(config, false);
-        conv.CreateProxyScene(sourceFilePath, outputFilePath);
-        return Task.CompletedTask;
+        return conv.CreateProxyScene(sourceFilePath, outputFilePath);
     }
 
-    public static Task ImportPrefab(string sourceFilePath, string outputFilePath, AssetConfig config)
+    public static PackedScene? ImportPrefab(string sourceFilePath, string outputFilePath, AssetConfig config)
     {
         if (!System.IO.Path.IsPathRooted(sourceFilePath)) {
             sourceFilePath = ResolveSourceFilePath(sourceFilePath, config);
         }
         if (!File.Exists(sourceFilePath)) {
             GD.PrintErr("Prefab file not found: " + sourceFilePath);
-            return Task.CompletedTask;
+            return null;
         }
         var conv = new RszGodotConverter(config, false);
-        conv.CreateProxyPrefab(sourceFilePath, outputFilePath);
-        return Task.CompletedTask;
+        return conv.CreateProxyPrefab(sourceFilePath, outputFilePath);
     }
 
-    public static Task ImportUserdata(string sourceFilePath, string outputFilePath, AssetConfig config)
+    public static UserdataResource? ImportUserdata(string sourceFilePath, string outputFilePath, AssetConfig config)
     {
         if (!System.IO.Path.IsPathRooted(sourceFilePath)) {
             sourceFilePath = ResolveSourceFilePath(sourceFilePath, config);
         }
         if (!File.Exists(sourceFilePath)) {
             GD.PrintErr("Userdata file not found: " + sourceFilePath);
-            return Task.CompletedTask;
+            return null;
         }
         var conv = new RszGodotConverter(config, false);
-        conv.CreateUserdata(sourceFilePath, outputFilePath);
-        return Task.CompletedTask;
+        return conv.CreateUserdata(sourceFilePath, outputFilePath);
     }
 
     private static void QueueFileRescan()
@@ -275,24 +304,21 @@ public class Importer
         if (!fs.IsScanning()) fs.CallDeferred(EditorFileSystem.MethodName.Scan);
     }
 
-    public static Task ImportResource(string sourceFilePath, string outputFilePath, AssetConfig config)
+    private static T? ImportResource<T>(string sourceFilePath, string outputFilePath, AssetConfig config)
+        where T : REResource, new()
     {
         if (!System.IO.Path.IsPathRooted(sourceFilePath)) {
             sourceFilePath = ResolveSourceFilePath(sourceFilePath, config);
         }
         if (!File.Exists(sourceFilePath)) {
             GD.PrintErr("Resource file not found: " + sourceFilePath);
-            return Task.CompletedTask;
+            return null;
         }
 
         var format = Importer.GetFileFormat(sourceFilePath);
-        if (format.format != RESupportedFileFormats.Unknown) {
-            return Import(format, sourceFilePath, outputFilePath, config);
-        }
-
         sourceFilePath = Path.GetRelativePath(config.Paths.ChunkPath, sourceFilePath);
         Directory.CreateDirectory(outputFilePath.GetBaseDir());
-        var newres = new REResource() {
+        var newres = new T() {
             Asset = new AssetReference(sourceFilePath),
             ResourceType = format.format,
             Game = config.Game,
@@ -301,8 +327,8 @@ public class Importer
         };
         ResourceSaver.Save(newres);
         // if we later end up adding a proper resource type, call newres.TakeOverPath() to replace the placeholder instance
-        QueueFileRescan();
-        return Task.CompletedTask;
+        // QueueFileRescan();
+        return newres;
     }
 
     private static Task ExecuteBlenderScript(string scriptFilename, bool background)

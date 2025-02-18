@@ -10,21 +10,53 @@ public partial class REMeshComponent : REComponent
 {
     [Export] public Node3D? meshNode;
 
+    [Export] public string? MeshFilepath { get; set; }
+
+    [ExportToolButton("Reinstantiate mesh")]
+    private Callable ForceReinstance => Callable.From(FindResourceAndReinit);
+
+    private MeshResource? GetMeshResource() => SerializedContainers.Select(parent => parent.FindResource<MeshResource>(MeshFilepath)).FirstOrDefault();
+
+    private void FindResourceAndReinit()
+    {
+        if (GameObject != null) {
+            ReloadMesh(GetMeshResource(), GameObject);
+        }
+    }
+
+    private bool IsCorrectMesh(MeshResource mr)
+    {
+        return MeshFilepath != null && mr.Asset?.IsSameAsset(MeshFilepath) == true;
+    }
+
     public override void Setup(IRszContainerNode root, REGameObject gameObject, RszInstance rsz)
     {
-        var meshPath = rsz.GetFieldValue("v2") as string ?? rsz.GetFieldValue("v20") as string ?? rsz.Values.FirstOrDefault(v => v is string) as string;
+        MeshFilepath = rsz.GetFieldValue("v2") as string ?? rsz.GetFieldValue("v20") as string ?? rsz.Values.FirstOrDefault(v => v is string) as string;
 
-        if (root.Resources?.FirstOrDefault(r => r.Asset?.AssetFilename == meshPath) is REResourceProxy mr && mr.ImportedResource is PackedScene scene) {
-            meshNode = scene.Instantiate<Node3D>(PackedScene.GenEditState.Instance);
-            if (meshNode == null) {
-                GD.PrintErr("Invalid mesh source scene " + mr.ResourcePath);
-                return;
+        ReloadMesh(root.FindResource<MeshResource>(MeshFilepath), gameObject);
+    }
+
+    protected void ReloadMesh(MeshResource? mr, REGameObject gameObject)
+    {
+        if (mr != null) {
+            if (mr.ImportedResource is PackedScene scene) {
+                ReinstantiateMesh(scene, gameObject);
+            } else {
+                mr.Import(false).ContinueWith((res) => ReinstantiateMesh(res.Result as PackedScene, gameObject));
             }
-            meshNode.Name = "__" + meshNode.Name;
-            gameObject.AddOwnedChild(meshNode);
         } else {
             meshNode = null;
-            GD.Print("Missing mesh " + meshPath + " at path: " + gameObject.Owner.GetPathTo(gameObject));
+            GD.Print("Missing mesh " + MeshFilepath + " at path: " + gameObject.Owner.GetPathTo(gameObject));
+        }
+    }
+
+    public void ReinstantiateMesh(PackedScene? scene, REGameObject? go)
+    {
+        meshNode?.Free();
+        if (scene != null) {
+            meshNode = scene.Instantiate<Node3D>(PackedScene.GenEditState.Instance);
+            meshNode.Name = "__" + meshNode.Name;
+            go?.AddOwnedChild(meshNode);
         }
     }
 }

@@ -1,6 +1,7 @@
 namespace RGE;
 
 using System;
+using System.Threading.Tasks;
 using Godot;
 using RszTool;
 
@@ -10,6 +11,19 @@ using RszTool;
 [GlobalClass, Tool]
 public partial class REResourceProxy : REResource
 {
-    [Export] public string? ImportedPath { get; set; }
     [Export] public Resource? ImportedResource { get; set; }
+
+    [ExportToolButton("Re-Import asset")]
+    private Callable ForceReimport => Callable.From(() => Import().Wait());
+
+    public Task<Resource?> Import(bool forceReload)
+    {
+        if (forceReload) {
+            ImportedResource = null;
+        }
+
+        // TODO put the import into a queue instead of executing immediately
+        return Import();
+    }
+    protected virtual Task<Resource?> Import() => Task.FromResult((Resource?)null);
 }

@@ -15,10 +15,19 @@ public partial class AssetReference : Resource
 
     public AssetReference(string assetFilename)
     {
-        AssetFilename = assetFilename;
+        // normalize all paths to front slashes - because resources tend to use forward slashes
+        AssetFilename = assetFilename.Replace('\\', '/');
     }
 
     [Export] public string AssetFilename { get; set; } = string.Empty;
+
+    public bool IsSameAsset(string compare)
+    {
+        if (AssetFilename == compare) return true;
+
+        var dot = AssetFilename.LastIndexOf('.');
+        return dot == -1 ? false : AssetFilename.AsSpan().Slice(0, dot).SequenceEqual(compare);
+    }
 
     public void OpenSourceFile(SupportedGame game)
     {
