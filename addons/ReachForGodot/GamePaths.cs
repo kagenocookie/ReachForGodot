@@ -23,4 +23,21 @@ public record GamePaths(SupportedGame Game, string ChunkPath, string? Il2cppPath
             default: return GameName.unknown;
         }
     }
+
+    public string GetShortName() => Game switch {
+        SupportedGame.DragonsDogma2 => "dd2",
+        SupportedGame.DevilMayCry5 => "dmc5",
+        SupportedGame.ResidentEvil2 => "re2",
+        SupportedGame.ResidentEvil2RT => "re2rt",
+        SupportedGame.ResidentEvil3 => "re3",
+        SupportedGame.ResidentEvil3RT => "re3rt",
+        SupportedGame.ResidentEvil4 => "re4",
+        SupportedGame.ResidentEvil7 => "re7",
+        SupportedGame.ResidentEvil7RT => "re7rt",
+        SupportedGame.ResidentEvil8 => "re8",
+        SupportedGame.MonsterHunterRise => "mhrise",
+        SupportedGame.StreetFighter6 => "sf6",
+        SupportedGame.MonsterHunterWilds => "mhwilds",
+        _ => Game.ToString(),
+    };
 }

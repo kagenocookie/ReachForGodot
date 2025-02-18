@@ -1,0 +1,25 @@
+{
+    "via.navigation.NavigationWaypoint": {
+        "FieldPatches": [
+            {
+                "Name": "v58",
+                "Type": "Object",
+                "OriginalType": "via.navigation.map.InteractionShapeBase"
+            },
+            {
+                "Name": "v61",
+                "Type": "Object",
+                "OriginalType": "via.navigation.map.InteractionShapeBase"
+            }
+        ]
+    },
+    "via.navigation.map.NodeCollectShapeOBB": {
+        "FieldPatches": [
+            {
+                "Name": "v0_Shape",
+                "Type": "OBB",
+                "OriginalType": "via.OBB"
+            }
+        ]
+    }
+}

@@ -59,7 +59,7 @@ public static class ReachForGodot
         }
 
         if (data.config == null) {
-            data.config = new AssetConfig() { ResourcePath = defaultResourcePath, AssetDirectory = data.paths.GetRszToolGameEnum().ToString() };
+            data.config = new AssetConfig() { ResourcePath = defaultResourcePath, AssetDirectory = data.paths.GetShortName() };
             ResourceSaver.Save(data.config);
         }
 

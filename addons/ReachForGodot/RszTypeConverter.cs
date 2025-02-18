@@ -186,6 +186,10 @@ public static class RszTypeConverter
                     min,
                     ((RszTool.via.AABB)value).maxpos.ToGodot() - min
                 );
+            case RszFieldType.Mat4:
+                return ((RszTool.via.mat4)value).ToProjection();
+            case RszFieldType.OBB:
+                return new OrientedBoundingBox(((RszTool.via.OBB)value));
         }
 
         GD.PrintErr("Unhandled conversion for rsz type " + field.RszField.type + " with value type " + value.GetType().FullName);
@@ -196,4 +200,13 @@ public static class RszTypeConverter
     public static Vector3 ToGodot(this System.Numerics.Vector3 val) => new Vector3(val.X, val.Y, val.Z);
     public static Vector4 ToGodot(this System.Numerics.Vector4 val) => new Vector4(val.X, val.Y, val.Z, val.W);
     public static Quaternion ToGodot(this System.Numerics.Quaternion val) => new Quaternion(val.X, val.Y, val.Z, val.W);
+    public static Projection ToProjection(this RszTool.via.mat4 mat)
+    {
+        return new Projection(
+            new Vector4(mat.m00, mat.m01, mat.m02, mat.m03),
+            new Vector4(mat.m10, mat.m11, mat.m12, mat.m13),
+            new Vector4(mat.m20, mat.m21, mat.m22, mat.m23),
+            new Vector4(mat.m30, mat.m31, mat.m32, mat.m33)
+        );
+    }
 }

@@ -196,8 +196,11 @@ public class TypeCache
             case RszFieldType.Data:
                 refield.VariantType = Variant.Type.PackedByteArray;
                 break;
-            case RszFieldType.Mat4:
+            case RszFieldType.Mat3:
                 refield.VariantType = Variant.Type.Transform3D;
+                break;
+            case RszFieldType.Mat4:
+                refield.VariantType = Variant.Type.Projection;
                 break;
             case RszFieldType.AABB:
                 refield.VariantType = Variant.Type.Aabb;
@@ -272,7 +275,9 @@ public class TypeCache
                 // new RszTool.via.Rect3D();
                 break;
             case RszFieldType.OBB:
-                // new RszTool.via.OBB();
+                refield.VariantType = Variant.Type.Object;
+                refield.Hint = PropertyHint.ResourceType;
+                refield.HintString = nameof(OrientedBoundingBox);
                 break;
             case RszFieldType.Capsule:
                 // new RszTool.via.Capsule();
@@ -301,13 +306,17 @@ public class TypeCache
 
     private static RszParser LoadRsz(SupportedGame game)
     {
-        var jsonPath = ReachForGodot.GetPaths(game)?.RszJsonPath;
+        var paths = ReachForGodot.GetPaths(game);
+        var jsonPath = paths?.RszJsonPath;
         if (jsonPath == null) {
             GD.PrintErr("No rsz json defined for game " + game);
             return null!;
         }
 
-        return rszData[game] = RszParser.GetInstance(jsonPath);
+        var parser = RszParser.GetInstance(jsonPath);
+        parser.ReadPatch(ProjectSettings.GlobalizePath($"res://addons/ReachForGodot/rsz_patches/global.json"));
+        parser.ReadPatch(ProjectSettings.GlobalizePath($"res://addons/ReachForGodot/rsz_patches/{paths!.GetShortName()}.json"));
+        return rszData[game] = parser;
     }
 
     public static EnumDescriptor GetEnumDescriptor(SupportedGame game, string classname)
