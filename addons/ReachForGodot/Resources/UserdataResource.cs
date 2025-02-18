@@ -12,18 +12,19 @@ public partial class UserdataResource : REResource, IRszContainerNode
 
     public bool IsEmpty => false;
 
-    [ExportToolButton("Rebuild")]
-    private Callable RebuildFileButton => Callable.From(Rebuild);
+    [ExportToolButton("Re-import")]
+    private Callable ReimportFileButton => Callable.From(Reimport);
 
-    public void Rebuild()
+    public void Reimport()
     {
         using var conv = new RszGodotConverter(ReachForGodot.GetAssetConfig(Game!)!, false);
         conv.GenerateUserdata(this);
+        NotifyPropertyListChanged();
     }
 
     public void Clear()
     {
         Resources = null;
-        Data.Clear();
+        __Data.Clear();
     }
 }

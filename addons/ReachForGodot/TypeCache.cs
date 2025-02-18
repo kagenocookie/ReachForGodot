@@ -14,6 +14,15 @@ public class TypeCache
     private static readonly Dictionary<SupportedGame, Dictionary<string, REObjectTypeCache>> cache = new();
     private static readonly Dictionary<SupportedGame, Dictionary<string, EnumDescriptor>> enums = new();
 
+    static TypeCache()
+    {
+        System.Runtime.Loader.AssemblyLoadContext.GetLoadContext(typeof(RszGodotConverter).Assembly)!.Unloading += (c) => {
+            rszData.Clear();
+            cache.Clear();
+            enums.Clear();
+        };
+    }
+
     public static REObjectTypeCache GetData(SupportedGame game, string classname)
     {
         if (!cache.TryGetValue(game, out var cacheData)) {
@@ -98,6 +107,15 @@ public class TypeCache
                     return;
                 case RszFieldType.String:
                     refield.VariantType = Variant.Type.PackedStringArray;
+                    return;
+                case RszFieldType.UserData:
+                    refield.VariantType = Variant.Type.Array;
+                    refield.Hint = PropertyHint.ResourceType;
+                    refield.HintString = nameof(REObject);
+                    break;
+                case RszFieldType.Resource:
+                    refield.VariantType = Variant.Type.Array;
+                    refield.Hint = PropertyHint.ResourceType;
                     return;
                 default:
                     refield.VariantType = Variant.Type.Array;
@@ -453,10 +471,11 @@ public class REObjectTypeCache
 
             var dict = new Godot.Collections.Dictionary()
             {
+                // TODO include "class_name"?
                 { "name", f.DisplayName ?? f.SerializedName },
                 { "type", (int)f.VariantType },
                 { "hint", (int)f.Hint },
-                { "usage", (int)(PropertyUsageFlags.Default|PropertyUsageFlags.Storage|PropertyUsageFlags.ScriptVariable) }
+                { "usage", (int)(PropertyUsageFlags.Editor|PropertyUsageFlags.ScriptVariable) }
             };
             if (f.HintString != null) dict["hint_string"] = f.HintString;
             PropertyList.Add(dict);

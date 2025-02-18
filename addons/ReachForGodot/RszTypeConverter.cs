@@ -154,6 +154,10 @@ public static class RszTypeConverter
             case RszFieldType.Float2:
             case RszFieldType.Point:
                 return ((System.Numerics.Vector2)value).ToGodot();
+            case RszFieldType.Range:
+                return ((System.Numerics.Vector2)((RszTool.via.Range)value)).ToGodot();
+            case RszFieldType.RangeI:
+                return new Vector2I(((RszTool.via.RangeI)value).r, ((RszTool.via.RangeI)value).s);
             case RszFieldType.Vec3:
             case RszFieldType.Float3:
             case RszFieldType.Position:

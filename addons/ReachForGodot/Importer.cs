@@ -310,7 +310,8 @@ public class Importer
         var process = Process.Start(new ProcessStartInfo() {
             UseShellExecute = false,
             FileName = ReachForGodot.BlenderPath,
-            Arguments = background ? $"--background --python \"{scriptFilename}\"" : $"--python \"{scriptFilename}\"",
+            WindowStyle = ProcessWindowStyle.Hidden,
+            Arguments = background ? $"--no-window-focus --background --python \"{scriptFilename}\"" : $"--no-window-focus --python \"{scriptFilename}\"",
         });
 
         return process!.WaitForExitAsync();

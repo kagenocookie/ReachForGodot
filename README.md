@@ -30,11 +30,13 @@ Integrates various open source tools dealing with RE Engine games and packs them
 - support all remaining rsz types
 - export any changes back over their original file formats (into a configurable output folder so we don't override the source files)
 - support serializing objects to JSON - Content Editor integration
+- RETool integration - automatically extract files from paks as needed instead of requiring everything to be pre-extracted
 
 ## Room for improvement
 - import files in batches, keep blender open and just re-clear the file
 - force blend file import afterwards, so the .blend files are immediately usable as packed scenes
-- some sort of progress bar and cancellation support for the editor
+- find a way to not put blender in the foreground while its doing the imports
+- some sort of progress bar and cancellation support for importing
 
 ## Hard blockers
 - mesh textures don't show up (requires Godot DDS image format support - https://github.com/godotengine/godot/pull/101994)

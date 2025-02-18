@@ -10,7 +10,7 @@ public partial class REObject : Resource
 {
     [Export] public SupportedGame Game { get; set; }
     [Export] public string? Classname { get; set; }
-    protected Godot.Collections.Dictionary Data = new();
+    [Export] protected Godot.Collections.Dictionary<StringName, Variant> __Data = new();
 
     private REObjectTypeCache? cache;
 
@@ -35,7 +35,7 @@ public partial class REObject : Resource
 
     public override void _ValidateProperty(Dictionary property)
     {
-        if (property["name"].AsStringName() == PropertyName.Data) {
+        if (property["name"].AsStringName() == PropertyName.__Data) {
             property["usage"] = (int)(PropertyUsageFlags.Storage|PropertyUsageFlags.ScriptVariable);
         }
         base._ValidateProperty(property);
@@ -52,7 +52,7 @@ public partial class REObject : Resource
         cache ??= TypeCache.GetData(Game, Classname ?? throw new Exception("Missing REObject classname"));
         foreach (var field in cache.Fields) {
             var value = instance.Values[field.FieldIndex];
-            Data[field.SerializedName] = RszTypeConverter.FromRszValue(field, value, Game);
+            __Data[field.SerializedName] = RszTypeConverter.FromRszValue(field, value, Game);
         }
     }
 
@@ -72,9 +72,7 @@ public partial class REObject : Resource
             return default;
         }
 
-        cache ??= TypeCache.GetData(Game, Classname);
-        if (cache.FieldsByName.TryGetValue(property, out var field)) {
-            Data.TryGetValue(property, out var val);
+        if (__Data.TryGetValue(property, out var val)) {
             return val;
         }
 
@@ -89,7 +87,8 @@ public partial class REObject : Resource
 
         cache ??= TypeCache.GetData(Game, Classname);
         if (cache.FieldsByName.TryGetValue(property, out var field)) {
-            Data[property] = value;
+            __Data[property] = value;
+            return true;
         }
         return base._Set(property, value);
     }
@@ -118,4 +117,6 @@ public partial class REObject : Resource
         if (hintstring != null) dict["hint_string"] = hintstring;
         return dict;
     }
+
+    public override string ToString() => Classname ?? "REObject";
 }

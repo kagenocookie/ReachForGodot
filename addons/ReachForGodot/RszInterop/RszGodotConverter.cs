@@ -9,8 +9,6 @@ using RszTool;
 
 public class RszGodotConverter : IDisposable
 {
-    private static bool hasSafetyHooked;
-
     private static readonly Dictionary<SupportedGame, Dictionary<string, Func<IRszContainerNode, REGameObject, RszInstance, REComponent?>>> perGameFactories = new();
 
     public AssetConfig AssetConfig { get; }
@@ -21,7 +19,13 @@ public class RszGodotConverter : IDisposable
 
     static RszGodotConverter()
     {
-        EnsureSafeJsonLoadContext();
+        AssemblyLoadContext.GetLoadContext(typeof(RszGodotConverter).Assembly)!.Unloading += (c) => {
+            var assembly = typeof(System.Text.Json.JsonSerializerOptions).Assembly;
+            var updateHandlerType = assembly.GetType("System.Text.Json.JsonSerializerOptionsUpdateHandler");
+            var clearCacheMethod = updateHandlerType?.GetMethod("ClearCache", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public);
+            clearCacheMethod!.Invoke(null, new object?[] { null });
+            perGameFactories.Clear();
+        };
         InitComponents(typeof(RszGodotConverter).Assembly);
     }
 
@@ -58,20 +62,6 @@ public class RszGodotConverter : IDisposable
             }
 
             factories[componentType] = factory;
-        }
-    }
-
-    private static void EnsureSafeJsonLoadContext()
-    {
-        if (!hasSafetyHooked && Engine.IsEditorHint()) {
-            hasSafetyHooked = true;
-            AssemblyLoadContext.GetLoadContext(typeof(RszGodotConverter).Assembly)!.Unloading += (c) => {
-                var assembly = typeof(System.Text.Json.JsonSerializerOptions).Assembly;
-                var updateHandlerType = assembly.GetType("System.Text.Json.JsonSerializerOptionsUpdateHandler");
-                var clearCacheMethod = updateHandlerType?.GetMethod("ClearCache", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public);
-                clearCacheMethod!.Invoke(null, new object?[] { null });
-                perGameFactories.Clear();
-            };
         }
     }
 
