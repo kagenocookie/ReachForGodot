@@ -15,12 +15,6 @@ public partial class UserdataResource : REResource, IRszContainerNode
     [ExportToolButton("Rebuild")]
     private Callable RebuildFileButton => Callable.From(Rebuild);
 
-    [ExportToolButton("Open source file")]
-    private Callable OpenSourceFile => Callable.From(() => ((IRszContainerNode)this).OpenSourceFile());
-
-    [ExportToolButton("Find me something to look at")]
-    public Callable Find3DNodeButton => Callable.From(() => ((IRszContainerNode)this).Find3DNode());
-
     public void Rebuild()
     {
         using var conv = new RszGodotConverter(ReachForGodot.GetAssetConfig(Game!)!, false);

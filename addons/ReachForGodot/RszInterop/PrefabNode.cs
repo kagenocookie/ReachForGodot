@@ -20,8 +20,8 @@ public partial class PrefabNode : REGameObject, IRszContainerNode
     [ExportToolButton("Regenerate tree + Children")]
     private Callable BuildFullTreeButton => Callable.From(BuildTreeDeep);
 
-    [ExportToolButton("Open source file")]
-    private Callable OpenSourceFile => Callable.From(() => ((IRszContainerNode)this).OpenSourceFile());
+    [ExportToolButton("Show source file")]
+    private Callable OpenSourceFile => Callable.From(() => Asset?.OpenSourceFile(Game));
 
     [ExportToolButton("Find me something to look at")]
     public Callable Find3DNodeButton => Callable.From(() => ((IRszContainerNode)this).Find3DNode());

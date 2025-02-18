@@ -11,4 +11,7 @@ public partial class REResource : REObject
     [Export] public string? ImportedPath { get; set; }
     [Export] public Resource? ImportedResource { get; set; }
     [Export] public RESupportedFileFormats ResourceType { get; set; } = RESupportedFileFormats.Unknown;
+
+    [ExportToolButton("Show source file")]
+    private Callable OpenSourceFile => Callable.From(() => Asset?.OpenSourceFile(Game));
 }

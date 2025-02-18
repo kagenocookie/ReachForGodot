@@ -27,8 +27,6 @@ public class Importer
         }
 
         var fmt = GetFileFormatFromExtension(filename.AsSpan()[(extDot + 1)..versionDot]);
-        if (fmt == RESupportedFileFormats.Unknown) return REFileFormat.Unknown;
-
         return new REFileFormat(fmt, version);
     }
 
@@ -127,7 +125,7 @@ public class Importer
             case RESupportedFileFormats.Userdata:
                 return targetPath + ".tres";
             default:
-                return targetPath;
+                return targetPath + ".tres";
         }
     }
 
@@ -170,8 +168,8 @@ public class Importer
             case RESupportedFileFormats.Userdata:
                 return ImportUserdata(sourceFilePath, outputFilePath, config);
             default:
-                GD.Print("Unsupported file format " + format.format);
-                return Task.CompletedTask;
+                // GD.Print("Unsupported file format " + format.format);
+                return ImportResource(sourceFilePath, outputFilePath, config);
         }
     }
 
@@ -209,6 +207,8 @@ public class Importer
             if (!File.Exists(blendPath)) {
                 GD.Print("Unsuccessfully imported mesh " + sourceFilePath);
             }
+
+            QueueFileRescan();
         });
     }
 
@@ -234,6 +234,8 @@ public class Importer
 
         return ExecuteBlenderScript(tempFn, true).ContinueWith((_) => {
             File.Move(convertedFilepath, outputGlobalized, true);
+
+            QueueFileRescan();
         });
     }
 
@@ -276,6 +278,42 @@ public class Importer
         }
         var conv = new RszGodotConverter(config, false);
         conv.CreateUserdata(sourceFilePath, outputFilePath);
+        // EditorInterface.Singleton.GetResourceFilesystem().Scan();
+        return Task.CompletedTask;
+    }
+
+    private static void QueueFileRescan()
+    {
+        var fs = EditorInterface.Singleton.GetResourceFilesystem();
+        if (!fs.IsScanning()) fs.Scan();
+    }
+
+    public static Task ImportResource(string sourceFilePath, string outputFilePath, AssetConfig config)
+    {
+        if (!System.IO.Path.IsPathRooted(sourceFilePath)) {
+            sourceFilePath = ResolveSourceFilePath(sourceFilePath, config);
+        }
+        if (!File.Exists(sourceFilePath)) {
+            GD.PrintErr("Invalid prefab source file, does not exist: " + sourceFilePath);
+            return Task.CompletedTask;
+        }
+
+        var format = Importer.GetFileFormat(sourceFilePath);
+        if (format.format != RESupportedFileFormats.Unknown) {
+            return Import(format, sourceFilePath, outputFilePath, config);
+        }
+
+        sourceFilePath = Path.GetRelativePath(config.Paths.ChunkPath, sourceFilePath);
+        Directory.CreateDirectory(outputFilePath.GetBaseDir());
+        var newres = new REResource() {
+            Asset = new AssetReference(sourceFilePath),
+            ResourceType = format.format,
+            Game = config.Game,
+            ResourceName = sourceFilePath.GetFile(),
+            ResourcePath = ProjectSettings.LocalizePath(outputFilePath),
+        };
+        ResourceSaver.Save(newres);
+        QueueFileRescan();
         return Task.CompletedTask;
     }
 

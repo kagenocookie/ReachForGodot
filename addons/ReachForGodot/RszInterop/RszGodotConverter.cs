@@ -60,7 +60,7 @@ public class RszGodotConverter : IDisposable
 
         if (!ResourceLoader.Exists(importFilepath)) {
             var scene = new PackedScene();
-            scene.Pack(new SceneFolder() { Game = AssetConfig.Game, Name = name, Asset = new AssetReference() { AssetFilename = relativeSourceFile } });
+            scene.Pack(new SceneFolder() { Game = AssetConfig.Game, Name = name, Asset = new AssetReference(relativeSourceFile) });
             ResourceSaver.Save(scene, importFilepath);
         }
     }
@@ -82,7 +82,7 @@ public class RszGodotConverter : IDisposable
 
         if (!ResourceLoader.Exists(importFilepath)) {
             var scene = new PackedScene();
-            scene.Pack(new PrefabNode() { Game = AssetConfig.Game, Name = name, Asset = new AssetReference() { AssetFilename = relativeSourceFile } });
+            scene.Pack(new PrefabNode() { Game = AssetConfig.Game, Name = name, Asset = new AssetReference(relativeSourceFile) });
             ResourceSaver.Save(scene, importFilepath);
         }
     }
@@ -108,7 +108,7 @@ public class RszGodotConverter : IDisposable
                 ResourcePath = importFilepath,
                 ResourceType = RESupportedFileFormats.Userdata,
                 Game = AssetConfig.Game,
-                Asset = new AssetReference() { AssetFilename = relativeSourceFile }
+                Asset = new AssetReference(relativeSourceFile)
             };
             ResourceSaver.Save(userdata);
         }
@@ -193,37 +193,49 @@ public class RszGodotConverter : IDisposable
         foreach (var res in resourceInfos) {
             if (res.Path != null) {
                 var format = Importer.GetFileFormat(res.Path);
-                var newres = new REResource() {
-                    Asset = new AssetReference() { AssetFilename = res.Path },
-                    ResourceType = format.format,
-                    Game = AssetConfig.Game,
-                    ResourceName = res.Path.GetFile()
-                };
-                resources.Add(newres);
-                if (format.format == RESupportedFileFormats.Unknown) {
-                    continue;
+                var importPath = Importer.GetDefaultImportPath(res.Path, format, config);
+                if (!ResourceLoader.Exists(importPath)) {
+                    var source = Importer.ResolveSourceFilePath(res.Path, config);
+                    Importer.Import(format, source, importPath, config).Wait();
                 }
 
-                newres.ImportedPath = Importer.GetDefaultImportPath(res.Path, format, config);
-                if (ResourceLoader.Exists(newres.ImportedPath)) {
-                    newres.ImportedResource = ResourceLoader.Load(newres.ImportedPath);
+                if (ResourceLoader.Exists(importPath)) {
+                    var resource = ResourceLoader.Load(importPath);
+                    if (resource is REResource newres) {
+                        resources.Add(newres);
+                    } else {
+                        switch (format.format) {
+                            case RESupportedFileFormats.Mesh:
+                                resources.Add(new MeshResource() {
+                                    Asset = new AssetReference(res.Path),
+                                    ResourceType = RESupportedFileFormats.Mesh,
+                                    Game = AssetConfig.Game,
+                                    ResourceName = res.Path.GetFile(),
+                                    ImportedPath = importPath,
+                                    ImportedResource = resource,
+                                });
+                                break;
+                            default:
+                                resources.Add(new REResource() {
+                                    Asset = new AssetReference(res.Path),
+                                    ResourceType = format.format,
+                                    Game = AssetConfig.Game,
+                                    ResourceName = res.Path.GetFile(),
+                                    ImportedPath = importPath,
+                                    ImportedResource = resource,
+                                });
+                                break;
+                        }
+                    }
                     continue;
-                }
-
-                if (format.version == -1) {
-                    format.version = Importer.GuessFileVersion(res.Path, format.format, config);
-                }
-                var sourceWithVersion = Importer.ResolveSourceFilePath(res.Path, config);
-                // var sourceWithVersion = Path.Join(config.Paths.ChunkPath, newres.SourcePath + "." + format.version).Replace('\\', '/');
-                if (!File.Exists(sourceWithVersion)) {
-                    GD.Print("Resource not found: " + sourceWithVersion);
+                } else {
+                    resources.Add(new REResource() {
+                        Asset = new AssetReference(res.Path),
+                        ResourceType = format.format,
+                        Game = AssetConfig.Game,
+                        ResourceName = res.Path.GetFile()
+                    });
                     continue;
-                }
-                switch (newres.ResourceType) {
-                    case RESupportedFileFormats.Mesh:
-                        Importer.ImportMesh(sourceWithVersion, ProjectSettings.GlobalizePath(newres.ImportedPath)).Wait();
-                        // Importer.Import(format, sourceWithVersion, ProjectSettings.GlobalizePath(newres.ImportedPath), config).Wait();
-                        break;
                 }
             } else {
                 GD.Print("Found a resource with null path: " + resources.Count);

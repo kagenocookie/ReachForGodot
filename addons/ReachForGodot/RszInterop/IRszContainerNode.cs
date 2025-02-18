@@ -15,22 +15,6 @@ public interface IRszContainerNode
 
     public bool IsEmpty { get; }
 
-    public void OpenSourceFile()
-    {
-        if (Asset == null) {
-            GD.PrintErr("Scene does not have a source asset defined");
-            return;
-        }
-
-        string file = Importer.ResolveSourceFilePath(Asset.AssetFilename, ReachForGodot.GetAssetConfig(Game)).Replace('/', '\\');
-        if (File.Exists(file)) {
-            Process.Start(new ProcessStartInfo("explorer.exe") {
-                UseShellExecute = false,
-                Arguments = $"/select, \"{file}\"",
-            });
-        }
-    }
-
     [ExportToolButton("Find me something to look at")]
     public Callable Find3DNodeButton => Callable.From(Find3DNode);
 
