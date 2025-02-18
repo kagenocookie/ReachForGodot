@@ -12,7 +12,7 @@ public partial class CompositeMeshComponent : REComponent
 
     public override void Setup(IRszContainerNode root, REGameObject gameObject, RszInstance rsz)
     {
-        meshNode = gameObject.AddOwnedChild(new Node3D() { Name = "CompositeMesh__ComponentNode" });
+        meshNode = gameObject.AddOwnedChild(new Node3D() { Name = "__CompositeMesh" });
         var compositeInstanceGroup = rsz.GetFieldValue("v15") as List<object>;
 
         if (compositeInstanceGroup != null) {

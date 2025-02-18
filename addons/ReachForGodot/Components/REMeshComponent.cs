@@ -20,7 +20,7 @@ public partial class REMeshComponent : REComponent
                 GD.PrintErr("Invalid mesh source scene " + mr.ResourcePath);
                 return;
             }
-            meshNode.Name += "__ComponentNode";
+            meshNode.Name = "__" + meshNode.Name;
             gameObject.AddOwnedChild(meshNode);
         } else {
             meshNode = null;

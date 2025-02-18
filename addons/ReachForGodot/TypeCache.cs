@@ -272,6 +272,9 @@ public class TypeCache
             case RszFieldType.Line:
                 // new RszTool.via.Line();
                 break;
+            case RszFieldType.Resource:
+                // var res = Importer.FindOrImportResource<REResource>()
+                break;
             default:
                 refield.VariantType = Variant.Type.Nil;
                 GD.Print("Unhandled rsz field type " + srcField.type + " / " + srcField.original_type);

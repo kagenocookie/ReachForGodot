@@ -160,6 +160,13 @@ public static class RszTypeConverter
             case RszFieldType.Uri:
             case RszFieldType.GameObjectRef:
                 return ((Guid)value).ToString();
+            case RszFieldType.Resource:
+                if (value is string str && str != "") {
+                    return Importer.FindOrImportResource<Resource>(str, ReachForGodot.GetAssetConfig(game));
+                } else {
+                    GD.Print("Empty resource path " + value);
+                    return new Variant();
+                }
             case RszFieldType.AABB:
                 var min = ((RszTool.via.AABB)value).minpos.ToGodot();
                 return new Aabb(
