@@ -2,6 +2,7 @@ namespace RGE;
 
 using System;
 using System.Diagnostics;
+using System.Reflection;
 using System.Runtime.Loader;
 using Godot;
 using RszTool;
@@ -18,7 +19,49 @@ public class RszGodotConverter : IDisposable
     public PfbFile? PfbFile { get; private set; }
     public UserFile? UserFile { get; private set; }
 
-    public static void EnsureSafeJsonLoadContext()
+    static RszGodotConverter()
+    {
+        EnsureSafeJsonLoadContext();
+        InitComponents(typeof(RszGodotConverter).Assembly);
+    }
+
+    public static void InitComponents(Assembly assembly)
+    {
+        var componentTypes = assembly.GetTypes()
+            .Where(t => t.GetCustomAttribute<REComponentClassAttribute>() != null && !t.IsAbstract);
+
+        foreach (var type in componentTypes) {
+            if (!type.IsAssignableTo(typeof(REComponent))) {
+                GD.PrintErr($"Invalid REComponentClass annotated type {type.FullName}.\nMust be a non-abstract REComponent node.");
+                continue;
+            }
+
+            var attr = type.GetCustomAttribute<REComponentClassAttribute>()!;
+            DefineComponentFactory(attr.Classname, (root, obj, instance) => {
+                var node = (REComponent)Activator.CreateInstance(type)!;
+                node.Name = attr.Classname;
+                node.Setup(root, obj, instance);
+                return node;
+            }, attr.SupportedGames);
+        }
+    }
+
+    public static void DefineComponentFactory(string componentType, Func<IRszContainerNode, REGameObject, RszInstance, REComponent?> factory, params SupportedGame[] supportedGames)
+    {
+        if (supportedGames.Length == 0) {
+            supportedGames = ReachForGodot.GameList;
+        }
+
+        foreach (var game in supportedGames) {
+            if (!perGameFactories.TryGetValue(game, out var factories)) {
+                perGameFactories[game] = factories = new();
+            }
+
+            factories[componentType] = factory;
+        }
+    }
+
+    private static void EnsureSafeJsonLoadContext()
     {
         if (!hasSafetyHooked && Engine.IsEditorHint()) {
             hasSafetyHooked = true;
@@ -30,11 +73,6 @@ public class RszGodotConverter : IDisposable
                 perGameFactories.Clear();
             };
         }
-    }
-
-    static RszGodotConverter()
-    {
-        ComponentTypes.Init();
     }
 
     public RszGodotConverter(AssetConfig paths, bool fullImport)
@@ -348,19 +386,16 @@ public class RszGodotConverter : IDisposable
 
     private ScnFile OpenScn(string filename)
     {
-        EnsureSafeJsonLoadContext();
         return new ScnFile(CreateFileOption(), new FileHandler(filename));
     }
 
     private PfbFile OpenPfb(string filename)
     {
-        EnsureSafeJsonLoadContext();
         return new PfbFile(CreateFileOption(), new FileHandler(filename));
     }
 
     private UserFile OpenUserdata(string filename)
     {
-        EnsureSafeJsonLoadContext();
         return new UserFile(CreateFileOption(), new FileHandler(filename));
     }
 
@@ -390,21 +425,6 @@ public class RszGodotConverter : IDisposable
 
         componentInfo.Data = new REObject(root.Game, instance.RszClass.name, instance);
         componentInfo.ObjectId = instance.Index;
-    }
-
-    public static void DefineComponentFactory(string componentType, Func<IRszContainerNode, REGameObject, RszInstance, REComponent?> factory, params SupportedGame[] supportedGames)
-    {
-        if (supportedGames.Length == 0) {
-            supportedGames = ReachForGodot.GameList;
-        }
-
-        foreach (var game in supportedGames) {
-            if (!perGameFactories.TryGetValue(game, out var factories)) {
-                perGameFactories[game] = factories = new();
-            }
-
-            factories[componentType] = factory;
-        }
     }
 
     public void Dispose()

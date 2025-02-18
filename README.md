@@ -7,7 +7,7 @@ Integrates various open source tools dealing with RE Engine games and packs them
 - Blender
 - [RE Mesh Editor](https://github.com/NSACloud/RE-Mesh-Editor) - used for mesh and texture import / export
 - Extract all relevant chunk files you wish to edit somewhere - [written guide here](https://github.com/Modding-Haven/REEngine-Modding-Documentation/wiki/Extracting-Game-Files)
-- Godot 4.5 (Or whatever version this PR gets merged into: https://github.com/godotengine/godot/pull/101994)
+- Godot 4.5 w/ .NET (Or whatever version this PR gets merged into: https://github.com/godotengine/godot/pull/101994)
 
 ## Godot setup
 - Configure the blender path in Godot's editor settings (filesystem/import/blender/blender_path)
