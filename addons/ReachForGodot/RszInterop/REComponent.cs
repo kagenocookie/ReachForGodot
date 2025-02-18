@@ -1,4 +1,4 @@
-namespace RFG;
+namespace RGE;
 
 using System;
 using Godot;

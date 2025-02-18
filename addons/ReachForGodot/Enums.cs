@@ -1,4 +1,4 @@
-namespace RFG;
+namespace RGE;
 
 public enum SupportedGame
 {

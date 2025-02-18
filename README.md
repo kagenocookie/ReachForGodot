@@ -1,5 +1,7 @@
-# Reach For Godot
+# Reach for Godot Engine (RGE)
 Godot-based editor for RE Engine games.
+
+Integrates various open source tools dealing with RE Engine games and packs them into a fully functional game data and content editor using Godot.
 
 ## Prerequisites
 - Blender
@@ -27,10 +29,12 @@ Godot-based editor for RE Engine games.
     - properly show and resolve guid gameobject references
 - support all remaining rsz types
 - export any changes back over their original file formats (into a configurable output folder so we don't override the source files)
+- support serializing objects to JSON - Content Editor integration
 
 ## Room for improvement
 - import files in batches, keep blender open and just re-clear the file
 - force blend file import afterwards, so the .blend files are immediately usable as packed scenes
+- some sort of progress bar and cancellation support for the editor
 
 ## Hard blockers
 - mesh textures don't show up (requires Godot DDS image format support - https://github.com/godotengine/godot/pull/101994)
@@ -43,3 +47,4 @@ Godot-based editor for RE Engine games.
 ## Credits
 - RE Mesh Editor - NSACloud
 - RszTool - czastack
+- All the members of the RE engine modding community

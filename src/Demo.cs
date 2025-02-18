@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-namespace RFG;
+namespace RGE;
 
 public partial class Demo : Node
 {

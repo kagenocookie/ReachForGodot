@@ -1,4 +1,4 @@
-namespace RFG;
+namespace RGE;
 
 [System.AttributeUsage(System.AttributeTargets.Class, Inherited = true, AllowMultiple = true)]
 public sealed class REComponentClassAttribute : System.Attribute

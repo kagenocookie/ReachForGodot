@@ -1,11 +1,10 @@
-namespace RFG;
+namespace RGE;
 
 using System;
 using System.Text.Json;
 using Godot;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using REFDumpFormatter;
-using RFG;
 using RszTool;
 using RszTool.via;
 

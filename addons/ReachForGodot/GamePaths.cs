@@ -1,6 +1,6 @@
 using RszTool;
 
-namespace RFG;
+namespace RGE;
 
 public record GamePaths(SupportedGame Game, string ChunkPath, string? Il2cppPath, string? RszJsonPath)
 {

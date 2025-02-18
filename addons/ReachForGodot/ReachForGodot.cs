@@ -3,7 +3,7 @@ using System.IO;
 using Godot;
 using GC = Godot.Collections;
 
-namespace RFG;
+namespace RGE;
 
 public static class ReachForGodot
 {

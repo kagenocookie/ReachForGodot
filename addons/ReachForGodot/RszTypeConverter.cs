@@ -1,9 +1,8 @@
-namespace RFG;
+namespace RGE;
 
 using System;
 using System.Globalization;
 using Godot;
-using RFG;
 using RszTool;
 using RszTool.via;
 

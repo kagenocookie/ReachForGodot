@@ -8,7 +8,7 @@ using System.Security.Principal;
 using System.Threading.Tasks;
 using Godot;
 
-namespace RFG;
+namespace RGE;
 
 [GlobalClass, Tool]
 public partial class AssetConfig : Resource

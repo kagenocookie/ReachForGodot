@@ -4,7 +4,7 @@ using System;
 using System.Diagnostics;
 using Godot;
 
-namespace RFG;
+namespace RGE;
 
 [GlobalClass, Tool]
 public partial class AssetReference : Resource

@@ -4,7 +4,7 @@ using Godot;
 using GC = Godot.Collections;
 
 #if TOOLS
-namespace RFG;
+namespace RGE;
 #nullable enable
 
 [Tool]
