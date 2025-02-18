@@ -52,11 +52,7 @@ public partial class REObject : Resource
         cache ??= TypeCache.GetData(Game, Classname ?? throw new Exception("Missing REObject classname"));
         foreach (var field in cache.Fields) {
             var value = instance.Values[field.FieldIndex];
-            if (field.Hint == PropertyHint.ResourceType) {
-                Data[field.SerializedName] = new Variant();
-            } else {
-                Data[field.SerializedName] = RszTypeConverter.FromRszValue(field, value, Game);
-            }
+            Data[field.SerializedName] = RszTypeConverter.FromRszValue(field, value, Game);
         }
     }
 

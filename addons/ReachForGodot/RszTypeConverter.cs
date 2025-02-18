@@ -13,6 +13,16 @@ public static class RszTypeConverter
 
     public static Variant FromRszValue(REField field, object value, SupportedGame game)
     {
+        try {
+            return FromRszValueUnsafe(field, value, game);
+        } catch (NotSupportedException exception) {
+            GD.PrintErr("Could not deserialize rsz value of type " + field.RszField.original_type + ":\n" + exception);
+            return new Variant();
+        }
+    }
+
+    public static Variant FromRszValueUnsafe(REField field, object value, SupportedGame game)
+    {
         if (field.RszField.array) {
             if (value == null) return new Godot.Collections.Array();
 

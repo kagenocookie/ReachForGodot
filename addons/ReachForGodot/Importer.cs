@@ -218,9 +218,12 @@ public class Importer
         tmpfile.Close();
 
         return ExecuteBlenderScript(tempFn, true).ContinueWith((_) => {
-            File.Move(convertedFilepath, outputGlobalized, true);
-
-            QueueFileRescan();
+            if (File.Exists(convertedFilepath)) {
+                File.Move(convertedFilepath, outputGlobalized, true);
+                QueueFileRescan();
+            } else {
+                // array textures and supported stuff... not sure how to handle those
+            }
         });
     }
 
@@ -269,7 +272,7 @@ public class Importer
     private static void QueueFileRescan()
     {
         var fs = EditorInterface.Singleton.GetResourceFilesystem();
-        if (!fs.IsScanning()) fs.Scan();
+        if (!fs.IsScanning()) fs.CallDeferred(EditorFileSystem.MethodName.Scan);
     }
 
     public static Task ImportResource(string sourceFilePath, string outputFilePath, AssetConfig config)
