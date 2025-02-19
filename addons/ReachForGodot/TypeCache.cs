@@ -1,6 +1,7 @@
 namespace RGE;
 
 using System;
+using System.Diagnostics;
 using System.Text.Json;
 using Godot;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -28,6 +29,8 @@ public class TypeCache
             rszData.Clear();
             serializationCache.Clear();
             il2cppCache.Clear();
+            RszParser.ClearCache();
+            EnumParser.ClearCache();
         };
     }
 
@@ -321,9 +324,14 @@ public class TypeCache
             return null!;
         }
 
+        GD.Print("Loading RSZ data...");
+        var time = new Stopwatch();
+        time.Start();
         var parser = RszParser.GetInstance(jsonPath);
         parser.ReadPatch(GamePaths.RszPatchGlobalPath);
         parser.ReadPatch(paths.RszPatchPath);
+        time.Stop();
+        GD.Print("Loaded RSZ data in " + time.Elapsed);
         return rszData[game] = parser;
     }
 
@@ -344,6 +352,8 @@ public class TypeCache
         }
 
         GD.Print("Loading il2cpp data...");
+        var time = new Stopwatch();
+        time.Start();
         il2cppCache[paths.Game] = cache = new Il2cppCache();
         var baseCacheFile = paths.EnumCacheFilename;
         var overrideFile = paths.EnumOverridesFilename;
@@ -354,6 +364,7 @@ public class TypeCache
                 if (!success) {
                     GD.PrintErr("Failed to load il2cpp cache data from " + baseCacheFile);
                 }
+                GD.Print("Loaded previously cached il2cpp data in " + time.Elapsed);
                 return cache;
             }
 
@@ -362,6 +373,7 @@ public class TypeCache
             if (il2cppLastUpdate <= cacheLastUpdate) {
                 var existingCacheWorks = TryApplyIl2cppCache(cache, baseCacheFile);
                 TryApplyIl2cppCache(cache, overrideFile);
+                GD.Print("Loaded cached il2cpp data in " + time.Elapsed);
                 if (existingCacheWorks) return cache;
             }
         }
@@ -376,11 +388,13 @@ public class TypeCache
             ?? throw new Exception("File is not a valid dump json file");
         fs.Close();
         cache.ApplyIl2cppData(entries);
+        GD.Print("Loaded source il2cpp data in " + time.Elapsed);
 
         GD.Print("Updating il2cpp cache... " + baseCacheFile);
-        var newCacheJson = JsonSerializer.Serialize(cache.ToCacheData(), jsonOptions);
         Directory.CreateDirectory(baseCacheFile.GetBaseDir());
-        File.WriteAllText(baseCacheFile, newCacheJson);
+        using var outfs = File.Create(baseCacheFile);
+        JsonSerializer.Serialize(outfs, cache.ToCacheData(), jsonOptions);
+        outfs.Close();
 
         TryApplyIl2cppCache(cache, overrideFile);
         return cache;

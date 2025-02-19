@@ -16,13 +16,21 @@ public partial class AsyncImporter : Node
     private static AsyncImporter? node;
     private static List<ImportQueueItem> queuedImports = new();
     private static Task<Resource?>? currentImportTask;
+    private static int asyncLoadCompletedTasks;
 
     public override void _Process(double delta)
     {
-        if (!AsyncImporter.ContinueAsyncImports()) {
+        if (AsyncImporter.ContinueAsyncImports()) {
+            if (progress != null && progress.IsInsideTree()) {
+                progress.MaxValue = queuedImports.Count + asyncLoadCompletedTasks;
+                progress.Value = asyncLoadCompletedTasks;
+            }
+        } else {
             SetProcess(false);
             QueueFree();
+            HideProgressPopup();
             instance = null;
+            asyncLoadCompletedTasks = 0;
         }
     }
 
@@ -38,18 +46,25 @@ public partial class AsyncImporter : Node
 
     public static void TestPopup()
     {
-        EditorInterface.Singleton.PopupDialogCentered(CreateProgressPopup());
+        CreateProgressPopup();
     }
 
-    private static Popup CreateProgressPopup()
+    private static void HideProgressPopup()
     {
-        var p = ResourceLoader.Load<PackedScene>("res://addons/ReachForGodot/async_loader_popup.tscn").Instantiate<Popup>();
+        progress?.FindNodeInParents<Window>()?.Hide();
+        progress = null;
+    }
+
+    private static void CreateProgressPopup()
+    {
+        var p = ResourceLoader.Load<PackedScene>("res://addons/ReachForGodot/async_loader_popup.tscn").Instantiate<Window>();
         progress = p.RequireChildByTypeRecursive<ProgressBar>();
         var cancelButton = p.FindChildByTypeRecursive<Button>();
         if (cancelButton != null) {
             cancelButton.Pressed += () => CancelImports();
         }
-        return p;
+        p.SetUnparentWhenInvisible(true);
+        p.PopupExclusiveCentered(((SceneTree)(Engine.GetMainLoop())).Root);
     }
 
     static AsyncImporter()
@@ -63,12 +78,11 @@ public partial class AsyncImporter : Node
     public static void CancelImports()
     {
         cancellationTokenSource?.Cancel();
-        cancellationTokenSource = null!;
+        cancellationTokenSource = null;
         currentImportTask = null;
         queuedImports.Clear();
         instance?.QueueFree();
-        progress?.FindNodeInParents<Popup>()?.Hide();
-        progress = null;
+        HideProgressPopup();
     }
 
     private class ImportQueueItem
@@ -99,6 +113,8 @@ public partial class AsyncImporter : Node
         switch (format) {
             case RESupportedFileFormats.Mesh:
                 return QueueAssetImport(originalFilepath, game, format, Importer.ImportMesh, callback).importTask;
+            case RESupportedFileFormats.Texture:
+                return QueueAssetImport(originalFilepath, game, format, Importer.ImportTexture, callback).importTask;
             default:
                 return Task.FromException<Resource?>(new ArgumentException("Invalid import asset " + originalFilepath));
         }
@@ -123,7 +139,7 @@ public partial class AsyncImporter : Node
                 var root = ((SceneTree)Engine.GetMainLoop()).Root;
                 instance = new AsyncImporter() { Name = nameof(AsyncImporter) };
                 root.CallDeferred(Window.MethodName.AddChild, instance);
-                EditorInterface.Singleton.PopupDialogCentered(CreateProgressPopup());
+                CreateProgressPopup();
                 progress!.ShowPercentage = true;
                 progress.MinValue = 0;
             }
@@ -143,17 +159,13 @@ public partial class AsyncImporter : Node
 
         var importCount = queuedImports.Count;
 
-        // TODO show popup with an asset count list
-        // EditorInterface.Singleton.PopupDialogCentered();
-        GD.Print("Pending imports: " + importCount + ". Current: " + first.state);
-
         if (first.state == ImportState.Pending) {
             currentImportTask = HandleImportAsync(first);
         }
 
         Debug.Assert(currentImportTask != null);
 
-        if (currentImportTask.IsCompleted == true) {
+        if (currentImportTask.IsCompleted == true || first.state == ImportState.Failed) {
             queuedImports.Remove(first);
             currentImportTask = null;
         }
@@ -168,6 +180,7 @@ public partial class AsyncImporter : Node
         if (convertTask == null) {
             GD.PrintErr("Asset conversion setup failed: " + item.originalFilepath);
             ExecutePostImport(item);
+            item.state = ImportState.Failed;
             return null;
         }
 
@@ -175,19 +188,17 @@ public partial class AsyncImporter : Node
         if (!convertSucess)  {
             GD.PrintErr("Asset conversion failed: " + item.originalFilepath);
             ExecutePostImport(item);
+            item.state = ImportState.Failed;
             return null;
         }
         item.state = ImportState.Importing;
 
         var fs = EditorInterface.Singleton.GetResourceFilesystem();
         if (!fs.IsScanning()) {
-            GD.Print("Triggered rescan");
             fs.CallDeferred(EditorFileSystem.MethodName.Scan);
             await Task.Delay(50, cancellationTokenSource.Token);
-            GD.Print("Triggered rescan delay 1: " + fs.IsScanning());
             while (fs.IsScanning()) {
                 await Task.Delay(50, cancellationTokenSource.Token);
-                GD.Print("Triggered rescan more delay: " + fs.IsScanning());
             }
         }
 
@@ -200,6 +211,7 @@ public partial class AsyncImporter : Node
 
     private static void ExecutePostImport(ImportQueueItem item)
     {
+        asyncLoadCompletedTasks++;
         foreach (var cb in item.callbacks) {
             cb.Invoke(item.resource);
         }

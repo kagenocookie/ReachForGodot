@@ -21,46 +21,50 @@ public class Il2cppCache
 {
     public Dictionary<string, EnumDescriptor> enums = new();
 
+    private static Dictionary<string, Func<EnumDescriptor>> descriptorFactory = new();
+
     public void ApplyIl2cppData(REFDumpFormatter.SourceDumpRoot data)
     {
         enums.Clear();
-        foreach (var e in data) {
-            if (e.Value.parent == "System.Enum") {
-                var backing = REFDumpFormatter.EnumParser.GetEnumBackingType(e.Value);
+        foreach (var (name, enumData) in data) {
+            if (enumData.parent == "System.Enum") {
+                var backing = REFDumpFormatter.EnumParser.GetEnumBackingType(enumData);
                 if (backing == null) {
-                    GD.PrintErr("Couldn't determine enum backing type: " + e.Key);
-                    enums[e.Key] = EnumDescriptor<int>.Default;
+                    GD.PrintErr("Couldn't determine enum backing type: " + name);
+                    enums[name] = EnumDescriptor<int>.Default;
                     continue;
                 }
 
-                var descriptor = CreateDescriptor(backing);
-                descriptor.ParseIl2cppData(e.Value);
-                enums[e.Key] = descriptor;
+                var descriptor = CreateDescriptor(backing.FullName!);
+                descriptor?.ParseIl2cppData(enumData);
+                enums[name] = descriptor ?? EnumDescriptor<ulong>.Default;
             }
         }
     }
 
-    private static EnumDescriptor CreateDescriptor(Type backing)
+    private static EnumDescriptor? CreateDescriptor(string backing)
     {
-        var enumType = typeof(EnumDescriptor<>).MakeGenericType(backing);
-        var descriptor = (EnumDescriptor)Activator.CreateInstance(enumType)!;
-        return descriptor;
+        if (!descriptorFactory.TryGetValue(backing, out var fac)) {
+            var t = Type.GetType(backing);
+            if (t == null) {
+                GD.PrintErr("Invalid cached enum backing type: " + backing);
+                return null;
+            }
+
+            var enumType = typeof(EnumDescriptor<>).MakeGenericType(t!);
+            fac = () => (EnumDescriptor)Activator.CreateInstance(enumType)!;
+        }
+
+        return fac();
     }
 
     public void ApplyCacheData(Il2cppCacheData data)
     {
         foreach (var (enumName, enumItem) in data.Enums) {
             if (!enums.TryGetValue(enumName, out var enumInstance)) {
-                var backing = Type.GetType(enumItem.BackingType);
-                if (backing == null) {
-                    GD.PrintErr("Invalid cached enum backing type: " + enumItem.BackingType);
-                    enums[enumName] = EnumDescriptor<int>.Default;
-                    continue;
-                }
-
-                var descriptor = CreateDescriptor(backing);
-                descriptor.ParseCacheData(enumItem.Items);
-                enums[enumName] = descriptor;
+                var descriptor = CreateDescriptor(enumItem.BackingType);
+                descriptor?.ParseCacheData(enumItem.Items);
+                enums[enumName] = descriptor ?? EnumDescriptor<ulong>.Default;
             }
         }
     }

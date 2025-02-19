@@ -222,7 +222,7 @@ public class Importer
             var bytes = new byte[4];
             meshPreview.ReadExactly(bytes);
             if (bytes.AsSpan().SequenceEqual(MPLY_mesh_bytes)) {
-                GD.Print("Unsupported MPLY mesh " + sourceFilePath);
+                GD.PrintErr("Unsupported MPLY mesh " + sourceFilePath);
                 return null;
             }
         }
@@ -250,7 +250,7 @@ public class Importer
         });
     }
 
-    public static Task ImportTexture(string sourceFilePath, SupportedGame game)
+    public static Task<bool>? ImportTexture(string sourceFilePath, SupportedGame game)
     {
         var config = ReachForGodot.GetAssetConfig(game);
         var importFilepath = GetAssetImportPath(sourceFilePath, RESupportedFileFormats.Texture, config);
@@ -279,8 +279,10 @@ public class Importer
             if (File.Exists(convertedFilepath)) {
                 File.Move(convertedFilepath, outputGlobalized, true);
                 QueueFileRescan();
+                return true;
             } else {
                 // array textures and supported stuff... not sure how to handle those
+                return false;
             }
         });
     }

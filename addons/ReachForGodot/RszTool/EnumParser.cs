@@ -9,6 +9,11 @@ namespace RszTool
     {
         private static readonly Dictionary<string, EnumParser> instanceDict = new();
 
+        public static void ClearCache()
+        {
+            instanceDict.Clear();
+        }
+
         public static EnumParser GetInstance(string jsonPath)
         {
             if (!instanceDict.TryGetValue(jsonPath, out var rszParser))

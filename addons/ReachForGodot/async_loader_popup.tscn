@@ -1,15 +1,32 @@
 [gd_scene format=3 uid="uid://clucit0gowfua"]
 
-[node name="Popup" type="Popup"]
-size = Vector2i(400, 160)
-visible = true
-always_on_top = true
+[node name="Popup" type="Window"]
+initial_position = 5
+size = Vector2i(400, 500)
+exclusive = true
+borderless = true
 
-[node name="Panel" type="Panel" parent="."]
-offset_right = 400.0
+[node name="Container" type="Control" parent="."]
+custom_minimum_size = Vector2(400, 400)
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="Panel" parent="Container"]
+custom_minimum_size = Vector2(400, 160)
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -200.0
+offset_right = 200.0
 offset_bottom = 160.0
+grow_horizontal = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Panel"]
+[node name="VBoxContainer" type="VBoxContainer" parent="Container/Panel"]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -18,15 +35,15 @@ grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/separation = 30
 
-[node name="ProgressBar" type="ProgressBar" parent="Panel/VBoxContainer"]
+[node name="ProgressBar" type="ProgressBar" parent="Container/Panel/VBoxContainer"]
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Panel/VBoxContainer"]
+[node name="Label" type="Label" parent="Container/Panel/VBoxContainer"]
 layout_mode = 2
 text = "Converting assets..."
 horizontal_alignment = 1
 
-[node name="Button" type="Button" parent="Panel/VBoxContainer"]
+[node name="Button" type="Button" parent="Container/Panel/VBoxContainer"]
 layout_mode = 2
 size_flags_horizontal = 4
 text = "Cancel"

@@ -87,9 +87,9 @@ public class RszGodotConverter : IDisposable
         scn.Read();
 
         if (!ResourceLoader.Exists(importFilepath)) {
-            var scene = new PackedScene();
+            var scene = new PackedScene() { ResourcePath = importFilepath };
             scene.Pack(new SceneFolder() { Game = AssetConfig.Game, Name = name, Asset = new AssetReference(relativeSourceFile) });
-            ResourceSaver.Save(scene, importFilepath);
+            ResourceSaver.Save(scene);
             return scene;
         }
         return ResourceLoader.Load<PackedScene>(importFilepath);
@@ -111,9 +111,9 @@ public class RszGodotConverter : IDisposable
         file.Read();
 
         if (!ResourceLoader.Exists(importFilepath)) {
-            var scene = new PackedScene();
+            var scene = new PackedScene() { ResourcePath = importFilepath };
             scene.Pack(new PrefabNode() { Game = AssetConfig.Game, Name = name, Asset = new AssetReference(relativeSourceFile) });
-            ResourceSaver.Save(scene, importFilepath);
+            ResourceSaver.Save(scene);
             return scene;
         }
         return ResourceLoader.Load<PackedScene>(importFilepath);
@@ -258,6 +258,8 @@ public class RszGodotConverter : IDisposable
         SceneFolder newFolder;
         if (folder.Instance?.GetFieldValue("v5") is string scnPath && !string.IsNullOrWhiteSpace(scnPath)) {
             var importPath = Importer.GetLocalizedImportPath(scnPath, AssetConfig);
+            GD.Print("Importing folder " + scnPath);
+            GD.Print("Importing generated folder to " + importPath);
             PackedScene scene;
             if (importPath == null) {
                 GD.PrintErr("Missing scene file " + scnPath);

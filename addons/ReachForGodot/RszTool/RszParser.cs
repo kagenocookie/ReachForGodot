@@ -12,6 +12,11 @@ namespace RszTool
     {
         private static readonly Dictionary<string, RszParser> instanceDict = new();
 
+        public static void ClearCache()
+        {
+            instanceDict.Clear();
+        }
+
         public static RszParser GetInstance(string jsonPath)
         {
             if (!instanceDict.TryGetValue(jsonPath, out var rszParser))
