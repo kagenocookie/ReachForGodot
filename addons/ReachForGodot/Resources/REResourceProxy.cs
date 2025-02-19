@@ -18,9 +18,11 @@ public partial class REResourceProxy : REResource
 
     public Task<Resource?> Import(bool forceReload)
     {
-        if (forceReload) {
-            ImportedResource = null;
+        if (!forceReload && ImportedResource != null) {
+            return Task.FromResult<Resource?>(ImportedResource);
         }
+
+        ImportedResource = null;
 
         // TODO put the import into a queue instead of executing immediately
         return Import();

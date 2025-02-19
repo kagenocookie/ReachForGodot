@@ -203,10 +203,10 @@ public static class GodotObjectExtensions
         }
     }
 
-    public static T AddOwnedChild<T>(this Node parent, T child) where T : Node
+    public static T AddDeferredChild<T>(this Node parent, T child) where T : Node
     {
-        parent.AddChild(child);
-        child.Owner = parent.Owner ?? parent;
+        parent.CallDeferred(Node.MethodName.AddChild, child);
+        child.SetDeferred(Node.PropertyName.Owner, parent.Owner ?? parent);
         return child;
     }
 

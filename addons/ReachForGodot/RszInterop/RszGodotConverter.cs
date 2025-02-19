@@ -259,7 +259,10 @@ public class RszGodotConverter : IDisposable
         if (folder.Instance?.GetFieldValue("v5") is string scnPath && !string.IsNullOrWhiteSpace(scnPath)) {
             var importPath = Importer.GetLocalizedImportPath(scnPath, AssetConfig);
             PackedScene scene;
-            if (!ResourceLoader.Exists(importPath)) {
+            if (importPath == null) {
+                GD.PrintErr("Missing scene file " + scnPath);
+                return;
+            } else if (!ResourceLoader.Exists(importPath)) {
                 scene = Importer.ImportScene(Importer.ResolveSourceFilePath(scnPath, AssetConfig), importPath, AssetConfig)!;
                 newFolder = scene.Instantiate<SceneFolder>(PackedScene.GenEditState.Instance);
             } else {
@@ -343,7 +346,9 @@ public class RszGodotConverter : IDisposable
         }
     }
 
-    private RszFileOption CreateFileOption() => new RszFileOption(AssetConfig.Paths.GetRszToolGameEnum(), AssetConfig.Paths.RszJsonPath ?? throw new Exception("Rsz json file not specified for game " + AssetConfig.Game));
+    private RszFileOption CreateFileOption() => new RszFileOption(
+        AssetConfig.Paths.GetRszToolGameEnum(),
+        AssetConfig.Paths.RszJsonPath ?? throw new Exception("Rsz json file not specified for game " + AssetConfig.Game));
 
     private ScnFile OpenScn(string filename)
     {

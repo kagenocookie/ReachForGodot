@@ -28,7 +28,7 @@ public partial class REGameObject : Node3D
 
     public void AddComponent(REComponent component)
     {
-        EnsureComponentContainerSetup().AddOwnedChild(component);
+        EnsureComponentContainerSetup().AddDeferredChild(component);
     }
 
     public REComponent? GetComponent(string classname)

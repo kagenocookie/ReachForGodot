@@ -39,11 +39,7 @@ public partial class REMeshComponent : REComponent
     protected void ReloadMesh(MeshResource? mr, REGameObject gameObject)
     {
         if (mr != null) {
-            if (mr.ImportedResource is PackedScene scene) {
-                ReinstantiateMesh(scene, gameObject);
-            } else {
-                mr.Import(false).ContinueWith((res) => ReinstantiateMesh(res.Result as PackedScene, gameObject));
-            }
+            mr.Import(false).ContinueWith((res) => ReinstantiateMesh(res.Result as PackedScene, gameObject));
         } else {
             meshNode = null;
             GD.Print("Missing mesh " + MeshFilepath + " at path: " + gameObject.Owner.GetPathTo(gameObject));
@@ -56,7 +52,7 @@ public partial class REMeshComponent : REComponent
         if (scene != null) {
             meshNode = scene.Instantiate<Node3D>(PackedScene.GenEditState.Instance);
             meshNode.Name = "__" + meshNode.Name;
-            go?.AddOwnedChild(meshNode);
+            go?.AddDeferredChild(meshNode);
         }
     }
 }

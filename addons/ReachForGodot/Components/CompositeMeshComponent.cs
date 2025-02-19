@@ -12,13 +12,13 @@ public partial class CompositeMeshComponent : REComponent
 
     public override void Setup(IRszContainerNode root, REGameObject gameObject, RszInstance rsz)
     {
-        meshNode = gameObject.AddOwnedChild(new Node3D() { Name = "__CompositeMesh" });
+        meshNode = gameObject.AddDeferredChild(new Node3D() { Name = "__CompositeMesh" });
         var compositeInstanceGroup = rsz.GetFieldValue("v15") as List<object>;
 
         if (compositeInstanceGroup != null) {
             foreach (var inst in compositeInstanceGroup.OfType<RszInstance>()) {
                 if (inst.GetFieldValue("v0") is string meshFilename && meshFilename != "") {
-                    var submesh = meshNode.AddOwnedChild(new MeshInstance3D() { Name = "mesh_" + meshNode.GetChildCount() });
+                    var submesh = meshNode.AddDeferredChild(new MeshInstance3D() { Name = "mesh_" + meshNode.GetChildCount() });
                     if (root.Resources?.FirstOrDefault(r => r.Asset?.AssetFilename == meshFilename) is REResourceProxy mr && mr.ImportedResource is PackedScene scene) {
                         var sourceMeshInstance = scene.Instantiate()?.FindChildByType<MeshInstance3D>();
                         if (sourceMeshInstance != null) {
