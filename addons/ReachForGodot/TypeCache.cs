@@ -79,6 +79,12 @@ public class TypeCache
 
     private static void RszFieldToVariantType(RszField srcField, REField refield, SupportedGame game)
     {
+        void ResourceHint(REField field, string resourceName) {
+            field.VariantType = Variant.Type.Object;
+            field.Hint = PropertyHint.ResourceType;
+            field.HintString = nameof(OrientedBoundingBox);
+        }
+
         if (srcField.array) {
             switch (srcField.type) {
                 case RszFieldType.U8:
@@ -130,6 +136,7 @@ public class TypeCache
                     return;
             }
         }
+
         switch (srcField.type) {
             case RszFieldType.Object:
             case RszFieldType.UserData:
@@ -150,9 +157,7 @@ public class TypeCache
                 if (!string.IsNullOrEmpty(srcField.original_type)) {
                     var desc = GetEnumDescriptor(game, srcField.original_type);
                     if (desc != null && !desc.IsEmpty) {
-                        // use Enum and not EnumSuggestion
-                        // TODO for custom enum values, provide a way to explicitly define them somewhere in a config
-                        // maybe coordinate with content editor's fake entity enums
+                        // use Enum and not EnumSuggestion so we could still add custom values
                         refield.Hint = PropertyHint.Enum;
                         refield.HintString = desc.HintstringLabels;
                     }
@@ -234,73 +239,68 @@ public class TypeCache
                 refield.VariantType = Variant.Type.Vector2;
                 break;
 
-            // TODO see if we can rename the individual inputs maybe?
             case RszFieldType.Sphere:
                 refield.VariantType = Variant.Type.Vector4;
                 break;
             case RszFieldType.Rect:
                 refield.VariantType = Variant.Type.Vector4;
                 break;
-
-            // TODO unhandled types
             case RszFieldType.LineSegment:
-                // new RszTool.via.LineSegment();
+                ResourceHint(refield, nameof(LineSegment));
                 break;
             case RszFieldType.Plane:
-                // new RszTool.via.Plane();
+                ResourceHint(refield, nameof(Plane));
                 break;
             case RszFieldType.PlaneXZ:
-                // new RszTool.via.PlaneXZ();
+                refield.VariantType = Variant.Type.Float;
                 break;
             case RszFieldType.Ray:
-                // new RszTool.via.Ray();
+                ResourceHint(refield, nameof(Ray));
                 break;
             case RszFieldType.RayY:
-                // new RszTool.via.RayY();
+                ResourceHint(refield, nameof(RayY));
                 break;
             case RszFieldType.Segment:
-                // new RszTool.via.Segment();
+                ResourceHint(refield, nameof(Segment));
                 break;
             case RszFieldType.Triangle:
-                // new RszTool.via.Triangle();
+                ResourceHint(refield, nameof(Triangle));
                 break;
             case RszFieldType.Cylinder:
-                // new RszTool.via.Cylinder();
+                ResourceHint(refield, nameof(Cylinder));
                 break;
             case RszFieldType.Ellipsoid:
-                // new RszTool.via.Ellipsoid();
+                ResourceHint(refield, nameof(Ellipsoid));
                 break;
             case RszFieldType.Torus:
-                // new RszTool.via.Torus();
+                ResourceHint(refield, nameof(Torus));
                 break;
             case RszFieldType.Frustum:
-                // new RszTool.via.Frustum();
+                ResourceHint(refield, nameof(Frustum));
                 break;
             case RszFieldType.KeyFrame:
-                // new RszTool.via.KeyFrame();
+                ResourceHint(refield, nameof(KeyFrame));
                 break;
             case RszFieldType.Rect3D:
-                // new RszTool.via.Rect3D();
+                ResourceHint(refield, nameof(Rect3D));
                 break;
             case RszFieldType.OBB:
-                refield.VariantType = Variant.Type.Object;
-                refield.Hint = PropertyHint.ResourceType;
-                refield.HintString = nameof(OrientedBoundingBox);
+                ResourceHint(refield, nameof(OrientedBoundingBox));
                 break;
             case RszFieldType.Capsule:
-                // new RszTool.via.Capsule();
+                ResourceHint(refield, nameof(Capsule));
                 break;
             case RszFieldType.Area:
-                // new RszTool.via.Area();
+                ResourceHint(refield, nameof(Area));
                 break;
             case RszFieldType.TaperedCapsule:
-                // new RszTool.via.TaperedCapsule();
+                ResourceHint(refield, nameof(TaperedCapsule));
                 break;
             case RszFieldType.Cone:
-                // new RszTool.via.Cone();
+                ResourceHint(refield, nameof(Cone));
                 break;
             case RszFieldType.Line:
-                // new RszTool.via.Line();
+                ResourceHint(refield, nameof(Line));
                 break;
             case RszFieldType.Resource:
                 // var res = Importer.FindOrImportResource<REResource>()

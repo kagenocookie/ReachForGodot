@@ -75,6 +75,14 @@ public static class RszTypeConverter
                 }
                 GD.Print("Unhandled rsz object type " + value?.GetType().FullName);
                 return default;
+            case RszFieldType.Resource:
+                if (value is string str && !string.IsNullOrWhiteSpace(str)) {
+                    return Importer.FindOrImportResource<Resource>(str, ReachForGodot.GetAssetConfig(game))!;
+                } else {
+                    GD.Print("Empty resource path " + value);
+                    return new Variant();
+                }
+
             case RszFieldType.Sfix:
                 return ((sfix)value).v;
             case RszFieldType.Sfix2:
@@ -176,23 +184,46 @@ public static class RszTypeConverter
             case RszFieldType.Uri:
             case RszFieldType.GameObjectRef:
                 return ((Guid)value).ToString();
-            case RszFieldType.Resource:
-                if (value is string str && !string.IsNullOrWhiteSpace(str)) {
-                    return Importer.FindOrImportResource<Resource>(str, ReachForGodot.GetAssetConfig(game))!;
-                } else {
-                    GD.Print("Empty resource path " + value);
-                    return new Variant();
-                }
             case RszFieldType.AABB:
-                var min = ((RszTool.via.AABB)value).minpos.ToGodot();
-                return new Aabb(
-                    min,
-                    ((RszTool.via.AABB)value).maxpos.ToGodot() - min
-                );
+                return ((RszTool.via.AABB)value).ToGodot();
             case RszFieldType.Mat4:
                 return ((RszTool.via.mat4)value).ToProjection();
             case RszFieldType.OBB:
-                return new OrientedBoundingBox(((RszTool.via.OBB)value));
+                return (OrientedBoundingBox)(((RszTool.via.OBB)value));
+            case RszFieldType.Sphere:
+                return ((RszTool.via.Sphere)value).ToVector4();
+            case RszFieldType.LineSegment:
+                return (LineSegment)((RszTool.via.LineSegment)value);
+            case RszFieldType.Plane:
+                return (Plane)((RszTool.via.Plane)value);
+            case RszFieldType.PlaneXZ:
+                return ((RszTool.via.PlaneXZ)value).dist;
+            case RszFieldType.Ray:
+                return (Ray)((RszTool.via.Ray)value);
+            case RszFieldType.RayY:
+                return (RayY)((RszTool.via.RayY)value);
+            case RszFieldType.Triangle:
+                return (Triangle)((RszTool.via.Triangle)value);
+            case RszFieldType.Cylinder:
+                return (Cylinder)((RszTool.via.Cylinder)value);
+            case RszFieldType.Ellipsoid:
+                return (Ellipsoid)((RszTool.via.Ellipsoid)value);
+            case RszFieldType.Frustum:
+                return (Frustum)((RszTool.via.Frustum)value);
+            case RszFieldType.KeyFrame:
+                return (KeyFrame)((RszTool.via.KeyFrame)value);
+            case RszFieldType.Rect3D:
+                return (Rect3D)((RszTool.via.Rect3D)value);
+            case RszFieldType.Capsule:
+                return (Capsule)((RszTool.via.Capsule)value);
+            case RszFieldType.Area:
+                return (Area)((RszTool.via.Area)value);
+            case RszFieldType.TaperedCapsule:
+                return (TaperedCapsule)((RszTool.via.TaperedCapsule)value);
+            case RszFieldType.Cone:
+                return (Cone)((RszTool.via.Cone)value);
+            case RszFieldType.Line:
+                return (Line)((RszTool.via.Line)value);
         }
 
         GD.PrintErr("Unhandled conversion for rsz type " + field.RszField.type + " with value type " + value.GetType().FullName);
@@ -202,7 +233,9 @@ public static class RszTypeConverter
     public static Vector2 ToGodot(this System.Numerics.Vector2 val) => new Vector2(val.X, val.Y);
     public static Vector3 ToGodot(this System.Numerics.Vector3 val) => new Vector3(val.X, val.Y, val.Z);
     public static Vector4 ToGodot(this System.Numerics.Vector4 val) => new Vector4(val.X, val.Y, val.Z, val.W);
+    public static Vector4 ToVector4(this RszTool.via.Sphere val) => new Vector4(val.pos.X, val.pos.Y, val.Pos.Z, val.R);
     public static Quaternion ToGodot(this System.Numerics.Quaternion val) => new Quaternion(val.X, val.Y, val.Z, val.W);
+    public static Aabb ToGodot(this RszTool.via.AABB val) => new Aabb(val.minpos.ToGodot(), val.maxpos.ToGodot() - val.minpos.ToGodot());
     public static Projection ToProjection(this RszTool.via.mat4 mat)
     {
         return new Projection(
