@@ -60,6 +60,9 @@ public static class RszTypeConverter
                     } else if (rsz.RSZUserData is RSZUserDataInfo_TDB_LE_67 ud2) {
                         GD.PrintErr("Unsupported userdata reference TDB_LE_67");
                     }
+                    if (string.IsNullOrEmpty(rsz.RszClass.name)) {
+                        return new Variant();
+                    }
                     return new REObject(game, rsz.RszClass.name);
                 }
 
