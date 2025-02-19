@@ -4,29 +4,37 @@ using System;
 using System.Text.Json;
 using Godot;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using REFDumpFormatter;
 using RszTool;
 using RszTool.via;
 
 public class TypeCache
 {
     private static readonly Dictionary<SupportedGame, RszParser> rszData = new();
-    private static readonly Dictionary<SupportedGame, Dictionary<string, REObjectTypeCache>> cache = new();
-    private static readonly Dictionary<SupportedGame, Dictionary<string, EnumDescriptor>> enums = new();
+    private static readonly Dictionary<SupportedGame, Dictionary<string, REObjectTypeCache>> serializationCache = new();
+    private static readonly Dictionary<SupportedGame, Il2cppCache> il2cppCache = new();
+
+    private static readonly JsonSerializerOptions jsonOptions = new() {
+        WriteIndented = true,
+    };
 
     static TypeCache()
     {
         System.Runtime.Loader.AssemblyLoadContext.GetLoadContext(typeof(RszGodotConverter).Assembly)!.Unloading += (c) => {
+            var assembly = typeof(System.Text.Json.JsonSerializerOptions).Assembly;
+            var updateHandlerType = assembly.GetType("System.Text.Json.JsonSerializerOptionsUpdateHandler");
+            var clearCacheMethod = updateHandlerType?.GetMethod("ClearCache", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public);
+            clearCacheMethod!.Invoke(null, new object?[] { null });
+
             rszData.Clear();
-            cache.Clear();
-            enums.Clear();
+            serializationCache.Clear();
+            il2cppCache.Clear();
         };
     }
 
     public static REObjectTypeCache GetData(SupportedGame game, string classname)
     {
-        if (!cache.TryGetValue(game, out var cacheData)) {
-            cache[game] = cacheData = new();
+        if (!serializationCache.TryGetValue(game, out var cacheData)) {
+            serializationCache[game] = cacheData = new();
         }
 
         if (!cacheData.TryGetValue(classname, out var data)) {
@@ -45,7 +53,7 @@ public class TypeCache
         return new REObjectTypeCache(GenerateFields(cls, game));
     }
 
-    public static RszClass? GetRszClass(SupportedGame game, string classname)
+    private static RszClass? GetRszClass(SupportedGame game, string classname)
     {
         if (!rszData.TryGetValue(game, out var data)) {
             rszData[game] = data = LoadRsz(game);
@@ -54,7 +62,7 @@ public class TypeCache
         return data.GetRSZClass(classname);
     }
 
-    public static REField[] GenerateFields(RszClass cls, SupportedGame game)
+    private static REField[] GenerateFields(RszClass cls, SupportedGame game)
     {
         var fields = new REField[cls.fields.Length];
         for (int i = 0; i < cls.fields.Length; ++i) {
@@ -308,139 +316,91 @@ public class TypeCache
     {
         var paths = ReachForGodot.GetPaths(game);
         var jsonPath = paths?.RszJsonPath;
-        if (jsonPath == null) {
+        if (jsonPath == null || paths == null) {
             GD.PrintErr("No rsz json defined for game " + game);
             return null!;
         }
 
         var parser = RszParser.GetInstance(jsonPath);
-        parser.ReadPatch(ProjectSettings.GlobalizePath($"res://addons/ReachForGodot/rsz_patches/global.json"));
-        parser.ReadPatch(ProjectSettings.GlobalizePath($"res://addons/ReachForGodot/rsz_patches/{paths!.GetShortName()}.json"));
+        parser.ReadPatch(GamePaths.RszPatchGlobalPath);
+        parser.ReadPatch(paths.RszPatchPath);
         return rszData[game] = parser;
     }
 
     public static EnumDescriptor GetEnumDescriptor(SupportedGame game, string classname)
     {
-        if (!enums.TryGetValue(game, out var list)) {
-            enums[game] = list = new();
-            var inputFilepath = ReachForGodot.GetAssetConfig(game).Paths.Il2cppPath;
-            if (inputFilepath == null) {
-                return EnumDescriptor<int>.Default;
-            }
-
-            // TODO add file cache for specific il2cpp data (enums, anything else we might need) since it's slow
-
-            using var fs = File.OpenRead(inputFilepath);
-            var entries = System.Text.Json.JsonSerializer.Deserialize<REFDumpFormatter.SourceDumpRoot>(fs)
-                ?? throw new Exception("File is not a valid dump json file");
-            fs.Close();
-            foreach (var e in entries) {
-                if (e.Value.parent == "System.Enum") {
-                    var backing = REFDumpFormatter.EnumParser.GetEnumBackingType(e.Value);
-                    if (backing == null) {
-                        GD.PrintErr("Couldn't determine enum backing type: " + e.Key);
-                        list[e.Key] = EnumDescriptor<int>.Default;
-                        continue;
-                    }
-                    var enumType = typeof(EnumDescriptor<>).MakeGenericType(backing);
-                    var descriptior = (EnumDescriptor)Activator.CreateInstance(enumType)!;
-                    descriptior.ParseData(e.Value);
-                    list[e.Key] = descriptior;
-                }
-            }
-        }
-
-        if (list.TryGetValue(classname, out var desc)) {
-            return desc;
+        var cache = SetupIl2cppData(ReachForGodot.GetAssetConfig(game).Paths);
+        if (cache.enums.TryGetValue(classname, out var descriptor)) {
+            return descriptor;
         }
 
         return EnumDescriptor<int>.Default;
     }
-}
 
-public abstract class EnumDescriptor
-{
-    public abstract string GetLabel(object value);
-    // public abstract object GetValue(string label);
-
-    protected abstract IEnumerable<string> LabelValuePairs { get; }
-    private string? _hintstring;
-    public string HintstringLabels => _hintstring ??= string.Join(",", LabelValuePairs);
-
-    public bool IsEmpty { get; private set; } = true;
-
-    public void ParseData(ObjectDef item)
+    private static Il2cppCache SetupIl2cppData(GamePaths paths)
     {
-        if (item.fields == null) return;
+        if (il2cppCache.TryGetValue(paths.Game, out var cache)) {
+            return cache;
+        }
 
-        foreach (var (name, field) in item.fields.OrderBy(f => f.Value.Id)) {
-            if (!field.Flags.Contains("SpecialName") && field.IsStatic && field.Default is JsonElement elem && elem.ValueKind == JsonValueKind.Number) {
-                AddValue(name, elem);
+        GD.Print("Loading il2cpp data...");
+        il2cppCache[paths.Game] = cache = new Il2cppCache();
+        var baseCacheFile = paths.EnumCacheFilename;
+        var overrideFile = paths.EnumOverridesFilename;
+        if (File.Exists(baseCacheFile)) {
+            if (!File.Exists(paths.Il2cppPath)) {
+                var success = TryApplyIl2cppCache(cache, baseCacheFile);
+                TryApplyIl2cppCache(cache, overrideFile);
+                if (!success) {
+                    GD.PrintErr("Failed to load il2cpp cache data from " + baseCacheFile);
+                }
+                return cache;
+            }
+
+            var cacheLastUpdate = File.GetLastWriteTimeUtc(paths.Il2cppPath!);
+            var il2cppLastUpdate = File.GetLastWriteTimeUtc(paths.Il2cppPath!);
+            if (il2cppLastUpdate <= cacheLastUpdate) {
+                var existingCacheWorks = TryApplyIl2cppCache(cache, baseCacheFile);
+                TryApplyIl2cppCache(cache, overrideFile);
+                if (existingCacheWorks) return cache;
             }
         }
 
-        IsEmpty = false;
+        if (!File.Exists(paths.Il2cppPath)) {
+            GD.PrintErr($"Il2cpp file does not exist, nor do we have an enum cache file yet for {paths.Game}. Enums won't show up properly.");
+            return cache;
+        }
+
+        using var fs = File.OpenRead(paths.Il2cppPath!);
+        var entries = System.Text.Json.JsonSerializer.Deserialize<REFDumpFormatter.SourceDumpRoot>(fs)
+            ?? throw new Exception("File is not a valid dump json file");
+        fs.Close();
+        cache.ApplyIl2cppData(entries);
+
+        GD.Print("Updating il2cpp cache... " + baseCacheFile);
+        var newCacheJson = JsonSerializer.Serialize(cache.ToCacheData(), jsonOptions);
+        Directory.CreateDirectory(baseCacheFile.GetBaseDir());
+        File.WriteAllText(baseCacheFile, newCacheJson);
+
+        TryApplyIl2cppCache(cache, overrideFile);
+        return cache;
     }
 
-    protected abstract void AddValue(string name, JsonElement elem);
-}
-
-public sealed class EnumDescriptor<T> : EnumDescriptor where T : struct
-{
-    public readonly Dictionary<T, string> ValueToLabels = new();
-
-    public static readonly EnumDescriptor<T> Default = new();
-    private static readonly object DefaultValue = default(T);
-
-    public override string GetLabel(object value) => ValueToLabels.TryGetValue((T)value, out var val) ? val : string.Empty;
-
-    private static Func<JsonElement, T>? converter;
-
-    protected override IEnumerable<string> LabelValuePairs => ValueToLabels.Select((pair) => $"{pair.Value}:{pair.Key}");
-
-    protected override void AddValue(string name, JsonElement elem)
+    private static bool TryApplyIl2cppCache(Il2cppCache cache, string filename)
     {
-        if (converter == null) {
-            CreateConverter();
+        if (File.Exists(filename)) {
+            using var fs = File.OpenRead(filename);
+            var data = JsonSerializer.Deserialize<Il2cppCacheData>(fs, jsonOptions);
+            if (data != null) {
+                cache.ApplyCacheData(data);
+                return true;
+            } else {
+                GD.PrintErr("Invalid il2cpp cache data json file: " + filename);
+            }
         }
-        T val = converter!(elem);
-        ValueToLabels[val] = name;
-    }
-
-    private static void CreateConverter()
-    {
-        // nasty; maybe add individual enum descriptor types eventually
-        if (typeof(T) == typeof(System.Int64)) {
-            converter = static (e) => (T)Convert.ChangeType(e.GetUInt64(), typeof(System.Int64));
-        } else if (typeof(T) == typeof(System.UInt64)) {
-            converter = static (e) => (T)(object)e.GetUInt64();
-        } else if (typeof(T) == typeof(System.Int32)) {
-            converter = static (e) => {
-                var v = e.GetInt64();
-                return (T)(object)(int)(v >= 2147483648 ? (v - 2 * 2147483648L) : v);
-            };
-        } else if (typeof(T) == typeof(System.UInt32)) {
-            converter = static (e) => (T)(object)e.GetUInt32();
-        } else if (typeof(T) == typeof(System.Int16)) {
-            converter = static (e) => {
-                var v = e.GetInt32();
-                return (T)(object)(short)(v >= 32768 ? (v - 2 * 32768) : v);
-            };
-        } else if (typeof(T) == typeof(System.UInt16)) {
-            converter = static (e) => (T)(object)e.GetUInt16();
-        } else if (typeof(T) == typeof(System.SByte)) {
-            converter = static (e) => {
-                var v = e.GetInt32();
-                return (T)(object)(sbyte)(v >= 128 ? (v - 2 * 128) : v);
-            };
-        } else if (typeof(T) == typeof(System.Byte)) {
-            converter = static (e) => (T)(object)e.GetByte();
-        } else {
-            converter = static (e) => default(T);
-        }
+        return false;
     }
 }
-
 
 public class REField
 {

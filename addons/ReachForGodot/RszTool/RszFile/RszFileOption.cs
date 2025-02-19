@@ -27,7 +27,7 @@ namespace RszTool
                 _ => GameVersion.unknown,
             };
             RszParser = RszParser.GetInstance(rszJsonFilepath ?? $"rsz{gameName}.json");
-            EnumParser = EnumParser.GetInstance($"Data\\Enums\\{gameName}_enum.json");
+            EnumParser = EnumParser.GetInstance("");
         }
     }
 }

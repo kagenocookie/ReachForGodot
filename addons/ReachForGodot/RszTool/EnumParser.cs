@@ -32,9 +32,10 @@ namespace RszTool
             {
                 EnumDict = new([]);
             }
+        }
 
-            // read in culture specific json
-            string cultureJsonPath = Path.ChangeExtension(jsonPath, $".{Thread.CurrentThread.CurrentCulture}.json");
+        public void ReadOverrides(string cultureJsonPath)
+        {
             if (File.Exists(cultureJsonPath))
             {
                 using FileStream fileStream = File.OpenRead(cultureJsonPath);

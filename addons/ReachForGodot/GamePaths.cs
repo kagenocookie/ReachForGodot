@@ -1,3 +1,4 @@
+using Godot;
 using RszTool;
 
 namespace RGE;
@@ -40,4 +41,10 @@ public record GamePaths(SupportedGame Game, string ChunkPath, string? Il2cppPath
         SupportedGame.MonsterHunterWilds => "mhwilds",
         _ => Game.ToString(),
     };
+
+    public static readonly string RszPatchGlobalPath = ProjectSettings.GlobalizePath($"res://addons/ReachForGodot/rsz_patches/global.json");
+    public string RszPatchPath => ProjectSettings.GlobalizePath($"res://addons/ReachForGodot/rsz_patches/{ShortName}.json");
+
+    public string EnumCacheFilename => ProjectSettings.GlobalizePath($"res://addons/ReachForGodot/il2cpp_cache/{ShortName}.json");
+    public string EnumOverridesFilename => ProjectSettings.GlobalizePath($"res://addons/ReachForGodot/il2cpp_cache/{ShortName}.en.json");
 }
