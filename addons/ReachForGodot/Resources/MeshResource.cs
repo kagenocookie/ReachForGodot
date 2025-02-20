@@ -12,9 +12,7 @@ public partial class MeshResource : REResourceProxy
     {
         if (Asset?.AssetFilename == null) return null;
 
-        return await AsyncImporter.QueueAssetImport(Asset.AssetFilename, Game, (res) => {
-            ImportedResource = res;
-        });
+        return ImportedResource = await AsyncImporter.QueueAssetImport(Asset.AssetFilename, Game);
     }
 }
 

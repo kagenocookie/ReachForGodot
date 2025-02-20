@@ -20,5 +20,61 @@
                 "OriginalType": "app.QuestDefine.ID"
             }
         ]
+    },
+    "via.render.CompositeMesh": {
+        "FieldPatches": [
+            {
+                "Name": "v15",
+                "ReplaceName": "MeshGroups"
+            }
+        ]
+    },
+    "via.render.CompositeMeshInstanceGroup": {
+        "FieldPatches": [
+            {
+                "Name": "v0",
+                "ReplaceName": "Mesh"
+            },
+            {
+                "Name": "v1",
+                "ReplaceName": "Material"
+            },
+            {
+                "Name": "v2",
+                "ReplaceName": "MaterialCtrl"
+            },
+            {
+                "Name": "v3",
+                "ReplaceName": "Transforms"
+            }
+        ]
+    },
+    "via.render.CompositeMeshTransformController": {
+        "FieldPatches": [
+            {
+                "Name": "v2",
+                "ReplaceName": "Position"
+            },
+            {
+                "Name": "v3",
+                "ReplaceName": "Rotation"
+            },
+            {
+                "Name": "v4",
+                "ReplaceName": "Scale"
+            }
+        ]
+    },
+    "via.render.CompositeMeshMaterialController": {
+        "FieldPatches": [
+            {
+                "Name": "v1",
+                "ReplaceName": "MaterialVariable"
+            },
+            {
+                "Name": "v3",
+                "ReplaceName": "TexturePath"
+            }
+        ]
     }
 }

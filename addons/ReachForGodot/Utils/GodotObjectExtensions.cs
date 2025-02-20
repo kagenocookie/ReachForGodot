@@ -414,4 +414,7 @@ public static class GodotObjectExtensions
             node.Disconnect(sig["signal"].AsStringName(), sig["callable"].AsCallable());
         }
     }
+
+    public static Vector3 ToVector3(this Vector4 vec) => new Vector3(vec.X, vec.Y, vec.Z);
+    public static Quaternion ToQuaternion(this Vector4 vec) => new Quaternion(vec.X, vec.Y, vec.Z, vec.W);
 }

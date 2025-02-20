@@ -268,7 +268,6 @@ public class RszGodotConverter
         if (folder.Instance?.GetFieldValue("v5") is string scnPath && !string.IsNullOrWhiteSpace(scnPath)) {
             var importPath = Importer.GetLocalizedImportPath(scnPath, AssetConfig);
             GD.Print("Importing folder " + scnPath);
-            GD.Print("Importing generated folder to " + importPath);
             PackedScene scene;
             if (importPath == null) {
                 GD.PrintErr("Missing scene file " + scnPath);

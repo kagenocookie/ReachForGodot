@@ -57,7 +57,7 @@ public interface IRszContainerNode
                     var center = node?.GlobalPosition ?? aabb.GetCenter();
                     cam.LookAtFromPosition(new Vector3(5, 5, 5), center);
                 } else {
-                    cam.LookAtFromPosition(aabb.GetCenter() + aabb.Size.LimitLength(50), aabb.GetCenter());
+                    cam.LookAtFromPosition(node!.GlobalPosition + aabb.GetCenter() + aabb.Size.LimitLength(50), node!.GlobalPosition + aabb.GetCenter());
                 }
             }
         }

@@ -23,8 +23,6 @@ public partial class REResourceProxy : REResource
         }
 
         ImportedResource = null;
-
-        // TODO put the import into a queue instead of executing immediately
         return Import();
     }
     protected virtual Task<Resource?> Import() => Task.FromResult((Resource?)null);

@@ -121,7 +121,7 @@ public partial class AsyncImporter : Node
         Failed,
     }
 
-    public static Task<Resource?> QueueAssetImport(string originalFilepath, SupportedGame game, Action<Resource?> callback)
+    public static Task<Resource?> QueueAssetImport(string originalFilepath, SupportedGame game, Action<Resource?>? callback = null)
     {
         var format = Importer.GetFileFormat(originalFilepath).format;
         switch (format) {
@@ -134,19 +134,21 @@ public partial class AsyncImporter : Node
         }
     }
 
-    private static ImportQueueItem QueueAssetImport(string originalFilepath, SupportedGame game, RESupportedFileFormats format, Func<string, SupportedGame, Task<bool>?> importAction, Action<Resource?> callback)
+    private static ImportQueueItem QueueAssetImport(string originalFilepath, SupportedGame game, RESupportedFileFormats format, Func<string, SupportedGame, Task<bool>?> importAction, Action<Resource?>? callback)
     {
-        var list = queuedImports.FirstOrDefault(qi => qi.originalFilepath == originalFilepath && qi.game == game);
-        if (list == null) {
+        var queueItem = queuedImports.FirstOrDefault(qi => qi.originalFilepath == originalFilepath && qi.game == game);
+        if (queueItem == null) {
             var config = ReachForGodot.GetAssetConfig(game);
-            queuedImports.Add(list = new ImportQueueItem() {
+            queuedImports.Add(queueItem = new ImportQueueItem() {
                 originalFilepath = originalFilepath,
                 importFilename = Importer.GetAssetImportPath(originalFilepath, format, config),
                 game = game,
                 importAction = importAction,
             });
         }
-        list.callbacks.Add(callback);
+        if (callback != null) {
+            queueItem.callbacks.Add(callback);
+        }
         if (node == null) {
             if (instance == null) {
                 var root = ((SceneTree)Engine.GetMainLoop()).Root;
@@ -159,9 +161,9 @@ public partial class AsyncImporter : Node
             popup!.progress!.MaxValue = queuedImports.Count;
         }
         cancellationTokenSource ??= new CancellationTokenSource();
-        list.importTask = AwaitResource(originalFilepath, cancellationTokenSource.Token);
+        queueItem.importTask = AwaitResource(originalFilepath, queueItem, cancellationTokenSource.Token);
 
-        return list;
+        return queueItem;
     }
 
     private static bool ContinueAsyncImports()
@@ -216,7 +218,7 @@ public partial class AsyncImporter : Node
             await Task.Delay(250, cancellationTokenSource.Token);
         }
 
-        var res = await AwaitResource(item.importFilename, cancellationTokenSource.Token);
+        var res = await AwaitResource(item.importFilename, item, cancellationTokenSource.Token);
         item.state = ImportState.Done;
         item.resource = res;
         ExecutePostImport(item);
@@ -231,10 +233,13 @@ public partial class AsyncImporter : Node
         }
     }
 
-    private async static Task<Resource?> AwaitResource(string importPath, CancellationToken token)
+    private async static Task<Resource?> AwaitResource(string importPath, ImportQueueItem queueItem, CancellationToken token)
     {
         while (!ResourceLoader.Exists(importPath)) {
             await Task.Delay(50, token);
+            if (queueItem.state == ImportState.Failed) {
+                return null;
+            }
         }
         Resource? res = null;
         var attempts = 10;
