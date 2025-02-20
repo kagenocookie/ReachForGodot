@@ -29,6 +29,18 @@ public partial class AssetBrowser : Resource
     [ExportToolButton("Import Assets")]
     private Callable ImportAssets => Callable.From(ShowFilePicker);
 
+    [ExportToolButton("Open chunk folder")]
+    private Callable OpenFolder => Callable.From(() => {
+        if (Assets == null || Assets.Game == SupportedGame.Unknown) {
+            GD.PrintErr("Pick a game first, please");
+            return;
+        }
+        Process.Start(new ProcessStartInfo("explorer.exe") {
+            UseShellExecute = false,
+            Arguments = $"\"{ReachForGodot.GetChunkPath(Assets.Game)!.Replace('/', '\\')}\"",
+        });
+    });
+
     private FileDialog? _dialog;
 
     private void ShowFilePicker()

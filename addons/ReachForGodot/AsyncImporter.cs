@@ -9,7 +9,7 @@ using Godot;
 public partial class AsyncImporter : Node
 {
     private static AsyncImporter? instance;
-    private static ProgressBar? progress;
+    private static AsyncLoaderPopup? popup;
 
     private static CancellationTokenSource? cancellationTokenSource;
 
@@ -21,9 +21,15 @@ public partial class AsyncImporter : Node
     public override void _Process(double delta)
     {
         if (AsyncImporter.ContinueAsyncImports()) {
-            if (progress != null && progress.IsInsideTree()) {
-                progress.MaxValue = queuedImports.Count + asyncLoadCompletedTasks;
-                progress.Value = asyncLoadCompletedTasks;
+            var totalCount = queuedImports.Count + asyncLoadCompletedTasks;
+            var doneCount = asyncLoadCompletedTasks;
+            if (popup?.progress?.IsInsideTree() == true) {
+                popup.progress.MaxValue = totalCount;
+                popup.progress.Value = doneCount;
+            }
+
+            if (popup?.label?.IsInsideTree() == true) {
+                popup.label.Text = $"Converting assets ({doneCount}/{totalCount}) ...";
             }
         } else {
             SetProcess(false);
@@ -49,16 +55,25 @@ public partial class AsyncImporter : Node
         CreateProgressPopup();
     }
 
+    private class AsyncLoaderPopup
+    {
+        public ProgressBar? progress;
+        public Label? label;
+    }
+
     private static void HideProgressPopup()
     {
-        progress?.FindNodeInParents<Window>()?.Hide();
-        progress = null;
+        popup?.progress?.FindNodeInParents<Window>()?.Hide();
+        popup = null;
     }
 
     private static void CreateProgressPopup()
     {
         var p = ResourceLoader.Load<PackedScene>("res://addons/ReachForGodot/async_loader_popup.tscn").Instantiate<Window>();
-        progress = p.RequireChildByTypeRecursive<ProgressBar>();
+        popup = new AsyncLoaderPopup() {
+            progress = p.RequireChildByTypeRecursive<ProgressBar>(),
+            label = p.RequireChildByTypeRecursive<Label>(),
+        };
         var cancelButton = p.FindChildByTypeRecursive<Button>();
         if (cancelButton != null) {
             cancelButton.Pressed += () => CancelImports();
@@ -71,7 +86,7 @@ public partial class AsyncImporter : Node
     {
         System.Runtime.Loader.AssemblyLoadContext.GetLoadContext(typeof(RszGodotConverter).Assembly)!.Unloading += (c) => {
             CancelImports();
-            progress = null;
+            popup = null;
         };
     }
 
@@ -140,11 +155,10 @@ public partial class AsyncImporter : Node
                 instance = new AsyncImporter() { Name = nameof(AsyncImporter) };
                 root.CallDeferred(Window.MethodName.AddChild, instance);
                 CreateProgressPopup();
-                progress!.ShowPercentage = true;
-                progress.MinValue = 0;
+                popup!.progress!.ShowPercentage = true;
+                popup.progress.MinValue = 0;
             }
-            progress!.MaxValue = queuedImports.Count;
-            // progress.Value = queue
+            popup!.progress!.MaxValue = queuedImports.Count;
         }
         cancellationTokenSource ??= new CancellationTokenSource();
         list.importTask = AwaitResource(originalFilepath, cancellationTokenSource.Token);
@@ -198,8 +212,10 @@ public partial class AsyncImporter : Node
             fs.CallDeferred(EditorFileSystem.MethodName.Scan);
             await Task.Delay(50, cancellationTokenSource.Token);
             while (fs.IsScanning()) {
-                await Task.Delay(50, cancellationTokenSource.Token);
+                await Task.Delay(25, cancellationTokenSource.Token);
             }
+            // a bit of extra delay to give the user a chance to cancel
+            await Task.Delay(250, cancellationTokenSource.Token);
         }
 
         var res = await AwaitResource(item.importFilename, cancellationTokenSource.Token);
