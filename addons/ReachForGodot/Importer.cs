@@ -68,6 +68,12 @@ public class Importer
                 };
         }
 
+        if (relativePath.StartsWith('@')) {
+            // IDK what these @'s are, but so far I've only found them for sounds at the root folder
+            // seems to be safe to ignore, though we may need to handle them when putting the files back
+            relativePath = relativePath.Substring(1);
+        }
+
         var fullpath = Path.Join(config.Paths.ChunkPath, relativePath);
         var ext = GetFileExtensionFromFormat(format) ?? relativePath.GetExtension();
         var dir = fullpath.GetBaseDir();

@@ -161,7 +161,7 @@ public partial class AsyncImporter : Node
             popup!.progress!.MaxValue = queuedImports.Count;
         }
         cancellationTokenSource ??= new CancellationTokenSource();
-        queueItem.importTask = AwaitResource(originalFilepath, queueItem, cancellationTokenSource.Token);
+        queueItem.importTask = AwaitResource(queueItem, cancellationTokenSource.Token);
 
         return queueItem;
     }
@@ -218,7 +218,7 @@ public partial class AsyncImporter : Node
             await Task.Delay(250, cancellationTokenSource.Token);
         }
 
-        var res = await AwaitResource(item.importFilename, item, cancellationTokenSource.Token);
+        var res = await AwaitResource(item, cancellationTokenSource.Token);
         item.state = ImportState.Done;
         item.resource = res;
         ExecutePostImport(item);
@@ -233,9 +233,9 @@ public partial class AsyncImporter : Node
         }
     }
 
-    private async static Task<Resource?> AwaitResource(string importPath, ImportQueueItem queueItem, CancellationToken token)
+    private async static Task<Resource?> AwaitResource(ImportQueueItem queueItem, CancellationToken token)
     {
-        while (!ResourceLoader.Exists(importPath)) {
+        while (!ResourceLoader.Exists(queueItem.importFilename)) {
             await Task.Delay(50, token);
             if (queueItem.state == ImportState.Failed) {
                 return null;
@@ -245,14 +245,14 @@ public partial class AsyncImporter : Node
         var attempts = 10;
         while (attempts-- > 0) {
             try {
-                res = ResourceLoader.Load<Resource>(importPath);
+                res = ResourceLoader.Load<Resource>(queueItem.importFilename);
             } catch (Exception) {
                 await Task.Delay(100, token);
             }
         }
 
         if (attempts >= 0) {
-            GD.PrintErr("Asset import timed out: " + importPath);
+            GD.PrintErr("Asset import timed out: " + queueItem.importFilename);
         }
 
         return res;
