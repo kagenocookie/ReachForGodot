@@ -100,6 +100,20 @@ public class Importer
         return true;
     }
 
+    public static bool CheckResourceExists(string sourceFile, AssetConfig config)
+    {
+        if (string.IsNullOrEmpty(sourceFile)) {
+            return false;
+        }
+
+        var importPath = Importer.GetLocalizedImportPath(sourceFile, config);
+        if (importPath == null) return false;
+        if (ResourceLoader.Exists(importPath)) return true;
+
+        var sourcePath = ResolveSourceFilePath(sourceFile, config);
+        return File.Exists(sourcePath);
+    }
+
     public static T? FindOrImportResource<T>(string sourceFile, AssetConfig config) where T : Resource
     {
         if (string.IsNullOrEmpty(sourceFile)) {

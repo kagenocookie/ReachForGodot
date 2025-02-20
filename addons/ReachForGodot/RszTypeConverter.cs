@@ -82,7 +82,6 @@ public static class RszTypeConverter
                 if (value is string str && !string.IsNullOrWhiteSpace(str)) {
                     return Importer.FindOrImportResource<Resource>(str, ReachForGodot.GetAssetConfig(game))!;
                 } else {
-                    GD.Print("Empty resource path " + value);
                     return new Variant();
                 }
 

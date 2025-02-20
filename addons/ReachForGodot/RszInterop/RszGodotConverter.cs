@@ -330,9 +330,10 @@ public class RszGodotConverter
         Debug.Assert(data.Info != null);
 
         REGameObject? newGameobj = null;
-        if (data.Prefab?.Path != null) {
+        if (data.Prefab?.Path != null && Importer.CheckResourceExists(data.Prefab.Path, AssetConfig)) {
+            // note: some PFB files aren't shipped with the game, hence the CheckResourceExists check
+            // presumably they are only used directly within scn files and not instantiated during runtime
             var res = Importer.FindOrImportResource<PackedScene>(data.Prefab.Path, AssetConfig);
-            // TODO should we require instantiation here?
             if (res != null) {
                 newGameobj = res.Instantiate<PrefabNode>(PackedScene.GenEditState.Instance);
             }

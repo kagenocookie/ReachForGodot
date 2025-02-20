@@ -123,7 +123,6 @@ public partial class AsyncImporter : Node
 
     public static Task<Resource?> QueueAssetImport(string originalFilepath, SupportedGame game, Action<Resource?> callback)
     {
-        GD.Print("Queue asset import " + originalFilepath);
         var format = Importer.GetFileFormat(originalFilepath).format;
         switch (format) {
             case RESupportedFileFormats.Mesh:
@@ -149,7 +148,6 @@ public partial class AsyncImporter : Node
         }
         list.callbacks.Add(callback);
         if (node == null) {
-            GD.Print("Creating importer node");
             if (instance == null) {
                 var root = ((SceneTree)Engine.GetMainLoop()).Root;
                 instance = new AsyncImporter() { Name = nameof(AsyncImporter) };
