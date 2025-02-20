@@ -7,15 +7,14 @@ using System.Runtime.Loader;
 using Godot;
 using RszTool;
 
-public class RszGodotConverter : IDisposable
+public class RszGodotConverter
 {
     private static readonly Dictionary<SupportedGame, Dictionary<string, Func<IRszContainerNode, REGameObject, RszInstance, REComponent?>>> perGameFactories = new();
 
     public AssetConfig AssetConfig { get; }
     public bool FullImport { get; }
-    public ScnFile? ScnFile { get; private set; }
-    public PfbFile? PfbFile { get; private set; }
-    public UserFile? UserFile { get; private set; }
+
+    private RszFileOption fileOption;
 
     static RszGodotConverter()
     {
@@ -69,6 +68,9 @@ public class RszGodotConverter : IDisposable
     {
         AssetConfig = paths;
         FullImport = fullImport;
+        fileOption = new RszFileOption(
+            AssetConfig.Paths.GetRszToolGameEnum(),
+            AssetConfig.Paths.RszJsonPath ?? throw new Exception("Rsz json file not specified for game " + AssetConfig.Game));
     }
 
     public PackedScene? CreateProxyScene(string sourceFilePath, string importFilepath)
@@ -82,9 +84,6 @@ public class RszGodotConverter : IDisposable
         Directory.CreateDirectory(ProjectSettings.GlobalizePath(importFilepath.GetBaseDir()));
 
         var name = sourceFilePath.GetFile().GetBaseName().GetBaseName();
-        // opening the scene file mostly just to verify that it's valid
-        using var scn = OpenScn(sourceFilePath);
-        scn.Read();
 
         if (!ResourceLoader.Exists(importFilepath)) {
             var scene = new PackedScene() { ResourcePath = importFilepath };
@@ -106,9 +105,6 @@ public class RszGodotConverter : IDisposable
         Directory.CreateDirectory(ProjectSettings.GlobalizePath(importFilepath.GetBaseDir()));
 
         var name = sourceFilePath.GetFile().GetBaseName().GetBaseName();
-        // opening the scene file mostly just to verify that it's valid
-        using var file = OpenPfb(sourceFilePath);
-        file.Read();
 
         if (!ResourceLoader.Exists(importFilepath)) {
             var scene = new PackedScene() { ResourcePath = importFilepath };
@@ -152,22 +148,27 @@ public class RszGodotConverter : IDisposable
     {
         var scnFullPath = Importer.ResolveSourceFilePath(root.Asset!.AssetFilename, AssetConfig);
 
-        ScnFile?.Dispose();
         GD.Print("Opening scn file " + scnFullPath);
-        ScnFile = OpenScn(scnFullPath);
-        ScnFile.Read();
-        ScnFile.SetupGameObjects();
+        using var file = new ScnFile(fileOption, new FileHandler(scnFullPath));
+        try {
+            file.Read();
+        } catch (Exception e) {
+            GD.PrintErr("Failed to parse file " + scnFullPath, e);
+            return;
+        }
+
+        file.SetupGameObjects();
 
         root.Clear();
 
-        foreach (var folder in ScnFile.FolderDatas!.OrderBy(o => o.Instance!.Index)) {
+        foreach (var folder in file.FolderDatas!.OrderBy(o => o.Instance!.Index)) {
             Debug.Assert(folder.Info != null);
             GenerateFolder(root, folder);
         }
 
-        GenerateResources(root, ScnFile.ResourceInfoList, AssetConfig);
+        GenerateResources(root, file.ResourceInfoList, AssetConfig);
 
-        foreach (var gameObj in ScnFile.GameObjectDatas!.OrderBy(o => o.Instance!.Index)) {
+        foreach (var gameObj in file.GameObjectDatas!.OrderBy(o => o.Instance!.Index)) {
             Debug.Assert(gameObj.Info != null);
             GenerateGameObject(root, gameObj);
         }
@@ -177,17 +178,21 @@ public class RszGodotConverter : IDisposable
     {
         var scnFullPath = Importer.ResolveSourceFilePath(root.Asset!.AssetFilename, AssetConfig);
 
-        PfbFile?.Dispose();
-        GD.Print("Opening scn file " + scnFullPath);
-        PfbFile = OpenPfb(scnFullPath);
-        PfbFile.Read();
-        PfbFile.SetupGameObjects();
+        GD.Print("Opening pfb file " + scnFullPath);
+        using var file = new PfbFile(fileOption, new FileHandler(scnFullPath));
+        try {
+            file.Read();
+            file.SetupGameObjects();
+        } catch (Exception e) {
+            GD.PrintErr("Failed to parse file " + scnFullPath, e);
+            return;
+        }
 
         ((IRszContainerNode)root).Clear();
 
-        GenerateResources(root, PfbFile.ResourceInfoList, AssetConfig);
+        GenerateResources(root, file.ResourceInfoList, AssetConfig);
 
-        var rootGOs = PfbFile.GameObjectDatas!.OrderBy(o => o.Instance!.Index);
+        var rootGOs = file.GameObjectDatas!.OrderBy(o => o.Instance!.Index);
         if (rootGOs.Count() > 1) {
             GD.PrintErr("WTF Capcom, why do you have multiple GameObjects in the PFB root???");
         }
@@ -201,20 +206,24 @@ public class RszGodotConverter : IDisposable
     {
         var scnFullPath = Importer.ResolveSourceFilePath(root.Asset!.AssetFilename, AssetConfig);
 
-        UserFile?.Dispose();
         GD.Print("Opening user file " + scnFullPath);
-        UserFile = OpenUserdata(scnFullPath);
-        UserFile.Read();
+        using var file = new UserFile(fileOption, new FileHandler(scnFullPath));
+        try {
+            file.Read();
+        } catch (Exception e) {
+            GD.PrintErr("Failed to parse file " + scnFullPath, e);
+            return;
+        }
 
         root.Clear();
 
-        GenerateResources(root, UserFile.ResourceInfoList, AssetConfig);
+        GenerateResources(root, file.ResourceInfoList, AssetConfig);
 
-        if (UserFile.RSZ!.ObjectList.Skip(1).Any()) {
+        if (file.RSZ!.ObjectList.Skip(1).Any()) {
             GD.PrintErr("WTF Capcom, why do you have multiple objects in the userfile root???");
         }
 
-        foreach (var instance in UserFile.RSZ!.ObjectList) {
+        foreach (var instance in file.RSZ!.ObjectList) {
             root.Rebuild(instance.RszClass.name, instance);
             ResourceSaver.Save(root);
             break;
@@ -273,8 +282,8 @@ public class RszGodotConverter : IDisposable
             }
 
             if (FullImport && newFolder.IsEmpty) {
-                using var childConf = new RszGodotConverter(AssetConfig, FullImport);
-                childConf.GenerateSceneTree(newFolder);
+                var childConv = new RszGodotConverter(AssetConfig, FullImport);
+                childConv.GenerateSceneTree(newFolder);
                 scene.Pack(newFolder);
                 ResourceSaver.Save(scene);
             }
@@ -348,25 +357,6 @@ public class RszGodotConverter : IDisposable
         }
     }
 
-    private RszFileOption CreateFileOption() => new RszFileOption(
-        AssetConfig.Paths.GetRszToolGameEnum(),
-        AssetConfig.Paths.RszJsonPath ?? throw new Exception("Rsz json file not specified for game " + AssetConfig.Game));
-
-    private ScnFile OpenScn(string filename)
-    {
-        return new ScnFile(CreateFileOption(), new FileHandler(filename));
-    }
-
-    private PfbFile OpenPfb(string filename)
-    {
-        return new PfbFile(CreateFileOption(), new FileHandler(filename));
-    }
-
-    private UserFile OpenUserdata(string filename)
-    {
-        return new UserFile(CreateFileOption(), new FileHandler(filename));
-    }
-
     private void SetupComponent(IRszContainerNode root, RszInstance instance, REGameObject gameObject)
     {
         if (root.Game == SupportedGame.Unknown) {
@@ -393,11 +383,5 @@ public class RszGodotConverter : IDisposable
 
         componentInfo.Data = new REObject(root.Game, instance.RszClass.name, instance);
         componentInfo.ObjectId = instance.Index;
-    }
-
-    public void Dispose()
-    {
-        ScnFile?.Dispose();
-        GC.SuppressFinalize(this);
     }
 }
