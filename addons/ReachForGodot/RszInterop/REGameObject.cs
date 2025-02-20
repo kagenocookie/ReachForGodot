@@ -26,6 +26,11 @@ public partial class REGameObject : Node3D
         return ComponentContainer;
     }
 
+    public override void _EnterTree()
+    {
+        ComponentContainer?.SetDisplayFolded(true);
+    }
+
     public void AddComponent(REComponent component)
     {
         EnsureComponentContainerSetup().AddDeferredChild(component);
