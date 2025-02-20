@@ -47,13 +47,13 @@ public partial class SceneFolder : Node, IRszContainerNode
 
     public void BuildTree()
     {
-        using var conv = new RszGodotConverter(ReachForGodot.GetAssetConfig(Game!)!, false);
+        var conv = new RszGodotConverter(ReachForGodot.GetAssetConfig(Game!)!, false);
         conv.GenerateSceneTree(this);
     }
 
     public void BuildTreeDeep()
     {
-        using var conv = new RszGodotConverter(ReachForGodot.GetAssetConfig(Game!)!, true);
+        var conv = new RszGodotConverter(ReachForGodot.GetAssetConfig(Game!)!, true);
         conv.GenerateSceneTree(this);
     }
 }
