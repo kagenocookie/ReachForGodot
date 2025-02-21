@@ -29,14 +29,17 @@ public partial class AssetReference : Resource
         return dot == -1 ? false : AssetFilename.AsSpan().Slice(0, dot).SequenceEqual(compare);
     }
 
+    public string? ResolveSourceFile(AssetConfig config) => Importer.ResolveSourceFilePath(AssetFilename, config);
+    public string? GetImportFilepath(AssetConfig config) => Importer.GetLocalizedImportPath(AssetFilename, config);
+
     public void OpenSourceFile(SupportedGame game)
     {
         if (game == SupportedGame.Unknown) {
             GD.PrintErr("Unknown game for asset " + AssetFilename);
             return;
         }
-        string file = Importer.ResolveSourceFilePath(AssetFilename, ReachForGodot.GetAssetConfig(game)).Replace('/', '\\');
-        GD.Print(file);
+        var file = ResolveSourceFile(ReachForGodot.GetAssetConfig(game))?.Replace('/', '\\');
+        GD.Print("Filename: " + file);
         if (File.Exists(file)) {
             Process.Start(new ProcessStartInfo("explorer.exe") {
                 UseShellExecute = false,

@@ -31,7 +31,8 @@ public interface IRszContainerNode
             (this as Node)?.AddUniqueNamedChild(gameObject);
         }
 
-        gameObject.Owner = (this as Node)?.Owner ?? this as Node;
+        gameObject.Owner = this as Node;
+        // GD.Print("Set owner " + gameObject.Name + " to " + gameObject.Owner?.Name);
     }
 
     public T? FindResource<T>(string? filepath) where T : REResource

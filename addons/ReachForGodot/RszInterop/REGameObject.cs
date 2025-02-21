@@ -1,6 +1,7 @@
 namespace RGE;
 
 using System;
+using System.Threading.Tasks;
 using Godot;
 using RszTool;
 
@@ -31,14 +32,16 @@ public partial class REGameObject : Node3D
         ComponentContainer?.SetDisplayFolded(true);
     }
 
-    public void AddComponent(REComponent component)
+    public async Task AddComponent(REComponent component)
     {
-        EnsureComponentContainerSetup().AddDeferredChild(component);
+        EnsureComponentContainerSetup().AddDeferredChild(component, Owner);
+        while (component.Owner != Owner) {
+            await Task.Delay(1);
+        }
     }
 
     public REComponent? GetComponent(string classname)
     {
-        var child = ComponentContainer?.FindChildWhere<Node>(x => x is REComponent rec && rec.Classname == classname || x.FindChild("ComponentInfo") is REComponent);
-        return child as REComponent ?? child?.FindChild("ComponentInfo") as REComponent;
+        return ComponentContainer?.FindChildWhere<REComponent>(x => x is REComponent rec && rec.Classname == classname);
     }
 }

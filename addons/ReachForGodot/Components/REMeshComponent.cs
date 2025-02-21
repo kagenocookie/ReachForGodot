@@ -1,6 +1,7 @@
 namespace RGE;
 
 using System;
+using System.Threading.Tasks;
 using Godot;
 using Godot.Collections;
 using RszTool;
@@ -20,7 +21,7 @@ public partial class REMeshComponent : REComponent
     private void FindResourceAndReinit()
     {
         if (GameObject != null) {
-            ReloadMesh(GetMeshResource(), GameObject);
+            _ = ReloadMesh(GetMeshResource(), GameObject);
         }
     }
 
@@ -29,17 +30,18 @@ public partial class REMeshComponent : REComponent
         return MeshFilepath != null && mr.Asset?.IsSameAsset(MeshFilepath) == true;
     }
 
-    public override void Setup(IRszContainerNode root, REGameObject gameObject, RszInstance rsz)
+    public override Task Setup(IRszContainerNode root, REGameObject gameObject, RszInstance rsz)
     {
         MeshFilepath = rsz.GetFieldValue("v2") as string ?? rsz.GetFieldValue("v20") as string ?? rsz.Values.FirstOrDefault(v => v is string) as string;
 
-        ReloadMesh(root.FindResource<MeshResource>(MeshFilepath), gameObject);
+        return ReloadMesh(root.FindResource<MeshResource>(MeshFilepath), gameObject);
     }
 
-    protected void ReloadMesh(MeshResource? mr, REGameObject gameObject)
+    protected async Task ReloadMesh(MeshResource? mr, REGameObject gameObject)
     {
         if (mr != null) {
-            mr.Import(false).ContinueWith((res) => ReinstantiateMesh(res.Result as PackedScene, gameObject));
+            var res = await mr.Import(false).ContinueWith(static (t) => t.IsFaulted ? null : t.Result);
+            ReinstantiateMesh(res as PackedScene, gameObject);
         } else {
             meshNode = null;
             GD.Print("Missing mesh " + MeshFilepath + " at path: " + gameObject.Owner.GetPathTo(gameObject));
@@ -52,7 +54,7 @@ public partial class REMeshComponent : REComponent
         if (scene != null) {
             meshNode = scene.Instantiate<Node3D>(PackedScene.GenEditState.Instance);
             meshNode.Name = "__" + meshNode.Name;
-            go?.AddDeferredChild(meshNode);
+            go?.AddDeferredChild(meshNode, Owner);
         }
     }
 }

@@ -25,7 +25,9 @@
         "FieldPatches": [
             {
                 "Name": "v15",
-                "ReplaceName": "MeshGroups"
+                "ReplaceName": "MeshGroups",
+                "Type": "Object",
+                "OriginalType": "via.render.CompositeMeshInstanceGroup"
             }
         ]
     },
@@ -41,11 +43,13 @@
             },
             {
                 "Name": "v2",
-                "ReplaceName": "MaterialCtrl"
+                "ReplaceName": "Materials"
             },
             {
                 "Name": "v3",
-                "ReplaceName": "Transforms"
+                "ReplaceName": "Transform",
+                "Type": "Object",
+                "OriginalType": "via.render.CompositeMeshTransformController"
             }
         ]
     },

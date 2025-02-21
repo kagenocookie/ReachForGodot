@@ -90,7 +90,7 @@ public class Importer
         return -1;
     }
 
-    public static bool EnsureResourceImported(string sourceFile, AssetConfig config)
+    public static bool EnsureResourceImported(string? sourceFile, AssetConfig config)
     {
         if (string.IsNullOrEmpty(sourceFile)) {
             return false;
@@ -99,6 +99,7 @@ public class Importer
         var importPath = Importer.GetLocalizedImportPath(sourceFile, config);
         if (!ResourceLoader.Exists(importPath)) {
             var sourcePath = ResolveSourceFilePath(sourceFile, config);
+            if (sourcePath == null) return false;
             Importer.Import(sourcePath, config, importPath);
             return true;
         }
@@ -120,6 +121,9 @@ public class Importer
         return File.Exists(sourcePath);
     }
 
+    /// <summary>
+    /// Fetch an existing resource, or if it doesn't exist yet, create a placeholder resource for it.
+    /// </summary>
     public static T? FindOrImportResource<T>(string sourceFile, AssetConfig config) where T : Resource
     {
         if (string.IsNullOrEmpty(sourceFile)) {
@@ -135,6 +139,7 @@ public class Importer
 
         if (!ResourceLoader.Exists(importPath)) {
             var sourcePath = ResolveSourceFilePath(sourceFile, config);
+            if (sourcePath == null) return null;
             return Importer.Import(sourcePath, config, importPath) as T;
         }
 
@@ -149,12 +154,13 @@ public class Importer
         return ProjectSettings.LocalizePath(path);
     }
 
-    public static string GetAssetImportPath(string osFilepath, RESupportedFileFormats format, AssetConfig config)
+    public static string? GetAssetImportPath(string? osFilepath, RESupportedFileFormats format, AssetConfig config)
     {
+        if (osFilepath == null) return null;
         return ProjectSettings.LocalizePath(GetDefaultImportPath(osFilepath, format, config, false));
     }
 
-    private static string GetDefaultImportPath(string osFilepath, RESupportedFileFormats fmt, AssetConfig config, bool resource)
+    private static string? GetDefaultImportPath(string osFilepath, RESupportedFileFormats fmt, AssetConfig config, bool resource)
     {
         var basepath = ReachForGodot.GetChunkPath(config.Game);
         if (basepath == null) {
@@ -164,7 +170,7 @@ public class Importer
         var realOsFilepath = ResolveSourceFilePath(relativePath, config);
         if (string.IsNullOrEmpty(realOsFilepath)) {
             GD.PrintErr($"{config.Game} file not found: " + relativePath);
-            return string.Empty;
+            return null;
         }
 
         relativePath = realOsFilepath.Replace(basepath, "");
@@ -185,14 +191,15 @@ public class Importer
         }
     }
 
-    public static string ResolveSourceFilePath(string assetRelativePath, AssetConfig config)
+    public static string? ResolveSourceFilePath(string? assetRelativePath, AssetConfig config)
     {
+        if (assetRelativePath == null) return null;
         var fmt = GetFileFormat(assetRelativePath);
         string extractedFilePath;
         if (fmt.version == -1) {
             fmt.version = GuessFileVersion(assetRelativePath, fmt.format, config);
             if (fmt.version == -1) {
-                return string.Empty;
+                return null;
             }
             extractedFilePath = Path.Join(config.Paths.ChunkPath, assetRelativePath + "." + fmt.version).Replace('\\', '/');
         } else {
@@ -224,13 +231,15 @@ public class Importer
         }
     }
 
-    public static Task<bool>? ImportMesh(string sourceFilePath, SupportedGame game)
+    public static Task<bool>? ImportMesh(string? sourceFilePath, SupportedGame game)
     {
         var config = ReachForGodot.GetAssetConfig(game);
         var importFilepath = GetAssetImportPath(sourceFilePath, RESupportedFileFormats.Mesh, config);
         if (!System.IO.Path.IsPathRooted(sourceFilePath)) {
             sourceFilePath = ResolveSourceFilePath(sourceFilePath, config);
         }
+        if (sourceFilePath == null) return Task.FromResult(false);
+
         var path = Directory.GetCurrentDirectory();
         var outputGlobalized = ProjectSettings.GlobalizePath(importFilepath);
         var blendPath = Path.GetFullPath(outputGlobalized).Replace('\\', '/');
@@ -270,13 +279,15 @@ public class Importer
         });
     }
 
-    public static Task<bool>? ImportTexture(string sourceFilePath, SupportedGame game)
+    public static Task<bool>? ImportTexture(string? sourceFilePath, SupportedGame game)
     {
         var config = ReachForGodot.GetAssetConfig(game);
         var importFilepath = GetAssetImportPath(sourceFilePath, RESupportedFileFormats.Texture, config);
         if (!System.IO.Path.IsPathRooted(sourceFilePath)) {
             sourceFilePath = ResolveSourceFilePath(sourceFilePath, config);
         }
+        if (sourceFilePath == null) return Task.FromResult(false);
+
         var path = Directory.GetCurrentDirectory();
         var outputGlobalized = ProjectSettings.GlobalizePath(importFilepath);
         var importDir = Path.GetFullPath(outputGlobalized.GetBaseDir());
@@ -307,7 +318,7 @@ public class Importer
         });
     }
 
-    public static PackedScene? ImportScene(string sourceFilePath, string outputFilePath, AssetConfig config)
+    public static PackedScene? ImportScene(string? sourceFilePath, string outputFilePath, AssetConfig config)
     {
         if (!System.IO.Path.IsPathRooted(sourceFilePath)) {
             sourceFilePath = ResolveSourceFilePath(sourceFilePath, config);
@@ -316,11 +327,13 @@ public class Importer
             GD.PrintErr("Scene file not found: " + sourceFilePath);
             return null;
         }
-        var conv = new RszGodotConverter(config, false);
-        return conv.CreateProxyScene(sourceFilePath, outputFilePath);
+        var conv = new RszGodotConverter(config, placeholderImport);
+        return conv.CreateOrReplaceScene(sourceFilePath, outputFilePath);
     }
 
-    public static PackedScene? ImportPrefab(string sourceFilePath, string outputFilePath, AssetConfig config)
+    private static RszGodotConversionOptions placeholderImport = new RszGodotConversionOptions(folders: RszImportType.Placeholders, meshes: RszImportType.Placeholders, prefabs: RszImportType.Placeholders);
+
+    public static PackedScene? ImportPrefab(string? sourceFilePath, string outputFilePath, AssetConfig config)
     {
         if (!System.IO.Path.IsPathRooted(sourceFilePath)) {
             sourceFilePath = ResolveSourceFilePath(sourceFilePath, config);
@@ -329,11 +342,11 @@ public class Importer
             GD.PrintErr("Prefab file not found: " + sourceFilePath);
             return null;
         }
-        var conv = new RszGodotConverter(config, false);
-        return conv.CreateProxyPrefab(sourceFilePath, outputFilePath);
+        var conv = new RszGodotConverter(config, placeholderImport);
+        return conv.CreateOrReplacePrefab(sourceFilePath, outputFilePath);
     }
 
-    public static UserdataResource? ImportUserdata(string sourceFilePath, string outputFilePath, AssetConfig config)
+    public static UserdataResource? ImportUserdata(string? sourceFilePath, string outputFilePath, AssetConfig config)
     {
         if (!System.IO.Path.IsPathRooted(sourceFilePath)) {
             sourceFilePath = ResolveSourceFilePath(sourceFilePath, config);
@@ -342,8 +355,8 @@ public class Importer
             GD.PrintErr("Userdata file not found: " + sourceFilePath);
             return null;
         }
-        var conv = new RszGodotConverter(config, false);
-        return conv.CreateUserdata(sourceFilePath, outputFilePath);
+        var conv = new RszGodotConverter(config, placeholderImport);
+        return conv.CreateOrReplaceUserdata(sourceFilePath, outputFilePath);
     }
 
     private static void QueueFileRescan()
@@ -352,7 +365,7 @@ public class Importer
         if (!fs.IsScanning()) fs.CallDeferred(EditorFileSystem.MethodName.Scan);
     }
 
-    private static T? ImportResource<T>(string sourceFilePath, string outputFilePath, AssetConfig config)
+    private static T? ImportResource<T>(string? sourceFilePath, string outputFilePath, AssetConfig config)
         where T : REResource, new()
     {
         if (!System.IO.Path.IsPathRooted(sourceFilePath)) {

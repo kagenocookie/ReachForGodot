@@ -18,5 +18,12 @@
                 "ReplaceName": "ParentJoint"
             }
         ]
+    },
+    "via.physics.FilterInfo": {
+        "FieldPatches": [
+            {
+                "Name": "v1"
+            }
+        ]
     }
 }
