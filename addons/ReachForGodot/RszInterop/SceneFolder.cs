@@ -44,7 +44,7 @@ public partial class SceneFolder : Node, IRszContainerNode
 
     public void AddFolder(SceneFolder folder)
     {
-        if (FolderContainer == null) {
+        if ((FolderContainer ??= FindChild("Folders")) == null) {
             AddChild(FolderContainer = new Node() { Name = "Folders" });
             FolderContainer.Owner = this;
         }

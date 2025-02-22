@@ -54,7 +54,6 @@ public partial class REMeshComponent : REComponent
     protected async Task ReloadMesh(MeshResource? mr, REGameObject gameObject, bool forceReload)
     {
         if (mr != null) {
-
             var res = await mr.Import(forceReload).ContinueWith(static (t) => t.IsFaulted ? null : t.Result);
             await ReinstantiateMesh(res as PackedScene, gameObject);
         } else {

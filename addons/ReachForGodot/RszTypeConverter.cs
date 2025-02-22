@@ -18,7 +18,7 @@ public static class RszTypeConverter
             GD.PrintErr("Could not deserialize rsz value of type " + field.RszField.original_type + ":\n" + exception);
             return new Variant();
         } catch (RszRetryOpenException retryException) {
-            GD.PrintErr("Could not deserialize rsz value of type " + field.RszField.original_type + ":\n" + retryException);
+            retryException.LogRszRetryException();
             return new Variant();
         }
     }

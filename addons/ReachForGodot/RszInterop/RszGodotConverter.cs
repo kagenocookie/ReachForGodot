@@ -177,7 +177,7 @@ public class RszGodotConverter
         try {
             file.Read();
         } catch (RszRetryOpenException e) {
-            GD.PrintErr("Retrying rsz open operation: " + e.Message);
+            e.LogRszRetryException();
             await GenerateSceneTree(root);
             return;
         } catch (Exception e) {
