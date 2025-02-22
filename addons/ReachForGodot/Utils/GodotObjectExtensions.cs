@@ -214,13 +214,6 @@ public static class GodotObjectExtensions
         }
     }
 
-    public static T AddDeferredChild<T>(this Node parent, T child, Node? owner) where T : Node
-    {
-        parent.CallDeferred(Node.MethodName.AddChild, child);
-        child.SetDeferred(Node.PropertyName.Owner, owner ?? parent);
-        return child;
-    }
-
     public static async Task<T> AddChildAsync<T>(this Node parent, T child, Node? owner) where T : Node
     {
         if (child.GetParent() != null) {

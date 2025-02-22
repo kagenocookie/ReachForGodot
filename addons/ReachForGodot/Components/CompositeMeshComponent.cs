@@ -53,7 +53,6 @@ public partial class CompositeMeshComponent : REComponent
                 var reobj = new REObject(root.Game, tr.RszClass.name, tr);
                 var submesh = res is PackedScene scene ? scene.Instantiate<Node3D>(PackedScene.GenEditState.Instance) : new MeshInstance3D() { };
                 submesh.Name = "mesh_" + childCount++;
-                meshNode.AddDeferredChild(submesh, root as Node);
                 SphereMesh? newMesh = null;
                 if (res == null && submesh is MeshInstance3D mi) {
                     mi.SetDeferred("mesh", newMesh = new SphereMesh() { Radius = 0.5f, Height = 1 });
@@ -63,9 +62,7 @@ public partial class CompositeMeshComponent : REComponent
                     reobj._Get("Rotation").AsVector4(),
                     reobj._Get("Scale").AsVector4());
 
-                while (submesh.GetParent() != meshNode) {
-                    await Task.Delay(1);
-                }
+                await meshNode.AddChildAsync(submesh, root as Node);
             }
         }
     }

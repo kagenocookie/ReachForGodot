@@ -41,6 +41,8 @@ public class RszGodotConverter
 
     private RszFileOption fileOption;
 
+    private readonly Dictionary<string, Resource?> resolvedResources = new();
+
     static RszGodotConverter()
     {
         AssemblyLoadContext.GetLoadContext(typeof(RszGodotConverter).Assembly)!.Unloading += (c) => {
@@ -141,13 +143,14 @@ public class RszGodotConverter
         newResource.Game = AssetConfig.Game;
         newResource.Asset = new AssetReference(relativeSourceFile);
 
-        return SaveOrReplaceResource(newResource, sourceFilePath, importFilepath); ;
+        return SaveOrReplaceResource(newResource, sourceFilePath, importFilepath);
     }
 
     private TRes? SaveOrReplaceResource<TRes>(TRes newResource, string sourceFilePath, string importFilepath) where TRes : Resource
     {
         if (!File.Exists(sourceFilePath)) {
             GD.PrintErr("Invalid resource source file, does not exist: " + sourceFilePath);
+            resolvedResources[sourceFilePath] = null;
             return null;
         }
 
@@ -159,6 +162,7 @@ public class RszGodotConverter
         }
         GD.Print("   Saving resource " + importFilepath);
         ResourceSaver.Save(newResource);
+        resolvedResources[importFilepath] = newResource;
         return newResource;
     }
 
@@ -377,7 +381,7 @@ public class RszGodotConverter
     private async Task GenerateGameObject(IRszContainerNode root, IGameObjectData data, RszImportType importType, REGameObject? parent = null)
     {
         var name = data.Name ?? "UnnamedGameObject";
-        GD.Print("Generating gameobject " + name);
+        // GD.Print("Generating gameobject " + name);
 
         string? uuid = null;
         var gameobj = root.GetGameObject(name, parent);
@@ -393,8 +397,9 @@ public class RszGodotConverter
             // note: some PFB files aren't shipped with the game, hence the CheckResourceExists check
             // presumably they are only used directly within scn files and not instantiated during runtime
             if (!string.IsNullOrEmpty(scnData.Prefab?.Path) && Importer.CheckResourceExists(scnData.Prefab.Path, AssetConfig)) {
-                var packedPfb = Importer.FindOrImportResource<PackedScene>(scnData.Prefab.Path, AssetConfig);
-                if (packedPfb != null) {
+                if (resolvedResources.TryGetValue(Importer.GetLocalizedImportPath(scnData.Prefab.Path, AssetConfig)!, out var pfb) && pfb is PackedScene resolvedPfb) {
+                    gameobj = resolvedPfb.Instantiate<PrefabNode>(PackedScene.GenEditState.Instance);
+                } else if (Importer.FindOrImportResource<PackedScene>(scnData.Prefab.Path, AssetConfig) is PackedScene packedPfb) {
                     var pfbInstance = packedPfb.Instantiate<PrefabNode>(PackedScene.GenEditState.Instance);
                     gameobj = pfbInstance;
                     if (importType == RszImportType.Placeholders) {
@@ -427,7 +432,7 @@ public class RszGodotConverter
             root.AddGameObject(gameobj, parent);
         }
 
-        if (importType >= RszImportType.Reimport) {
+        if (importType == RszImportType.ForceReimport) {
             gameobj.ComponentContainer?.ClearChildren();
         }
 
