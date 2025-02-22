@@ -15,9 +15,6 @@ public interface IRszContainerNode
 
     public bool IsEmpty { get; }
 
-    [ExportToolButton("Find me something to look at")]
-    public Callable Find3DNodeButton => Callable.From(Find3DNode);
-
     public void Clear()
     {
         (this as Node)?.FreeAllChildrenImmediately();

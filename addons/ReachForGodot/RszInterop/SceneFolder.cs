@@ -24,9 +24,6 @@ public partial class SceneFolder : Node, IRszContainerNode
     public Node? FolderContainer { get; private set; }
     public IEnumerable<SceneFolder> Subfolders => FolderContainer?.FindChildrenByType<SceneFolder>() ?? Array.Empty<SceneFolder>();
 
-    [ExportToolButton("Find me something to look at")]
-    public Callable Find3DNodeButton => Callable.From(() => ((IRszContainerNode)this).Find3DNode());
-
     public void Clear()
     {
         FolderContainer = null;
