@@ -73,12 +73,14 @@ public partial class SceneFolder : Node, IRszContainerNode
 
     public void BuildTree(RszGodotConversionOptions options)
     {
+        var sw = new Stopwatch();
+        sw.Start();
         var conv = new RszGodotConverter(ReachForGodot.GetAssetConfig(Game!)!, options);
         conv.GenerateSceneTree(this).ContinueWith((t) => {
             if (t.IsFaulted) {
                 GD.Print("Tree rebuild failed:", t.Exception);
             } else {
-                GD.Print("Tree rebuild finished");
+                GD.Print("Tree rebuild finished in " + sw.Elapsed);
             }
             EditorInterface.Singleton.CallDeferred(EditorInterface.MethodName.MarkSceneAsUnsaved);
         });
