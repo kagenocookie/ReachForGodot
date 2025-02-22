@@ -15,11 +15,6 @@ public interface IRszContainerNode
 
     public bool IsEmpty { get; }
 
-    public void Clear()
-    {
-        (this as Node)?.FreeAllChildrenImmediately();
-    }
-
     public void AddGameObject(REGameObject gameObject, REGameObject? parent)
     {
         if (parent != null) {

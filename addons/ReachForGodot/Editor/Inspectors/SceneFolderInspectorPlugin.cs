@@ -40,7 +40,6 @@ public partial class SceneFolderInspectorPlugin : EditorInspectorPlugin, ISerial
 
         var importType = container.GetNode<OptionButton>("%ImportTypeOption");
         importType.Clear();
-        importType.AddItem("Import setting", 0);
         importType.AddItem("Placeholders only", (int)RszGodotConverter.PresetImportModes.PlaceholderImport);
         importType.AddItem("Only what's missing", (int)RszGodotConverter.PresetImportModes.ImportMissingItems);
         if (obj is SceneFolder or PrefabNode) {
@@ -49,16 +48,10 @@ public partial class SceneFolderInspectorPlugin : EditorInspectorPlugin, ISerial
         }
 
         var importBtn = container.GetNode<Button>("%ImportButton");
-        importBtn.Visible = false;
         importBtn.Pressed += () => {
-            if (importType.GetSelectedId() == 0) return;
             var options = ((RszGodotConverter.PresetImportModes)importType.GetSelectedId()).ToOptions();
             if (obj is SceneFolder scn) scn.BuildTree(options);
             if (obj is PrefabNode pfb) pfb.BuildTree(options);
-        };
-
-        importType.ItemSelected += (val) => {
-            importBtn.Visible = val != 0;
         };
 
         AddCustomControl(container);

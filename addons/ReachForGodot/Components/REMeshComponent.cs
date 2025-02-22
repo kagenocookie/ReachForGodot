@@ -21,14 +21,19 @@ public partial class REMeshComponent : REComponent
     private void FindResourceAndReinit()
     {
         if (GameObject != null) {
-            _ = ReloadMesh(GetMeshResource(), GameObject);
+            _ = ReloadMesh(GetMeshResource(), GameObject, true);
         }
     }
 
     public override void _ExitTree()
     {
-        meshNode?.GetParent().RemoveChild(meshNode);
-        meshNode?.QueueFree();
+        if (meshNode != null) {
+            if (!meshNode.IsQueuedForDeletion()) {
+                meshNode.GetParent().CallDeferred(Node.MethodName.RemoveChild, meshNode);
+                meshNode.QueueFree();
+            }
+            meshNode = null;
+        }
     }
 
     private bool IsCorrectMesh(MeshResource mr)
@@ -43,14 +48,14 @@ public partial class REMeshComponent : REComponent
             return Task.CompletedTask;
         }
 
-        return ReloadMesh(root.FindResource<MeshResource>(MeshFilepath), gameObject);
+        return ReloadMesh(root.FindResource<MeshResource>(MeshFilepath), gameObject, importType == RszImportType.ForceReimport);
     }
 
-    protected async Task ReloadMesh(MeshResource? mr, REGameObject gameObject)
+    protected async Task ReloadMesh(MeshResource? mr, REGameObject gameObject, bool forceReload)
     {
         if (mr != null) {
 
-            var res = await mr.Import(false).ContinueWith(static (t) => t.IsFaulted ? null : t.Result);
+            var res = await mr.Import(forceReload).ContinueWith(static (t) => t.IsFaulted ? null : t.Result);
             await ReinstantiateMesh(res as PackedScene, gameObject);
         } else {
             meshNode = null;

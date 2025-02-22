@@ -30,7 +30,7 @@ public class RszGodotConverter
 
     public enum PresetImportModes
     {
-        PlaceholderImport = 1,
+        PlaceholderImport = 0,
         ImportMissingItems,
         ImportTreeChanges,
         FullReimport
@@ -243,8 +243,6 @@ public class RszGodotConverter
             GD.PrintErr("Failed to parse file " + scnFullPath, e);
             return;
         }
-
-        ((IRszContainerNode)root).Clear();
 
         GenerateResources(root, file.ResourceInfoList, AssetConfig);
 

@@ -24,12 +24,6 @@ public partial class SceneFolder : Node, IRszContainerNode
 
     public IEnumerable<SceneFolder> Subfolders => FolderContainer?.FindChildrenByType<SceneFolder>() ?? Array.Empty<SceneFolder>();
 
-    public void Clear()
-    {
-        FolderContainer = null;
-        this.FreeAllChildrenImmediately();
-    }
-
     public void SetChildVisibility(bool visible)
     {
         childrenVisible = visible;
