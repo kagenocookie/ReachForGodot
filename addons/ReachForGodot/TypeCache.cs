@@ -128,6 +128,7 @@ public class TypeCache
                     refield.VariantType = Variant.Type.PackedVector4Array;
                     return;
                 case RszFieldType.String:
+                case RszFieldType.RuntimeType:
                     refield.VariantType = Variant.Type.PackedStringArray;
                     return;
                 case RszFieldType.UserData:
@@ -180,6 +181,7 @@ public class TypeCache
                 refield.VariantType = Variant.Type.Float;
                 break;
             case RszFieldType.String:
+            case RszFieldType.RuntimeType:
                 refield.VariantType = Variant.Type.String;
                 break;
             case RszFieldType.Bool:

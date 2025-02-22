@@ -159,6 +159,7 @@ public static class RszTypeConverter
             case RszFieldType.F32:
             case RszFieldType.F64:
                 return Convert.ToSingle(value, CultureInfo.InvariantCulture);
+            case RszFieldType.RuntimeType:
             case RszFieldType.String:
                 return (value as string)!;
             case RszFieldType.Bool:
