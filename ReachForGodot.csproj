@@ -4,7 +4,7 @@
     <EnableDynamicLoading>true</EnableDynamicLoading>
     <LangVersion>12.0</LangVersion>
     <Nullable>enable</Nullable>
-    <RootNamespace>RFG</RootNamespace>
+    <RootNamespace>RGE</RootNamespace>
     <!-- Required for some nuget packages to work -->
     <!-- godotengine/godot/issues/42271#issuecomment-751423827 -->
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
@@ -23,8 +23,11 @@
     <Authors>shadowcookie</Authors>
     <Company>shadowcookie</Company>
     <!-- Don't include unit tests in release builds. -->
+    <DefaultItemExcludes>
+      $(DefaultItemExcludes);addons/ReachForGodot/RszTool/RszTool.App/**/*;addons/ReachForGodot/RszTool/RszTool.Test/**/*;
+    </DefaultItemExcludes>
     <DefaultItemExcludes Condition="'$(Configuration)' == 'ExportRelease'">
-      $(DefaultItemExcludes);test/**/*;addons/RszTool/**/*
+      $(DefaultItemExcludes);test/**/*;
     </DefaultItemExcludes>
   </PropertyGroup>
   <ItemGroup Condition="'$(Configuration)' == 'Debug' or '$(Configuration)' == 'ExportDebug'">
