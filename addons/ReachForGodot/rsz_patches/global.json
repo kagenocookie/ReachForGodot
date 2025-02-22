@@ -22,7 +22,16 @@
     "via.physics.FilterInfo": {
         "FieldPatches": [
             {
-                "Name": "v1"
+                "Name": "v0",
+                "Type": "S32"
+            },
+            {
+                "Name": "v1",
+                "Type": "S32"
+            },
+            {
+                "Name": "v4",
+                "Type": "S32"
             }
         ]
     }

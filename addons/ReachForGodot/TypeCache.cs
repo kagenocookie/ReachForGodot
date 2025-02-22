@@ -29,9 +29,14 @@ public class TypeCache
             rszData.Clear();
             serializationCache.Clear();
             il2cppCache.Clear();
-            RszParser.ClearCache();
-            EnumParser.ClearCache();
         };
+    }
+
+    public static void InitializeGame(SupportedGame game)
+    {
+        if (!rszData.TryGetValue(game, out var data)) {
+            rszData[game] = data = LoadRsz(game);
+        }
     }
 
     public static REObjectTypeCache GetData(SupportedGame game, string classname)

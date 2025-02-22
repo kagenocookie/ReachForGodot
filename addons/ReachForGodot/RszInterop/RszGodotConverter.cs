@@ -90,6 +90,7 @@ public class RszGodotConverter
     {
         AssetConfig = paths;
         Options = options;
+        TypeCache.InitializeGame(paths.Game);
         fileOption = new RszFileOption(
             AssetConfig.Paths.GetRszToolGameEnum(),
             AssetConfig.Paths.RszJsonPath ?? throw new Exception("Rsz json file not specified for game " + AssetConfig.Game));
