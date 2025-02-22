@@ -29,7 +29,11 @@ public interface IRszContainerNode
         }
 
         gameObject.Owner = this as Node;
-        // GD.Print("Set owner " + gameObject.Name + " to " + gameObject.Owner?.Name);
+    }
+
+    public REGameObject? GetGameObject(string name, REGameObject? parent)
+    {
+        return (parent ?? this as Node)?.FindChild(name, false) as REGameObject;
     }
 
     public T? FindResource<T>(string? filepath) where T : REResource

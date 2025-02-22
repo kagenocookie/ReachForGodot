@@ -8,14 +8,19 @@ using RszTool;
 [GlobalClass, Tool, REComponentClass("via.Transform")]
 public partial class RETransformComponent : REComponent
 {
-    public override Task Setup(IRszContainerNode root, REGameObject gameObject, RszInstance rsz)
+    public override Task Setup(IRszContainerNode root, REGameObject gameObject, RszInstance rsz, RszImportType importType)
     {
-        gameObject.Transform = Vector4x3ToTransform(
+        ApplyTransform(gameObject, rsz);
+        return Task.CompletedTask;
+    }
+
+    public static void ApplyTransform(Node3D node, RszInstance rsz)
+    {
+        node.Transform = Vector4x3ToTransform(
             (System.Numerics.Vector4)rsz.Values[0],
             (System.Numerics.Vector4)rsz.Values[1],
             (System.Numerics.Vector4)rsz.Values[2]
         );
-        return Task.CompletedTask;
     }
 
     public static Transform3D Vector4x3ToTransform(Vector4 pos, Vector4 rotation, Vector4 scale) => new Transform3D(

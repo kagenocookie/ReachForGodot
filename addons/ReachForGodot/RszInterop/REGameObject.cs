@@ -32,12 +32,9 @@ public partial class REGameObject : Node3D
         ComponentContainer?.SetDisplayFolded(true);
     }
 
-    public async Task AddComponent(REComponent component)
+    public Task AddComponent(REComponent component)
     {
-        EnsureComponentContainerSetup().AddDeferredChild(component, Owner);
-        while (component.Owner != Owner) {
-            await Task.Delay(1);
-        }
+        return EnsureComponentContainerSetup().AddChildAsync(component, Owner);
     }
 
     public REComponent? GetComponent(string classname)

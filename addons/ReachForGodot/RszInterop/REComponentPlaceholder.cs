@@ -8,5 +8,5 @@ using RszTool;
 [GlobalClass, Tool]
 public partial class REComponentPlaceholder : REComponent
 {
-    public override Task Setup(IRszContainerNode root, REGameObject gameObject, RszInstance rsz) => Task.CompletedTask;
+    public override Task Setup(IRszContainerNode root, REGameObject gameObject, RszInstance rsz, RszImportType importType) => Task.CompletedTask;
 }

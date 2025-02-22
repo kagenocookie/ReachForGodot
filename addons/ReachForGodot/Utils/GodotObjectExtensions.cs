@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Threading.Tasks;
 using Godot;
 using RszTool.via;
 
@@ -203,10 +204,35 @@ public static class GodotObjectExtensions
         }
     }
 
+    public static void ClearChildren(this Node node)
+    {
+        var i = node.GetChildCount();
+        while (--i >= 0) {
+            var child = node.GetChild(i);
+            node.RemoveChild(child);
+            child.Free();
+        }
+    }
+
     public static T AddDeferredChild<T>(this Node parent, T child, Node? owner) where T : Node
     {
         parent.CallDeferred(Node.MethodName.AddChild, child);
         child.SetDeferred(Node.PropertyName.Owner, owner ?? parent);
+        return child;
+    }
+
+    public static async Task<T> AddChildAsync<T>(this Node parent, T child, Node? owner) where T : Node
+    {
+        if (child.GetParent() != null) {
+            child.CallDeferred(Node.MethodName.Reparent, parent);
+        } else {
+            parent.CallDeferred(Node.MethodName.AddChild, child);
+        }
+        owner ??= parent;
+        child.SetDeferred(Node.PropertyName.Owner, owner);
+        while (child.Owner != owner && child.GetParent() != parent) {
+            await Task.Delay(1);
+        }
         return child;
     }
 

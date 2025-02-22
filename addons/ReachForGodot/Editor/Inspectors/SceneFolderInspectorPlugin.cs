@@ -25,13 +25,6 @@ public partial class SceneFolderInspectorPlugin : EditorInspectorPlugin, ISerial
         }
     }
 
-    private Button CreateButton(string label, Action action)
-    {
-        var btn = new Button() { Text = label };
-        btn.Pressed += action;
-        return btn;
-    }
-
     private void CreateUI(IRszContainerNode obj)
     {
         inspectorScene ??= ResourceLoader.Load<PackedScene>("res://addons/ReachForGodot/Editor/Inspectors/SceneFolderInspector.tscn");

@@ -25,14 +25,23 @@ public partial class REMeshComponent : REComponent
         }
     }
 
+    public override void _ExitTree()
+    {
+        meshNode?.GetParent().RemoveChild(meshNode);
+        meshNode?.QueueFree();
+    }
+
     private bool IsCorrectMesh(MeshResource mr)
     {
         return MeshFilepath != null && mr.Asset?.IsSameAsset(MeshFilepath) == true;
     }
 
-    public override Task Setup(IRszContainerNode root, REGameObject gameObject, RszInstance rsz)
+    public override Task Setup(IRszContainerNode root, REGameObject gameObject, RszInstance rsz, RszImportType importType)
     {
         MeshFilepath = rsz.GetFieldValue("v2") as string ?? rsz.GetFieldValue("v20") as string ?? rsz.Values.FirstOrDefault(v => v is string) as string;
+        if (importType == RszImportType.Placeholders || importType == RszImportType.Import && meshNode != null) {
+            return Task.CompletedTask;
+        }
 
         return ReloadMesh(root.FindResource<MeshResource>(MeshFilepath), gameObject);
     }
@@ -40,21 +49,25 @@ public partial class REMeshComponent : REComponent
     protected async Task ReloadMesh(MeshResource? mr, REGameObject gameObject)
     {
         if (mr != null) {
+
             var res = await mr.Import(false).ContinueWith(static (t) => t.IsFaulted ? null : t.Result);
-            ReinstantiateMesh(res as PackedScene, gameObject);
+            await ReinstantiateMesh(res as PackedScene, gameObject);
         } else {
             meshNode = null;
             GD.Print("Missing mesh " + MeshFilepath + " at path: " + gameObject.Owner.GetPathTo(gameObject));
         }
     }
 
-    public void ReinstantiateMesh(PackedScene? scene, REGameObject? go)
+    public Task ReinstantiateMesh(PackedScene? scene, REGameObject? go)
     {
         meshNode?.Free();
         if (scene != null) {
             meshNode = scene.Instantiate<Node3D>(PackedScene.GenEditState.Instance);
             meshNode.Name = "__" + meshNode.Name;
-            go?.AddDeferredChild(meshNode, Owner);
+            if (go != null) {
+                return go.AddChildAsync(meshNode, Owner);
+            }
         }
+        return Task.CompletedTask;
     }
 }

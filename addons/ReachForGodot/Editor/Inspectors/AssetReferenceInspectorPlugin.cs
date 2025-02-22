@@ -44,17 +44,5 @@ public partial class AssetReferenceInspectorPlugin : EditorInspectorPlugin, ISer
         }
         return base._ParseProperty(@object, type, name, hintType, hintString, usageFlags, wide);
     }
-
-    private Button CreateButton(string label, Action action)
-    {
-        var btn = new Button() { Text = label };
-        btn.Pressed += action;
-        return btn;
-    }
-
-    // private void CreateUI(GodotObject obj)
-    // {
-    //     pluginSerializationFixer.Register(obj, container);
-    // }
 }
 #endif

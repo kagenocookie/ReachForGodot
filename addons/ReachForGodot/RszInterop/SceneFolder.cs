@@ -12,6 +12,7 @@ public partial class SceneFolder : Node, IRszContainerNode
     [Export] public AssetReference? Asset { get; set; }
     [Export] public REResource[]? Resources { get; set; }
     [Export] public int ObjectId { get; set; }
+    [Export] public Node? FolderContainer { get; private set; }
 
     private bool childrenVisible = true;
     [Export] public bool ShowChildren {
@@ -21,7 +22,6 @@ public partial class SceneFolder : Node, IRszContainerNode
 
     public bool IsEmpty => GetChildCount() == 0;
 
-    public Node? FolderContainer { get; private set; }
     public IEnumerable<SceneFolder> Subfolders => FolderContainer?.FindChildrenByType<SceneFolder>() ?? Array.Empty<SceneFolder>();
 
     public void Clear()
@@ -56,6 +56,19 @@ public partial class SceneFolder : Node, IRszContainerNode
         }
         FolderContainer.AddChild(folder);
         folder.Owner = Owner ?? this;
+    }
+
+    public void RemoveFolder(SceneFolder folder)
+    {
+        if (FolderContainer != null && folder.GetParent() == FolderContainer) {
+            FolderContainer.RemoveChild(folder);
+            folder.QueueFree();
+        }
+    }
+
+    public SceneFolder? GetFolder(string name)
+    {
+        return FolderContainer?.FindChildWhere<SceneFolder>(c => c.Name == name);
     }
 
     public void BuildTree(RszGodotConversionOptions options)

@@ -12,10 +12,24 @@ public partial class CompositeMeshComponent : REComponent
     [Export] public Node3D? meshNode;
     private int childCount = 0;
 
-    public override Task Setup(IRszContainerNode root, REGameObject gameObject, RszInstance rsz)
+    public override void _ExitTree()
     {
+        meshNode?.GetParent().CallDeferred(Node.MethodName.RemoveChild, meshNode);
+        meshNode?.QueueFree();
+        meshNode = null;
+    }
+
+    public override async Task Setup(IRszContainerNode root, REGameObject gameObject, RszInstance rsz, RszImportType importType)
+    {
+        if (importType == RszImportType.Placeholders || importType == RszImportType.Import && meshNode != null) {
+            return;
+        }
         childCount = 0;
-        meshNode = gameObject.AddDeferredChild(new Node3D() { Name = "__CompositeMesh" }, root as Node);
+        if (meshNode != null) {
+            meshNode.ClearChildren();
+        } else {
+            meshNode = await gameObject.AddChildAsync(new Node3D() { Name = "__CompositeMesh" }, root as Node);
+        }
         var tasks = new List<Task>();
         if ((rsz.GetFieldValue("MeshGroups") ?? rsz.GetFieldValue("v15")) is List<object> meshGroups) {
             foreach (var inst in meshGroups.OfType<RszInstance>()) {
@@ -24,7 +38,7 @@ public partial class CompositeMeshComponent : REComponent
                 }
             }
         }
-        return Task.WhenAll(tasks);
+        await Task.WhenAll(tasks);
     }
 
     private async Task InstantiateSubmeshes(IRszContainerNode root, string meshFilename, IEnumerable<RszInstance>? transforms)
