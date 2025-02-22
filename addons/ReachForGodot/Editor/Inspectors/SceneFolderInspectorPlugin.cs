@@ -6,25 +6,12 @@ namespace RGE;
 
 public partial class SceneFolderInspectorPlugin : EditorInspectorPlugin, ISerializationListener
 {
-    private static System.Collections.Generic.Dictionary<GodotObject, Control> nodes = new();
+    private static PluginSerializationFixer pluginSerializationFixer = new();
+
+    public void OnAfterDeserialize() { }
+    public void OnBeforeSerialize() => pluginSerializationFixer.OnBeforeSerialize();
 
     private PackedScene? inspectorScene;
-
-    public void OnAfterDeserialize()
-    {
-    }
-
-    public void OnBeforeSerialize()
-    {
-        // workaround for editor assembly unload, need to yeet anything that has closure reference to objects (buttons)
-        foreach (var (node, ui) in nodes) {
-            if (IsInstanceValid(ui) && IsInstanceValid(node)) {
-                ui.GetParent().RemoveChild(ui);
-                ui.Free();
-            }
-        }
-        nodes.Clear();
-    }
 
     public override bool _CanHandle(GodotObject @object)
     {
@@ -49,17 +36,6 @@ public partial class SceneFolderInspectorPlugin : EditorInspectorPlugin, ISerial
     {
         inspectorScene ??= ResourceLoader.Load<PackedScene>("res://addons/ReachForGodot/Editor/Inspectors/SceneFolderInspector.tscn");
         var container = inspectorScene.Instantiate<Control>();
-
-        var uiContainer = new VBoxContainer();
-        uiContainer.AddThemeConstantOverride("Separation", 4);
-
-        if (container.GetNode<Button>("%ShowSourceFile") is Button btn) {
-            if (!string.IsNullOrEmpty(obj.Asset?.AssetFilename)) {
-                btn.Pressed += () => obj.Asset?.OpenSourceFile(obj.Game);
-            } else {
-                btn.Visible = false;
-            }
-        }
 
         if (container.GetNode<Button>("%Find3DNode") is Button btn2) {
             if (obj is SceneFolder) {
@@ -93,7 +69,7 @@ public partial class SceneFolderInspectorPlugin : EditorInspectorPlugin, ISerial
         };
 
         AddCustomControl(container);
-        nodes[(GodotObject)obj] = container;
+        pluginSerializationFixer.Register((GodotObject)obj, container);
     }
 }
 #endif

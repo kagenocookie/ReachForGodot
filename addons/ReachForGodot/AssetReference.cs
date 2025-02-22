@@ -39,12 +39,14 @@ public partial class AssetReference : Resource
             return;
         }
         var file = ResolveSourceFile(ReachForGodot.GetAssetConfig(game))?.Replace('/', '\\');
-        GD.Print("Filename: " + file);
         if (File.Exists(file)) {
+            GD.Print("Filename: " + file);
             Process.Start(new ProcessStartInfo("explorer.exe") {
                 UseShellExecute = false,
                 Arguments = $"/select, \"{file}\"",
             });
+        } else {
+            GD.PrintErr("File not found: " + file);
         }
     }
 }
