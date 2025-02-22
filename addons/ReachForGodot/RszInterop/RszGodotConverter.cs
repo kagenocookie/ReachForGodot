@@ -190,7 +190,6 @@ public class RszGodotConverter
 
         GenerateResources(root, file.ResourceInfoList, AssetConfig);
 
-        GD.Print("generating root scene folders...");
         foreach (var folder in file.FolderDatas!.OrderBy(o => o.Instance!.Index)) {
             Debug.Assert(folder.Info != null);
             PrepareSubfolderPlaceholders(root, folder, root);
@@ -202,12 +201,11 @@ public class RszGodotConverter
             await GenerateGameObject(root, gameObj, Options.folders);
         }
 
-        GD.Print("Waiting for subfolders of " + root.Name);
         if (Options.folders >= RszImportType.Import) {
             await GenerateSubfolders(root);
         }
 
-        GD.Print("scn tree done " + root.Name);
+        GD.Print(" Finished scene tree " + root.Name);
     }
 
     private async Task GenerateSubfolders(SceneFolder folder)
