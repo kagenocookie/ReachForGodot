@@ -44,6 +44,12 @@ public partial class REMeshComponent : REComponent
     public override Task Setup(IRszContainerNode root, REGameObject gameObject, RszInstance rsz, RszImportType importType)
     {
         MeshFilepath = rsz.GetFieldValue("v2") as string ?? rsz.GetFieldValue("v20") as string ?? rsz.Values.FirstOrDefault(v => v is string) as string;
+        if (string.IsNullOrEmpty(MeshFilepath)) {
+            meshNode?.QueueFree();
+            meshNode = null;
+            return Task.CompletedTask;
+        }
+
         if (importType == RszImportType.Placeholders || importType == RszImportType.Import && meshNode != null) {
             return Task.CompletedTask;
         }
@@ -57,6 +63,7 @@ public partial class REMeshComponent : REComponent
             var res = await mr.Import(forceReload).ContinueWith(static (t) => t.IsFaulted ? null : t.Result);
             await ReinstantiateMesh(res as PackedScene, gameObject);
         } else {
+            meshNode?.QueueFree();
             meshNode = null;
             GD.Print("Missing mesh " + MeshFilepath + " at path: " + gameObject.Owner.GetPathTo(gameObject));
         }

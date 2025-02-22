@@ -18,7 +18,7 @@ public partial class REGameObject : Node3D
 
     public Node EnsureComponentContainerSetup()
     {
-        if (ComponentContainer == null) {
+        if ((ComponentContainer ??= FindChild("Components")) == null) {
             AddChild(ComponentContainer = new Node() { Name = "Components" });
             ComponentContainer.Owner = Owner;
             MoveChild(ComponentContainer, 0);

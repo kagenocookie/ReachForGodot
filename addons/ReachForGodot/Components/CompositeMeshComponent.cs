@@ -49,21 +49,29 @@ public partial class CompositeMeshComponent : REComponent
         if (root.Resources?.FirstOrDefault(r => r.Asset?.IsSameAsset(meshFilename) == true) is MeshResource mr) {
             var res = await mr.Import(false).ContinueWith(static (t) => t.IsFaulted ? null : t.Result);
 
-            foreach (var tr in transforms) {
-                var reobj = new REObject(root.Game, tr.RszClass.name, tr);
-                var submesh = res is PackedScene scene ? scene.Instantiate<Node3D>(PackedScene.GenEditState.Instance) : new MeshInstance3D() { };
-                submesh.Name = "mesh_" + childCount++;
-                SphereMesh? newMesh = null;
-                if (res == null && submesh is MeshInstance3D mi) {
-                    mi.SetDeferred("mesh", newMesh = new SphereMesh() { Radius = 0.5f, Height = 1 });
-                }
-                submesh.Transform = RETransformComponent.Vector4x3ToTransform(
-                    reobj._Get("Position").AsVector4(),
-                    reobj._Get("Rotation").AsVector4(),
-                    reobj._Get("Scale").AsVector4());
-
-                await meshNode.AddChildAsync(submesh, root as Node);
+            var mesh = new MultiMeshInstance3D() { Name = "mesh_" + childCount++ };
+            var mm = new MultiMesh();
+            mesh.Multimesh = mm;
+            mm.InstanceCount = 0;
+            if (res is PackedScene scene && scene.Instantiate<Node3D>(PackedScene.GenEditState.Instance).FindChildByTypeRecursive<MeshInstance3D>() is MeshInstance3D meshinst) {
+                mm.Mesh = meshinst.Mesh;
+            } else {
+                mm.Mesh = new SphereMesh() { Radius = 0.5f, Height = 1 };
             }
+            mm.TransformFormat = MultiMesh.TransformFormatEnum.Transform3D;
+
+            mm.InstanceCount = transforms.Count();
+
+            int i = 0;
+            foreach (var tr in transforms) {
+                mm.SetInstanceTransform(i++, RETransformComponent.Vector4x3ToTransform(
+                    (System.Numerics.Vector4)tr.Values[2],
+                    (System.Numerics.Vector4)tr.Values[3],
+                    (System.Numerics.Vector4)tr.Values[4]
+                ));
+            }
+
+            await meshNode.AddChildAsync(mesh, root as Node);
         }
     }
 }

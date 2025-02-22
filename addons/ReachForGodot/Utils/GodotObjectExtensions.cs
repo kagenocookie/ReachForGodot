@@ -59,7 +59,7 @@ public static class GodotObjectExtensions
     }
 
     /// <summary>
-    /// Find an immediate child of a node by type.
+    /// Find a child of a node by type.
     /// </summary>
     public static T? FindChildByTypeRecursive<T>(this Node node) where T : class
     {

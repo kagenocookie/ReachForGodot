@@ -26,9 +26,21 @@ public interface IRszContainerNode
         gameObject.Owner = this as Node;
     }
 
-    public REGameObject? GetGameObject(string name, REGameObject? parent)
+    public REGameObject? GetGameObject(string name, REGameObject? parent, int objectId)
     {
-        return (parent ?? this as Node)?.FindChild(name, false) as REGameObject;
+        var from = parent ?? this as Node;
+        if (from == null) return null;
+
+        REGameObject? firstMatch = null;
+        string? childName;
+        foreach (var child in from.GetChildren()) {
+            if (child is REGameObject go && ((childName = child.Name) == name || childName.StartsWith(name) && childName.AsSpan()[name.Length..].StartsWith("___"))) {
+                if (go.ObjectId == objectId) return go;
+
+                firstMatch ??= go;
+            }
+        }
+        return firstMatch;
     }
 
     public T? FindResource<T>(string? filepath) where T : REResource

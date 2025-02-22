@@ -49,7 +49,7 @@ Specific components support:
 - find a way to not put blender in the foreground while its doing the imports
 - when re-deserializing RSZ values from godot formats, sometimes the types get mismatched because the base rsz json doesn't always contain correct types. Can be fixed by manually fixing the data in the game specific patch json files, or by re-importing from source file. Will eventually add automatic re-import of just the RSZ Data from the source file when potential cases of this are detected, maybe automatic patch file modifications as well.
 
-## Hard blockers
+## Known issues
 - mesh textures don't show up (likely fixed once Godot gets DDS image format support - https://github.com/godotengine/godot/pull/101994)
 - no MPLY format support (meaning DD2 levels are mostly empty aside from the occasional simple mesh)
 - some meshes fail to import on RE Mesh Editor's side (AttributeError: 'NoneType' object has no attribute 'count' - if reMesh.skeletonHeader.remapCount != reMesh.boneBoundingBoxHeader.count)

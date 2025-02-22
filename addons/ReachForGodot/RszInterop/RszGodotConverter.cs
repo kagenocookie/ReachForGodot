@@ -12,6 +12,7 @@ public static class PresetImportModeExtensions
 {
     public static RszGodotConversionOptions ToOptions(this RszGodotConverter.PresetImportModes mode) => mode switch {
         RszGodotConverter.PresetImportModes.PlaceholderImport => RszGodotConverter.placeholderImport,
+        RszGodotConverter.PresetImportModes.ThisFolderOnly => RszGodotConverter.thisFolderOnly,
         RszGodotConverter.PresetImportModes.ImportMissingItems => RszGodotConverter.importMissing,
         RszGodotConverter.PresetImportModes.ImportTreeChanges => RszGodotConverter.importTreeChanges,
         RszGodotConverter.PresetImportModes.FullReimport => RszGodotConverter.fullReimport,
@@ -22,6 +23,7 @@ public static class PresetImportModeExtensions
 public class RszGodotConverter
 {
     public static readonly RszGodotConversionOptions placeholderImport = new(RszImportType.Placeholders, RszImportType.Placeholders, RszImportType.Placeholders, RszImportType.Placeholders);
+    public static readonly RszGodotConversionOptions thisFolderOnly = new(RszImportType.Placeholders, RszImportType.Import, RszImportType.Import, RszImportType.Import);
     public static readonly RszGodotConversionOptions importMissing = new(RszImportType.Import, RszImportType.Import, RszImportType.Import, RszImportType.Import);
     public static readonly RszGodotConversionOptions importTreeChanges = new(RszImportType.Reimport, RszImportType.Reimport, RszImportType.Import, RszImportType.Reimport);
     public static readonly RszGodotConversionOptions fullReimport = new(RszImportType.Reimport, RszImportType.Reimport, RszImportType.Reimport, RszImportType.Reimport);
@@ -31,6 +33,7 @@ public class RszGodotConverter
     public enum PresetImportModes
     {
         PlaceholderImport = 0,
+        ThisFolderOnly,
         ImportMissingItems,
         ImportTreeChanges,
         FullReimport
@@ -161,7 +164,7 @@ public class RszGodotConverter
             Directory.CreateDirectory(ProjectSettings.GlobalizePath(importFilepath.GetBaseDir()));
             newResource.ResourcePath = importFilepath;
         }
-        GD.Print("   Saving resource " + importFilepath);
+        GD.Print(" Saving resource " + importFilepath);
         ResourceSaver.Save(newResource);
         resolvedResources[importFilepath] = newResource;
         return newResource;
@@ -184,6 +187,10 @@ public class RszGodotConverter
         } catch (Exception e) {
             GD.PrintErr("Failed to parse file " + scnFullPath, e);
             return;
+        }
+
+        if (Options.folders == RszImportType.ForceReimport) {
+            root.ClearChildren();
         }
 
         file.SetupGameObjects();
@@ -380,10 +387,9 @@ public class RszGodotConverter
     private async Task GenerateGameObject(IRszContainerNode root, IGameObjectData data, RszImportType importType, REGameObject? parent = null)
     {
         var name = data.Name ?? "UnnamedGameObject";
-        // GD.Print("Generating gameobject " + name);
 
         string? uuid = null;
-        var gameobj = root.GetGameObject(name, parent);
+        var gameobj = root.GetGameObject(name, parent, data.Instance?.ObjectTableIndex ?? -1);
         if (gameobj != null && importType == RszImportType.ForceReimport) {
             (parent ?? root as Node)?.RemoveChild(gameobj);
             gameobj.QueueFree();
