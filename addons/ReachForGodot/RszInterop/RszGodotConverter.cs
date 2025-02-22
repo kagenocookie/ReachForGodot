@@ -8,6 +8,17 @@ using System.Threading.Tasks;
 using Godot;
 using RszTool;
 
+public static class PresetImportModeExtensions
+{
+    public static RszGodotConversionOptions ToOptions(this RszGodotConverter.PresetImportModes mode) => mode switch {
+        RszGodotConverter.PresetImportModes.PlaceholderImport => RszGodotConverter.placeholderImport,
+        RszGodotConverter.PresetImportModes.ImportMissingItems => RszGodotConverter.importMissing,
+        RszGodotConverter.PresetImportModes.ImportTreeChanges => RszGodotConverter.importTreeChanges,
+        RszGodotConverter.PresetImportModes.FullReimport => RszGodotConverter.fullReimport,
+        _ => RszGodotConverter.placeholderImport,
+    };
+}
+
 public class RszGodotConverter
 {
     public static readonly RszGodotConversionOptions placeholderImport = new(RszImportType.Placeholders, RszImportType.Placeholders, RszImportType.Placeholders, RszImportType.Placeholders);
@@ -16,6 +27,14 @@ public class RszGodotConverter
     public static readonly RszGodotConversionOptions fullReimport = new(RszImportType.Reimport, RszImportType.Reimport, RszImportType.Reimport, RszImportType.Reimport);
 
     private static readonly Dictionary<SupportedGame, Dictionary<string, Func<IRszContainerNode, REGameObject, RszInstance, REComponent?>>> perGameFactories = new();
+
+    public enum PresetImportModes
+    {
+        PlaceholderImport = 1,
+        ImportMissingItems,
+        ImportTreeChanges,
+        FullReimport
+    }
 
     public AssetConfig AssetConfig { get; }
     public RszGodotConversionOptions Options { get; }

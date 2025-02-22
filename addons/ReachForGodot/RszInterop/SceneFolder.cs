@@ -13,25 +13,16 @@ public partial class SceneFolder : Node, IRszContainerNode
     [Export] public REResource[]? Resources { get; set; }
     [Export] public int ObjectId { get; set; }
 
+    private bool childrenVisible = true;
+    [Export] public bool ShowChildren {
+        get => childrenVisible;
+        set => SetChildVisibility(value);
+    }
+
     public bool IsEmpty => GetChildCount() == 0;
 
     public Node? FolderContainer { get; private set; }
     public IEnumerable<SceneFolder> Subfolders => FolderContainer?.FindChildrenByType<SceneFolder>() ?? Array.Empty<SceneFolder>();
-
-    [ExportToolButton("Basic import (rebuild current tree; linked assets unchanged)")]
-    private Callable BuildTreeButton => Callable.From(() => BuildTree(RszGodotConverter.placeholderImport));
-
-    [ExportToolButton("Import what isn't")]
-    private Callable BuildImportTreeButton => Callable.From(() => BuildTree(RszGodotConverter.importMissing));
-
-    [ExportToolButton("Reimport changes to tree and children (coffee break time)")]
-    private Callable BuildFullTreeButton => Callable.From(() => BuildTree(RszGodotConverter.importTreeChanges));
-
-    [ExportToolButton("Discard local data; full rebuild incl meshes (lunch break time)")]
-    private Callable BuildFullButton => Callable.From(() => BuildTree(RszGodotConverter.fullReimport));
-
-    [ExportToolButton("Show source file")]
-    private Callable OpenSourceFile => Callable.From(() => Asset?.OpenSourceFile(Game));
 
     [ExportToolButton("Find me something to look at")]
     public Callable Find3DNodeButton => Callable.From(() => ((IRszContainerNode)this).Find3DNode());
@@ -40,6 +31,24 @@ public partial class SceneFolder : Node, IRszContainerNode
     {
         FolderContainer = null;
         this.FreeAllChildrenImmediately();
+    }
+
+    public void SetChildVisibility(bool visible)
+    {
+        childrenVisible = visible;
+        foreach (var ch in this.FindChildrenByTypeRecursive<Node3D>()) {
+            ch.Visible = childrenVisible;
+        }
+        if (!visible) {
+            this.SetDisplayFolded(true);
+        }
+    }
+
+    public override void _EnterTree()
+    {
+        if (!childrenVisible) {
+            SetChildVisibility(false);
+        }
     }
 
     public void AddFolder(SceneFolder folder)

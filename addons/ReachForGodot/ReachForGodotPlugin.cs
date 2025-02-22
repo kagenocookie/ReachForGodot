@@ -23,12 +23,20 @@ public partial class ReachForGodotPlugin : EditorPlugin
     private static string Il2cppPathSetting(SupportedGame game) => Setting_Il2cppPath.Replace("{game}", game.ToString());
     private static string RszPathSetting(SupportedGame game) => Setting_RszJsonPath.Replace("{game}", game.ToString());
 
+    private SceneFolderInspectorPlugin? inspectorScenes;
+
     public override void _EnterTree()
     {
         AddSettings();
 
         EditorInterface.Singleton.GetEditorSettings().SettingsChanged += OnProjectSettingsChanged;
         OnProjectSettingsChanged();
+        AddInspectorPlugin(inspectorScenes = new SceneFolderInspectorPlugin());
+    }
+
+    public override void _ExitTree()
+    {
+        RemoveInspectorPlugin(inspectorScenes);
     }
 
     private void AddSettings()
