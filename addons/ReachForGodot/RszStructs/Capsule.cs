@@ -13,4 +13,10 @@ public partial class Capsule : Resource
         p1 = rszValue.p1.ToGodot(),
         r = rszValue.r,
     };
+
+    public RszTool.via.Capsule ToRsz() => new() {
+        p0 = p0.ToRsz(),
+        p1 = p1.ToRsz(),
+        r = r,
+    };
 }

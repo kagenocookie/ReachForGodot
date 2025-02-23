@@ -19,4 +19,13 @@ public partial class Frustum : Resource
         plane4 = (Plane)rszValue.plane4,
         plane5 = (Plane)rszValue.plane5,
     };
+
+    public RszTool.via.Frustum ToRsz() => new() {
+        plane0 = plane0?.ToRsz() ?? default,
+        plane1 = plane1?.ToRsz() ?? default,
+        plane2 = plane2?.ToRsz() ?? default,
+        plane3 = plane3?.ToRsz() ?? default,
+        plane4 = plane4?.ToRsz() ?? default,
+        plane5 = plane5?.ToRsz() ?? default,
+    };
 }

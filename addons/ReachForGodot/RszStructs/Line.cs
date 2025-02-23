@@ -11,4 +11,9 @@ public partial class Line : Resource
         from = rszValue.from.ToGodot(),
         dir = rszValue.dir.ToGodot(),
     };
+
+    public RszTool.via.Line ToRsz() => new() {
+        from = from.ToRsz(),
+        dir = dir.ToRsz(),
+    };
 }

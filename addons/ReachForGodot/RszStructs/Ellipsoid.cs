@@ -11,4 +11,9 @@ public partial class Ellipsoid : Resource
         pos = rszValue.pos.ToGodot(),
         r = rszValue.r.ToGodot(),
     };
+
+    public RszTool.via.Ellipsoid ToRsz() => new() {
+        pos = pos.ToRsz(),
+        r = r.ToRsz(),
+    };
 }

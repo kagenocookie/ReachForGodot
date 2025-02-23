@@ -11,4 +11,9 @@ public partial class Ray : Resource
         direction = rszValue.dir.ToGodot(),
         from = rszValue.from.ToGodot(),
     };
+
+    public RszTool.via.Ray ToRsz() => new() {
+        from = from.ToRsz(),
+        dir = direction.ToRsz(),
+    };
 }

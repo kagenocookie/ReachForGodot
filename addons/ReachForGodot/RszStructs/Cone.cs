@@ -15,4 +15,11 @@ public partial class Cone : Resource
         r0 = rszValue.r0,
         r1 = rszValue.r1
     };
+
+    public RszTool.via.Cone ToRsz() => new() {
+        p0 = p0.ToRsz(),
+        p1 = p1.ToRsz(),
+        r0 = r0,
+        r1 = r1,
+    };
 }

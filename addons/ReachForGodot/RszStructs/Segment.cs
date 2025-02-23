@@ -11,4 +11,9 @@ public partial class Segment : Resource
         from = rszValue.from.ToGodot(),
         dir = rszValue.dir.ToGodot(),
     };
+
+    public RszTool.via.Segment ToRsz() => new() {
+        from = from.ToRsz(),
+        dir = dir.ToRsz(),
+    };
 }

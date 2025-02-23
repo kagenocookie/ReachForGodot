@@ -27,19 +27,22 @@ public partial class ResourceInspectorPlugin : EditorInspectorPlugin, ISerializa
     private void CreateUI(UserdataResource res)
     {
         var container = new VBoxContainer();
-        var emptyLabel = new Label() { Text = "Object is uninitialized. Make sure a source asset is defined and press IMPORT." };
+        var emptyLabel = new Label() { Text = "Object is uninitialized. Make sure a source asset is defined and press 'Reimport file'." };
 
         emptyLabel.Visible = res.IsEmpty;
-        var reimportButton = new Button() { Text = "Re-import", SizeFlagsHorizontal = Control.SizeFlags.ShrinkCenter };
+        var reimportButton = new Button() { Text = "Reimport file", SizeFlagsHorizontal = Control.SizeFlags.ShrinkCenter };
         reimportButton.Pressed += () => {
             if (res is UserdataResource ur) {
                 ur.Reimport();
                 emptyLabel.Visible = res.IsEmpty;
             }
         };
+        var hbox = new HBoxContainer();
+        hbox.AddChild(reimportButton);
+        hbox.AddChild(new Label() { Text = "Note that any local changes will be lost on reimport." });
 
         container.AddChild(emptyLabel);
-        container.AddChild(reimportButton);
+        container.AddChild(hbox);
 
         var root = new MarginContainer();
         root.AddThemeConstantOverride("margin_left", 8);

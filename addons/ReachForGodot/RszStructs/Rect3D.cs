@@ -15,4 +15,11 @@ public partial class Rect3D : Resource
         sizeW = rszValue.sizeW,
         sizeH = rszValue.sizeH,
     };
+
+    public RszTool.via.Rect3D ToRsz() => new() {
+        normal = normal.ToRsz(),
+        center = center.ToRsz(),
+        sizeW = sizeW,
+        sizeH = sizeH,
+    };
 }

@@ -10,7 +10,7 @@ public partial class UserdataResource : REResource, IRszContainerNode
 
     public void Reimport()
     {
-        var conv = new RszGodotConverter(ReachForGodot.GetAssetConfig(Game!)!, RszGodotConverter.importMissing);
+        var conv = new RszGodotConverter(ReachForGodot.GetAssetConfig(Game!)!, RszGodotConverter.importTreeChanges);
         conv.GenerateUserdata(this);
         NotifyPropertyListChanged();
     }

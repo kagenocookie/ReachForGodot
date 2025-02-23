@@ -13,4 +13,10 @@ public partial class Triangle : Resource
         p1 = rszValue.p1.ToGodot(),
         p2 = rszValue.p2.ToGodot(),
     };
+
+    public RszTool.via.Triangle ToRsz() => new() {
+        p0 = p0.ToRsz(),
+        p1 = p1.ToRsz(),
+        p2 = p2.ToRsz(),
+    };
 }

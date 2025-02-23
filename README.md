@@ -18,7 +18,10 @@ Integrates various open source tools dealing with RE Engine games and packs them
 - Configure the game paths in Editor Settings > `Reach for Godot/Paths/{game name}`
 - Create an AssetBrowser resource anywhere in the project and press "Import Assets"
 - If it doesn't exist yet, an asset config resource file will be created automatically, select the game there
-- back in Asset Browser: pick the file you wish to import
+
+## Usage
+Start by selecting the Asset Browser resource and picking a file to import. The appdata/contents.scn.20 might be a good start (DD2) since it's basically the root scene for the world.
+
 
 ## Current features
 - normal meshes: automatic import through RE Mesh editor into blend files
@@ -33,6 +36,11 @@ Specific components support:
 - `via.Transform`: transforms are transformed to Godot equivalents
 - `via.render.Mesh`: meshes are imported automatically
 
+## Asset exporting
+- configure any export base folders you need in editor settings
+- You can specify either just the full path, or also add a label for it to make it easier to identify with a | separator, e.g. `DD2: my awesome mod|D:/mods/dd2/awesome_mod/natives/stm/`
+- every exportable asset has a path picker and export button at the top of its inspector
+
 ## Planned features
 - enums
     - autodetect if it's a flag enum
@@ -45,6 +53,7 @@ Specific components support:
 - look into GUI support
 
 ## Room for improvement
+- large scene files are SLOW. Don't fully generate the root contents scene because you won't be able to actually do anything with it. I'll provide some sort of wrapper node that lets you toggle individual subfolder loading eventually
 - import files in batches, keep blender instance open and just re-clear the file
 - find a way to not put blender in the foreground while its doing the imports
 - when re-deserializing RSZ values from godot formats, sometimes the types get mismatched because the base rsz json doesn't always contain correct types. Can be fixed by manually fixing the data in the game specific patch json files, or by re-importing from source file. Will eventually add automatic re-import of just the RSZ Data from the source file when potential cases of this are detected, maybe automatic patch file modifications as well.
@@ -56,6 +65,12 @@ Specific components support:
 
 ## Self notes
 - Nice and chunky env: AppData/Contents/TWN01_02/Env_6216/Environment.scn.20
+
+## DD2 specific additions
+- app.AISituationObject: show some sort of 3d gizmo to indicate AI node objects
+
+## General additions
+- soundlib.SoundSphere: show _Sphere gizmo
 
 ## Credits
 - RE Mesh Editor - NSACloud

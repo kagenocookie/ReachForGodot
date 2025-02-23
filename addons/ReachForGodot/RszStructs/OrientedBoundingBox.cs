@@ -11,4 +11,9 @@ public partial class OrientedBoundingBox : Resource
         coord = rszValue.Coord.ToProjection(),
         extent = rszValue.Extent.ToGodot(),
     };
+
+    public RszTool.via.OBB ToRsz() => new() {
+        Coord = coord.ToRsz(),
+        Extent = extent.ToRsz(),
+    };
 }

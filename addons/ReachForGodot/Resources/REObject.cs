@@ -1,6 +1,7 @@
 namespace RGE;
 
 using System;
+using System.Runtime.CompilerServices;
 using Godot;
 using Godot.Collections;
 using RszTool;
@@ -13,6 +14,7 @@ public partial class REObject : Resource
     [Export] protected Godot.Collections.Dictionary<StringName, Variant> __Data = new();
 
     public bool IsEmpty => __Data.Count == 0;
+    public REObjectTypeCache TypeInfo => cache ??= TypeCache.GetData(Game, Classname ?? throw new Exception("Missing classname"));
 
     private REObjectTypeCache? cache;
 
@@ -93,6 +95,12 @@ public partial class REObject : Resource
             return true;
         }
         return base._Set(property, value);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public bool TryGetFieldValue(REField field, out Variant variant)
+    {
+        return __Data.TryGetValue(field.DisplayName ?? field.SerializedName, out variant);
     }
 
     protected Dictionary CreatePropertyCategory(string name, string? hintstring = null)

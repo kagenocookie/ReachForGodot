@@ -11,4 +11,9 @@ public partial class TaperedCapsule : Resource
         vertexRadiusA = rszValue.VertexRadiusA.ToGodot(),
         vertexRadiusB = rszValue.VertexRadiusB.ToGodot()
     };
+
+    public RszTool.via.TaperedCapsule ToRsz() => new() {
+        VertexRadiusA = vertexRadiusA.ToRsz(),
+        VertexRadiusB = vertexRadiusB.ToRsz(),
+    };
 }

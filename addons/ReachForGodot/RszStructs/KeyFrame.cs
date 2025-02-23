@@ -15,4 +15,11 @@ public partial class KeyFrame : Resource
         inNormal = rszValue.inNormal,
         outNormal = rszValue.outNormal,
     };
+
+    public RszTool.via.KeyFrame ToRsz() => new() {
+        value = value,
+        time_type = time_type,
+        inNormal = inNormal,
+        outNormal = outNormal,
+    };
 }

@@ -19,4 +19,13 @@ public partial class Area : Resource
         height = rszValue.height,
         bottom = rszValue.bottom,
     };
+
+    public RszTool.via.Area ToRsz() => new() {
+        p0 = p0.ToRsz(),
+        p1 = p1.ToRsz(),
+        p2 = p2.ToRsz(),
+        p3 = p3.ToRsz(),
+        height = height,
+        bottom = bottom,
+    };
 }

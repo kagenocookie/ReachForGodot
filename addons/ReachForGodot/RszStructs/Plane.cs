@@ -11,4 +11,9 @@ public partial class Plane : Resource
         normal = rszValue.normal.ToGodot(),
         dist = rszValue.dist,
     };
+
+    public RszTool.via.Plane ToRsz() => new() {
+        normal = normal.ToRsz(),
+        dist = dist,
+    };
 }

@@ -15,4 +15,11 @@ public partial class Torus : Resource
         axis = rszValue.axis.ToGodot(),
         cr = rszValue.cr,
     };
+
+    public RszTool.via.Torus ToRsz() => new() {
+        pos = pos.ToRsz(),
+        axis = axis.ToRsz(),
+        r = r,
+        cr = cr,
+    };
 }

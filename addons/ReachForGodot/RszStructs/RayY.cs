@@ -11,4 +11,9 @@ public partial class RayY : Resource
         from = rszValue.from.ToGodot(),
         dir = rszValue.dir,
     };
+
+    public RszTool.via.RayY ToRsz() => new() {
+        from = from.ToRsz(),
+        dir = dir,
+    };
 }

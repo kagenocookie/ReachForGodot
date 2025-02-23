@@ -13,4 +13,10 @@ public partial class Cylinder : Resource
         p1 = rszValue.p1.ToGodot(),
         r = rszValue.r,
     };
+
+    public RszTool.via.Cylinder ToRsz() => new() {
+        p0 = p0.ToRsz(),
+        p1 = p1.ToRsz(),
+        r = r,
+    };
 }

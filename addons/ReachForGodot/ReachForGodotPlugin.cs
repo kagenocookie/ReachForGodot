@@ -13,6 +13,7 @@ public partial class ReachForGodotPlugin : EditorPlugin
     private const string Setting_GameChunkPath = $"{SettingBase}/paths/{{game}}/game_chunk_path";
     private const string Setting_Il2cppPath = $"{SettingBase}/paths/{{game}}/il2cpp_dump_file";
     private const string Setting_RszJsonPath = $"{SettingBase}/paths/{{game}}/rsz_json_file";
+    private const string Setting_OutputPaths = $"{SettingBase}/paths/export_output_paths";
 
     public static string BlenderPath => EditorInterface.Singleton.GetEditorSettings().GetSetting(Setting_BlenderPath).AsString()
         ?? throw new System.Exception("Blender path not defined in editor settings");
@@ -21,7 +22,10 @@ public partial class ReachForGodotPlugin : EditorPlugin
     private static string Il2cppPathSetting(SupportedGame game) => Setting_Il2cppPath.Replace("{game}", game.ToString());
     private static string RszPathSetting(SupportedGame game) => Setting_RszJsonPath.Replace("{game}", game.ToString());
 
-    private EditorInspectorPlugin[] inspectors = new EditorInspectorPlugin[3];
+    private static readonly List<ExportPathSetting> exportPaths = new();
+    public static IEnumerable<ExportPathSetting> ExportPaths => exportPaths;
+
+    private EditorInspectorPlugin[] inspectors = new EditorInspectorPlugin[4];
 
     public override void _EnterTree()
     {
@@ -32,6 +36,7 @@ public partial class ReachForGodotPlugin : EditorPlugin
         AddInspectorPlugin(inspectors[0] = new SceneFolderInspectorPlugin());
         AddInspectorPlugin(inspectors[1] = new AssetReferenceInspectorPlugin());
         AddInspectorPlugin(inspectors[2] = new ResourceInspectorPlugin());
+        AddInspectorPlugin(inspectors[3] = new AssetExportInspectorPlugin());
     }
 
     public override void _ExitTree()
@@ -43,6 +48,7 @@ public partial class ReachForGodotPlugin : EditorPlugin
 
     private void AddSettings()
     {
+        AddEditorSetting(Setting_OutputPaths, Variant.Type.PackedStringArray, string.Empty, PropertyHint.GlobalDir);
         foreach (var game in ReachForGodot.GameList) {
             AddEditorSetting(ChunkPathSetting(game), Variant.Type.String, string.Empty, PropertyHint.GlobalDir);
             AddEditorSetting(Il2cppPathSetting(game), Variant.Type.String, string.Empty, PropertyHint.GlobalFile, "*.json");
@@ -73,6 +79,13 @@ public partial class ReachForGodotPlugin : EditorPlugin
 
                 ReachForGodot.SetConfiguration(game, null, new GamePaths(game, pathChunks, pathIl2cpp, pathRsz));
             }
+        }
+        exportPaths.Clear();
+        foreach (var path in settings.GetSetting(Setting_OutputPaths).AsStringArray()) {
+            var parts = path.Split('|');
+            string? label = parts.Length >= 2 ? parts[0] : null;
+            var filepath = parts.Length >= 2 ? parts[1] : parts[0];
+            exportPaths.Add(new ExportPathSetting(filepath, label));
         }
     }
 

@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Threading.Tasks;
 using Godot;
@@ -26,6 +27,22 @@ public class Importer
 
         var fmt = GetFileFormatFromExtension(filename.AsSpan()[(extDot + 1)..versionDot]);
         return new REFileFormat(fmt, version);
+    }
+
+    [return: NotNullIfNotNull(nameof(filepath))]
+    public static string? NormalizeResourceFilepath(string? filepath)
+    {
+        return GetFilepathWithoutVersion(filepath!).Replace('\\', '/');
+    }
+
+    public static string GetFilepathWithoutVersion(string filepath)
+    {
+        var versionDot = filepath.LastIndexOf('.');
+        if (versionDot != -1 && int.TryParse(filepath.AsSpan().Slice(versionDot + 1), out _)) {
+            return filepath.Substring(0, versionDot);
+        }
+
+        return filepath;
     }
 
     public static RESupportedFileFormats GetFileFormatFromExtension(ReadOnlySpan<char> extension)

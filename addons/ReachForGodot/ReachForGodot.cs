@@ -19,6 +19,18 @@ public static class ReachForGodot
         }
     }
 
+    public static IEnumerable<ExportPathSetting> ExportPaths {
+        get {
+#if TOOLS
+            return ReachForGodotPlugin.ExportPaths;
+#else
+            throw new NotImplementedException();
+#endif
+        }
+    }
+
+    public static ExportPathSetting? LastExportPath { get; set; }
+
     public static GamePaths? GetPaths(SupportedGame game)
     {
         if (assetConfigData.Count == 0) ReloadSettings();
@@ -89,4 +101,11 @@ public static class ReachForGodot
         throw new NotImplementedException();
     }
 #endif
+}
+
+public record ExportPathSetting(string path, string? label = null)
+{
+    public string DisplayLabel => label ?? path;
+
+    public static implicit operator string(ExportPathSetting setting) => setting.path;
 }

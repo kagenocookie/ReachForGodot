@@ -37,6 +37,14 @@ public class TypeCache
         }
     }
 
+    public static RszFileOption CreateRszFileOptions(AssetConfig config)
+    {
+        InitializeGame(config.Game);
+        return new RszFileOption(
+            config.Paths.GetRszToolGameEnum(),
+            config.Paths.RszJsonPath ?? throw new Exception("Rsz json file not specified for game " + config.Game));
+    }
+
     public static REObjectTypeCache GetData(SupportedGame game, string classname)
     {
         if (!serializationCache.TryGetValue(game, out var cacheData)) {
@@ -56,10 +64,10 @@ public class TypeCache
 
     private static REObjectTypeCache GenerateObjectCache(RszClass cls, SupportedGame game)
     {
-        return new REObjectTypeCache(GenerateFields(cls, game));
+        return new REObjectTypeCache(cls, GenerateFields(cls, game));
     }
 
-    private static RszClass? GetRszClass(SupportedGame game, string classname)
+    public static RszClass? GetRszClass(SupportedGame game, string classname)
     {
         if (!rszData.TryGetValue(game, out var data)) {
             rszData[game] = data = LoadRsz(game);
@@ -88,7 +96,7 @@ public class TypeCache
         void ResourceHint(REField field, string resourceName) {
             field.VariantType = Variant.Type.Object;
             field.Hint = PropertyHint.ResourceType;
-            field.HintString = nameof(OrientedBoundingBox);
+            field.HintString = resourceName;
         }
 
         if (srcField.array) {
@@ -129,14 +137,20 @@ public class TypeCache
                 case RszFieldType.RuntimeType:
                     refield.VariantType = Variant.Type.PackedStringArray;
                     return;
+                case RszFieldType.Object:
+                    refield.VariantType = Variant.Type.Array;
+                    refield.Hint = PropertyHint.TypeString;
+                    refield.HintString = $"{(int)Variant.Type.Object}/{(int)PropertyHint.ResourceType}:{nameof(UserdataResource)}";
+                    return;
                 case RszFieldType.UserData:
                     refield.VariantType = Variant.Type.Array;
-                    refield.Hint = PropertyHint.ResourceType;
-                    refield.HintString = nameof(REObject);
-                    break;
+                    refield.Hint = PropertyHint.TypeString;
+                    refield.HintString = $"{(int)Variant.Type.Object}/{(int)PropertyHint.ResourceType}:{nameof(REObject)}";
+                    return;
                 case RszFieldType.Resource:
                     refield.VariantType = Variant.Type.Array;
-                    refield.Hint = PropertyHint.ResourceType;
+                    refield.Hint = PropertyHint.TypeString;
+                    refield.HintString = $"{(int)Variant.Type.Object}/{(int)PropertyHint.ResourceType}:{nameof(REResource)}";
                     return;
                 default:
                     refield.VariantType = Variant.Type.Array;
@@ -311,7 +325,7 @@ public class TypeCache
                 ResourceHint(refield, nameof(Line));
                 break;
             case RszFieldType.Resource:
-                // var res = Importer.FindOrImportResource<REResource>()
+                ResourceHint(refield, nameof(REResource));
                 break;
             default:
                 refield.VariantType = Variant.Type.Nil;
@@ -435,14 +449,16 @@ public class REField
 
 public class REObjectTypeCache
 {
-    public static readonly REObjectTypeCache Empty = new REObjectTypeCache(Array.Empty<REField>());
+    public static readonly REObjectTypeCache Empty = new REObjectTypeCache(RszClass.Empty, Array.Empty<REField>());
 
     public REField[] Fields { get; }
     public Dictionary<string, REField> FieldsByName { get; }
     public Godot.Collections.Array<Godot.Collections.Dictionary> PropertyList { get; }
+    public RszClass RszClass { get; set; }
 
-    public REObjectTypeCache(REField[] fields)
+    public REObjectTypeCache(RszClass cls, REField[] fields)
     {
+        RszClass = cls;
         Fields = fields;
         PropertyList = new();
         FieldsByName = new(fields.Length);

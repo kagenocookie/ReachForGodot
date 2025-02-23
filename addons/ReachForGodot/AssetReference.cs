@@ -19,6 +19,7 @@ public partial class AssetReference : Resource
     }
 
     [Export] public string AssetFilename { get; set; } = string.Empty;
+    public string NormalizedFilepath => Importer.NormalizeResourceFilepath(AssetFilename);
 
     public bool IsSameAsset(string compare)
     {
@@ -38,14 +39,8 @@ public partial class AssetReference : Resource
             return;
         }
         var file = ResolveSourceFile(ReachForGodot.GetAssetConfig(game))?.Replace('/', '\\');
-        if (File.Exists(file)) {
-            GD.Print("Filename: " + file);
-            Process.Start(new ProcessStartInfo("explorer.exe") {
-                UseShellExecute = false,
-                Arguments = $"/select, \"{file}\"",
-            });
-        } else {
-            GD.PrintErr("File not found: " + file);
-        }
+        FileSystemUtils.ShowFileInExplorer(file);
     }
+
+    public static implicit operator string(AssetReference assref) => assref.AssetFilename;
 }

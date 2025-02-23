@@ -14,7 +14,7 @@ public partial class SceneFolderInspectorPlugin : EditorInspectorPlugin, ISerial
 
     public override bool _CanHandle(GodotObject @object)
     {
-        return @object is IRszContainerNode;
+        return @object is SceneFolder or PrefabNode;
     }
 
     public override void _ParseBegin(GodotObject @object)
@@ -41,13 +41,9 @@ public partial class SceneFolderInspectorPlugin : EditorInspectorPlugin, ISerial
         importType.Clear();
         importType.AddItem("Placeholders only", (int)RszGodotConverter.PresetImportModes.PlaceholderImport);
         importType.AddItem("Only what's missing", (int)RszGodotConverter.PresetImportModes.ImportMissingItems);
-        if (obj is SceneFolder or PrefabNode) {
-            importType.AddItem("Fully import just this scene, no subfolders", (int)RszGodotConverter.PresetImportModes.ThisFolderOnly);
-            importType.AddItem("Import changes on top of current data", (int)RszGodotConverter.PresetImportModes.ImportTreeChanges);
-            importType.AddItem("Fully reimport everything", (int)RszGodotConverter.PresetImportModes.FullReimport);
-        } else {
-            importType.AddItem("Import changes on top of current data", (int)RszGodotConverter.PresetImportModes.ImportTreeChanges);
-        }
+        importType.AddItem("Fully import just this scene, no subfolders", (int)RszGodotConverter.PresetImportModes.ThisFolderOnly);
+        importType.AddItem("Import changes on top of current data", (int)RszGodotConverter.PresetImportModes.ImportTreeChanges);
+        importType.AddItem("Fully reimport everything", (int)RszGodotConverter.PresetImportModes.FullReimport);
 
         var importBtn = container.GetNode<Button>("%ImportButton");
         importBtn.Pressed += () => {
