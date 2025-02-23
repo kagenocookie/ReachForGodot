@@ -1,6 +1,5 @@
 namespace RGE;
 
-using System;
 using Godot;
 
 public partial class Torus : Resource

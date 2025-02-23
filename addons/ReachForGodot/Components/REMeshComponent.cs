@@ -1,9 +1,7 @@
 namespace RGE;
 
-using System;
 using System.Threading.Tasks;
 using Godot;
-using Godot.Collections;
 using RszTool;
 
 [GlobalClass, Tool, REComponentClass("via.render.Mesh")]

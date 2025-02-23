@@ -1,8 +1,5 @@
 namespace RGE;
 
-using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Runtime.CompilerServices;
 using Godot;
 using RszTool;
 

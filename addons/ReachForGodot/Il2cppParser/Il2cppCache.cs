@@ -3,6 +3,7 @@ namespace RGE;
 using System;
 using System.Text.Json;
 using Godot;
+using REFDumpFormatter;
 
 public class Il2cppCacheData
 {
@@ -23,12 +24,27 @@ public class Il2cppCache
 
     private static Dictionary<string, Func<EnumDescriptor>> descriptorFactory = new();
 
-    public void ApplyIl2cppData(REFDumpFormatter.SourceDumpRoot data)
+    private static Type? GetEnumBackingType(ObjectDef item)
+    {
+        if (item.fields == null) {
+            return null;
+        }
+
+        foreach (var (fieldName, field) in item.fields) {
+            if (fieldName == "value__") { // !IsStatic instead?
+                return Type.GetType(field.Type);
+            }
+        }
+
+        return typeof(int);
+    }
+
+    public void ApplyIl2cppData(SourceDumpRoot data)
     {
         enums.Clear();
         foreach (var (name, enumData) in data) {
             if (enumData.parent == "System.Enum") {
-                var backing = REFDumpFormatter.EnumParser.GetEnumBackingType(enumData);
+                var backing = GetEnumBackingType(enumData);
                 if (backing == null) {
                     GD.PrintErr("Couldn't determine enum backing type: " + name);
                     enums[name] = EnumDescriptor<int>.Default;

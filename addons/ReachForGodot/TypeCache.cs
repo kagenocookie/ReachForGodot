@@ -4,9 +4,7 @@ using System;
 using System.Diagnostics;
 using System.Text.Json;
 using Godot;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using RszTool;
-using RszTool.via;
 
 public class TypeCache
 {

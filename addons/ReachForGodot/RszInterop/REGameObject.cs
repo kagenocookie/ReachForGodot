@@ -1,9 +1,7 @@
 namespace RGE;
 
-using System;
 using System.Threading.Tasks;
 using Godot;
-using RszTool;
 
 [GlobalClass, Tool]
 public partial class REGameObject : Node3D

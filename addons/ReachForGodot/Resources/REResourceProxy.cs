@@ -1,9 +1,7 @@
 namespace RGE;
 
-using System;
 using System.Threading.Tasks;
 using Godot;
-using RszTool;
 
 /// <summary>
 /// Proxy placeholder resource for resources that have a non-REResource compatible representation in engine (e.g. meshes)
