@@ -21,8 +21,7 @@ public partial class ReachForGodotPlugin : EditorPlugin
     private static string Il2cppPathSetting(SupportedGame game) => Setting_Il2cppPath.Replace("{game}", game.ToString());
     private static string RszPathSetting(SupportedGame game) => Setting_RszJsonPath.Replace("{game}", game.ToString());
 
-    private SceneFolderInspectorPlugin? inspectorScenes;
-    private AssetReferenceInspectorPlugin? inspectorAssets;
+    private EditorInspectorPlugin[] inspectors = new EditorInspectorPlugin[3];
 
     public override void _EnterTree()
     {
@@ -30,14 +29,16 @@ public partial class ReachForGodotPlugin : EditorPlugin
 
         EditorInterface.Singleton.GetEditorSettings().SettingsChanged += OnProjectSettingsChanged;
         OnProjectSettingsChanged();
-        AddInspectorPlugin(inspectorScenes = new SceneFolderInspectorPlugin());
-        AddInspectorPlugin(inspectorAssets = new AssetReferenceInspectorPlugin());
+        AddInspectorPlugin(inspectors[0] = new SceneFolderInspectorPlugin());
+        AddInspectorPlugin(inspectors[1] = new AssetReferenceInspectorPlugin());
+        AddInspectorPlugin(inspectors[2] = new ResourceInspectorPlugin());
     }
 
     public override void _ExitTree()
     {
-        RemoveInspectorPlugin(inspectorScenes);
-        RemoveInspectorPlugin(inspectorAssets);
+        foreach (var insp in inspectors) {
+            RemoveInspectorPlugin(insp);
+        }
     }
 
     private void AddSettings()

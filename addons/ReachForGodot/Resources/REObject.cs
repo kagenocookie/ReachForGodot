@@ -12,6 +12,8 @@ public partial class REObject : Resource
     [Export] public string? Classname { get; set; }
     [Export] protected Godot.Collections.Dictionary<StringName, Variant> __Data = new();
 
+    public bool IsEmpty => __Data.Count == 0;
+
     private REObjectTypeCache? cache;
 
     public REObject()

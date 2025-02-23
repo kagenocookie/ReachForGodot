@@ -45,6 +45,8 @@ public partial class SceneFolderInspectorPlugin : EditorInspectorPlugin, ISerial
             importType.AddItem("Fully import just this scene, no subfolders", (int)RszGodotConverter.PresetImportModes.ThisFolderOnly);
             importType.AddItem("Import changes on top of current data", (int)RszGodotConverter.PresetImportModes.ImportTreeChanges);
             importType.AddItem("Fully reimport everything", (int)RszGodotConverter.PresetImportModes.FullReimport);
+        } else {
+            importType.AddItem("Import changes on top of current data", (int)RszGodotConverter.PresetImportModes.ImportTreeChanges);
         }
 
         var importBtn = container.GetNode<Button>("%ImportButton");
