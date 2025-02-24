@@ -8,7 +8,6 @@ public interface IRszContainerNode
     public SupportedGame Game { get; set; }
     public AssetReference? Asset { get; set; }
     public REResource[]? Resources { get; set; }
-    public int ObjectId { get; set; }
 
     public bool IsEmpty { get; }
 
@@ -21,23 +20,6 @@ public interface IRszContainerNode
         }
 
         gameObject.Owner = this as Node;
-    }
-
-    public REGameObject? GetGameObject(string name, REGameObject? parent, int objectId)
-    {
-        var from = parent ?? this as Node;
-        if (from == null) return null;
-
-        REGameObject? firstMatch = null;
-        string? childName;
-        foreach (var child in from.GetChildren()) {
-            if (child is REGameObject go && ((childName = child.Name) == name || childName.StartsWith(name) && childName.AsSpan()[name.Length..].StartsWith("___"))) {
-                if (go.ObjectId == objectId) return go;
-
-                firstMatch ??= go;
-            }
-        }
-        return firstMatch;
     }
 
     public T? FindResource<T>(string? filepath) where T : REResource

@@ -29,6 +29,8 @@ public class Exporter
         return Path.Combine(basePath, filepath);
     }
 
+    private static readonly Dictionary<GodotObject, RszInstance> exportedInstances = new();
+
     public static bool Export(IRszContainerNode resource, string exportBasepath)
     {
         var outputPath = ResolveExportPath(exportBasepath, resource.Asset ?? throw new Exception("Resource asset is null"));
@@ -37,6 +39,7 @@ public class Exporter
             return false;
         }
 
+        exportedInstances.Clear();
         if (resource is REResource reres) {
             switch (reres.ResourceType) {
                 case RESupportedFileFormats.Userdata:
@@ -66,10 +69,8 @@ public class Exporter
 
         using var file = new UserFile(fileOption, new FileHandler(outputFile));
         SetResources(userdata.Resources, file.ResourceInfoList, fileOption);
-        file.RSZ = new RSZFile(fileOption, handler);
-        file.RSZ.ClearInstances();
-        file.RSZ.InstanceInfoList.Add(new InstanceInfo());
-        file.RSZ.Header.Data.version = 16; // TODO what's this version do?
+        file.RSZ = CreateNewRszFile(fileOption, handler);
+
         var rootInstance = ConstructObjectInstances(userdata, file.RSZ, fileOption, file);
         file.RSZ.AddToObjectTable(file.RSZ.InstanceList[rootInstance]);
         var success = file.Save();
@@ -88,9 +89,9 @@ public class Exporter
         var fileOption = TypeCache.CreateRszFileOptions(config);
 
         var handler = new FileHandler(Importer.ResolveSourceFilePath(root.Asset?.AssetFilename!, config)!);
-        // var sourceFile = new PfbFile(fileOption, handler);
-        // sourceFile.Read();
-        // sourceFile.SetupGameObjects();
+        var sourceFile = new PfbFile(fileOption, handler);
+        sourceFile.Read();
+        sourceFile.SetupGameObjects();
 
         foreach (var go in root.AllChildrenIncludingSelf) {
             foreach (var comp in go.Components) {
@@ -100,17 +101,11 @@ public class Exporter
 
         using var file = new PfbFile(fileOption, new FileHandler(outputFile));
         SetResources(root.Resources, file.ResourceInfoList, fileOption);
-        file.RSZ = new RSZFile(fileOption, handler);
-        file.RSZ.Header.Data.version = 16; // TODO what's this version do?
-        file.RSZ.ClearInstances();
-        file.RSZ.InstanceInfoList.Add(new InstanceInfo());
+        file.RSZ = CreateNewRszFile(fileOption, handler);
 
-        foreach (var gameobj in root.FindChildrenByType<REGameObject>()) {
-            AddGameObject(gameobj, file.RSZ, file, fileOption);
-        }
-        foreach (var gameobj in root.FindChildrenByType<REGameObject>()) {
-            SetupGameObjectReferences(file, gameobj);
-        }
+        AddGameObject(root, file.RSZ, file, fileOption, -1);
+        SetupGameObjectReferences(file, root);
+        // var success = sourceFile.SaveAs(outputFile);
         var success = file.Save();
 
         if (!success && File.Exists(outputFile) && new FileInfo(outputFile).Length == 0) {
@@ -120,50 +115,66 @@ public class Exporter
         return success;
     }
 
-    private static int AddGameObject(REGameObject obj, RSZFile rsz, BaseRszFile container, RszFileOption fileOption)
+    private static RSZFile CreateNewRszFile(RszFileOption fileOption, FileHandler handler)
     {
-        var gameobjectIndex = rsz.InstanceInfoList.Count;
-        var goClass = rsz.RszParser.GetRSZClass("via.GameObject")!;
-        var instance = obj.GetData(goClass);
-        rsz.InstanceInfoList.Add(new InstanceInfo() { ClassName = goClass.name, CRC = goClass.crc, typeId = goClass.typeId });
-        rsz.InstanceList.Add(instance);
+        var rsz = new RSZFile(fileOption, handler);
+        rsz.Header.Data.version = 16; // TODO what's this version do?
+        rsz.ClearInstances();
+        rsz.InstanceInfoList.Add(new InstanceInfo());
+        return rsz;
+    }
 
+    private static int AddGameObject(REGameObject obj, RSZFile rsz, BaseRszFile container, RszFileOption fileOption, int parentObjectId)
+    {
+        var instanceId = ConstructObjectInstances(obj.Data!, rsz, fileOption, container);
+        var instance = rsz.InstanceList[instanceId];
+
+        rsz.AddToObjectTable(instance);
         if (container is ScnFile scn) {
-            AddScnGameObject(gameobjectIndex, scn, obj.ComponentContainer?.GetChildCount() ?? 0);
+            AddScnGameObject(instance.ObjectTableIndex, scn, obj.ComponentContainer?.GetChildCount() ?? 0, parentObjectId);
         } else if (container is PfbFile pfb) {
-            AddPfbGameObject(gameobjectIndex, pfb, obj.ComponentContainer?.GetChildCount() ?? 0);
+            AddPfbGameObject(instance.ObjectTableIndex, pfb, obj.ComponentContainer?.GetChildCount() ?? 0, parentObjectId);
         }
 
         foreach (var comp in obj.Components) {
             var typeinfo = comp.Data!.TypeInfo;
             int dataIndex = ConstructObjectInstances(comp.Data!, rsz, fileOption, container);
-            rsz.ObjectList.Add(rsz.InstanceList[dataIndex]);
-
+            rsz.AddToObjectTable(rsz.InstanceList[dataIndex]);
         }
 
         foreach (var child in obj.Children) {
-            AddGameObject(child, rsz, container, fileOption);
+            AddGameObject(child, rsz, container, fileOption, instance.ObjectTableIndex);
         }
-        rsz.AddToObjectTable(instance);
 
-        return gameobjectIndex;
+        return instanceId;
     }
 
-    private static void AddPfbGameObject(int instanceId, PfbFile file, int componentCount)
+    private static void AddPfbGameObject(int objectId, PfbFile file, int componentCount, int parentId)
     {
-        var objectId = file.GameObjectInfoList.Count;
         file.GameObjectInfoList.Add(new StructModel<PfbFile.GameObjectInfo>() {
             Data = new PfbFile.GameObjectInfo() {
                 objectId = objectId,
-                parentId = -1,
+                parentId = parentId,
                 componentCount = componentCount,
             }
         });
-        file.RSZ!.ObjectList.Add(file.RSZ!.InstanceList[instanceId]);
+        // file.RSZ!.ObjectList.Add(file.RSZ!.InstanceList[instanceId]);
     }
 
     private static void SetupGameObjectReferences(PfbFile pfb, REGameObject gameobj)
     {
+        // TEMP TEST
+        // for (int i =0; i < 12; ++i) {
+        //     pfb.GameObjectRefInfoList.Add(new StructModel<PfbFile.GameObjectRefInfo>() {
+        //         Data = new PfbFile.GameObjectRefInfo() {
+        //             objectId = (uint)i,
+        //             targetId = 151,
+        //             propertyId = 262244,
+        //         }
+        //     });
+        // }
+        // return;
+
         foreach (var comp in gameobj.Components) {
             var ti = comp.Data!.TypeInfo;
             if (ti.GameObjectRefFields.Length == 0) continue;
@@ -171,10 +182,17 @@ public class Exporter
             foreach (var objref in ti.GameObjectRefFields) {
                 if (comp.Data.TryGetFieldValue(ti.Fields[objref], out var uuidString) && uuidString.AsString() != Guid.Empty.ToString()) {
                     // TODO
+                    // propertyId: seems to be some 16bit + 16bit value
+                    // first 2 bytes would seem like a field index, but it's not a direct correlation between rsz fields and indexes
+                    // the second 2 bytes seem to be a property type
+                    // judging from ch000000_00 pfb, type 2 = "Exported ref" (source objectId instance added to the object info list)
+                    // type 4 = something else (default?)
+                    // could be flag
                     // pfb.GameObjectRefInfoList.Add(new StructModel<PfbFile.GameObjectRefInfo>() {
                     //     Data = new PfbFile.GameObjectRefInfo() {
                     //         arrayIndex = 0,
-                    //         objectId = (uint)instanceId,
+                    //         objectId = (uint)0,
+                    //         propertyId = 0,
                     //     }
                     // });
                 }
@@ -186,12 +204,12 @@ public class Exporter
         }
     }
 
-    private static void AddScnGameObject(int instanceId, ScnFile file, int componentCount)
+    private static void AddScnGameObject(int objectId, ScnFile file, int componentCount, int parentId)
     {
         file.GameObjectInfoList.Add(new StructModel<ScnFile.GameObjectInfo>() {
             Data = new ScnFile.GameObjectInfo() {
-                objectId = 1,
-                parentId = -1,
+                objectId = objectId,
+                parentId = parentId,
                 componentCount = (short)componentCount,
             }
         });
@@ -209,9 +227,11 @@ public class Exporter
 
     private static int ConstructObjectInstances(REObject target, RSZFile rsz, RszFileOption fileOption, BaseRszFile container)
     {
+        if (exportedInstances.TryGetValue(target, out var instance)) {
+            return instance.Index;
+        }
         int i = 0;
         RszClass rszClass;
-        RszInstance instance;
         if (target is UserdataResource userdata) {
             rszClass = target.TypeInfo.RszClass;
             if (string.IsNullOrEmpty(target.Classname)) {
@@ -239,8 +259,14 @@ public class Exporter
 
             var values = instance.Values;
             foreach (var field in target.TypeInfo.Fields) {
-                if (target.TryGetFieldValue(field, out var value)) {
-                    if (field.RszField.type is RszFieldType.Object or RszFieldType.UserData) {
+                if (!target.TryGetFieldValue(field, out var value)) {
+                    values[i++] = RszInstance.CreateNormalObject(field.RszField);
+                    continue;
+                }
+
+                switch (field.RszField.type) {
+                    case RszFieldType.Object:
+                    case RszFieldType.UserData:
                         if (field.RszField.array) {
                             var array = value.AsGodotArray<REObject>() ?? throw new Exception("Unhandled rsz object array type");
                             var array_refs = new object[array.Count];
@@ -255,24 +281,26 @@ public class Exporter
                             var obj = value.As<REObject>() ?? throw new Exception("Unhandled rsz object array type");
                             values[i++] = ConstructObjectInstances(obj, rsz, fileOption, container);
                         }
-                    } else if (field.RszField.type is RszFieldType.Resource) {
+                        break;
+                    case RszFieldType.Resource:
                         if (field.RszField.array) {
                             values[i++] = value.AsGodotArray<REResource>().Select(obj => obj?.Asset?.NormalizedFilepath ?? string.Empty).ToArray();
                         } else {
-                            values[i++] = value.As<REResource?>()?.Asset?.AssetFilename ?? string.Empty;
+                            values[i++] = value.As<REResource?>()?.Asset?.NormalizedFilepath ?? string.Empty;
                         }
-                    } else {
+                        break;
+                    default:
                         var converted = RszTypeConverter.ToRszStruct(value, field);
                         values[i++] = converted ?? RszInstance.CreateNormalObject(field.RszField);
-                    }
-                } else {
-                    values[i++] = RszInstance.CreateNormalObject(field.RszField);
+                        break;
                 }
             }
         }
 
+        instance.Index = rsz.InstanceList.Count;
         rsz.InstanceInfoList.Add(new InstanceInfo() { ClassName = rszClass.name, CRC = rszClass.crc, typeId = rszClass.typeId });
         rsz.InstanceList.Add(instance);
+        exportedInstances[target] = instance;
         return instance.Index;
     }
 }

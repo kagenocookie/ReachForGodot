@@ -474,14 +474,19 @@ public class REObjectTypeCache
     public Godot.Collections.Array<Godot.Collections.Dictionary> PropertyList { get; }
     public RszClass RszClass { get; set; }
 
-    public string GetFieldNameOrFallback(string name, Func<REField, bool> fallbackFilter)
+    public REField GetFieldOrFallback(string name, Func<REField, bool> fallbackFilter)
     {
         if (FieldsByName.TryGetValue(name, out var field)) {
-            return field.DisplayName ?? field.SerializedName;
+            return field;
         } else {
             var f = Fields.FirstOrDefault(fallbackFilter);
-            return f?.DisplayName ?? f?.SerializedName ?? throw new Exception($"Field {name} could not be found for type {RszClass.name}");
+            return f ?? throw new Exception($"Field {name} could not be found for type {RszClass.name}");
         }
+    }
+
+    public string GetFieldNameOrFallback(string name, Func<REField, bool> fallbackFilter)
+    {
+        return GetFieldOrFallback(name, fallbackFilter).SerializedName;
     }
 
     public REObjectTypeCache(RszClass cls, REField[] fields)

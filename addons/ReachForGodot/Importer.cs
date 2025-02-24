@@ -442,6 +442,7 @@ public class Importer
         if (!File.Exists(sourceFilePath)) {
             GD.PrintErr("Resource file not found: " + sourceFilePath);
             format = RESupportedFileFormats.Unknown;
+            sourceFilePath = Path.GetRelativePath(config.Paths.ChunkPath, sourceFilePath);
         } else {
             format = Importer.GetFileFormat(sourceFilePath).format;
             sourceFilePath = Path.GetRelativePath(config.Paths.ChunkPath, sourceFilePath);

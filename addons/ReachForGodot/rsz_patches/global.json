@@ -1,4 +1,16 @@
 {
+    "via.GameObject": {
+        "FieldPatches": [
+            {
+                "Name": "v0",
+                "ReplaceName": "Name"
+            },
+            {
+                "Name": "v1",
+                "ReplaceName": "Tags"
+            }
+        ]
+    },
     "via.Transform": {
         "FieldPatches": [
             {

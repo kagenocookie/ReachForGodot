@@ -6,7 +6,6 @@ using Godot;
 public partial class UserdataResource : REResource, IRszContainerNode
 {
     [Export] public REResource[]? Resources { get; set; }
-    public int ObjectId { get; set; }
 
     public void Reimport()
     {

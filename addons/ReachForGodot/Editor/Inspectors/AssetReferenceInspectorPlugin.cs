@@ -18,7 +18,7 @@ public partial class AssetReferenceInspectorPlugin : EditorInspectorPlugin, ISer
 
     private PackedScene? inspectorScene;
 
-    [GeneratedRegex("[^a-zA-Z0-9-_/.]")]
+    [GeneratedRegex("[^a-zA-Z0-9-_/\\.]")]
     private static partial Regex FilepathRegex();
 
     public override bool _ParseProperty(GodotObject @object, Variant.Type type, string name, PropertyHint hintType, string hintString, PropertyUsageFlags usageFlags, bool wide)

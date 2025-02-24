@@ -10,7 +10,6 @@ public partial class SceneFolder : Node, IRszContainerNode
     [Export] public SupportedGame Game { get; set; }
     [Export] public AssetReference? Asset { get; set; }
     [Export] public REResource[]? Resources { get; set; }
-    [Export] public int ObjectId { get; set; }
     [Export] public Node? FolderContainer { get; private set; }
 
     private bool childrenVisible = true;

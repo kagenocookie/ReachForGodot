@@ -29,35 +29,12 @@ public partial class REObject : Resource
         ResourceName = classname;
     }
 
-    public REObject(SupportedGame game, string classname, RszInstance instance)
-    {
-        Game = game;
-        Classname = classname;
-        ResourceName = classname;
-        LoadProperties(instance);
-    }
-
     public override void _ValidateProperty(Dictionary property)
     {
         if (property["name"].AsStringName() == PropertyName.__Data) {
             property["usage"] = (int)(PropertyUsageFlags.Storage|PropertyUsageFlags.ScriptVariable);
         }
         base._ValidateProperty(property);
-    }
-
-    public void Rebuild(string classname, RszInstance instance)
-    {
-        Classname = classname;
-        LoadProperties(instance);
-    }
-
-    public void LoadProperties(RszInstance instance)
-    {
-        cache ??= TypeCache.GetData(Game, Classname ?? throw new Exception("Missing REObject classname"));
-        foreach (var field in cache.Fields) {
-            var value = instance.Values[field.FieldIndex];
-            __Data[field.SerializedName] = RszTypeConverter.FromRszValue(field, value, Game);
-        }
     }
 
     public void ResetProperties()
@@ -108,13 +85,19 @@ public partial class REObject : Resource
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool TryGetFieldValue(REField field, out Variant variant)
     {
-        return __Data.TryGetValue(field.DisplayName ?? field.SerializedName, out variant);
+        return __Data.TryGetValue(field.SerializedName, out variant);
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void SetField(REField field, Variant value)
     {
-        __Data[field.DisplayName ?? field.SerializedName] = value;
+        __Data[field.SerializedName] = value;
+    }
+
+    public void SetField(string field, Variant value)
+    {
+        var fieldRef = TypeInfo.GetFieldOrFallback(field, static (o) => o.FieldIndex == 0);
+        __Data[fieldRef.SerializedName] = value;
     }
 
     protected Dictionary CreatePropertyCategory(string name, string? hintstring = null)

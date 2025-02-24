@@ -92,5 +92,60 @@
                 "ReplaceName": "TexturePath"
             }
         ]
+    },
+    "via.physics.SphereShape": {
+        "FieldPatches": [
+            {
+                "Name": "v1",
+                "Type": "UserData"
+            }
+        ]
+    },
+    "via.physics.Collider": {
+        "FieldPatches": [
+            {
+                "Name": "v2",
+                "Type": "Object",
+                "OriginalType": "via.physics.Shape"
+            },
+            {
+                "Name": "v3",
+                "Type": "Object",
+                "OriginalType": "via.physics.FilterInfo"
+            },
+            {
+                "Name": "v4",
+                "Type": "Object"
+            }
+        ]
+    },
+    "via.physics.Colliders": {
+        "FieldPatches": [
+            {
+                "Name": "v5",
+                "ReplaceName": "Colliders",
+                "Type": "Object"
+            }
+        ]
+    },
+    "via.GameObject": {
+        "FieldPatches": [
+            {
+                "Name": "v4",
+                "Type": "F32"
+            }
+        ]
+    },
+    "via.motion.Motion": {
+        "FieldPatches": [
+            {
+                "Name": "v24",
+                "Type": "Object"
+            },
+            {
+                "Name": "v26",
+                "Type": "Object"
+            }
+        ]
     }
 }

@@ -25,7 +25,7 @@ public class RszGodotConverter
     public static readonly RszGodotConversionOptions thisFolderOnly = new(RszImportType.Placeholders, RszImportType.Import, RszImportType.Import, RszImportType.Import);
     public static readonly RszGodotConversionOptions importMissing = new(RszImportType.Import, RszImportType.Import, RszImportType.Import, RszImportType.Import);
     public static readonly RszGodotConversionOptions importTreeChanges = new(RszImportType.Reimport, RszImportType.Reimport, RszImportType.Import, RszImportType.Reimport);
-    public static readonly RszGodotConversionOptions fullReimport = new(RszImportType.Reimport, RszImportType.Reimport, RszImportType.Reimport, RszImportType.Reimport);
+    public static readonly RszGodotConversionOptions fullReimport = new(RszImportType.ForceReimport, RszImportType.ForceReimport, RszImportType.ForceReimport, RszImportType.ForceReimport);
 
     private static readonly Dictionary<SupportedGame, Dictionary<string, Func<IRszContainerNode, REGameObject, RszInstance, REComponent?>>> perGameFactories = new();
 
@@ -166,6 +166,7 @@ public class RszGodotConverter
         return newResource;
     }
 
+    private readonly Dictionary<RszInstance, REObject> importedObjects = new();
 
     public async Task GenerateSceneTree(SceneFolder root)
     {
@@ -252,13 +253,16 @@ public class RszGodotConverter
 
         GenerateResources(root, file.ResourceInfoList, AssetConfig);
 
-        var rootGOs = file.GameObjectDatas!.OrderBy(o => o.Instance!.Index);
-        if (rootGOs.Count() > 1) {
-            GD.PrintErr("WTF Capcom, why do you have multiple GameObjects in the PFB root???");
+        if (Options.prefabs == RszImportType.ForceReimport) {
+            root.ClearChildren();
+            root.ComponentContainer = null;
         }
+
+        importedObjects.Clear();
+        var rootGOs = file.GameObjectDatas!.OrderBy(o => o.Instance!.Index);
+        Debug.Assert(rootGOs.Count() <= 1, "WTF Capcom. Guess we doing multiple PFB roots now");
         foreach (var gameObj in rootGOs) {
-            Debug.Assert(gameObj.Info != null);
-            await GenerateGameObject(root, gameObj, Options.prefabs, root);
+            await GenerateGameObject(root, gameObj, Options.prefabs);
         }
     }
 
@@ -285,7 +289,8 @@ public class RszGodotConverter
         }
 
         foreach (var instance in file.RSZ!.ObjectList) {
-            root.Rebuild(instance.RszClass.name, instance);
+            root.Classname = instance.RszClass.name;
+            ApplyObjectValues(root, instance);
             ResourceSaver.Save(root);
             break;
         }
@@ -362,7 +367,6 @@ public class RszGodotConverter
             if (subfolder == null) {
                 GD.Print("Creating folder " + name);
                 subfolder = new SceneFolder() {
-                    ObjectId = folder.Info.Data.objectId,
                     Game = root.Game,
                     Name = name
                 };
@@ -380,18 +384,14 @@ public class RszGodotConverter
         }
     }
 
-    private async Task GenerateGameObject(IRszContainerNode root, IGameObjectData data, RszImportType importType, REGameObject? parent = null)
+    private async Task GenerateGameObject(IRszContainerNode root, IGameObjectData data, RszImportType importType, REGameObject? parent = null, int dedupeIndex = 0)
     {
         var name = data.Name ?? "UnnamedGameObject";
 
+        Debug.Assert(data.Instance != null);
+
         string? uuid = null;
-        // TODO resolve duplicate name children
-        var gameobj = root.GetGameObject(name, parent, data.Instance?.ObjectTableIndex ?? -1);
-        if (gameobj != null && importType == RszImportType.ForceReimport) {
-            (parent ?? root as Node)?.RemoveChild(gameobj);
-            gameobj.QueueFree();
-            gameobj = null;
-        }
+        var gameobj = parent == null ? root as PrefabNode : (parent ?? root as REGameObject)?.GetChild(name, dedupeIndex);
 
         if (data is ScnFile.GameObjectData scnData) {
             uuid = scnData.Info?.Data.guid.ToString();
@@ -420,32 +420,37 @@ public class RszGodotConverter
 
         if (gameobj == null) {
             gameobj ??= new REGameObject() {
-                ObjectId = data.Instance?.ObjectTableIndex ?? -1,
+                Game = AssetConfig.Game,
                 Name = name,
                 OriginalName = name,
-                Tags = data.Instance?.Values[1] as string,
-                Uuid = uuid ?? Guid.NewGuid().ToString(),
                 Enabled = true, // TODO which gameobject field is enabled?
                 // Enabled = gameObj.Instance.GetFieldValue("v2")
             };
-        } else {
-            gameobj.Uuid = uuid ?? Guid.NewGuid().ToString();
         }
+
+        if (uuid != null) {
+            gameobj.Uuid = uuid;
+        }
+
+        gameobj.Data = CreateOrUpdateObject(data.Instance, gameobj.Data);
 
         if (gameobj.GetParent() == null) {
             root.AddGameObject(gameobj, parent);
-        }
-
-        if (importType == RszImportType.ForceReimport) {
-            gameobj.ComponentContainer?.ClearChildren();
         }
 
         foreach (var comp in data.Components.OrderBy(o => o.Index)) {
             await SetupComponent(root, comp, gameobj, importType);
         }
 
+        var dupeDict = new Dictionary<string, int>();
         foreach (var child in data.GetChildren().OrderBy(o => o.Instance!.Index)) {
-            await GenerateGameObject(root, child, importType, gameobj);
+            var childName = child.Name ?? "unnamed";
+            if (dupeDict.TryGetValue(childName, out var index)) {
+                dupeDict[childName] = ++index;
+            } else {
+                dupeDict[childName] = index = 0;
+            }
+            await GenerateGameObject(root, child, importType, gameobj, index);
         }
     }
 
@@ -476,9 +481,107 @@ public class RszGodotConverter
             await gameObject.AddComponent(componentInfo);
         }
 
-        componentInfo.Data = new REObject(root.Game, instance.RszClass.name, instance);
+        // componentInfo.Data = new REObject(root.Game, instance.RszClass.name, instance);
+        componentInfo.Data = CreateOrUpdateObject(instance, componentInfo.Data);
         componentInfo.ObjectId = instance.Index;
         await componentInfo.Setup(root, gameObject, instance, Options.meshes);
+    }
+
+    private REObject CreateOrUpdateObject(RszInstance instance, REObject? obj)
+    {
+        return obj == null ? CreateOrGetObject(instance) : ApplyObjectValues(obj, instance);
+    }
+
+    private REObject CreateOrGetObject(RszInstance instance)
+    {
+        if (importedObjects.TryGetValue(instance, out var obj)) {
+            return obj;
+        }
+
+        obj = new REObject(AssetConfig.Game, instance.RszClass.name);
+        importedObjects[instance] = obj;
+        return ApplyObjectValues(obj, instance);
+    }
+
+    private REObject ApplyObjectValues(REObject obj, RszInstance instance)
+    {
+        foreach (var field in obj.TypeInfo.Fields) {
+            var value = instance.Values[field.FieldIndex];
+            obj.SetField(field, ConvertRszValue(field, value));
+        }
+
+        return obj;
+    }
+
+    private Variant ConvertRszValue(REField field, object value)
+    {
+        if (field.RszField.array) {
+            if (value == null) return new Godot.Collections.Array();
+
+            var type = value.GetType();
+            object[] arr = ((IList<object>)value).ToArray();
+            var newArray = new Godot.Collections.Array();
+            foreach (var v in arr) {
+                newArray.Add(ConvertSingleRszValue(field, v));
+            }
+            return newArray;
+        }
+
+        return ConvertSingleRszValue(field, value);
+    }
+
+    private Variant ConvertSingleRszValue(REField field, object value)
+    {
+        switch (field.RszField.type) {
+            case RszFieldType.UserData:
+                return ConvertUserdata((RszInstance)value);
+            case RszFieldType.Object:
+                var fieldInst = (RszInstance)value;
+                return fieldInst.Index == 0 ? new Variant() : CreateOrGetObject(fieldInst);
+            case RszFieldType.Resource:
+                if (value is string str && !string.IsNullOrWhiteSpace(str)) {
+                    return Importer.FindOrImportResource<Resource>(str, ReachForGodot.GetAssetConfig(AssetConfig.Game))!;
+                } else {
+                    return new Variant();
+                }
+            default:
+                return RszTypeConverter.FromRszValueSingleValue(field, value, AssetConfig.Game);
+        }
+    }
+
+    private Variant ConvertRszInstanceArray(object value)
+    {
+        var values = (IList<object>)value;
+        var newArray = new Godot.Collections.Array();
+        foreach (var element in values) {
+            if (element is RszInstance rsz) {
+                newArray.Add(rsz.Index == 0 ? new Variant() : CreateOrGetObject(rsz));
+            } else {
+                GD.PrintErr("INVALID ARRAY WTF");
+            }
+        }
+        return newArray;
+    }
+
+    private Variant ConvertUserdata(RszInstance rsz)
+    {
+        if (importedObjects.TryGetValue(rsz, out var previousInst)) {
+            return previousInst;
+        }
+        if (rsz.Index == 0) return new Variant();
+
+        if (rsz.RSZUserData is RSZUserDataInfo ud1) {
+            if (!string.IsNullOrEmpty(ud1.Path)) {
+                return importedObjects[rsz] = Importer.FindOrImportResource<UserdataResource>(ud1.Path, AssetConfig)!;
+            }
+        } else if (rsz.RSZUserData is RSZUserDataInfo_TDB_LE_67 ud2) {
+            GD.PrintErr("Unsupported userdata reference TDB_LE_67");
+        } else if (string.IsNullOrEmpty(rsz.RszClass.name)) {
+            return new Variant();
+        } else {
+            GD.PrintErr("Unhandled userdata reference type??");
+        }
+        return new Variant();
     }
 }
 
@@ -497,6 +600,6 @@ public enum RszImportType
     Import,
     /// <summary>Reimport the full asset from the source file, maintaining any local changes as much as possible.</summary>
     Reimport,
-    /// <summary>Discard any local changes and regenerate assets.</summary>
+    /// <summary>Discard any local data and regenerate assets.</summary>
     ForceReimport,
 }
