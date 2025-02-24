@@ -2,6 +2,7 @@ namespace RGE;
 
 using Godot;
 
+[GlobalClass, Tool]
 public partial class TaperedCapsule : Resource
 {
     [Export] public Vector4 vertexRadiusA;

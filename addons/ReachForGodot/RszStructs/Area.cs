@@ -2,6 +2,7 @@ namespace RGE;
 
 using Godot;
 
+[GlobalClass, Tool]
 public partial class Area : Resource
 {
     [Export] public Vector2 p0;

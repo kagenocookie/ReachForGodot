@@ -2,6 +2,7 @@ namespace RGE;
 
 using Godot;
 
+[GlobalClass, Tool]
 public partial class Rect3D : Resource
 {
     [Export] public Vector3 normal;

@@ -2,6 +2,7 @@ namespace RGE;
 
 using Godot;
 
+[GlobalClass, Tool]
 public partial class Plane : Resource
 {
     [Export] public Vector3 normal;

@@ -32,7 +32,55 @@ public class Importer
     [return: NotNullIfNotNull(nameof(filepath))]
     public static string? NormalizeResourceFilepath(string? filepath)
     {
+        if (filepath?.StartsWith("res://") == true) {
+            filepath = filepath.Substring(6);
+        }
         return GetFilepathWithoutVersion(filepath!).Replace('\\', '/');
+    }
+
+    public static REResource? FindImportedResourceAsset(Resource? asset)
+    {
+        if (asset == null) return null;
+        if (asset is REResource reres) return reres;
+
+        var path = asset.ResourcePath;
+        if (asset is PackedScene ps) {
+            // could be tscn (pfb, scn) or a mesh (.blend)
+            if (path.EndsWith(".blend")) {
+                return FindImportedResourceAsset(path);
+            }
+        }
+
+        throw new ArgumentException("Unsupported asset resource " + path, nameof(asset));
+    }
+
+    public static REResource? FindImportedResourceAsset(string? resourceFilepath)
+    {
+        if (string.IsNullOrEmpty(resourceFilepath)) return null;
+
+        if (resourceFilepath.EndsWith(".blend")) {
+            var resLocalized = ProjectSettings.LocalizePath(resourceFilepath.GetBaseName() + ".tres");
+            if (ResourceLoader.Exists(resLocalized)) {
+                return ResourceLoader.Load<REResource>(resLocalized);
+            }
+        } else if (resourceFilepath.EndsWith(".dds")) {
+            var resLocalized = ProjectSettings.LocalizePath(resourceFilepath.GetBaseName() + ".tres");
+            if (ResourceLoader.Exists(resLocalized)) {
+                return ResourceLoader.Load<REResource>(resLocalized);
+            }
+        } else if (resourceFilepath.EndsWith(".tres")) {
+            var resLocalized = ProjectSettings.LocalizePath(resourceFilepath);
+            if (ResourceLoader.Exists(resLocalized)) {
+                return ResourceLoader.Load<REResource>(resLocalized);
+            }
+        }
+
+        var localized = ProjectSettings.LocalizePath(resourceFilepath + ".tres");
+        if (ResourceLoader.Exists(localized)) {
+            return ResourceLoader.Load<REResource>(localized);
+        }
+
+        throw new Exception("Unknown asset resource reference " + resourceFilepath);
     }
 
     public static string GetFilepathWithoutVersion(string filepath)
@@ -100,6 +148,7 @@ public class Importer
 
         var first = Directory.EnumerateFiles(dir, $"*.{ext}.*").FirstOrDefault();
         if (first != null) {
+            // TODO: cache autodetected file format versions?
             return int.TryParse(first.GetExtension(), out var ver) ? ver : -1;
         }
         return -1;
@@ -381,20 +430,27 @@ public class Importer
     private static T? ImportResource<T>(string? sourceFilePath, string outputFilePath, AssetConfig config)
         where T : REResource, new()
     {
+        if (string.IsNullOrEmpty(sourceFilePath)) return null;
         if (!System.IO.Path.IsPathRooted(sourceFilePath)) {
-            sourceFilePath = ResolveSourceFilePath(sourceFilePath, config);
-        }
-        if (!File.Exists(sourceFilePath)) {
-            GD.PrintErr("Resource file not found: " + sourceFilePath);
-            return null;
+            var resolved = ResolveSourceFilePath(sourceFilePath, config);
+            if (resolved != null) {
+                sourceFilePath = resolved;
+            }
         }
 
-        var format = Importer.GetFileFormat(sourceFilePath);
-        sourceFilePath = Path.GetRelativePath(config.Paths.ChunkPath, sourceFilePath);
+        RESupportedFileFormats format;
+        if (!File.Exists(sourceFilePath)) {
+            GD.PrintErr("Resource file not found: " + sourceFilePath);
+            format = RESupportedFileFormats.Unknown;
+        } else {
+            format = Importer.GetFileFormat(sourceFilePath).format;
+            sourceFilePath = Path.GetRelativePath(config.Paths.ChunkPath, sourceFilePath);
+        }
+
         Directory.CreateDirectory(outputFilePath.GetBaseDir());
         var newres = new T() {
             Asset = new AssetReference(sourceFilePath),
-            ResourceType = format.format,
+            ResourceType = format,
             Game = config.Game,
             ResourceName = sourceFilePath.GetFile(),
             ResourcePath = ProjectSettings.LocalizePath(outputFilePath),

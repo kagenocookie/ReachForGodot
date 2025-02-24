@@ -2,6 +2,7 @@ namespace RGE;
 
 using Godot;
 
+[GlobalClass, Tool]
 public partial class Cone : Resource
 {
     [Export] public Vector3 p0;

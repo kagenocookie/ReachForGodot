@@ -59,7 +59,7 @@ public partial class AssetExportInspectorPlugin : EditorInspectorPlugin, ISerial
         };
         button.Disabled = selectedIndex == -1;
         button.Pressed += () => {
-            var success = Exporter.ExportFile(res, paths[exportPath.Selected]);
+            var success = Exporter.Export(res, paths[exportPath.Selected]);
             if (success) {
                 GD.Print("Export successful!");
                 UpdateShowButton();

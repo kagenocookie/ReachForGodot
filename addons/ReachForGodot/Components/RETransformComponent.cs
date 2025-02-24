@@ -27,6 +27,18 @@ public partial class RETransformComponent : REComponent
         pos.ToVector3()
     );
 
+    public override void PreExport()
+    {
+        base.PreExport();
+        Debug.Assert(Data != null);
+        Debug.Assert(GameObject?.Transform != null);
+        var transform = GameObject.Transform;
+        var basis = transform.Basis;
+        Data.SetField(Data.TypeInfo.Fields[0], transform.Origin.ToVector4());
+        Data.SetField(Data.TypeInfo.Fields[1], basis.GetEuler().ToVector4());
+        Data.SetField(Data.TypeInfo.Fields[2], basis.Scale.ToVector4());
+    }
+
     public static Transform3D Vector4x3ToTransform(System.Numerics.Vector4 pos, System.Numerics.Vector4 rotation, System.Numerics.Vector4 scale)
     {
         var row1 = (System.Numerics.Vector4)pos;

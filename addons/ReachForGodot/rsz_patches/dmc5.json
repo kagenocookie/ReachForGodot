@@ -1,0 +1,14 @@
+{
+    "via.render.Mesh": {
+        "FieldPatches": [
+            {
+                "Name": "v20",
+                "ReplaceName": "Mesh"
+            },
+            {
+                "Name": "v21",
+                "ReplaceName": "Material"
+            }
+        ]
+    }
+}

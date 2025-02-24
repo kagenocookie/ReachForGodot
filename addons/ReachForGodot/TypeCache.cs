@@ -99,6 +99,12 @@ public class TypeCache
             field.HintString = resourceName;
         }
 
+        void ArrayHint(REField field, Variant.Type variantType) {
+            field.VariantType = Variant.Type.Array;
+            field.Hint = PropertyHint.TypeString;
+            field.HintString = $"{(int)variantType}/0:";
+        }
+
         if (srcField.array) {
             switch (srcField.type) {
                 case RszFieldType.U8:
@@ -116,6 +122,13 @@ public class TypeCache
                 case RszFieldType.F64:
                     refield.VariantType = Variant.Type.PackedFloat64Array;
                     return;
+                case RszFieldType.S8:
+                case RszFieldType.U16:
+                case RszFieldType.S16:
+                case RszFieldType.U32:
+                case RszFieldType.U64:
+                    ArrayHint(refield, Variant.Type.Int);
+                    break;
                 case RszFieldType.Color:
                     refield.VariantType = Variant.Type.PackedColorArray;
                     return;
@@ -152,6 +165,11 @@ public class TypeCache
                     refield.Hint = PropertyHint.TypeString;
                     refield.HintString = $"{(int)Variant.Type.Object}/{(int)PropertyHint.ResourceType}:{nameof(REResource)}";
                     return;
+                case RszFieldType.Data:
+                    refield.VariantType = Variant.Type.Array;
+                    refield.Hint = PropertyHint.TypeString;
+                    refield.HintString = $"{(int)Variant.Type.PackedByteArray}/0:";
+                    break;
                 default:
                     refield.VariantType = Variant.Type.Array;
                     return;
@@ -455,6 +473,16 @@ public class REObjectTypeCache
     public Dictionary<string, REField> FieldsByName { get; }
     public Godot.Collections.Array<Godot.Collections.Dictionary> PropertyList { get; }
     public RszClass RszClass { get; set; }
+
+    public string GetFieldNameOrFallback(string name, Func<REField, bool> fallbackFilter)
+    {
+        if (FieldsByName.TryGetValue(name, out var field)) {
+            return field.DisplayName ?? field.SerializedName;
+        } else {
+            var f = Fields.FirstOrDefault(fallbackFilter);
+            return f?.DisplayName ?? f?.SerializedName ?? throw new Exception($"Field {name} could not be found for type {RszClass.name}");
+        }
+    }
 
     public REObjectTypeCache(RszClass cls, REField[] fields)
     {

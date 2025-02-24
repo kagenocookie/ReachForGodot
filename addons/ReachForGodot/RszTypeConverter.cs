@@ -74,7 +74,7 @@ public static class RszTypeConverter
                 return Importer.FindOrImportResource<UserdataResource>(path, ReachForGodot.GetAssetConfig(game))!;
             case RszFieldType.Object:
                 if (value is RszInstance rszInstance) {
-                    return new REObject(game, rszInstance.RszClass.name, rszInstance);
+                    return rszInstance.Index == 0 ? new Variant() : new REObject(game, rszInstance.RszClass.name, rszInstance);
                 }
                 GD.Print("Unhandled rsz object type " + value?.GetType().FullName);
                 return default;
@@ -241,17 +241,26 @@ public static class RszTypeConverter
     {
         if (field.RszField.array) {
             return field.RszField.type switch {
+                RszFieldType.S16 => ConvertArray(variant.AsGodotArray<uint>(), static v => v),
+                RszFieldType.U16 => ConvertArray(variant.AsGodotArray<uint>(), static v => v),
                 RszFieldType.S32 => ConvertArray(variant.AsInt32Array()),
+                RszFieldType.U32 => ConvertArray(variant.AsGodotArray<uint>(), static v => v),
                 RszFieldType.S64 => ConvertArray(variant.AsInt64Array()),
+                RszFieldType.U64 => ConvertArray(variant.AsGodotArray<uint>(), static v => v),
                 RszFieldType.F32 => ConvertArray(variant.AsFloat32Array()),
                 RszFieldType.F64 => ConvertArray(variant.AsFloat64Array()),
+                RszFieldType.S8 => ConvertArray(variant.AsGodotArray<uint>(), static v => v),
                 RszFieldType.U8 => ConvertArray(variant.AsByteArray()),
                 RszFieldType.String => ConvertArray(variant.AsStringArray()),
                 RszFieldType.RuntimeType => ConvertArray(variant.AsStringArray()),
                 RszFieldType.Color => ConvertArray(variant.AsColorArray(), static (val) => val.ToRsz()),
-                RszFieldType.Vec2 => ConvertArray(variant.AsVector2Array(), static (val) => val.ToRsz()),
-                RszFieldType.Vec3 => ConvertArray(variant.AsVector3Array(), static (val) => val.ToRsz()),
-                RszFieldType.Vec4 => ConvertArray(variant.AsVector4Array(), static (val) => val.ToRsz()),
+                RszFieldType.Vec2 or RszFieldType.Float2 or RszFieldType.Point => ConvertArray(variant.AsVector2Array(), static (val) => val.ToRsz()),
+                RszFieldType.Vec3 or RszFieldType.Float3 or RszFieldType.Position => ConvertArray(variant.AsVector3Array(), static (val) => val.ToRsz()),
+                RszFieldType.Vec4 or RszFieldType.Float4 => ConvertArray(variant.AsVector4Array(), static (val) => val.ToRsz()),
+                RszFieldType.Data => ConvertArray(variant.AsGodotArray<byte[]>().ToArray()),
+                RszFieldType.Uint2  => ConvertArray(variant.AsGodotArray<Vector2I>(), static v => v.ToRsz()),
+                RszFieldType.Uint3  => ConvertArray(variant.AsGodotArray<Vector3I>(), static v => v.ToRsz()),
+                RszFieldType.Uint4  => ConvertArray(variant.AsGodotArray<Vector4I>(), static v => v.ToRsz()),
                 _ => throw new Exception("Unhandled rsz export array type " + field.RszField.type),
             };
         }
@@ -268,6 +277,14 @@ public static class RszTypeConverter
     private static object[] ConvertArray<T>(T[] sourceArray, Func<T, object> converter)
     {
         var arr = new object[sourceArray.Length];
+        for (int i = 0; i < arr.Length; ++i) {
+            arr[i] = converter.Invoke(sourceArray[i]!);
+        }
+        return arr;
+    }
+    private static object[] ConvertArray<[MustBeVariant] T>(Godot.Collections.Array<T> sourceArray, Func<T, object> converter)
+    {
+        var arr = new object[sourceArray.Count];
         for (int i = 0; i < arr.Length; ++i) {
             arr[i] = converter.Invoke(sourceArray[i]!);
         }
@@ -290,7 +307,7 @@ public static class RszTypeConverter
             RszFieldType.Data => variant.AsByteArray(),
             RszFieldType.Mat4 => variant.AsProjection().ToRsz(),
             RszFieldType.Vec2 or RszFieldType.Float2 or RszFieldType.Point => variant.AsVector2().ToRsz(),
-            RszFieldType.Vec3 or RszFieldType.Float3 => variant.AsVector3().ToRsz(),
+            RszFieldType.Vec3 or RszFieldType.Float3 or RszFieldType.Position => variant.AsVector3().ToRsz(),
             RszFieldType.Vec4 or RszFieldType.Float4 => variant.AsVector4().ToRsz(),
             RszFieldType.Int2 => (RszTool.via.Int2)variant.AsVector2I().ToRsz(),
             RszFieldType.Int3 => (RszTool.via.Int3)variant.AsVector3I().ToRsz(),
@@ -341,6 +358,8 @@ public static class RszTypeConverter
     public static Vector4 ToGodot(this System.Numerics.Vector4 val) => new Vector4(val.X, val.Y, val.Z, val.W);
     public static Vector4 ToGodot(this RszTool.via.Rect val) => new Vector4(val.t, val.r, val.b, val.l);
     public static Vector4 ToVector4(this RszTool.via.Sphere val) => new Vector4(val.pos.X, val.pos.Y, val.Pos.Z, val.R);
+    public static Vector4 ToVector4(this Vector3 val) => new Vector4(val.X, val.Y, val.Z, 0);
+    public static Vector4 ToVector4(this Quaternion val) => new Vector4(val.X, val.Y, val.Z, val.W);
     public static RszTool.via.Sphere ToSphere(this Vector4 val) => new RszTool.via.Sphere { pos = val.ToVector3().ToRsz(), r = val.W };
     public static RszTool.via.Rect ToRect(this Vector4 val) => new RszTool.via.Rect { t = val.X, r = val.Y, b = val.Z, l = val.W  };
     public static Quaternion ToGodot(this System.Numerics.Quaternion val) => new Quaternion(val.X, val.Y, val.Z, val.W);

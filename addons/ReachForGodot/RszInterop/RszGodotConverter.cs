@@ -385,6 +385,7 @@ public class RszGodotConverter
         var name = data.Name ?? "UnnamedGameObject";
 
         string? uuid = null;
+        // TODO resolve duplicate name children
         var gameobj = root.GetGameObject(name, parent, data.Instance?.ObjectTableIndex ?? -1);
         if (gameobj != null && importType == RszImportType.ForceReimport) {
             (parent ?? root as Node)?.RemoveChild(gameobj);
@@ -421,6 +422,8 @@ public class RszGodotConverter
             gameobj ??= new REGameObject() {
                 ObjectId = data.Instance?.ObjectTableIndex ?? -1,
                 Name = name,
+                OriginalName = name,
+                Tags = data.Instance?.Values[1] as string,
                 Uuid = uuid ?? Guid.NewGuid().ToString(),
                 Enabled = true, // TODO which gameobject field is enabled?
                 // Enabled = gameObj.Instance.GetFieldValue("v2")

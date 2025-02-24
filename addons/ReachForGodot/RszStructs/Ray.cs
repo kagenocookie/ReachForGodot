@@ -2,6 +2,7 @@ namespace RGE;
 
 using Godot;
 
+[GlobalClass, Tool]
 public partial class Ray : Resource
 {
     [Export] public Vector3 from;

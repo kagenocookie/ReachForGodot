@@ -2,6 +2,7 @@ namespace RGE;
 
 using Godot;
 
+[GlobalClass, Tool]
 public partial class KeyFrame : Resource
 {
     [Export] public float value;

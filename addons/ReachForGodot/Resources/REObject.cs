@@ -60,6 +60,14 @@ public partial class REObject : Resource
         }
     }
 
+    public void ResetProperties()
+    {
+        cache ??= TypeCache.GetData(Game, Classname ?? throw new Exception("Missing REObject classname"));
+        foreach (var field in cache.Fields) {
+            __Data[field.SerializedName] = RszTypeConverter.FromRszValue(field, RszInstance.CreateNormalObject(field.RszField), Game);
+        }
+    }
+
     public override Array<Dictionary> _GetPropertyList()
     {
         if (string.IsNullOrWhiteSpace(Classname)) {
@@ -101,6 +109,12 @@ public partial class REObject : Resource
     public bool TryGetFieldValue(REField field, out Variant variant)
     {
         return __Data.TryGetValue(field.DisplayName ?? field.SerializedName, out variant);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void SetField(REField field, Variant value)
+    {
+        __Data[field.DisplayName ?? field.SerializedName] = value;
     }
 
     protected Dictionary CreatePropertyCategory(string name, string? hintstring = null)

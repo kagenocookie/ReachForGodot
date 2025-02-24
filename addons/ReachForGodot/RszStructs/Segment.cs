@@ -2,6 +2,7 @@ namespace RGE;
 
 using Godot;
 
+[GlobalClass, Tool]
 public partial class Segment : Resource
 {
     [Export] public Vector4 from;

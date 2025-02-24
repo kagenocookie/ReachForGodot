@@ -2,6 +2,7 @@ namespace RGE;
 
 using Godot;
 
+[GlobalClass, Tool]
 public partial class Frustum : Resource
 {
     [Export] public Plane? plane0;

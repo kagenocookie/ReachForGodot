@@ -39,9 +39,11 @@ public partial class REMeshComponent : REComponent
         return MeshFilepath != null && mr.Asset?.IsSameAsset(MeshFilepath) == true;
     }
 
+    private string MeshField => Data?.TypeInfo.GetFieldNameOrFallback("Mesh", static (f) => f.VariantType == Variant.Type.String) ?? string.Empty;
+
     public override Task Setup(IRszContainerNode root, REGameObject gameObject, RszInstance rsz, RszImportType importType)
     {
-        MeshFilepath = rsz.GetFieldValue("v2") as string ?? rsz.GetFieldValue("v20") as string ?? rsz.Values.FirstOrDefault(v => v is string) as string;
+        MeshFilepath = rsz.GetFieldValue(MeshField) as string;
         if (string.IsNullOrEmpty(MeshFilepath)) {
             meshNode?.QueueFree();
             meshNode = null;
@@ -53,6 +55,16 @@ public partial class REMeshComponent : REComponent
         }
 
         return ReloadMesh(root.FindResource<MeshResource>(MeshFilepath), gameObject, importType == RszImportType.ForceReimport);
+    }
+
+    public override void PreExport()
+    {
+        base.PreExport();
+        Debug.Assert(Data != null);
+        var resource = Importer.FindImportedResourceAsset(meshNode?.SceneFilePath) as MeshResource;
+        var meshScenePath = resource?.Asset?.NormalizedFilepath;
+
+        Data.Set("Mesh", meshScenePath ?? string.Empty);
     }
 
     protected async Task ReloadMesh(MeshResource? mr, REGameObject gameObject, bool forceReload)

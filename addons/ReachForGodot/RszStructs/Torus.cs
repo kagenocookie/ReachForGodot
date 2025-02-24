@@ -2,6 +2,7 @@ namespace RGE;
 
 using Godot;
 
+[GlobalClass, Tool]
 public partial class Torus : Resource
 {
     [Export] public Vector3 pos;
