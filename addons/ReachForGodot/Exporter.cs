@@ -104,7 +104,7 @@ public class Exporter
         file.RSZ = CreateNewRszFile(fileOption, handler);
 
         AddGameObject(root, file.RSZ, file, fileOption, -1);
-        SetupGameObjectReferences(file, root);
+        SetupGameObjectReferences(file, root, root);
         // var success = sourceFile.SaveAs(outputFile);
         var success = file.Save();
 
@@ -161,46 +161,49 @@ public class Exporter
         // file.RSZ!.ObjectList.Add(file.RSZ!.InstanceList[instanceId]);
     }
 
-    private static void SetupGameObjectReferences(PfbFile pfb, REGameObject gameobj)
+    private static void SetupGameObjectReferences(PfbFile pfb, REGameObject gameobj, PrefabNode root)
     {
-        // TEMP TEST
-        // for (int i =0; i < 12; ++i) {
-        //     pfb.GameObjectRefInfoList.Add(new StructModel<PfbFile.GameObjectRefInfo>() {
-        //         Data = new PfbFile.GameObjectRefInfo() {
-        //             objectId = (uint)i,
-        //             targetId = 151,
-        //             propertyId = 262244,
-        //         }
-        //     });
-        // }
-        // return;
-
         foreach (var comp in gameobj.Components) {
-            var ti = comp.Data!.TypeInfo;
-            if (ti.GameObjectRefFields.Length == 0) continue;
-
-            foreach (var objref in ti.GameObjectRefFields) {
-                if (comp.Data.TryGetFieldValue(ti.Fields[objref], out var uuidString) && uuidString.AsString() != Guid.Empty.ToString()) {
-                    // TODO
-                    // propertyId: seems to be some 16bit + 16bit value
-                    // first 2 bytes would seem like a field index, but it's not a direct correlation between rsz fields and indexes
-                    // the second 2 bytes seem to be a property type
-                    // judging from ch000000_00 pfb, type 2 = "Exported ref" (source objectId instance added to the object info list)
-                    // type 4 = something else (default?)
-                    // could be flag
-                    // pfb.GameObjectRefInfoList.Add(new StructModel<PfbFile.GameObjectRefInfo>() {
-                    //     Data = new PfbFile.GameObjectRefInfo() {
-                    //         arrayIndex = 0,
-                    //         objectId = (uint)0,
-                    //         propertyId = 0,
-                    //     }
-                    // });
-                }
-            }
+            RecurseSetupGameObjectReferences(pfb, comp.Data!, comp, root);
         }
 
         foreach (var child in gameobj.Children) {
-            SetupGameObjectReferences(pfb, child);
+            SetupGameObjectReferences(pfb, child, root);
+        }
+    }
+
+    private static void RecurseSetupGameObjectReferences(PfbFile pfb, REObject data, REComponent component, PrefabNode root)
+    {
+        var ti = data.TypeInfo;
+        foreach (var field in ti.Fields) {
+            if (field.RszField.type == RszFieldType.GameObjectRef) {
+                if (data.TryGetFieldValue(field, out var uuidVariant) && uuidVariant.AsString() is string uuidString && uuidString != Guid.Empty.ToString()) {
+                    GD.Print("Found GameObjectRef " + component.GameObject + "." + component + " => " + field.SerializedName + " " + uuidString);
+                    var target = root.AllChildrenIncludingSelf.FirstOrDefault(c => c.Uuid == uuidString);
+                    if (target == null) {
+                        GD.Print("Invalid guid reference " + uuidString);
+                    } else {
+                        var from = exportedInstances.TryGetValue(component, out var instance) ? instance.ObjectTableIndex : 0;
+                        var refEntry = new StructModel<PfbFile.GameObjectRefInfo>() {
+                            Data = new PfbFile.GameObjectRefInfo() {
+                                objectId = (uint)from,
+                                arrayIndex = 0,
+                                propertyId = 0,
+                            }
+                        };
+                        pfb.GameObjectRefInfoList.Add(refEntry);
+                        // TODO
+                        // propertyId: seems to be some 16bit + 16bit value
+                        // first 2 bytes would seem like a field index, but it's not a direct correlation between rsz fields and indexes
+                        // the second 2 bytes seem to be a property type
+                        // judging from ch000000_00 pfb, type 2 = "Exported ref" (source objectId instance added to the object info list)
+                        // type 4 = something else (default?)
+                        // could be flag
+                    }
+                }
+            } else if (field.RszField.type == RszFieldType.Object && data.TryGetFieldValue(field, out var child) && child.VariantType != Variant.Type.Nil && child.As<REObject>() is REObject childObj) {
+                RecurseSetupGameObjectReferences(pfb, childObj, component, root);
+            }
         }
     }
 

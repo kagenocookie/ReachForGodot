@@ -262,6 +262,7 @@ public class RszGodotConverter
         var rootGOs = file.GameObjectDatas!.OrderBy(o => o.Instance!.Index);
         Debug.Assert(rootGOs.Count() <= 1, "WTF Capcom. Guess we doing multiple PFB roots now");
         foreach (var gameObj in rootGOs) {
+            root.OriginalName = gameObj.Name ?? root.Name;
             await GenerateGameObject(root, gameObj, Options.prefabs);
         }
     }
@@ -483,7 +484,6 @@ public class RszGodotConverter
 
         // componentInfo.Data = new REObject(root.Game, instance.RszClass.name, instance);
         componentInfo.Data = CreateOrUpdateObject(instance, componentInfo.Data);
-        componentInfo.ObjectId = instance.Index;
         await componentInfo.Setup(root, gameObject, instance, Options.meshes);
     }
 

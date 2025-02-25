@@ -7,7 +7,6 @@ using RszTool;
 [GlobalClass, Tool]
 public abstract partial class REComponent : Node
 {
-    [Export] public int ObjectId = -1;
     [Export] public REObject? Data { get; set; }
 
     [ExportToolButton("Store modifications from nodes")]
@@ -26,4 +25,6 @@ public abstract partial class REComponent : Node
 
     public IEnumerable<IRszContainerNode> SerializedContainers => this.FindParentsByType<IRszContainerNode>();
     public T? FindResource<T>(string filepath) where T : REResource => SerializedContainers.Select(sc => sc.FindResource<T>(filepath)).FirstOrDefault();
+
+    public override string ToString() => Classname ?? "REComponent";
 }

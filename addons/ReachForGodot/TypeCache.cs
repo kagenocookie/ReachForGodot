@@ -458,7 +458,6 @@ public class REField
     public required RszField RszField { get; init; }
     public required int FieldIndex { get; init; }
     public Variant.Type VariantType { get; set; }
-    public string? DisplayName { get; set; }
     public PropertyHint Hint { get; set; }
     public string? HintString { get; set; }
 
@@ -506,8 +505,7 @@ public class REObjectTypeCache
 
             var dict = new Godot.Collections.Dictionary()
             {
-                // TODO include "class_name"?
-                { "name", f.DisplayName ?? f.SerializedName },
+                { "name", f.SerializedName },
                 { "type", (int)f.VariantType },
                 { "hint", (int)f.Hint },
                 { "usage", (int)(PropertyUsageFlags.Editor|PropertyUsageFlags.ScriptVariable) }

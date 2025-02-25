@@ -99,4 +99,14 @@ public partial class REGameObject : Node3D
 
         return ComponentContainer;
     }
+
+    public override string ToString()
+    {
+        if (GetParent() is REGameObject parent) {
+            var dedupId = parent.GetChildDeduplicationIndex(OriginalName, this);
+            if (dedupId > 0) return $"{OriginalName} #{dedupId}";
+        }
+
+        return OriginalName;
+    }
 }
