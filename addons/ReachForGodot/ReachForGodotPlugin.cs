@@ -25,7 +25,7 @@ public partial class ReachForGodotPlugin : EditorPlugin
     private static readonly List<ExportPathSetting> exportPaths = new();
     public static IEnumerable<ExportPathSetting> ExportPaths => exportPaths;
 
-    private EditorInspectorPlugin[] inspectors = new EditorInspectorPlugin[4];
+    private EditorInspectorPlugin[] inspectors = new EditorInspectorPlugin[5];
 
     public override void _EnterTree()
     {
@@ -37,6 +37,7 @@ public partial class ReachForGodotPlugin : EditorPlugin
         AddInspectorPlugin(inspectors[1] = new AssetReferenceInspectorPlugin());
         AddInspectorPlugin(inspectors[2] = new ResourceInspectorPlugin());
         AddInspectorPlugin(inspectors[3] = new AssetExportInspectorPlugin());
+        AddInspectorPlugin(inspectors[4] = new GameObjectInspectorPlugin());
     }
 
     public override void _ExitTree()
