@@ -265,6 +265,102 @@ public class RszGodotConverter
             root.OriginalName = gameObj.Name ?? root.Name;
             await GenerateGameObject(root, gameObj, Options.prefabs);
         }
+
+        foreach (var go in root.AllChildrenIncludingSelf) {
+            foreach (var comp in go.Components) {
+                ReconstructGameObjectRefs(file, comp.Data!, comp, go, root);
+            }
+        }
+    }
+
+    private NodePath? ResolveGameObjectRef(PfbFile file, REField field, REObject obj, ref RszInstance? instance, REComponent component, REGameObject root, int arrayIndex)
+    {
+        // god help me...
+        instance ??= importedObjects.FirstOrDefault(kv => kv.Value == obj).Key;
+        Debug.Assert(instance != null);
+        int idx = instance.ObjectTableIndex;
+
+        var fieldRefs = file.GameObjectRefInfoList.Where(rr => rr.Data.objectId == idx && rr.Data.arrayIndex == arrayIndex);
+        if (!fieldRefs.Any()) return null;
+
+        var propInfoDict = TypeCache.GetData(AssetConfig.Game, obj.Classname!).PfbRefs;
+        if (!propInfoDict.TryGetValue(field.SerializedName, out var propInfo)) {
+            GD.PrintErr("Found undeclared GameObjectRef property " + field.SerializedName);
+            return default;
+        }
+
+        var objref = fieldRefs.FirstOrDefault(rr => rr.Data.propertyId == propInfo.PropertyId);
+        if (objref == null) {
+            GD.PrintErr("Could not match GameObjectRef field ref");
+            return default;
+        }
+
+        // TODO handle array index refs
+        if (objref.Data.arrayIndex != 0) {
+            GD.PrintErr("Please verify that array GameObjectRef resolved correctly; expected array index: " + arrayIndex + " path: " + root.GetPathTo(component));
+        }
+
+        var targetInstance = file.RSZ?.ObjectList[(int)objref.Data.targetId];
+        if (targetInstance == null) {
+            GD.PrintErr("GameObjectRef target object not found");
+            return default;
+        }
+
+        if (!importedObjects.TryGetValue(targetInstance, out var targetGameobjData)) {
+            GD.Print("Referenced game object was not imported");
+            return default;
+        }
+
+        var targetGameobj = root.AllChildrenIncludingSelf.FirstOrDefault(x => x.Data == targetGameobjData);
+        if (targetGameobj == null) {
+            GD.Print("Could not find actual gameobject instance");
+            return default;
+        }
+
+        return component.GetPathTo(targetGameobj);
+    }
+
+    private void ReconstructGameObjectRefs(PfbFile file, REObject obj, REComponent component, REGameObject gameobj, REGameObject root, int arrayIndex = 0)
+    {
+        Dictionary<string, PrefabGameObjectRefProperty>? propInfoDict = null;
+        RszInstance? instance = null;
+        foreach (var field in obj.TypeInfo.Fields) {
+            if (field.RszField.type == RszFieldType.GameObjectRef) {
+                if (field.RszField.array) {
+                    GD.PrintErr("GameObjectRef array import currently unsupported!! " + root.GetPathTo(component));
+                    // if (child.AsGodotArray<NodePath>() is Godot.Collections.Array<NodePath> children) {
+                    //     int i = 0;
+                    //     foreach (var childObj in children) {
+                    //         if (childObj != null) {
+                    //             ReconstructGameObjectRefs(file, childObj, component, gameobj, root, i++);
+                    //         }
+                    //     }
+                    // }
+                } else {
+                    var refval = ResolveGameObjectRef(file, field, obj, ref instance, component, root, 0);
+                    obj.SetField(field, refval ?? new Variant());
+                }
+
+                // GD.Print("Found GameObjectRef link: " + obj + " => " + targetGameobj + " == " + obj.GetField(field));
+            } else if (field.RszField.type is RszFieldType.Object) {
+                if (!obj.TryGetFieldValue(field, out var child)) continue;
+
+                if (field.RszField.array) {
+                    if (child.AsGodotArray<REObject>() is Godot.Collections.Array<REObject> children) {
+                        int i = 0;
+                        foreach (var childObj in children) {
+                            if (childObj != null) {
+                                ReconstructGameObjectRefs(file, childObj, component, gameobj, root, i++);
+                            }
+                        }
+                    }
+                } else {
+                    if (child.As<REObject>() is REObject childObj) {
+                        ReconstructGameObjectRefs(file, childObj, component, gameobj, root);
+                    }
+                }
+            }
+        }
     }
 
     public void GenerateUserdata(UserdataResource root)
@@ -482,7 +578,6 @@ public class RszGodotConverter
             await gameObject.AddComponent(componentInfo);
         }
 
-        // componentInfo.Data = new REObject(root.Game, instance.RszClass.name, instance);
         componentInfo.Data = CreateOrUpdateObject(instance, componentInfo.Data);
         await componentInfo.Setup(root, gameObject, instance, Options.meshes);
     }
@@ -505,6 +600,7 @@ public class RszGodotConverter
 
     private REObject ApplyObjectValues(REObject obj, RszInstance instance)
     {
+        importedObjects[instance] = obj;
         foreach (var field in obj.TypeInfo.Fields) {
             var value = instance.Values[field.FieldIndex];
             obj.SetField(field, ConvertRszValue(field, value));

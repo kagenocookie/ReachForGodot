@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Management;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -29,7 +30,7 @@ public class Exporter
         return Path.Combine(basePath, filepath);
     }
 
-    private static readonly Dictionary<GodotObject, RszInstance> exportedInstances = new();
+    private static readonly Dictionary<REObject, RszInstance> exportedInstances = new();
 
     public static bool Export(IRszContainerNode resource, string exportBasepath)
     {
@@ -172,37 +173,74 @@ public class Exporter
         }
     }
 
-    private static void RecurseSetupGameObjectReferences(PfbFile pfb, REObject data, REComponent component, PrefabNode root)
+    private static void RecurseSetupGameObjectReferences(PfbFile pfb, REObject data, REComponent component, PrefabNode root, int arrayIndex = 0)
     {
+        Dictionary<string, PrefabGameObjectRefProperty>? propInfoDict = null;
         var ti = data.TypeInfo;
         foreach (var field in ti.Fields) {
             if (field.RszField.type == RszFieldType.GameObjectRef) {
-                if (data.TryGetFieldValue(field, out var uuidVariant) && uuidVariant.AsString() is string uuidString && uuidString != Guid.Empty.ToString()) {
-                    GD.Print("Found GameObjectRef " + component.GameObject + "." + component + " => " + field.SerializedName + " " + uuidString);
-                    var target = root.AllChildrenIncludingSelf.FirstOrDefault(c => c.Uuid == uuidString);
-                    if (target == null) {
-                        GD.Print("Invalid guid reference " + uuidString);
-                    } else {
-                        var from = exportedInstances.TryGetValue(component, out var instance) ? instance.ObjectTableIndex : 0;
+                if (field.RszField.array) {
+                    GD.PrintErr("GameObjectRef array export currently unsupported!! " + root.GetPathTo(component));
+                } else {
+                    if (data.TryGetFieldValue(field, out var path) && path.AsNodePath() is NodePath nodepath && !nodepath.IsEmpty) {
+                        // GD.Print($"Found GameObjectRef {component.GameObject}/{component} => {field.SerializedName} {nodepath}");
+                        var target = component.GetNode(nodepath) as REGameObject;
+                        if (target == null) {
+                            GD.Print("Invalid node path reference " + nodepath + " at " + root.GetPathTo(component));
+                            continue;
+                        }
+
+                        propInfoDict ??= TypeCache.GetData(root.Game, data.Classname!).PfbRefs;
+                        if (!propInfoDict.TryGetValue(field.SerializedName, out var propInfo)) {
+                            GD.PrintErr("Found undeclared GameObjectRef property " + field.SerializedName);
+                            continue;
+                        }
+
+                        if (!exportedInstances.TryGetValue(data, out var dataInst) || !exportedInstances.TryGetValue(component.Data!, out var instance) || !exportedInstances.TryGetValue(target.Data!, out var targetInst)) {
+                            GD.PrintErr("Could not resolve GameObjectRef instances");
+                            continue;
+                        }
+
+                        // if (propInfo.AddToObjectTable && dataInst.ObjectTableIndex == -1) {
+                        if (dataInst.ObjectTableIndex == -1) {
+                            pfb.RSZ!.AddToObjectTable(dataInst);
+                        }
+
                         var refEntry = new StructModel<PfbFile.GameObjectRefInfo>() {
                             Data = new PfbFile.GameObjectRefInfo() {
-                                objectId = (uint)from,
-                                arrayIndex = 0,
-                                propertyId = 0,
+                                objectId = (uint)dataInst.ObjectTableIndex,
+                                arrayIndex = arrayIndex,
+                                propertyId = propInfo.PropertyId,
+                                targetId = (uint)targetInst.ObjectTableIndex,
                             }
                         };
-                        pfb.GameObjectRefInfoList.Add(refEntry);
-                        // TODO
-                        // propertyId: seems to be some 16bit + 16bit value
-                        // first 2 bytes would seem like a field index, but it's not a direct correlation between rsz fields and indexes
+
+                        // propertyId seems to be some 16bit + 16bit value
+                        // first 2 bytes would seem like a field index, but I'm not finding direct correlation between the fields and indexes
                         // the second 2 bytes seem to be a property type
                         // judging from ch000000_00 pfb, type 2 = "Exported ref" (source objectId instance added to the object info list)
                         // type 4 = something else (default?)
-                        // could be flag
+                        // could be some flag thing
+                        pfb.GameObjectRefInfoList.Add(refEntry);
                     }
                 }
-            } else if (field.RszField.type == RszFieldType.Object && data.TryGetFieldValue(field, out var child) && child.VariantType != Variant.Type.Nil && child.As<REObject>() is REObject childObj) {
-                RecurseSetupGameObjectReferences(pfb, childObj, component, root);
+            } else if (field.RszField.type == RszFieldType.Object) {
+                if (data.TryGetFieldValue(field, out var child)) {
+                    if (field.RszField.array) {
+                        if (child.AsGodotArray<REObject>() is Godot.Collections.Array<REObject> children) {
+                            int i = 0;
+                            foreach (var childObj in children) {
+                                if (childObj != null) {
+                                    RecurseSetupGameObjectReferences(pfb, childObj, component, root, i++);
+                                }
+                            }
+                        }
+                    } else {
+                        if (child.VariantType != Variant.Type.Nil && child.As<REObject>() is REObject childObj) {
+                            RecurseSetupGameObjectReferences(pfb, childObj, component, root);
+                        }
+                    }
+                }
             }
         }
     }

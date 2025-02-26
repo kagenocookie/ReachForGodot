@@ -161,8 +161,9 @@ public static class RszTypeConverter
                 return new Godot.Color(((RszTool.via.Color)value).rgba);
             case RszFieldType.Guid:
             case RszFieldType.Uri:
-            case RszFieldType.GameObjectRef:
                 return ((Guid)value).ToString();
+            case RszFieldType.GameObjectRef:
+                return new NodePath();
             case RszFieldType.AABB:
                 return ((RszTool.via.AABB)value).ToGodot();
             case RszFieldType.Mat4:
@@ -289,7 +290,8 @@ public static class RszTypeConverter
             RszFieldType.Uint4 => (RszTool.via.Uint4)variant.AsVector4I().ToRszU(),
             RszFieldType.OBB => variant.As<OrientedBoundingBox>().ToRsz(),
             RszFieldType.AABB => (RszTool.via.AABB)variant.AsAabb().ToRsz(),
-            RszFieldType.Guid or RszFieldType.GameObjectRef or RszFieldType.Uri => Guid.TryParse(variant.AsString(), out var guid) ? guid : Guid.Empty,
+            RszFieldType.Guid or RszFieldType.Uri => Guid.TryParse(variant.AsString(), out var guid) ? guid : Guid.Empty,
+            RszFieldType.GameObjectRef => new NodePath(),
             RszFieldType.Color => (RszTool.via.Color)variant.AsColor().ToRsz(),
             RszFieldType.Range => (RszTool.via.Range)variant.AsVector2().ToRszRange(),
             RszFieldType.RangeI => (RszTool.via.RangeI)variant.AsVector2I().ToRszRange(),

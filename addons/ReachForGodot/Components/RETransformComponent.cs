@@ -35,7 +35,7 @@ public partial class RETransformComponent : REComponent
         var transform = GameObject.Transform;
         var basis = transform.Basis;
         Data.SetField(Data.TypeInfo.Fields[0], transform.Origin.ToVector4());
-        Data.SetField(Data.TypeInfo.Fields[1], basis.GetEuler().ToVector4());
+        Data.SetField(Data.TypeInfo.Fields[1], basis.GetRotationQuaternion().ToVector4());
         Data.SetField(Data.TypeInfo.Fields[2], basis.Scale.ToVector4());
     }
 

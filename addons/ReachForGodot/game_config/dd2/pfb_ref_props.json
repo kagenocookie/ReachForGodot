@@ -1,0 +1,78 @@
+{
+    "app.Character": {
+        "SpecialFoliageChecker": {
+            "PropertyId": 262244,
+            "AddToObjectTable": false
+        }
+    },
+    "app.Human": {
+        "HeadRef": {
+            "PropertyId": 262163,
+            "AddToObjectTable": false
+        }
+    },
+    "app.HumanCollidersToggler": {
+        "ClimbMarker": {
+            "PropertyId": 131072,
+            "AddToObjectTable": true
+        },
+        "GrassSensor": {
+            "PropertyId": 131073,
+            "AddToObjectTable": true
+        },
+        "LanternLightControl": {
+            "PropertyId": 131074,
+            "AddToObjectTable": true
+        }
+    },
+    "app.CharacterFacialMotionController.TargetSetting": {
+        "HeadObject": {
+            "PropertyId": 131072,
+            "AddToObjectTable": true
+        }
+    },
+    "app.ScaleFacialMotion": {
+        "HeadObject": {
+            "PropertyId": 262146,
+            "AddToObjectTable": false
+        }
+    },
+    "app.SetupScaleFacialMotion": {
+        "HeadObj": {
+            "PropertyId": 262144,
+            "AddToObjectTable": false
+        }
+    },
+    "app.SetupHumanFacial": {
+        "HeadRef": {
+            "PropertyId": 262144,
+            "AddToObjectTable": false
+        }
+    },
+    "app.HumanBlushController": {
+        "HeadObj": {
+            "PropertyId": 262144,
+            "AddToObjectTable": false
+        }
+    },
+    "app.VisionMarker": {
+        "JointTargetObj": {
+            "PropertyId": 262146,
+            "AddToObjectTable": false
+        },
+        "OwnerObject": {
+            "PropertyId": 262150,
+            "AddToObjectTable": false
+        }
+    },
+    "app.BaseMarker": {
+        "JointTargetObj": {
+            "PropertyId": 262146,
+            "AddToObjectTable": false
+        },
+        "OwnerObject": {
+            "PropertyId": 262150,
+            "AddToObjectTable": false
+        }
+    }
+}

@@ -72,12 +72,24 @@
     "via.render.Mesh": {
         "FieldPatches": [
             {
+                "Name": "v0",
+                "Type": "S32"
+            },
+            {
                 "Name": "v2",
                 "ReplaceName": "Mesh"
             },
             {
                 "Name": "v3",
                 "ReplaceName": "Material"
+            },
+            {
+                "Name": "v5",
+                "Type": "F32"
+            },
+            {
+                "Name": "v8",
+                "Type": "F32"
             }
         ]
     },
@@ -137,6 +149,18 @@
         ]
     },
     "via.motion.Motion": {
+        "FieldPatches": [
+            {
+                "Name": "v24",
+                "Type": "Object"
+            },
+            {
+                "Name": "v26",
+                "Type": "Object"
+            }
+        ]
+    },
+    "via.physics.RequestSetCollider": {
         "FieldPatches": [
             {
                 "Name": "v24",

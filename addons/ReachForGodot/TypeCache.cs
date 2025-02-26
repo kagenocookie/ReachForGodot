@@ -11,6 +11,7 @@ public class TypeCache
     private static readonly Dictionary<SupportedGame, RszParser> rszData = new();
     private static readonly Dictionary<SupportedGame, Dictionary<string, REObjectTypeCache>> serializationCache = new();
     private static readonly Dictionary<SupportedGame, Il2cppCache> il2cppCache = new();
+    private static readonly Dictionary<SupportedGame, Dictionary<string, Dictionary<string, PrefabGameObjectRefProperty>>> gameObjectRefProps = new();
 
     private static readonly JsonSerializerOptions jsonOptions = new() {
         WriteIndented = true,
@@ -64,7 +65,7 @@ public class TypeCache
 
     private static REObjectTypeCache GenerateObjectCache(RszClass cls, SupportedGame game)
     {
-        return new REObjectTypeCache(cls, GenerateFields(cls, game));
+        return new REObjectTypeCache(cls, GenerateFields(cls, game), GetClassProps(game, cls.name));
     }
 
     public static RszClass? GetRszClass(SupportedGame game, string classname)
@@ -74,6 +75,24 @@ public class TypeCache
         }
 
         return data.GetRSZClass(classname);
+    }
+
+    private static Dictionary<string, PrefabGameObjectRefProperty>? GetClassProps(SupportedGame game, string classname)
+    {
+        if (!gameObjectRefProps.TryGetValue(game, out var reflist)) {
+            var fn = ReachForGodot.GetPaths(game)?.PfbGameObjectRefPropsPath;
+            if (File.Exists(fn)) {
+                using var fs = File.OpenRead(fn);
+                reflist = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, PrefabGameObjectRefProperty>>>(fs);
+            }
+            reflist ??= new(0);
+        }
+
+        if (reflist.TryGetValue(classname, out var result)) {
+            return result;
+        }
+
+        return null;
     }
 
     private static REField[] GenerateFields(RszClass cls, SupportedGame game)
@@ -93,13 +112,15 @@ public class TypeCache
 
     private static void RszFieldToVariantType(RszField srcField, REField refield, SupportedGame game)
     {
-        void ResourceHint(REField field, string resourceName) {
+        void ResourceHint(REField field, string resourceName)
+        {
             field.VariantType = Variant.Type.Object;
             field.Hint = PropertyHint.ResourceType;
             field.HintString = resourceName;
         }
 
-        void ArrayHint(REField field, Variant.Type variantType) {
+        void ArrayHint(REField field, Variant.Type variantType)
+        {
             field.VariantType = Variant.Type.Array;
             field.Hint = PropertyHint.TypeString;
             field.HintString = $"{(int)variantType}/0:";
@@ -258,8 +279,12 @@ public class TypeCache
             case RszFieldType.AABB:
                 refield.VariantType = Variant.Type.Aabb;
                 break;
-            case RszFieldType.Guid:
             case RszFieldType.GameObjectRef:
+                refield.VariantType = Variant.Type.NodePath;
+                refield.Hint = PropertyHint.NodePathValidTypes;
+                refield.HintString = nameof(REGameObject);
+                break;
+            case RszFieldType.Guid:
             case RszFieldType.Uri:
                 refield.VariantType = Variant.Type.String;
                 break;
@@ -466,12 +491,13 @@ public class REField
 
 public class REObjectTypeCache
 {
-    public static readonly REObjectTypeCache Empty = new REObjectTypeCache(RszClass.Empty, Array.Empty<REField>());
+    public static readonly REObjectTypeCache Empty = new REObjectTypeCache(RszClass.Empty, Array.Empty<REField>(), new(0));
 
     public REField[] Fields { get; }
     public Dictionary<string, REField> FieldsByName { get; }
     public Godot.Collections.Array<Godot.Collections.Dictionary> PropertyList { get; }
     public RszClass RszClass { get; set; }
+    public Dictionary<string, PrefabGameObjectRefProperty> PfbRefs { get; }
 
     public REField GetFieldOrFallback(string name, Func<REField, bool> fallbackFilter)
     {
@@ -488,8 +514,9 @@ public class REObjectTypeCache
         return GetFieldOrFallback(name, fallbackFilter).SerializedName;
     }
 
-    public REObjectTypeCache(RszClass cls, REField[] fields)
+    public REObjectTypeCache(RszClass cls, REField[] fields, Dictionary<string, PrefabGameObjectRefProperty>? prefabRefs)
     {
+        PfbRefs = prefabRefs ?? Empty.PfbRefs;
         RszClass = cls;
         Fields = fields;
         PropertyList = new();
@@ -514,4 +541,10 @@ public class REObjectTypeCache
             PropertyList.Add(dict);
         }
     }
+}
+
+public class PrefabGameObjectRefProperty
+{
+    public int PropertyId { get; set; }
+    public bool AddToObjectTable { get; set; }
 }

@@ -11,5 +11,5 @@ obj/
 .DS_Store
 build/*
 
-dd2/
-dmc5/
+/dd2/
+/dmc5/

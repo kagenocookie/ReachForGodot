@@ -44,9 +44,10 @@ public record GamePaths(SupportedGame Game, string ChunkPath, string? Il2cppPath
 
     public string GetChunkRelativePath(string path) => string.IsNullOrEmpty(ChunkPath) ? path : path.Replace(ChunkPath, "");
 
-    public static readonly string RszPatchGlobalPath = ProjectSettings.GlobalizePath($"res://addons/ReachForGodot/rsz_patches/global.json");
-    public string RszPatchPath => ProjectSettings.GlobalizePath($"res://addons/ReachForGodot/rsz_patches/{ShortName}.json");
+    public static readonly string RszPatchGlobalPath = ProjectSettings.GlobalizePath($"res://addons/ReachForGodot/game_config/global/rsz_patches.json");
+    public string RszPatchPath => ProjectSettings.GlobalizePath($"res://addons/ReachForGodot/game_config/{ShortName}/rsz_patches.json");
 
-    public string EnumCacheFilename => ProjectSettings.GlobalizePath($"res://addons/ReachForGodot/il2cpp_cache/{ShortName}.json");
-    public string EnumOverridesFilename => ProjectSettings.GlobalizePath($"res://addons/ReachForGodot/il2cpp_cache/{ShortName}.en.json");
+    public string EnumCacheFilename => ProjectSettings.GlobalizePath($"res://addons/ReachForGodot/game_config/{ShortName}/il2cpp_cache.json");
+    public string EnumOverridesFilename => ProjectSettings.GlobalizePath($"res://addons/ReachForGodot/game_config/{ShortName}/il2cpp_cache.en.json");
+    public string PfbGameObjectRefPropsPath => ProjectSettings.GlobalizePath($"res://addons/ReachForGodot/game_config/{ShortName}/pfb_ref_props.json");
 }
