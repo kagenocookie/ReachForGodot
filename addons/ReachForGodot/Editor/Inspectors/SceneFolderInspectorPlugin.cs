@@ -39,11 +39,17 @@ public partial class SceneFolderInspectorPlugin : EditorInspectorPlugin, ISerial
 
         var importType = container.GetNode<OptionButton>("%ImportTypeOption");
         importType.Clear();
-        importType.AddItem("Placeholders only", (int)RszGodotConverter.PresetImportModes.PlaceholderImport);
-        importType.AddItem("Only what's missing", (int)RszGodotConverter.PresetImportModes.ImportMissingItems);
-        importType.AddItem("Fully import just this scene, no subfolders", (int)RszGodotConverter.PresetImportModes.ThisFolderOnly);
-        importType.AddItem("Import changes on top of current data", (int)RszGodotConverter.PresetImportModes.ImportTreeChanges);
-        importType.AddItem("Fully reimport everything", (int)RszGodotConverter.PresetImportModes.FullReimport);
+        if (obj is PrefabNode pfb) {
+            importType.AddItem("Full import", (int)RszGodotConverter.PresetImportModes.ImportTreeChanges);
+            importType.AddItem("Fully reimport all resources", (int)RszGodotConverter.PresetImportModes.FullReimport);
+        } else if (obj is SceneFolder scn) {
+            importType.AddItem("Placeholders only", (int)RszGodotConverter.PresetImportModes.PlaceholderImport);
+            importType.AddItem("Only what's missing", (int)RszGodotConverter.PresetImportModes.ImportMissingItems);
+            importType.AddItem("Fully import just this scene, no subfolders", (int)RszGodotConverter.PresetImportModes.ThisFolderOnly);
+            importType.AddItem("Fully reimport all resources", (int)RszGodotConverter.PresetImportModes.FullReimport);
+        } else {
+            importType.AddItem("Full import", (int)RszGodotConverter.PresetImportModes.ImportTreeChanges);
+        }
 
         var importBtn = container.GetNode<Button>("%ImportButton");
         importBtn.Pressed += () => {

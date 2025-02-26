@@ -123,14 +123,14 @@ public class Exporter
 
         rsz.AddToObjectTable(instance);
         if (container is ScnFile scn) {
-            AddScnGameObject(instance.ObjectTableIndex, scn, obj.ComponentContainer?.GetChildCount() ?? 0, parentObjectId);
+            AddScnGameObject(instance.ObjectTableIndex, scn, obj.Components.Count, parentObjectId);
         } else if (container is PfbFile pfb) {
-            AddPfbGameObject(instance.ObjectTableIndex, pfb, obj.ComponentContainer?.GetChildCount() ?? 0, parentObjectId);
+            AddPfbGameObject(instance.ObjectTableIndex, pfb, obj.Components.Count, parentObjectId);
         }
 
         foreach (var comp in obj.Components) {
-            var typeinfo = comp.Data!.TypeInfo;
-            int dataIndex = ConstructObjectInstances(comp.Data!, rsz, fileOption, container);
+            var typeinfo = comp.TypeInfo;
+            int dataIndex = ConstructObjectInstances(comp, rsz, fileOption, container);
             rsz.AddToObjectTable(rsz.InstanceList[dataIndex]);
         }
 
@@ -156,7 +156,7 @@ public class Exporter
     private static void SetupGameObjectReferences(PfbFile pfb, REGameObject gameobj, PrefabNode root)
     {
         foreach (var comp in gameobj.Components) {
-            RecurseSetupGameObjectReferences(pfb, comp.Data!, comp, root);
+            RecurseSetupGameObjectReferences(pfb, comp, comp, root);
         }
 
         foreach (var child in gameobj.Children) {
@@ -171,13 +171,13 @@ public class Exporter
         foreach (var field in ti.Fields) {
             if (field.RszField.type == RszFieldType.GameObjectRef) {
                 if (field.RszField.array) {
-                    GD.PrintErr("GameObjectRef array export currently unsupported!! " + root.GetPathTo(component));
+                    GD.PrintErr("GameObjectRef array export currently unsupported!! " + root.GetPathTo(component.GameObject));
                 } else {
                     if (data.TryGetFieldValue(field, out var path) && path.AsNodePath() is NodePath nodepath && !nodepath.IsEmpty) {
                         // GD.Print($"Found GameObjectRef {component.GameObject}/{component} => {field.SerializedName} {nodepath}");
-                        var target = component.GetNode(nodepath) as REGameObject;
+                        var target = component.GameObject.GetNode(nodepath) as REGameObject;
                         if (target == null) {
-                            GD.Print("Invalid node path reference " + nodepath + " at " + root.GetPathTo(component));
+                            GD.Print("Invalid node path reference " + nodepath + " at " + root.GetPathTo(component.GameObject));
                             continue;
                         }
 
@@ -187,7 +187,7 @@ public class Exporter
                             continue;
                         }
 
-                        if (!exportedInstances.TryGetValue(data, out var dataInst) || !exportedInstances.TryGetValue(component.Data!, out var instance) || !exportedInstances.TryGetValue(target.Data!, out var targetInst)) {
+                        if (!exportedInstances.TryGetValue(data, out var dataInst) || !exportedInstances.TryGetValue(target.Data!, out var targetInst)) {
                             GD.PrintErr("Could not resolve GameObjectRef instances");
                             continue;
                         }

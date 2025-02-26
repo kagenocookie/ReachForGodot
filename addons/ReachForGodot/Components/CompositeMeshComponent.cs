@@ -9,10 +9,10 @@ using RszTool;
 [GlobalClass, REComponentClass("via.render.CompositeMesh")]
 public partial class CompositeMeshComponent : REComponent
 {
-    [Export] public Node3D? meshNode;
+    public Node3D? meshNode;
     private int childCount = 0;
 
-    public override void _ExitTree()
+    public override void OnDestroy()
     {
         meshNode?.GetParent().CallDeferred(Node.MethodName.RemoveChild, meshNode);
         meshNode?.QueueFree();

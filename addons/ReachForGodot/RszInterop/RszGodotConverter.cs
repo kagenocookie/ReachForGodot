@@ -67,7 +67,6 @@ public class RszGodotConverter
             var attr = type.GetCustomAttribute<REComponentClassAttribute>()!;
             DefineComponentFactory(attr.Classname, (root, obj, instance) => {
                 var node = (REComponent)Activator.CreateInstance(type)!;
-                node.Name = attr.Classname;
                 return node;
             }, attr.SupportedGames);
         }
@@ -255,7 +254,7 @@ public class RszGodotConverter
 
         if (Options.prefabs == RszImportType.ForceReimport) {
             root.ClearChildren();
-            root.ComponentContainer = null;
+            root.Components.Clear();
         }
 
         importedObjects.Clear();
@@ -268,7 +267,7 @@ public class RszGodotConverter
 
         foreach (var go in root.AllChildrenIncludingSelf) {
             foreach (var comp in go.Components) {
-                ReconstructGameObjectRefs(file, comp.Data!, comp, go, root);
+                ReconstructGameObjectRefs(file, comp, comp, go, root);
             }
         }
     }
@@ -297,7 +296,7 @@ public class RszGodotConverter
 
         // TODO handle array index refs
         if (objref.Data.arrayIndex != 0) {
-            GD.PrintErr("Please verify that array GameObjectRef resolved correctly; expected array index: " + arrayIndex + " path: " + root.GetPathTo(component));
+            GD.PrintErr("Please verify that array GameObjectRef resolved correctly; expected array index: " + arrayIndex + " component: " + component);
         }
 
         var targetInstance = file.RSZ?.ObjectList[(int)objref.Data.targetId];
@@ -317,17 +316,16 @@ public class RszGodotConverter
             return default;
         }
 
-        return component.GetPathTo(targetGameobj);
+        return root.GetPathTo(targetGameobj);
     }
 
     private void ReconstructGameObjectRefs(PfbFile file, REObject obj, REComponent component, REGameObject gameobj, REGameObject root, int arrayIndex = 0)
     {
-        Dictionary<string, PrefabGameObjectRefProperty>? propInfoDict = null;
         RszInstance? instance = null;
         foreach (var field in obj.TypeInfo.Fields) {
             if (field.RszField.type == RszFieldType.GameObjectRef) {
                 if (field.RszField.array) {
-                    GD.PrintErr("GameObjectRef array import currently unsupported!! " + root.GetPathTo(component));
+                    GD.PrintErr("GameObjectRef array import currently unsupported!! " + component.Classname + ": " + root.GetPathTo(gameobj));
                     // if (child.AsGodotArray<NodePath>() is Godot.Collections.Array<NodePath> children) {
                     //     int i = 0;
                     //     foreach (var childObj in children) {
@@ -558,27 +556,32 @@ public class RszGodotConverter
             return;
         }
 
-        var componentInfo = gameObject.GetComponent(instance.RszClass.name);
+        var classname = instance.RszClass.name;
+        var componentInfo = gameObject.GetComponent(classname);
         if (componentInfo != null) {
             // nothing to do here
         } else if (
             perGameFactories.TryGetValue(root.Game, out var factories) &&
-            factories.TryGetValue(instance.RszClass.name, out var factory)
+            factories.TryGetValue(classname, out var factory)
         ) {
             componentInfo = factory.Invoke(root, gameObject, instance);
             if (componentInfo == null) {
-                componentInfo = new REComponentPlaceholder() { Name = instance.RszClass.name };
-                await gameObject.AddComponent(componentInfo);
-            } else if (gameObject.GetComponent(instance.RszClass.name) == null) {
+                componentInfo = new REComponentPlaceholder();
+                gameObject.AddComponent(componentInfo);
+            } else if (gameObject.GetComponent(classname) == null) {
                 // if the component was created but not actually added to the gameobject yet, do so now
-                await gameObject.AddComponent(componentInfo);
+                gameObject.AddComponent(componentInfo);
             }
         } else {
-            componentInfo = new REComponentPlaceholder() { Name = instance.RszClass.name };
-            await gameObject.AddComponent(componentInfo);
+            componentInfo = new REComponentPlaceholder();
+            gameObject.AddComponent(componentInfo);
         }
 
-        componentInfo.Data = CreateOrUpdateObject(instance, componentInfo.Data);
+        componentInfo.Classname = classname;
+        componentInfo.Game = AssetConfig.Game;
+        componentInfo.ResourceName = classname;
+        componentInfo.GameObject = gameObject;
+        ApplyObjectValues(componentInfo, instance);
         await componentInfo.Setup(root, gameObject, instance, Options.meshes);
     }
 

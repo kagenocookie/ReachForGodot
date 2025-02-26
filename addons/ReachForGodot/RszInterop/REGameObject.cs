@@ -5,23 +5,28 @@ using Godot;
 using RszTool;
 
 [GlobalClass, Tool]
-public partial class REGameObject : Node3D
+public partial class REGameObject : Node3D, ISerializationListener
 {
     [Export] public SupportedGame Game { get; set; }
     [Export] public bool Enabled { get; set; } = true;
     [Export] public string Uuid { get; set; } = "00000000-0000-0000-0000-000000000000";
     [Export] public string? Prefab { get; set; }
     [Export] public string OriginalName { get; set; } = string.Empty;
-    [Export] public Node? ComponentContainer { get; set; }
     [Export] public REObject? Data { get; set; }
+    [Export] public Godot.Collections.Array<REComponent> Components { get; set; } = null!;
 
     public SceneFolder? SceneRoot => this.FindNodeInParents<SceneFolder>();
-
-    public IEnumerable<REComponent> Components => ComponentContainer?.FindChildrenByType<REComponent>() ?? Array.Empty<REComponent>();
 
     public IEnumerable<REGameObject> Children => this.FindChildrenByType<REGameObject>();
     public IEnumerable<REGameObject> AllChildren => this.FindChildrenByType<REGameObject>().SelectMany(c => new [] { c }.Concat(c.AllChildren));
     public IEnumerable<REGameObject> AllChildrenIncludingSelf => new [] { this }.Concat(AllChildren);
+
+    public override void _EnterTree()
+    {
+        foreach (var comp in Components) {
+            comp.GameObject = this;
+        }
+    }
 
     public int GetChildDeduplicationIndex(string name, REGameObject? relativeTo)
     {
@@ -74,30 +79,15 @@ public partial class REGameObject : Node3D
         }
     }
 
-    public override void _EnterTree()
+    public void AddComponent(REComponent component)
     {
-        ComponentContainer?.SetDisplayFolded(true);
-    }
-
-    public Task AddComponent(REComponent component)
-    {
-        return EnsureComponentContainerSetup().AddChildAsync(component, Owner ?? this);
+        Components ??= new();
+        Components.Add(component);
     }
 
     public REComponent? GetComponent(string classname)
     {
-        return ComponentContainer?.FindChildWhere<REComponent>(x => x is REComponent rec && rec.Classname == classname);
-    }
-
-    private Node EnsureComponentContainerSetup()
-    {
-        if ((ComponentContainer ??= FindChild("Components")) == null) {
-            AddChild(ComponentContainer = new Node() { Name = "Components" });
-            ComponentContainer.Owner = Owner ?? this;
-            MoveChild(ComponentContainer, 0);
-        }
-
-        return ComponentContainer;
+        return Components?.FirstOrDefault(x => x is REComponent rec && rec.Classname == classname);
     }
 
     public override string ToString()
@@ -108,5 +98,16 @@ public partial class REGameObject : Node3D
         }
 
         return OriginalName;
+    }
+
+    public void OnBeforeSerialize()
+    {
+    }
+
+    public void OnAfterDeserialize()
+    {
+        foreach (var comp in Components) {
+            comp.GameObject = this;
+        }
     }
 }

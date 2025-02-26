@@ -5,26 +5,38 @@ using Godot;
 using RszTool;
 
 [GlobalClass, Tool]
-public abstract partial class REComponent : Node
+public abstract partial class REComponent : REObject, ISerializationListener
 {
-    [Export] public REObject? Data { get; set; }
-
     [ExportToolButton("Store modifications from nodes")]
     private Callable TriggerPreExport => Callable.From(PreExport);
 
-    public string? Classname => Data?.Classname;
-    public REGameObject? GameObject => this.FindNodeInParents<REGameObject>();
+    public REGameObject GameObject { get; set; } = null!;
+
+    public REComponent() { }
+    public REComponent(SupportedGame game, string classname) : base(game, classname) {}
 
     public abstract Task Setup(IRszContainerNode root, REGameObject gameObject, RszInstance rsz, RszImportType importType);
     public virtual void PreExport()
     {
-        if (string.IsNullOrEmpty(Data?.Classname)) {
-            GD.PrintErr($"Component {Name} does not have any data declared! (path: {Owner.GetPathTo(this)})");
-        }
     }
 
-    public IEnumerable<IRszContainerNode> SerializedContainers => this.FindParentsByType<IRszContainerNode>();
+    public virtual void OnDestroy()
+    {
+    }
+
+    public IEnumerable<IRszContainerNode> SerializedContainers => GameObject is IRszContainerNode rsz
+        ? new [] { rsz }.Concat(GameObject.FindParentsByType<IRszContainerNode>())
+        : GameObject.FindParentsByType<IRszContainerNode>();
     public T? FindResource<T>(string filepath) where T : REResource => SerializedContainers.Select(sc => sc.FindResource<T>(filepath)).FirstOrDefault();
 
-    public override string ToString() => Classname ?? "REComponent";
+    public override string ToString() => (GameObject != null ? GameObject.ToString() + ":" : "") + (Classname ?? nameof(REComponent));
+
+    public void OnBeforeSerialize()
+    {
+        GameObject = null!;
+    }
+
+    public void OnAfterDeserialize()
+    {
+    }
 }
