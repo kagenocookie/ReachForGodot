@@ -70,7 +70,7 @@ public class Exporter
 
         using var file = new UserFile(fileOption, new FileHandler(outputFile));
         SetResources(userdata.Resources, file.ResourceInfoList, fileOption);
-        file.RSZ = CreateNewRszFile(fileOption, handler);
+        file.RSZ.ClearInstances();
 
         var rootInstance = ConstructObjectInstances(userdata, file.RSZ, fileOption, file);
         file.RSZ.AddToObjectTable(file.RSZ.InstanceList[rootInstance]);
@@ -102,7 +102,7 @@ public class Exporter
 
         using var file = new PfbFile(fileOption, new FileHandler(outputFile));
         SetResources(root.Resources, file.ResourceInfoList, fileOption);
-        file.RSZ = CreateNewRszFile(fileOption, handler);
+        file.RSZ.ClearInstances();
 
         AddGameObject(root, file.RSZ, file, fileOption, -1);
         SetupGameObjectReferences(file, root, root);
@@ -114,15 +114,6 @@ public class Exporter
         }
 
         return success;
-    }
-
-    private static RSZFile CreateNewRszFile(RszFileOption fileOption, FileHandler handler)
-    {
-        var rsz = new RSZFile(fileOption, handler);
-        rsz.Header.Data.version = 16; // TODO what's this version do?
-        rsz.ClearInstances();
-        rsz.InstanceInfoList.Add(new InstanceInfo());
-        return rsz;
     }
 
     private static int AddGameObject(REGameObject obj, RSZFile rsz, BaseRszFile container, RszFileOption fileOption, int parentObjectId)
@@ -261,7 +252,7 @@ public class Exporter
     {
         if (resources != null) {
             foreach (var res in resources) {
-                list.Add(ResourceInfo.Create(res.Asset?.NormalizedFilepath, fileOption.Version));
+                list.Add(new ResourceInfo(fileOption.Version) { Path = res.Asset?.NormalizedFilepath });
             }
         }
     }
@@ -329,6 +320,9 @@ public class Exporter
                         } else {
                             values[i++] = value.As<REResource?>()?.Asset?.NormalizedFilepath ?? string.Empty;
                         }
+                        break;
+                    case RszFieldType.GameObjectRef:
+                        values[i++] = Guid.Empty;
                         break;
                     default:
                         var converted = RszTypeConverter.ToRszStruct(value, field);
