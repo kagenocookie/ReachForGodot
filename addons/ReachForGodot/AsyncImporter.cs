@@ -143,7 +143,7 @@ public partial class AsyncImporter : Node
 
     public static Task<Resource?> QueueAssetImport(string originalFilepath, SupportedGame game, Action<Resource?>? callback = null)
     {
-        var format = Importer.GetFileFormat(originalFilepath).format;
+        var format = PathUtils.GetFileFormat(originalFilepath).format;
         switch (format) {
             case RESupportedFileFormats.Mesh:
                 return QueueAssetImport(originalFilepath, game, format, Importer.ImportMesh, callback).awaitTask;
@@ -161,7 +161,7 @@ public partial class AsyncImporter : Node
             var config = ReachForGodot.GetAssetConfig(game);
             queuedImports.Enqueue(queueItem = new ImportQueueItem() {
                 originalFilepath = originalFilepath,
-                importFilename = Importer.GetAssetImportPath(originalFilepath, format, config),
+                importFilename = PathUtils.GetAssetImportPath(originalFilepath, format, config)!,
                 game = game,
                 importAction = importAction,
             });

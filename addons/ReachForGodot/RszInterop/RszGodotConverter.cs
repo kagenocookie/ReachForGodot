@@ -138,8 +138,8 @@ public class RszGodotConverter
     private PackedScene? UpdateSceneResource<TRoot>(TRoot root) where TRoot : Node, IRszContainerNode, new()
     {
         var relativeSourceFile = root.Asset!.AssetFilename;
-        var sourceFilePath = Importer.ResolveSourceFilePath(relativeSourceFile, AssetConfig) ?? throw new Exception("Invalid source asset file " + relativeSourceFile);
-        var importFilepath = Importer.GetLocalizedImportPath(relativeSourceFile, AssetConfig) ?? throw new Exception("Couldn't resolve import path for resource " + relativeSourceFile);
+        var sourceFilePath = PathUtils.ResolveSourceFilePath(relativeSourceFile, AssetConfig) ?? throw new Exception("Invalid source asset file " + relativeSourceFile);
+        var importFilepath = PathUtils.GetLocalizedImportPath(relativeSourceFile, AssetConfig) ?? throw new Exception("Couldn't resolve import path for resource " + relativeSourceFile);
         var name = sourceFilePath.GetFile().GetBaseName().GetBaseName();
         var scene = ResourceLoader.Exists(importFilepath) ? ResourceLoader.Load<PackedScene>(importFilepath) : new PackedScene();
         scene.Pack(root);
@@ -274,7 +274,7 @@ public class RszGodotConverter
                     proxy.KnownBounds = tempInstance.KnownBounds;
                     proxy.Contents.Pack(tempInstance);
                     var importPath = subfolder.Asset!.GetImportFilepath(AssetConfig) ?? throw new Exception("Invalid scn import path");
-                    var scnFullPath = Importer.ResolveSourceFilePath(subfolder.Asset!.AssetFilename, AssetConfig) ?? throw new Exception("Invalid scn file " + scnPath);
+                    var scnFullPath = PathUtils.ResolveSourceFilePath(subfolder.Asset!.AssetFilename, AssetConfig) ?? throw new Exception("Invalid scn file " + scnPath);
                     SaveOrReplaceResource(proxy.Contents, scnFullPath, importPath);
                     proxy.Enabled = true;
                 }
@@ -304,7 +304,7 @@ public class RszGodotConverter
 
     private async Task GeneratePrefabTree(PrefabNode root)
     {
-        var scnFullPath = Importer.ResolveSourceFilePath(root.Asset!.AssetFilename, AssetConfig);
+        var scnFullPath = PathUtils.ResolveSourceFilePath(root.Asset!.AssetFilename, AssetConfig);
         if (scnFullPath == null) return;
 
         GD.Print("Opening pfb file " + scnFullPath);
@@ -429,7 +429,7 @@ public class RszGodotConverter
 
     public void GenerateUserdata(UserdataResource root)
     {
-        var scnFullPath = Importer.ResolveSourceFilePath(root.Asset!.AssetFilename, AssetConfig);
+        var scnFullPath = PathUtils.ResolveSourceFilePath(root.Asset!.AssetFilename, AssetConfig);
         if (scnFullPath == null) return;
 
         GD.Print("Opening user file " + scnFullPath);
@@ -466,7 +466,7 @@ public class RszGodotConverter
                 if (resource == null) {
                     resource ??= new REResource() {
                         Asset = new AssetReference(res.Path),
-                        ResourceType = Importer.GetFileFormat(res.Path).format,
+                        ResourceType = PathUtils.GetFileFormat(res.Path).format,
                         Game = AssetConfig.Game,
                         ResourceName = res.Path.GetFile()
                     };
@@ -475,7 +475,7 @@ public class RszGodotConverter
                 } else {
                     resources.Add(new REResourceProxy() {
                         Asset = new AssetReference(res.Path),
-                        ResourceType = Importer.GetFileFormat(res.Path).format,
+                        ResourceType = PathUtils.GetFileFormat(res.Path).format,
                         ImportedResource = resource,
                         Game = AssetConfig.Game,
                         ResourceName = res.Path.GetFile()
@@ -550,7 +550,7 @@ public class RszGodotConverter
             // note: some PFB files aren't shipped with the game, hence the CheckResourceExists check
             // presumably they are only used directly within scn files and not instantiated during runtime
             if (!string.IsNullOrEmpty(scnData.Prefab?.Path) && Importer.CheckResourceExists(scnData.Prefab.Path, AssetConfig)) {
-                if (ctx.resolvedResources.TryGetValue(Importer.GetLocalizedImportPath(scnData.Prefab.Path, AssetConfig)!, out var pfb) && pfb is PackedScene resolvedPfb) {
+                if (ctx.resolvedResources.TryGetValue(PathUtils.GetLocalizedImportPath(scnData.Prefab.Path, AssetConfig)!, out var pfb) && pfb is PackedScene resolvedPfb) {
                     gameobj = resolvedPfb.Instantiate<PrefabNode>(PackedScene.GenEditState.Instance);
                 } else if (Importer.FindOrImportResource<PackedScene>(scnData.Prefab.Path, AssetConfig) is PackedScene packedPfb) {
                     var pfbInstance = packedPfb.Instantiate<PrefabNode>(PackedScene.GenEditState.Instance);

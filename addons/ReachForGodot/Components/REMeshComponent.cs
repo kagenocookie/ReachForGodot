@@ -67,7 +67,7 @@ public partial class REMeshComponent : REComponent, IVisualREComponent
     {
         base.PreExport();
         var resource = Importer.FindImportedResourceAsset(meshNode?.SceneFilePath) as MeshResource;
-        var meshScenePath = resource?.Asset?.NormalizedFilepath;
+        var meshScenePath = resource?.Asset?.AssetFilename;
 
         SetField("Mesh", meshScenePath ?? string.Empty);
     }

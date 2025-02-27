@@ -15,11 +15,15 @@ public partial class AssetReference : Resource
     public AssetReference(string assetFilename)
     {
         // normalize all paths to front slashes - because resources tend to use forward slashes
-        AssetFilename = assetFilename.Replace('\\', '/');
+        AssetFilename = PathUtils.NormalizeResourceFilepath(assetFilename);
     }
 
-    [Export] public string AssetFilename { get; set; } = string.Empty;
-    public string NormalizedFilepath => Importer.NormalizeResourceFilepath(AssetFilename);
+    private string _assetFilename = string.Empty;
+    [Export] public string AssetFilename
+    {
+        get => _assetFilename;
+        set => _assetFilename = PathUtils.NormalizeResourceFilepath(value);
+    }
 
     public bool IsSameAsset(string compare)
     {
@@ -29,8 +33,8 @@ public partial class AssetReference : Resource
         return dot == -1 ? false : AssetFilename.AsSpan().Slice(0, dot).SequenceEqual(compare);
     }
 
-    public string? ResolveSourceFile(AssetConfig config) => Importer.ResolveSourceFilePath(AssetFilename, config);
-    public string? GetImportFilepath(AssetConfig config) => Importer.GetLocalizedImportPath(AssetFilename, config);
+    public string? ResolveSourceFile(AssetConfig config) => PathUtils.ResolveSourceFilePath(AssetFilename, config);
+    public string? GetImportFilepath(AssetConfig config) => PathUtils.GetLocalizedImportPath(AssetFilename, config);
 
     public void OpenSourceFile(SupportedGame game)
     {

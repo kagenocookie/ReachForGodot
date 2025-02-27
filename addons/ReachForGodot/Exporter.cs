@@ -64,7 +64,7 @@ public class Exporter
         AssetConfig config = ReachForGodot.GetAssetConfig(userdata.Game);
         var fileOption = TypeCache.CreateRszFileOptions(config);
 
-        var handler = new FileHandler(Importer.ResolveSourceFilePath(userdata.Asset?.AssetFilename!, config)!);
+        var handler = new FileHandler(PathUtils.ResolveSourceFilePath(userdata.Asset?.AssetFilename!, config)!);
         // var sourceFile = new UserFile(fileOption, new FileHandler(Importer.ResolveSourceFilePath(userdata.Asset?.AssetFilename!, config)!));
         // sourceFile.Read();
 
@@ -89,7 +89,7 @@ public class Exporter
         AssetConfig config = ReachForGodot.GetAssetConfig(root.Game);
         var fileOption = TypeCache.CreateRszFileOptions(config);
 
-        var handler = new FileHandler(Importer.ResolveSourceFilePath(root.Asset?.AssetFilename!, config)!);
+        var handler = new FileHandler(PathUtils.ResolveSourceFilePath(root.Asset?.AssetFilename!, config)!);
         var sourceFile = new PfbFile(fileOption, handler);
         sourceFile.Read();
         sourceFile.SetupGameObjects();
@@ -252,7 +252,7 @@ public class Exporter
     {
         if (resources != null) {
             foreach (var res in resources) {
-                list.Add(new ResourceInfo(fileOption.Version) { Path = res.Asset?.NormalizedFilepath });
+                list.Add(new ResourceInfo(fileOption.Version) { Path = res.Asset?.AssetFilename });
             }
         }
     }
@@ -272,7 +272,7 @@ public class Exporter
                     throw new ArgumentNullException("Missing root REObject classname " + target.Classname);
                 }
             }
-            var path = userdata.Asset!.NormalizedFilepath;
+            var path = userdata.Asset!.AssetFilename;
             RSZUserDataInfo? userDataInfo = rsz.RSZUserDataInfoList.FirstOrDefault(u => (u as RSZUserDataInfo)?.Path == path) as RSZUserDataInfo;
             if (userDataInfo == null) {
                 var fileUserdataList = (container as PfbFile)?.UserdataInfoList ?? (container as ScnFile)?.UserdataInfoList;
@@ -316,9 +316,9 @@ public class Exporter
                         break;
                     case RszFieldType.Resource:
                         if (field.RszField.array) {
-                            values[i++] = value.AsGodotArray<REResource>().Select(obj => obj?.Asset?.NormalizedFilepath ?? string.Empty).ToArray();
+                            values[i++] = value.AsGodotArray<REResource>().Select(obj => obj?.Asset?.AssetFilename ?? string.Empty).ToArray();
                         } else {
-                            values[i++] = value.As<REResource?>()?.Asset?.NormalizedFilepath ?? string.Empty;
+                            values[i++] = value.As<REResource?>()?.Asset?.AssetFilename ?? string.Empty;
                         }
                         break;
                     case RszFieldType.GameObjectRef:
