@@ -6,11 +6,15 @@ using System.Threading.Tasks;
 using Godot;
 using RszTool;
 
-[GlobalClass, REComponentClass("via.render.CompositeMesh")]
-public partial class CompositeMeshComponent : REComponent
+[GlobalClass, Tool, REComponentClass("via.render.CompositeMesh")]
+public partial class CompositeMeshComponent : REComponent, IVisualREComponent
 {
-    public Node3D? meshNode;
+    private Node3D? meshNode;
     private int childCount = 0;
+
+    public Node3D? GetOrFindMeshNode() => meshNode ??= GameObject.FindChildWhere<Node3D>(child => child is not REGameObject && child.Name == "__CompositeMesh");
+    private Godot.Collections.Array<REObject>? FindStoredMeshGroups()
+        => TryGetFieldValue(TypeInfo.GetFieldOrFallback("MeshGroups", f => f.SerializedName == "v15"), out var groups) ? groups.AsGodotArray<REObject>() : null;
 
     public override void OnDestroy()
     {
@@ -24,6 +28,7 @@ public partial class CompositeMeshComponent : REComponent
         if (importType == RszImportType.Placeholders || importType == RszImportType.Import && meshNode != null) {
             return;
         }
+        meshNode ??= GetOrFindMeshNode();
         childCount = 0;
         if (meshNode != null) {
             meshNode.ClearChildren();
@@ -31,20 +36,35 @@ public partial class CompositeMeshComponent : REComponent
             meshNode = await gameObject.AddChildAsync(new Node3D() { Name = "__CompositeMesh" }, root as Node);
         }
         var tasks = new List<Task>();
-        if ((rsz.GetFieldValue("MeshGroups") ?? rsz.GetFieldValue("v15")) is List<object> meshGroups) {
-            foreach (var inst in meshGroups.OfType<RszInstance>()) {
-                if (inst.Values[0] is string meshFilename && meshFilename != "") {
-                    tasks.Add(InstantiateSubmeshes(root, meshFilename, (inst.GetFieldValue("Transform") as IEnumerable<object>)?.OfType<RszInstance>()));
+        var groups = FindStoredMeshGroups();
+        if (groups != null) {
+            foreach (var mg in groups) {
+                if (mg.TryGetFieldValue(mg.TypeInfo.Fields[0], out var filename) && filename.AsString() is string meshFilename && !string.IsNullOrEmpty(meshFilename)) {
+                    var transform = mg.GetField(mg.TypeInfo.GetFieldOrFallback("Transform", s => s.RszField.type == RszFieldType.String));
+                    if (transform.VariantType == Variant.Type.Nil) {
+                        GD.Print("Could not find composite mesh group transform");
+                    } else {
+                        tasks.Add(InstantiateSubmeshes(root, meshFilename, (transform.AsGodotArray<REObject>())));
+                    }
                 }
             }
         }
+        // if ((rsz.GetFieldValue("MeshGroups") ?? rsz.GetFieldValue("v15")) is List<object> meshGroups) {
+        //     foreach (var inst in meshGroups.OfType<RszInstance>()) {
+        //         if (inst.Values[0] is string meshFilename && meshFilename != "") {
+        //             tasks.Add(InstantiateSubmeshes(root, meshFilename, (inst.GetFieldValue("Transform") as IEnumerable<object>)?.OfType<RszInstance>()));
+        //         }
+        //     }
+        // }
         await Task.WhenAll(tasks);
     }
 
-    private async Task InstantiateSubmeshes(IRszContainerNode root, string meshFilename, IEnumerable<RszInstance>? transforms)
+    private async Task InstantiateSubmeshes(IRszContainerNode root, string meshFilename, IEnumerable<REObject>? transforms)
     {
         Debug.Assert(meshNode != null);
         Debug.Assert(transforms != null);
+
+        REField? pos = null, rot = null, scale = null;
 
         if (root.Resources?.FirstOrDefault(r => r.Asset?.IsSameAsset(meshFilename) == true) is MeshResource mr) {
             var res = await mr.Import(false).ContinueWith(static (t) => t.IsFaulted ? null : t.Result);
@@ -53,25 +73,49 @@ public partial class CompositeMeshComponent : REComponent
             var mm = new MultiMesh();
             mesh.Multimesh = mm;
             mm.InstanceCount = 0;
+            mm.TransformFormat = MultiMesh.TransformFormatEnum.Transform3D;
             if (res is PackedScene scene && scene.Instantiate<Node3D>(PackedScene.GenEditState.Instance).FindChildByTypeRecursive<MeshInstance3D>() is MeshInstance3D meshinst) {
                 mm.Mesh = meshinst.Mesh;
             } else {
                 mm.Mesh = new SphereMesh() { Radius = 0.5f, Height = 1 };
             }
-            mm.TransformFormat = MultiMesh.TransformFormatEnum.Transform3D;
 
             mm.InstanceCount = transforms.Count();
 
             int i = 0;
             foreach (var tr in transforms) {
+                pos ??= tr.TypeInfo.GetFieldOrFallback("Position", f => f.FieldIndex == 2);
+                rot ??= tr.TypeInfo.GetFieldOrFallback("Rotation", f => f.FieldIndex == 2);
+                scale ??= tr.TypeInfo.GetFieldOrFallback("Scale", f => f.FieldIndex == 2);
                 mm.SetInstanceTransform(i++, RETransformComponent.Vector4x3ToTransform(
-                    (System.Numerics.Vector4)tr.Values[2],
-                    (System.Numerics.Vector4)tr.Values[3],
-                    (System.Numerics.Vector4)tr.Values[4]
+                    tr.GetField(pos).AsVector4(),
+                    tr.GetField(rot).AsVector4(),
+                    tr.GetField(scale).AsVector4()
+                    // (System.Numerics.Vector4)tr.Values[2],
+                    // (System.Numerics.Vector4)tr.Values[3],
+                    // (System.Numerics.Vector4)tr.Values[4]
                 ));
             }
 
             await meshNode.AddChildAsync(mesh, root as Node);
         }
+    }
+
+    public Aabb GetBounds()
+    {
+        var aabb = new Aabb();
+        var meshnode = GetOrFindMeshNode();
+        var groups = FindStoredMeshGroups();
+        if (groups != null) {
+            foreach (var mg in groups) {
+                var transforms = mg.GetField(mg.TypeInfo.GetFieldOrFallback("Transform", s => s.RszField.type == RszFieldType.String)).AsGodotArray<REObject>();
+                foreach (var tr in transforms) {
+                    var posfield = tr.TypeInfo.GetFieldOrFallback("Position", f => f.FieldIndex == 2);
+                    var origin = tr.GetField(posfield).AsVector4().ToVector3();
+                    aabb = aabb.Position.IsZeroApprox() && aabb.Size.IsZeroApprox() ? new Aabb(origin, Vector3.Zero) : aabb.Expand(origin);
+                }
+            }
+        }
+        return aabb;
     }
 }

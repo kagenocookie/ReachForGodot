@@ -188,21 +188,21 @@ public class Importer
     /// <summary>
     /// Fetch an existing resource, or if it doesn't exist yet, create a placeholder resource for it.
     /// </summary>
-    public static T? FindOrImportResource<T>(string sourceFile, AssetConfig config) where T : Resource
+    public static T? FindOrImportResource<T>(string chunkRelativeFilepath, AssetConfig config) where T : Resource
     {
-        if (string.IsNullOrEmpty(sourceFile)) {
-            GD.PrintErr("Empty import path for resource " + typeof(T) + ": " + sourceFile);
+        if (string.IsNullOrEmpty(chunkRelativeFilepath)) {
+            GD.PrintErr("Empty import path for resource " + typeof(T) + ": " + chunkRelativeFilepath);
             return null;
         }
 
-        var importPath = Importer.GetLocalizedImportPath(sourceFile, config);
+        var importPath = Importer.GetLocalizedImportPath(chunkRelativeFilepath, config);
         if (importPath == null) {
-            GD.PushError("Could not find resource " + typeof(T) + ": " + sourceFile);
+            GD.PushError("Could not find resource " + typeof(T) + ": " + chunkRelativeFilepath);
             return null;
         }
 
         if (!ResourceLoader.Exists(importPath)) {
-            var sourcePath = ResolveSourceFilePath(sourceFile, config);
+            var sourcePath = ResolveSourceFilePath(chunkRelativeFilepath, config);
             if (sourcePath == null) return null;
             return Importer.Import(sourcePath, config, importPath) as T;
         }
@@ -421,7 +421,7 @@ public class Importer
         return conv.CreateOrReplaceUserdata(sourceFilePath, outputFilePath);
     }
 
-    private static void QueueFileRescan()
+    public static void QueueFileRescan()
     {
         var fs = EditorInterface.Singleton.GetResourceFilesystem();
         if (!fs.IsScanning()) fs.CallDeferred(EditorFileSystem.MethodName.Scan);

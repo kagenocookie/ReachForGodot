@@ -5,14 +5,23 @@ using Godot;
 using RszTool;
 
 [GlobalClass, Tool, REComponentClass("via.render.Mesh")]
-public partial class REMeshComponent : REComponent
+public partial class REMeshComponent : REComponent, IVisualREComponent
 {
-    public Node3D? meshNode;
+    private Node3D? meshNode;
     private REField MeshField => TypeInfo.GetFieldOrFallback("Mesh", static (f) => f.VariantType == Variant.Type.String);
     public string? MeshFilepath => TryGetFieldValue(MeshField, out var path) ? path.AsString() : null;
 
     [ExportToolButton("Reinstantiate mesh")]
     private Callable ForceReinstance => Callable.From(FindResourceAndReinit);
+
+    public Node3D? GetOrFindMeshNode()
+    {
+        meshNode ??= GameObject.FindChildWhere<Node3D>(child => child is not REGameObject && child.Name.ToString().StartsWith("__"));
+        if (!IsInstanceValid(meshNode)) {
+            meshNode = null;
+        }
+        return meshNode;
+    }
 
     private MeshResource? GetMeshResource() => SerializedContainers.Select(parent => parent.FindResource<MeshResource>(MeshFilepath)).FirstOrDefault();
 
@@ -86,5 +95,12 @@ public partial class REMeshComponent : REComponent
             }
         }
         return Task.CompletedTask;
+    }
+
+    public Aabb GetBounds()
+    {
+        var meshnode = GetOrFindMeshNode();
+        if (meshnode == null) return new Aabb();
+        return meshnode.GetNode3DAABB(false);
     }
 }

@@ -30,10 +30,34 @@ public partial class SceneFolderInspectorPlugin : EditorInspectorPlugin, ISerial
         var container = inspectorScene.Instantiate<Control>();
 
         if (container.GetNode<Button>("%Find3DNode") is Button btn2) {
-            if (obj is SceneFolder) {
-                btn2.Pressed += obj.Find3DNode;
+            if (obj is SceneFolder folder) {
+                btn2.Pressed += folder.EditorRepositionCamera;
             } else {
                 btn2.Visible = false;
+            }
+        }
+        if (container.GetNode<Button>("%LoadFoldersBtn") is Button loadbtn) {
+            if (obj is SceneFolder scene) {
+                loadbtn.Pressed += () => {
+                    bool? targetValue = null;
+                    if (scene is SceneFolderProxy proxy) {
+                        proxy.LoadAllChildren(!proxy.Enabled);
+                    } else {
+                        foreach (var ch in scene.AllSubfolders.OfType<SceneFolderProxy>()) {
+                            if (targetValue == null) {
+                                targetValue = !ch.Enabled;
+                            }
+                            ch.LoadAllChildren(targetValue.Value);
+                        }
+                    }
+                };
+                var tempbtn = new Button() { Text = "Recalc bounds" };
+                loadbtn.GetParent().AddChild(tempbtn);
+                tempbtn.GetParent().MoveChild(tempbtn, loadbtn.GetIndex() + 1);
+                tempbtn.Pressed += () => {
+                    scene.RecalculateBounds(true);
+                    EditorInterface.Singleton.MarkSceneAsUnsaved();
+                };
             }
         }
 
@@ -44,9 +68,9 @@ public partial class SceneFolderInspectorPlugin : EditorInspectorPlugin, ISerial
             importType.AddItem("Fully reimport all resources", (int)RszGodotConverter.PresetImportModes.FullReimport);
         } else if (obj is SceneFolder scn) {
             importType.AddItem("Placeholders only", (int)RszGodotConverter.PresetImportModes.PlaceholderImport);
-            importType.AddItem("Only what's missing", (int)RszGodotConverter.PresetImportModes.ImportMissingItems);
-            importType.AddItem("Fully import just this scene, no subfolders", (int)RszGodotConverter.PresetImportModes.ThisFolderOnly);
-            importType.AddItem("Fully reimport all resources", (int)RszGodotConverter.PresetImportModes.FullReimport);
+            importType.AddItem("Import just this scene, no subfolders", (int)RszGodotConverter.PresetImportModes.ThisFolderOnly);
+            importType.AddItem("Import everything", (int)RszGodotConverter.PresetImportModes.ImportMissingItems);
+            importType.AddItem("Force reimport all resources", (int)RszGodotConverter.PresetImportModes.FullReimport);
         } else {
             importType.AddItem("Full import", (int)RszGodotConverter.PresetImportModes.ImportTreeChanges);
         }

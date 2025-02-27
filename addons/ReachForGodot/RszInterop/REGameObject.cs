@@ -23,6 +23,7 @@ public partial class REGameObject : Node3D, ISerializationListener
 
     public override void _EnterTree()
     {
+        Components ??= new();
         foreach (var comp in Components) {
             comp.GameObject = this;
         }
@@ -109,5 +110,39 @@ public partial class REGameObject : Node3D, ISerializationListener
         foreach (var comp in Components) {
             comp.GameObject = this;
         }
+    }
+
+    public Aabb CalculateBounds()
+    {
+        Aabb bounds = new Aabb();
+        Vector3 origin = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
+
+        var visuals = Components.OfType<IVisualREComponent>();
+        foreach (var vis in visuals) {
+            var compBounds = vis.GetBounds();
+            if (compBounds.Size.IsZeroApprox()) {
+                origin = compBounds.Position;
+            } else {
+                bounds = bounds.Size.IsZeroApprox() ? compBounds : bounds.Merge(compBounds);
+            }
+        }
+
+        foreach (var child in Children) {
+            var childBounds = child.CalculateBounds();
+            if (!childBounds.Size.IsZeroApprox()) {
+                var transformedChildBounds = child.Transform * childBounds;
+                bounds = bounds.Size.IsZeroApprox() ? transformedChildBounds : bounds.Merge(transformedChildBounds);
+            }
+        }
+
+        if (bounds.Size.IsZeroApprox()) {
+            if (!bounds.Position.IsZeroApprox()) {
+                return bounds;
+            }
+
+            return new Aabb(origin.X == float.MaxValue ? Position : origin, Vector3.Zero);
+        }
+
+        return bounds;
     }
 }

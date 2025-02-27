@@ -209,7 +209,6 @@ public partial class AsyncImporter : Node
         item.state = ImportState.Triggered;
         var convertTask = item.importAction.Invoke(item.originalFilepath, item.game);
         if (convertTask == null) {
-            GD.PrintErr("Asset conversion setup failed: " + item.originalFilepath);
             ExecutePostImport(item);
             item.state = ImportState.Failed;
             return null;

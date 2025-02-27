@@ -21,6 +21,11 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "Find me something to look at"
 
+[node name="LoadFoldersBtn" type="Button" parent="VBoxContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Load subfolders"
+
 [node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2
 

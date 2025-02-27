@@ -90,6 +90,10 @@
             {
                 "Name": "v8",
                 "Type": "F32"
+            },
+            {
+                "Name": "v46",
+                "Type": "S32"
             }
         ]
     },
@@ -169,6 +173,14 @@
             {
                 "Name": "v26",
                 "Type": "Object"
+            }
+        ]
+    },
+    "via.motion.Chain": {
+        "FieldPatches": [
+            {
+                "Name": "v13",
+                "Type": "S32"
             }
         ]
     }
