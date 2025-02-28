@@ -79,6 +79,10 @@ public class RszGodotConverter
                 GD.PrintErr($"Invalid REComponentClass annotated type {type.FullName}.\nMust be a non-abstract REComponent node.");
                 continue;
             }
+            if (type.GetCustomAttribute<ToolAttribute>() == null || type.GetCustomAttribute<GlobalClassAttribute>() == null) {
+                GD.PrintErr($"REComponentClass annotated type {type.FullName} must also be [Tool] and [GlobalClass].");
+                continue;
+            }
 
             var attr = type.GetCustomAttribute<REComponentClassAttribute>()!;
             DefineComponentFactory(attr.Classname, (root, obj, instance) => {

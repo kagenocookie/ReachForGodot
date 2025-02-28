@@ -1,78 +1,64 @@
 {
     "app.Character": {
         "SpecialFoliageChecker": {
-            "PropertyId": 262244,
-            "AddToObjectTable": false
+            "PropertyId": 262244
         }
     },
     "app.Human": {
         "HeadRef": {
-            "PropertyId": 262163,
-            "AddToObjectTable": false
+            "PropertyId": 262163
         }
     },
     "app.HumanCollidersToggler": {
         "ClimbMarker": {
-            "PropertyId": 131072,
-            "AddToObjectTable": true
+            "PropertyId": 131072
         },
         "GrassSensor": {
-            "PropertyId": 131073,
-            "AddToObjectTable": true
+            "PropertyId": 131073
         },
         "LanternLightControl": {
-            "PropertyId": 131074,
-            "AddToObjectTable": true
+            "PropertyId": 131074
         }
     },
     "app.CharacterFacialMotionController.TargetSetting": {
         "HeadObject": {
-            "PropertyId": 131072,
-            "AddToObjectTable": true
+            "PropertyId": 131072
         }
     },
     "app.ScaleFacialMotion": {
         "HeadObject": {
-            "PropertyId": 262146,
-            "AddToObjectTable": false
+            "PropertyId": 262146
         }
     },
     "app.SetupScaleFacialMotion": {
         "HeadObj": {
-            "PropertyId": 262144,
-            "AddToObjectTable": false
+            "PropertyId": 262144
         }
     },
     "app.SetupHumanFacial": {
         "HeadRef": {
-            "PropertyId": 262144,
-            "AddToObjectTable": false
+            "PropertyId": 262144
         }
     },
     "app.HumanBlushController": {
         "HeadObj": {
-            "PropertyId": 262144,
-            "AddToObjectTable": false
+            "PropertyId": 262144
         }
     },
     "app.VisionMarker": {
         "JointTargetObj": {
-            "PropertyId": 262146,
-            "AddToObjectTable": false
+            "PropertyId": 262146
         },
         "OwnerObject": {
-            "PropertyId": 262150,
-            "AddToObjectTable": false
+            "PropertyId": 262150
         }
     },
     "app.BaseMarker": {
         "JointTargetObj": {
-            "PropertyId": 262146,
-            "AddToObjectTable": false
+            "PropertyId": 262146
         },
         "OwnerObject": {
-            "PropertyId": 262150,
-            "AddToObjectTable": false
+            "PropertyId": 262150
         }
     }
 }

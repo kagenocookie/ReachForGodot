@@ -546,5 +546,4 @@ public class REObjectTypeCache
 public class PrefabGameObjectRefProperty
 {
     public int PropertyId { get; set; }
-    public bool AddToObjectTable { get; set; }
 }
