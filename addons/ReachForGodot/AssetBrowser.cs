@@ -71,7 +71,7 @@ public partial class AssetBrowser : Resource
     {
         Debug.Assert(Assets != null);
         var resource = Importer.Import(filepath, Assets);
-        GD.Print("File imported to " + Importer.GetLocalizedImportPath(filepath, Assets));
+        GD.Print("File imported to " + PathUtils.GetLocalizedImportPath(filepath, Assets));
         if (resource is REResourceProxy proxy) {
             proxy.Import(true).Wait();
         }
@@ -86,11 +86,11 @@ public partial class AssetBrowser : Resource
         }
 
         ImportMultipleAssets(files).Wait();
-        var importPaths = files.Select(f => Importer.GetLocalizedImportPath(f, Assets));
+        var importPaths = files.Select(f => PathUtils.GetLocalizedImportPath(f, Assets));
         GD.Print("Files imported to:\n" + string.Join('\n', importPaths));
 
         if (importPaths.FirstOrDefault(x => x != null) is string str && ResourceLoader.Exists(str)) {
-            var fmt = Importer.GetFileFormat(files.First(x => x != null));
+            var fmt = PathUtils.GetFileFormat(files.First(x => x != null));
             if (fmt.format == RESupportedFileFormats.Scene || fmt.format == RESupportedFileFormats.Prefab) {
                 EditorInterface.Singleton.CallDeferred(EditorInterface.MethodName.OpenSceneFromPath, str);
             } else {

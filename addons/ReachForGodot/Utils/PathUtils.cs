@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Godot;
 
@@ -8,19 +9,21 @@ namespace RGE;
 
 public static class PathUtils
 {
-    public static REFileFormat GetFileFormat(string filename)
+    private static readonly Dictionary<SupportedGame, Dictionary<string, int>> extensionVersions = new();
+
+    public static REFileFormat GetFileFormat(ReadOnlySpan<char> filename)
     {
         var versionDot = filename.LastIndexOf('.');
         if (versionDot == -1) return REFileFormat.Unknown;
 
-        var extDot = filename.LastIndexOf('.', versionDot - 1);
-        if (extDot == -1) return new REFileFormat(GetFileFormatFromExtension(filename.AsSpan()[(versionDot + 1)..]), -1);
+        var extDot = filename.Slice(0, versionDot).LastIndexOf('.');
+        if (extDot == -1) return new REFileFormat(GetFileFormatFromExtension(filename[(versionDot + 1)..]), -1);
 
-        if (!int.TryParse(filename.AsSpan().Slice(versionDot + 1), out var version)) {
-            return new REFileFormat(GetFileFormatFromExtension(filename.AsSpan()[versionDot..]), -1);
+        if (!int.TryParse(filename.Slice(versionDot + 1), out var version)) {
+            return new REFileFormat(GetFileFormatFromExtension(filename[versionDot..]), -1);
         }
 
-        var fmt = GetFileFormatFromExtension(filename.AsSpan()[(extDot + 1)..versionDot]);
+        var fmt = GetFileFormatFromExtension(filename[(extDot + 1)..versionDot]);
         return new REFileFormat(fmt, version);
     }
 
@@ -63,6 +66,29 @@ public static class PathUtils
         _ => null,
     };
 
+    private static bool TryFindFileExtensionVersion(AssetConfig config, string extension, out int version)
+    {
+        if (!extensionVersions.TryGetValue(config.Game, out var versions)) {
+            if (File.Exists(config.Paths.ExtensionVersionsCacheFilepath)) {
+                using var fs = File.OpenRead(config.Paths.ExtensionVersionsCacheFilepath);
+                versions = JsonSerializer.Deserialize<Dictionary<string, int>>(fs);
+            }
+            extensionVersions[config.Game] = versions ??= new Dictionary<string, int>();
+        }
+
+        return versions.TryGetValue(extension, out version);
+    }
+
+    private static void UpdateFileExtension(AssetConfig config, string extension, int version)
+    {
+        if (!extensionVersions.TryGetValue(config.Game, out var versions)) {
+            extensionVersions[config.Game] = versions = new Dictionary<string, int>();
+        }
+        versions[extension] = version;
+        using var fs = File.Create(config.Paths.ExtensionVersionsCacheFilepath);
+        JsonSerializer.Serialize(fs, versions);
+    }
+
     public static int GuessFileVersion(string relativePath, RESupportedFileFormats format, AssetConfig config)
     {
         switch (format) {
@@ -92,6 +118,10 @@ public static class PathUtils
 
         var fullpath = Path.Join(config.Paths.ChunkPath, relativePath);
         var ext = GetFileExtensionFromFormat(format) ?? relativePath.GetExtension();
+        if (TryFindFileExtensionVersion(config, ext, out var version)) {
+            return version;
+        }
+
         var dir = fullpath.GetBaseDir();
         if (!Directory.Exists(dir)) {
             // TODO: this is where we try to retool it out of the pak files
@@ -100,10 +130,11 @@ public static class PathUtils
         }
 
         var first = Directory.EnumerateFiles(dir, $"*.{ext}.*").FirstOrDefault();
-        if (first != null) {
-            // TODO: cache autodetected file format versions?
-            return int.TryParse(first.GetExtension(), out var ver) ? ver : -1;
+        if (first != null && int.TryParse(Path.GetExtension(first.AsSpan()), out version)) {
+            UpdateFileExtension(config, ext, version);
+            return version;
         }
+
         return -1;
     }
 
