@@ -80,6 +80,9 @@ public partial class SceneFolderProxy : SceneFolder
                 GD.Print("Tree rebuild failed:", t.Exception);
             } else {
                 GD.Print("Tree rebuild finished in " + sw.Elapsed);
+                if (Enabled && Contents != null) {
+                    LoadScene();
+                }
             }
         });
     }

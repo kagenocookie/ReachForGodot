@@ -11,17 +11,6 @@ public interface IRszContainerNode
 
     public bool IsEmpty { get; }
 
-    public void AddGameObject(REGameObject gameObject, Node? parent)
-    {
-        if (parent != null) {
-            parent.AddUniqueNamedChild(gameObject);
-        } else {
-            (this as Node)?.AddUniqueNamedChild(gameObject);
-        }
-
-        gameObject.Owner = this as Node;
-    }
-
     public T? FindResource<T>(string? filepath) where T : REResource
     {
         if (Resources == null || string.IsNullOrEmpty(filepath)) return null;

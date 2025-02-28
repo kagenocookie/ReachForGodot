@@ -71,7 +71,7 @@ public static class PathUtils
         if (!extensionVersions.TryGetValue(config.Game, out var versions)) {
             if (File.Exists(config.Paths.ExtensionVersionsCacheFilepath)) {
                 using var fs = File.OpenRead(config.Paths.ExtensionVersionsCacheFilepath);
-                versions = JsonSerializer.Deserialize<Dictionary<string, int>>(fs);
+                versions = JsonSerializer.Deserialize<Dictionary<string, int>>(fs, TypeCache.jsonOptions);
             }
             extensionVersions[config.Game] = versions ??= new Dictionary<string, int>();
         }
@@ -86,7 +86,7 @@ public static class PathUtils
         }
         versions[extension] = version;
         using var fs = File.Create(config.Paths.ExtensionVersionsCacheFilepath);
-        JsonSerializer.Serialize(fs, versions);
+        JsonSerializer.Serialize(fs, versions, TypeCache.jsonOptions);
     }
 
     public static int GuessFileVersion(string relativePath, RESupportedFileFormats format, AssetConfig config)
@@ -130,7 +130,7 @@ public static class PathUtils
         }
 
         var first = Directory.EnumerateFiles(dir, $"*.{ext}.*").FirstOrDefault();
-        if (first != null && int.TryParse(Path.GetExtension(first.AsSpan()), out version)) {
+        if (first != null && int.TryParse(first.GetExtension(), out version)) {
             UpdateFileExtension(config, ext, version);
             return version;
         }

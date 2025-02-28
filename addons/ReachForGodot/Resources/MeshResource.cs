@@ -10,7 +10,11 @@ public partial class MeshResource : REResourceProxy
     {
         if (Asset?.AssetFilename == null) return null;
 
-        return ImportedResource = await AsyncImporter.QueueAssetImport(Asset.AssetFilename, Game);
+        ImportedResource = await AsyncImporter.QueueAssetImport(Asset.AssetFilename, Game);
+        if (!string.IsNullOrEmpty(ResourcePath)) {
+            ResourceSaver.Save(this);
+        }
+        return ImportedResource;
     }
 }
 

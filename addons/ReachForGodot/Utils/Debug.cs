@@ -13,6 +13,7 @@ public static partial class Debug
         if (condition) return;
 
         GD.PrintErr($"Assertion failed: {msg} [{conditionString}]");
+        GD.PushError($"Assertion failed: {msg} [{conditionString}]");
         throw new ApplicationException($"Assertion failed: {msg} [{conditionString}]");
 #endif
     }

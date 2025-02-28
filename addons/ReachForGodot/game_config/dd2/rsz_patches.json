@@ -24,6 +24,10 @@
     "via.render.CompositeMesh": {
         "FieldPatches": [
             {
+                "Name": "v0",
+                "Type": "S32"
+            },
+            {
                 "Name": "v15",
                 "ReplaceName": "MeshGroups",
                 "Type": "Object",
@@ -180,6 +184,14 @@
         "FieldPatches": [
             {
                 "Name": "v13",
+                "Type": "S32"
+            }
+        ]
+    },
+    "via.render.VolumeDecal": {
+        "FieldPatches": [
+            {
+                "Name": "v30",
                 "Type": "S32"
             }
         ]

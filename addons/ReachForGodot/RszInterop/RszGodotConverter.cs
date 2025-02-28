@@ -14,6 +14,7 @@ public static class PresetImportModeExtensions
         RszGodotConverter.PresetImportModes.ThisFolderOnly => RszGodotConverter.thisFolderOnly,
         RszGodotConverter.PresetImportModes.ImportMissingItems => RszGodotConverter.importMissing,
         RszGodotConverter.PresetImportModes.ImportTreeChanges => RszGodotConverter.importTreeChanges,
+        RszGodotConverter.PresetImportModes.ReimportStructure => RszGodotConverter.forceReimportStructure,
         RszGodotConverter.PresetImportModes.FullReimport => RszGodotConverter.fullReimport,
         _ => RszGodotConverter.placeholderImport,
     };
@@ -25,6 +26,7 @@ public class RszGodotConverter
     public static readonly RszGodotConversionOptions thisFolderOnly = new(RszImportType.Placeholders, RszImportType.Import, RszImportType.Import, RszImportType.Import);
     public static readonly RszGodotConversionOptions importMissing = new(RszImportType.Import, RszImportType.Import, RszImportType.Import, RszImportType.Import);
     public static readonly RszGodotConversionOptions importTreeChanges = new(RszImportType.Reimport, RszImportType.Reimport, RszImportType.Import, RszImportType.Reimport);
+    public static readonly RszGodotConversionOptions forceReimportStructure = new(RszImportType.ForceReimport, RszImportType.ForceReimport, RszImportType.Import, RszImportType.ForceReimport);
     public static readonly RszGodotConversionOptions fullReimport = new(RszImportType.ForceReimport, RszImportType.ForceReimport, RszImportType.ForceReimport, RszImportType.ForceReimport);
 
     private static readonly Dictionary<SupportedGame, Dictionary<string, Func<IRszContainerNode, REGameObject, RszInstance, REComponent?>>> perGameFactories = new();
@@ -35,6 +37,7 @@ public class RszGodotConverter
         ThisFolderOnly,
         ImportMissingItems,
         ImportTreeChanges,
+        ReimportStructure,
         FullReimport
     }
 
@@ -232,7 +235,7 @@ public class RszGodotConverter
         foreach (var gameObj in file.GameObjectDatas!.OrderBy(o => o.Instance!.Index)) {
             if (gameObj.Info!.Data.parentId == -1) {
                 Debug.Assert(gameObj.Info != null);
-                await GenerateGameObject(root, gameObj, Options.folders);
+                await GenerateGameObject(root, gameObj, Options.folders, null, root);
             }
         }
 
@@ -468,12 +471,12 @@ public class RszGodotConverter
             if (!string.IsNullOrWhiteSpace(res.Path)) {
                 var resource = Importer.FindOrImportResource<Resource>(res.Path, config);
                 if (resource == null) {
-                    resource ??= new REResource() {
+                    resources.Add(new REResource() {
                         Asset = new AssetReference(res.Path),
                         ResourceType = PathUtils.GetFileFormat(res.Path).format,
                         Game = AssetConfig.Game,
                         ResourceName = res.Path.GetFile()
-                    };
+                    });
                 } else if (resource is REResource reres) {
                     resources.Add(reres);
                 } else {
@@ -590,7 +593,14 @@ public class RszGodotConverter
         gameobj.Data = CreateOrUpdateObject(data.Instance, gameobj.Data);
 
         if (gameobj.GetParent() == null) {
-            root.AddGameObject(gameobj, parent as Node ?? parentFolder);
+            if (parent != null) {
+                parent.AddUniqueNamedChild(gameobj);
+            } else if (parentFolder != null) {
+                parentFolder.AddUniqueNamedChild(gameobj);
+            }
+            if (root is Node rootNode && rootNode != gameobj) {
+                gameobj.Owner = rootNode;
+            }
         }
 
         foreach (var comp in data.Components.OrderBy(o => o.Index)) {

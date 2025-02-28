@@ -9,12 +9,6 @@ using Godot;
 
 public static class GodotObjectExtensions
 {
-    public static T AddChild<T>(this Node parent, T child) where T : Node
-    {
-        parent.AddChild(child);
-        return child;
-    }
-
     public static void SetActive(this CanvasItem target, bool active)
     {
         if (active) {

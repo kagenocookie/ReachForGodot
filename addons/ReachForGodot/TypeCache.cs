@@ -13,7 +13,7 @@ public class TypeCache
     private static readonly Dictionary<SupportedGame, Il2cppCache> il2cppCache = new();
     private static readonly Dictionary<SupportedGame, Dictionary<string, Dictionary<string, PrefabGameObjectRefProperty>>> gameObjectRefProps = new();
 
-    private static readonly JsonSerializerOptions jsonOptions = new() {
+    public static readonly JsonSerializerOptions jsonOptions = new() {
         WriteIndented = true,
     };
 

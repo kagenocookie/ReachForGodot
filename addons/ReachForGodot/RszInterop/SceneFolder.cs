@@ -21,6 +21,7 @@ public partial class SceneFolder : Node, IRszContainerNode
 
     public void AddFolder(SceneFolder folder)
     {
+        Debug.Assert(folder != this);
         if ((FolderContainer ??= FindChild("Folders")) == null) {
             AddChild(FolderContainer = new Node() { Name = "Folders" });
             FolderContainer.Owner = this;
