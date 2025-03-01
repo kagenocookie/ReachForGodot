@@ -191,7 +191,19 @@
     "via.render.VolumeDecal": {
         "FieldPatches": [
             {
+                "Name": "v0",
+                "Type": "S32"
+            },
+            {
                 "Name": "v30",
+                "Type": "S32"
+            }
+        ]
+    },
+    "via.render.PointLight": {
+        "FieldPatches": [
+            {
+                "Name": "v2",
                 "Type": "S32"
             }
         ]

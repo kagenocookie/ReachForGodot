@@ -23,9 +23,9 @@ public partial class CompositeMeshComponent : REComponent, IVisualREComponent
         meshNode = null;
     }
 
-    public override async Task Setup(IRszContainerNode root, REGameObject gameObject, RszInstance rsz, RszImportType importType)
+    public override async Task Setup(REGameObject gameObject, RszInstance rsz, RszImportType importType)
     {
-        if (importType == RszImportType.Placeholders || importType == RszImportType.Import && meshNode != null) {
+        if (importType == RszImportType.Placeholders || importType == RszImportType.CreateOrReuse && meshNode != null) {
             return;
         }
         meshNode ??= GetOrFindMeshNode();
@@ -33,7 +33,7 @@ public partial class CompositeMeshComponent : REComponent, IVisualREComponent
         if (meshNode != null) {
             meshNode.ClearChildren();
         } else {
-            meshNode = await gameObject.AddChildAsync(new Node3D() { Name = "__CompositeMesh" }, root as Node);
+            meshNode = await gameObject.AddChildAsync(new Node3D() { Name = "__CompositeMesh" }, gameObject.Owner ?? gameObject);
         }
         var tasks = new List<Task>();
         var groups = FindStoredMeshGroups();
@@ -44,7 +44,7 @@ public partial class CompositeMeshComponent : REComponent, IVisualREComponent
                     if (transform.VariantType == Variant.Type.Nil) {
                         GD.Print("Could not find composite mesh group transform");
                     } else {
-                        tasks.Add(InstantiateSubmeshes(root, meshFilename, (transform.AsGodotArray<REObject>())));
+                        tasks.Add(InstantiateSubmeshes(meshFilename, (transform.AsGodotArray<REObject>())));
                     }
                 }
             }
@@ -59,14 +59,14 @@ public partial class CompositeMeshComponent : REComponent, IVisualREComponent
         await Task.WhenAll(tasks);
     }
 
-    private async Task InstantiateSubmeshes(IRszContainerNode root, string meshFilename, IEnumerable<REObject>? transforms)
+    private async Task InstantiateSubmeshes(string meshFilename, IEnumerable<REObject>? transforms)
     {
         Debug.Assert(meshNode != null);
         Debug.Assert(transforms != null);
 
         REField? pos = null, rot = null, scale = null;
 
-        if (root.Resources?.FirstOrDefault(r => r.Asset?.IsSameAsset(meshFilename) == true) is MeshResource mr) {
+        if (Importer.FindOrImportResource<MeshResource>(meshFilename, ReachForGodot.GetAssetConfig(GameObject.Game)) is MeshResource mr) {
             var res = await mr.Import(false).ContinueWith(static (t) => t.IsFaulted ? null : t.Result);
 
             var mesh = new MultiMeshInstance3D() { Name = "mesh_" + childCount++ };
@@ -97,7 +97,7 @@ public partial class CompositeMeshComponent : REComponent, IVisualREComponent
                 ));
             }
 
-            await meshNode.AddChildAsync(mesh, root as Node);
+            await meshNode.AddChildAsync(mesh, GameObject.Owner);
         }
     }
 

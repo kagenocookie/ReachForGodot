@@ -1,11 +1,14 @@
 namespace RGE;
 
 using System;
+using System.Collections;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.Loader;
 using System.Threading.Tasks;
 using Godot;
 using RszTool;
+using Shouldly;
 
 public static class PresetImportModeExtensions
 {
@@ -23,13 +26,13 @@ public static class PresetImportModeExtensions
 public class RszGodotConverter
 {
     public static readonly RszGodotConversionOptions placeholderImport = new(RszImportType.Placeholders, RszImportType.Placeholders, RszImportType.Placeholders, RszImportType.Placeholders);
-    public static readonly RszGodotConversionOptions thisFolderOnly = new(RszImportType.Placeholders, RszImportType.Import, RszImportType.Import, RszImportType.Import);
-    public static readonly RszGodotConversionOptions importMissing = new(RszImportType.Import, RszImportType.Import, RszImportType.Import, RszImportType.Import);
-    public static readonly RszGodotConversionOptions importTreeChanges = new(RszImportType.Reimport, RszImportType.Reimport, RszImportType.Import, RszImportType.Reimport);
-    public static readonly RszGodotConversionOptions forceReimportStructure = new(RszImportType.ForceReimport, RszImportType.ForceReimport, RszImportType.Import, RszImportType.ForceReimport);
+    public static readonly RszGodotConversionOptions thisFolderOnly = new(RszImportType.Placeholders, RszImportType.CreateOrReuse, RszImportType.CreateOrReuse, RszImportType.CreateOrReuse);
+    public static readonly RszGodotConversionOptions importMissing = new(RszImportType.CreateOrReuse, RszImportType.CreateOrReuse, RszImportType.CreateOrReuse, RszImportType.CreateOrReuse);
+    public static readonly RszGodotConversionOptions importTreeChanges = new(RszImportType.Reimport, RszImportType.Reimport, RszImportType.CreateOrReuse, RszImportType.Reimport);
+    public static readonly RszGodotConversionOptions forceReimportStructure = new(RszImportType.ForceReimport, RszImportType.ForceReimport, RszImportType.CreateOrReuse, RszImportType.ForceReimport);
     public static readonly RszGodotConversionOptions fullReimport = new(RszImportType.ForceReimport, RszImportType.ForceReimport, RszImportType.ForceReimport, RszImportType.ForceReimport);
 
-    private static readonly Dictionary<SupportedGame, Dictionary<string, Func<IRszContainerNode, REGameObject, RszInstance, REComponent?>>> perGameFactories = new();
+    private static readonly Dictionary<SupportedGame, Dictionary<string, Func<REGameObject, RszInstance, REComponent?>>> perGameFactories = new();
 
     public enum PresetImportModes
     {
@@ -48,21 +51,198 @@ public class RszGodotConverter
 
     private readonly ImportContext ctx = new();
 
-    private class ImportContext
+    private sealed class ImportContext
     {
         public readonly Dictionary<string, Resource?> resolvedResources = new();
         public readonly Dictionary<RszInstance, REObject> importedObjects = new();
-        public readonly List<SceneFolder> pendingFolders = new();
         public readonly List<PrefabNode> pendingPrefabs = new();
+        public readonly Dictionary<SceneFolder, FolderBatch> sceneBatches = new();
+
+        public readonly Stack<IBatchContext> pendingBatches = new();
+        public readonly List<IBatchContext> batches = new();
 
         public void Clear()
         {
             resolvedResources.Clear();
             importedObjects.Clear();
-            pendingFolders.Clear();
             pendingPrefabs.Clear();
+            pendingBatches.Clear();
+        }
+
+        public void QueueBatch(IBatchContext batch)
+        {
+            batches.Add(batch);
+            UpdateUIStatus();
+        }
+
+        public void StartBatch(IBatchContext batch)
+        {
+            pendingBatches.Push(batch);
+            UpdateUIStatus();
+        }
+
+        public void EndBatch(IBatchContext batch)
+        {
+            var popped = pendingBatches.Pop();
+            Debug.Assert(popped == batch);
+            UpdateUIStatus();
+        }
+
+        public GameObjectBatch CreatePrefabBatch(PrefabNode root)
+        {
+            var batch = new GameObjectBatch(this) { GameObject = root };
+            QueueBatch(batch);
+            return batch;
+        }
+
+        public GameObjectBatch CreateGameObjectBatch()
+        {
+            var batch = new GameObjectBatch(this);
+            QueueBatch(batch);
+            return batch;
+        }
+
+        public FolderBatch CreateFolderBatch(SceneFolder folder, ScnFile.FolderData? data)
+        {
+            var batch = new FolderBatch(this, folder) { scnData = data };
+            QueueBatch(batch);
+            return batch;
+        }
+
+        private DateTime lastDateLog;
+
+        public void UpdateUIStatus()
+        {
+            var importer = AsyncImporter.Instance;
+            var objs = batches
+                .Select(batch => batch.GameObjectCount)
+                .Aggregate((total: 0, finished: 0), (sum, batch) => (sum.total + batch.total, sum.finished + batch.finished));
+
+            var comps = batches
+                .Select(batch => batch.ComponentsCount)
+                .Aggregate((total: 0, finished: 0), (sum, batch) => (sum.total + batch.total, sum.finished + batch.finished));
+
+            var folders = batches
+                .Select(batch => batch.FolderCount)
+                .Aggregate((total: 0, finished: 0), (sum, batch) => (sum.total + batch.total, sum.finished + batch.finished));
+
+            string? actionLabel = null;
+            if (pendingBatches.TryPeek(out var batch)) {
+                actionLabel = batch.Label;
+            }
+
+            if (importer == null) {
+                var now = DateTime.Now;
+                if ((now - lastDateLog).Seconds > 1) {
+                    GD.Print($"Importer status:\nGame objects: {objs.finished}/{objs.total}\nComponents: {comps.finished}/{comps.total}");
+                }
+                lastDateLog = now;
+            } else {
+                importer.SceneCount = folders;
+                importer.PrefabCount = objs;
+                importer.AssetCount = comps;
+                importer.CurrentAction = actionLabel;
+            }
         }
     }
+    private sealed class GameObjectBatch : IBatchContext
+    {
+        public REGameObject GameObject = null!;
+        public List<Task> ComponentTasks = new();
+        public List<GameObjectBatch> Children = new();
+
+        public override string ToString() => GameObject.Owner == null ? GameObject.Name : GameObject.Owner.GetPathTo(GameObject);
+
+        public PrefabQueueParams? prefabData;
+
+        private readonly ImportContext ctx;
+        private int compTaskIndex = 0;
+
+        public GameObjectBatch(ImportContext ctx)
+        {
+            this.ctx = ctx;
+        }
+
+        public string Label => "Importing prefab...";
+        public bool IsFinished => compTaskIndex >= ComponentTasks.Count && Children.All(c => c.IsFinished);
+
+        public (int total, int finished) FolderCount => (0, 0);
+
+        public (int total, int finished) ComponentsCount => (ComponentTasks.Count, compTaskIndex);
+        public (int total, int finished) GameObjectCount => (1, IsFinished ? 1 : 0);
+
+        public async Task Await(RszGodotConverter converter)
+        {
+            ctx.StartBatch(this);
+            if (prefabData != null) {
+                await converter.RePrepareBatchedPrefabGameObject(this);
+            }
+            ctx.UpdateUIStatus();
+
+            while (compTaskIndex < ComponentTasks.Count) {
+                await ComponentTasks[compTaskIndex];
+                compTaskIndex++;
+                ctx.UpdateUIStatus();
+            }
+
+            foreach (var ch in Children) {
+                await ch.Await(converter);
+                ctx.UpdateUIStatus();
+            }
+            Children.Clear();
+            ctx.EndBatch(this);
+        }
+    }
+
+    private sealed record PrefabQueueParams(PackedScene prefab, IGameObjectData data, RszImportType importType, Node? parentNode, REGameObject? parent = null, int dedupeIndex = 0);
+
+    private sealed class FolderBatch : IBatchContext
+    {
+        public override string ToString() => folder.Name;
+
+        public readonly List<FolderBatch> folders = new();
+        public readonly List<GameObjectBatch> gameObjects = new List<GameObjectBatch>();
+        public readonly HashSet<SceneFolderProxy> finishedFolders = new();
+        public ScnFile.FolderData? scnData;
+        public readonly SceneFolder folder;
+        private readonly ImportContext ctx;
+
+        public int FinishedFolderCount { get; internal set; }
+
+        public FolderBatch(ImportContext importContext, SceneFolder folder)
+        {
+            this.ctx = importContext;
+            this.folder = folder;
+        }
+
+        public string Label => "Importing folder...";
+        public bool IsFinished => gameObjects.Count == 0 && folders.Count == 0;
+
+        public int TotalCount => throw new NotImplementedException();
+
+        public (int total, int finished) FolderCount => (folders.Count(f => f.folder.ParentFolder == folder), FinishedFolderCount);
+        public (int total, int finished) ComponentsCount => (0, 0);
+        public (int total, int finished) GameObjectCount => (0, 0);
+
+        public async Task AwaitGameObjects(RszGodotConverter converter)
+        {
+            foreach (var subtask in gameObjects) {
+                await subtask.Await(converter);
+            }
+            // await Task.WhenAll(gameObjects.Select(c => c.Await(converter)));
+        }
+    }
+
+    private sealed record BatchInfo(string label, IBatchContext status);
+    private interface IBatchContext
+    {
+        string Label { get; }
+        bool IsFinished { get; }
+        public (int total, int finished) FolderCount { get; }
+        public (int total, int finished) ComponentsCount { get; }
+        public (int total, int finished) GameObjectCount { get; }
+    }
+
 
     static RszGodotConverter()
     {
@@ -88,14 +268,14 @@ public class RszGodotConverter
             }
 
             var attr = type.GetCustomAttribute<REComponentClassAttribute>()!;
-            DefineComponentFactory(attr.Classname, (root, obj, instance) => {
+            DefineComponentFactory(attr.Classname, (obj, instance) => {
                 var node = (REComponent)Activator.CreateInstance(type)!;
                 return node;
             }, attr.SupportedGames);
         }
     }
 
-    public static void DefineComponentFactory(string componentType, Func<IRszContainerNode, REGameObject, RszInstance, REComponent?> factory, params SupportedGame[] supportedGames)
+    public static void DefineComponentFactory(string componentType, Func<REGameObject, RszInstance, REComponent?> factory, params SupportedGame[] supportedGames)
     {
         if (supportedGames.Length == 0) {
             supportedGames = ReachForGodot.GameList;
@@ -195,7 +375,7 @@ public class RszGodotConverter
     public async Task RegenerateSceneTree(SceneFolder root)
     {
         ctx.Clear();
-        await OpenAndGenerateSceneTree(root);
+        await GenerateSceneTree(root);
         ctx.Clear();
     }
 
@@ -206,7 +386,7 @@ public class RszGodotConverter
         ctx.Clear();
     }
 
-    private async Task OpenAndGenerateSceneTree(SceneFolder root)
+    private async Task GenerateSceneTree(SceneFolder root)
     {
         var scnFullPath = root.Asset?.ResolveSourceFile(AssetConfig);
         if (scnFullPath == null) return;
@@ -217,7 +397,7 @@ public class RszGodotConverter
             file.Read();
         } catch (RszRetryOpenException e) {
             e.LogRszRetryException();
-            await OpenAndGenerateSceneTree(root);
+            await GenerateSceneTree(root);
             return;
         } catch (Exception e) {
             GD.PrintErr("Failed to parse file " + scnFullPath, e);
@@ -230,25 +410,16 @@ public class RszGodotConverter
             root.Clear();
         }
 
+        var batch = ctx.CreateFolderBatch(root, null);
+        ctx.StartBatch(batch);
         GenerateResources(root, file.ResourceInfoList, AssetConfig);
-
-        foreach (var gameObj in file.GameObjectDatas!.OrderBy(o => o.Instance!.Index)) {
-            if (gameObj.Info!.Data.parentId == -1) {
-                Debug.Assert(gameObj.Info != null);
-                await GenerateGameObject(root, gameObj, Options.folders, null, root);
-            }
-        }
-
-        foreach (var folder in file.FolderDatas!.OrderBy(o => o.Instance!.Index)) {
-            Debug.Assert(folder.Info != null);
-            PrepareSubfolderPlaceholders(root, folder, root);
-        }
-
-        if (Options.folders >= RszImportType.Import) {
-            await GenerateSubfolders(root, root, null!);
-        }
+        PrepareFolderBatch(batch, file.GameObjectDatas!.Where(go => go.Info?.Data.parentId == -1), file.FolderDatas!);
+        await AwaitFolderBatch(batch);
+        ctx.UpdateUIStatus();
 
         root.RecalculateBounds(true);
+
+        ctx.EndBatch(batch);
 
         GD.Print(" Finished scene tree " + root.Name);
         if (!root.IsInsideTree()) {
@@ -256,51 +427,63 @@ public class RszGodotConverter
         }
     }
 
-    private async Task GenerateSubfolders(SceneFolder root, SceneFolder folder, ScnFile.FolderData? scnFolder)
+    private void PrepareFolderBatch(FolderBatch batch, IEnumerable<ScnFile.GameObjectData> gameobjects, IEnumerable<ScnFile.FolderData> folders)
     {
-        if (folder.FolderContainer == null) return;
+        var dupeDict = new Dictionary<string, int>();
+        foreach (var gameObj in gameobjects) {
+            Debug.Assert(gameObj.Info != null);
 
-        foreach (var subfolder in folder.Subfolders.ToArray()) {
-            if (subfolder is SceneFolderProxy proxy) {
-                var scnPath = subfolder.Asset!.AssetFilename;
-                if (!string.IsNullOrEmpty(scnPath)) {
-                    if (Options.folders is RszImportType.Placeholders or RszImportType.Import && proxy.Contents != null) {
-                        continue;
-                    }
+            var objBatch = ctx.CreateGameObjectBatch();
+            batch.gameObjects.Add(objBatch);
 
-                    proxy.Contents = Importer.FindOrImportResource<PackedScene>(subfolder.Asset!.AssetFilename, AssetConfig);
-                    if (Options.folders == RszImportType.Placeholders) {
-                        continue;
-                    }
-
-                    proxy.UnloadScene();
-
-                    // TODO defer this to a task that we can await later, so we can show proper progress
-                    var tempInstance = proxy.Contents!.Instantiate<SceneFolder>();
-                    await OpenAndGenerateSceneTree(tempInstance);
-                    proxy.KnownBounds = tempInstance.KnownBounds;
-                    proxy.Contents.Pack(tempInstance);
-                    var importPath = subfolder.Asset!.GetImportFilepath(AssetConfig) ?? throw new Exception("Invalid scn import path");
-                    var scnFullPath = PathUtils.ResolveSourceFilePath(subfolder.Asset!.AssetFilename, AssetConfig) ?? throw new Exception("Invalid scn file " + scnPath);
-                    SaveOrReplaceResource(proxy.Contents, scnFullPath, importPath);
-                    proxy.Enabled = true;
-                }
+            var childName = gameObj.Name ?? "unnamed";
+            if (dupeDict.TryGetValue(childName, out var index)) {
+                dupeDict[childName] = ++index;
+            } else {
+                dupeDict[childName] = index = 0;
             }
+            PrepareGameObjectBatch(gameObj, Options.folders, objBatch, batch.folder, null, index);
         }
 
-        if (scnFolder != null) {
-            foreach (var gameObj in scnFolder.GameObjects!.OrderBy(o => o.Instance!.Index)) {
-                if (gameObj.Info!.Data.parentId == -1) {
-                    Debug.Assert(gameObj.Info != null);
-                    await GenerateGameObject(root, gameObj, Options.folders, null, folder);
+        foreach (var folder in folders) {
+            Debug.Assert(folder.Info != null);
+
+            PrepareSubfolderPlaceholders(batch.folder, folder, batch.folder, batch);
+        }
+    }
+
+    private async Task AwaitFolderBatch(FolderBatch batch)
+    {
+        ctx.StartBatch(batch);
+
+        var folder = batch.folder;
+        if (folder is SceneFolderProxy proxy) {
+            var tempInstance = proxy.Contents!.Instantiate<SceneFolder>();
+            if (!batch.finishedFolders.Contains(proxy)) {
+                await GenerateSceneTree(tempInstance);
+                ctx.UpdateUIStatus();
+                proxy.KnownBounds = tempInstance.KnownBounds;
+                proxy.Contents.Pack(tempInstance);
+                var importPath = proxy.Asset?.GetImportFilepath(AssetConfig);
+                var childFullPath = proxy.Asset?.ResolveSourceFile(AssetConfig);
+                batch.finishedFolders.Add(proxy);
+
+                if (importPath == null || childFullPath == null) {
+                    GD.PrintErr("Invalid folder source file " + proxy.Asset?.ToString());
+                    return;
                 }
             }
-
-            foreach (var childFolder in scnFolder.Children) {
-                var folderInstance = folder.GetFolder(childFolder.Name!) ?? throw new Exception("Expected folder was not found: " + childFolder.Name);
-                await GenerateSubfolders(root, folderInstance, childFolder);
-            }
+            proxy.Enabled = true; // TODO configurable by import type?
         }
+
+        await batch.AwaitGameObjects(this);
+        for (var i = 0; i < batch.folders.Count; i++) {
+            FolderBatch subfolder = batch.folders[i];
+            await AwaitFolderBatch(subfolder);
+            batch.FinishedFolderCount++;
+        }
+
+        ctx.EndBatch(batch);
     }
 
     private async Task GenerateLinkedPrefabTree(PrefabNode root)
@@ -325,17 +508,18 @@ public class RszGodotConverter
         }
 
         GenerateResources(root, file.ResourceInfoList, AssetConfig);
+        var batch = ctx.CreatePrefabBatch(root);
 
         if (Options.prefabs == RszImportType.ForceReimport) {
-            root.ClearChildren();
-            root.Components.Clear();
+            root.Clear();
         }
 
         var rootGOs = file.GameObjectDatas!.OrderBy(o => o.Instance!.Index);
-        Debug.Assert(rootGOs.Count() <= 1, "WTF Capcom. Guess we doing multiple PFB roots now");
+        Debug.Assert(rootGOs.Count() <= 1, "WTF Capcom?? Guess we doing multiple PFB roots now");
         foreach (var gameObj in rootGOs) {
             root.OriginalName = gameObj.Name ?? root.Name;
-            await GenerateGameObject(root, gameObj, Options.prefabs);
+            PrepareGameObjectBatch(gameObj, Options.prefabs, batch, root);
+            await batch.Await(this);
         }
 
         foreach (var go in root.AllChildrenIncludingSelf) {
@@ -355,21 +539,28 @@ public class RszGodotConverter
         var fieldRefs = file.GameObjectRefInfoList.Where(rr => rr.Data.objectId == idx && rr.Data.arrayIndex == arrayIndex);
         if (!fieldRefs.Any()) return null;
 
-        var propInfoDict = TypeCache.GetData(AssetConfig.Game, obj.Classname!).PfbRefs;
+        var cache = TypeCache.GetData(AssetConfig.Game, obj.Classname!);
+        var propInfoDict = cache.PfbRefs;
         if (!propInfoDict.TryGetValue(field.SerializedName, out var propInfo)) {
-            GD.PrintErr("Found undeclared GameObjectRef property " + field.SerializedName);
-            return default;
+            var allFieldRefs = file.GameObjectRefInfoList.Where(rr => rr.Data.objectId == idx && rr.Data.arrayIndex == 0);
+            var refcount = allFieldRefs.Count();
+            Debug.Assert(refcount > 0);
+            if (refcount == 1) {
+                var propId = allFieldRefs.First().Data.propertyId;
+                propInfo = new PrefabGameObjectRefProperty() { PropertyId = propId, AutoDetected = true };
+                propInfoDict[field.SerializedName] = propInfo;
+                GD.PrintErr("Auto-detected GameObjectRef property " + field.SerializedName + " as propertyId " + propId + ". May be wrong?");
+                TypeCache.UpdateTypecacheEntry(AssetConfig.Game, obj.Classname!, propInfoDict);
+            } else {
+                GD.PrintErr("Found undeclared GameObjectRef property " + field.SerializedName + " in class " + obj.Classname);
+                return default;
+            }
         }
 
         var objref = fieldRefs.FirstOrDefault(rr => rr.Data.propertyId == propInfo.PropertyId);
         if (objref == null) {
             GD.PrintErr("Could not match GameObjectRef field ref");
             return default;
-        }
-
-        // TODO handle array index refs
-        if (objref.Data.arrayIndex != 0) {
-            GD.PrintErr("Please verify that array GameObjectRef resolved correctly; expected array index: " + arrayIndex + " component: " + component);
         }
 
         var targetInstance = file.RSZ?.ObjectList[(int)objref.Data.targetId];
@@ -398,15 +589,14 @@ public class RszGodotConverter
         foreach (var field in obj.TypeInfo.Fields) {
             if (field.RszField.type == RszFieldType.GameObjectRef) {
                 if (field.RszField.array) {
-                    GD.PrintErr("GameObjectRef array import currently unsupported!! " + component.Classname + ": " + root.GetPathTo(gameobj));
-                    // if (child.AsGodotArray<NodePath>() is Godot.Collections.Array<NodePath> children) {
-                    //     int i = 0;
-                    //     foreach (var childObj in children) {
-                    //         if (childObj != null) {
-                    //             ReconstructGameObjectRefs(file, childObj, component, gameobj, root, i++);
-                    //         }
-                    //     }
-                    // }
+                    instance ??= ctx.importedObjects.FirstOrDefault(kv => kv.Value == obj).Key;
+                    var indices = (IList<object>)instance.Values[field.FieldIndex];
+                    var paths = new Godot.Collections.Array<NodePath>();
+                    for (int i = 0; i < indices.Count; ++i) {
+                        var refval = ResolveGameObjectRef(file, field, obj, ref instance, component, root, i);
+                        paths.Add(refval ?? new NodePath(""));
+                    }
+                    obj.SetField(field, paths);
                 } else {
                     var refval = ResolveGameObjectRef(file, field, obj, ref instance, component, root, 0);
                     obj.SetField(field, refval ?? new Variant());
@@ -495,17 +685,20 @@ public class RszGodotConverter
         root.Resources = resources.ToArray();
     }
 
-    private void PrepareSubfolderPlaceholders(SceneFolder root, ScnFile.FolderData folder, SceneFolder parent)
+    private void PrepareSubfolderPlaceholders(SceneFolder root, ScnFile.FolderData folder, SceneFolder parent, FolderBatch batch)
     {
         Debug.Assert(folder.Info != null);
         var name = folder.Name ?? "UnnamedFolder";
         var subfolder = parent.GetFolder(name);
         if (folder.Instance?.GetFieldValue("v5") is string scnPath && !string.IsNullOrWhiteSpace(scnPath)) {
+            var isNew = false;
             if (subfolder == null) {
                 subfolder = new SceneFolderProxy() { Name = name, Asset = new AssetReference(scnPath), Game = AssetConfig.Game };
                 parent.AddFolder(subfolder);
+                isNew = true;
             }
             var subProxy = (SceneFolderProxy)subfolder;
+            subProxy.Contents = Importer.FindOrImportResource<PackedScene>(subfolder.Asset!.AssetFilename, AssetConfig);
 
             if (subfolder.Name != name) {
                 GD.PrintErr("Parent and child scene name mismatch? " + subfolder.Name + " => " + name);
@@ -514,6 +707,14 @@ public class RszGodotConverter
             if (folder.Children.Any()) {
                 GD.PrintErr($"Unexpected situation: resource-linked scene also has additional children in parent scene.\nParent scene:{root.Asset?.AssetFilename}\nSubfolder:{scnPath}");
             }
+
+            if (Options.folders == RszImportType.Placeholders || !isNew && Options.folders == RszImportType.CreateOrReuse) {
+                return;
+            }
+
+            subProxy.UnloadScene();
+            var newBatch = ctx.CreateFolderBatch(subfolder, folder);
+            batch.folders.Add(newBatch);
         } else {
             if (subfolder == null) {
                 GD.Print("Creating folder " + name);
@@ -529,26 +730,45 @@ public class RszGodotConverter
                 }
             }
 
-            foreach (var child in folder.Children) {
-                PrepareSubfolderPlaceholders(root, child, subfolder);
-            }
+            var newBatch = ctx.CreateFolderBatch(subfolder, folder);
+            batch.folders.Add(newBatch);
+            PrepareFolderBatch(newBatch, folder.GameObjects, folder.Children);
         }
     }
 
-    private async Task GenerateGameObject(IRszContainerNode root, IGameObjectData data, RszImportType importType, REGameObject? parent = null, SceneFolder? parentFolder = null, int dedupeIndex = 0)
+    private void GenerateSceneGameObject(SceneFolder currentFolder, ScnFile.GameObjectData data, FolderBatch folderBatch)
+    {
+        var batch = ctx.CreateGameObjectBatch();
+        folderBatch.gameObjects.Add(batch);
+        PrepareGameObjectBatch(data, Options.folders, batch, currentFolder, null, 0);
+    }
+
+    private async Task RePrepareBatchedPrefabGameObject(GameObjectBatch batch)
+    {
+        Debug.Assert(batch.prefabData != null);
+        var (prefab, data, importType, parentNode, parentGO, index) = batch.prefabData;
+        var pfbInstance = prefab.Instantiate<PrefabNode>(PackedScene.GenEditState.Instance);
+        await GenerateLinkedPrefabTree(pfbInstance);
+        PrepareGameObjectBatch(data, importType, batch, parentNode, parentGO, index);
+    }
+
+    private void PrepareGameObjectBatch(IGameObjectData data, RszImportType importType, GameObjectBatch batch, Node? parentNode, REGameObject? parent = null, int dedupeIndex = 0)
     {
         var name = data.Name ?? "UnnamedGameObject";
 
         Debug.Assert(data.Instance != null);
 
         string? uuid = null;
-        REGameObject? gameobj = null;
-        if (parent != null) {
-            gameobj = parent.GetChild(name, dedupeIndex);
-        } else if (root is PrefabNode pfb) {
-            gameobj = pfb;
-        } else if (root is SceneFolder scn) {
-            gameobj = scn.GetTopLevelGameObject(name, dedupeIndex);
+        REGameObject? gameobj = batch.GameObject;
+        if (gameobj == null && parentNode != null) {
+            if (parentNode is REGameObject obj) {
+                gameobj = obj.GetChild(name, dedupeIndex);
+            } else if (parentNode is SceneFolder scn) {
+                gameobj = scn.GetGameObject(name, dedupeIndex);
+            } else {
+                Debug.Assert(false);
+            }
+            batch.GameObject = gameobj!;
         }
 
         if (data is ScnFile.GameObjectData scnData) {
@@ -562,6 +782,7 @@ public class RszGodotConverter
                 } else if (Importer.FindOrImportResource<PackedScene>(scnData.Prefab.Path, AssetConfig) is PackedScene packedPfb) {
                     var pfbInstance = packedPfb.Instantiate<PrefabNode>(PackedScene.GenEditState.Instance);
                     gameobj = pfbInstance;
+
                     if (importType == RszImportType.Placeholders) {
                         gameobj.Name = name;
                         if (data.Components.FirstOrDefault(t => t.RszClass.name == "via.Transform") is RszInstance transform) {
@@ -569,7 +790,8 @@ public class RszGodotConverter
                         }
                         return;
                     }
-                    await GenerateLinkedPrefabTree(pfbInstance);
+                    batch.prefabData = new PrefabQueueParams(packedPfb, data, importType, parentNode, parent, dedupeIndex);
+                    return;
                 } else {
                     GD.Print("Prefab source file not found: " + scnData.Prefab.Path);
                 }
@@ -585,6 +807,7 @@ public class RszGodotConverter
                 // Enabled = gameObj.Instance.GetFieldValue("v2")
             };
         }
+        batch.GameObject = gameobj;
 
         if (uuid != null) {
             gameobj.Uuid = uuid;
@@ -592,19 +815,23 @@ public class RszGodotConverter
 
         gameobj.Data = CreateOrUpdateObject(data.Instance, gameobj.Data);
 
-        if (gameobj.GetParent() == null) {
-            if (parent != null) {
-                parent.AddUniqueNamedChild(gameobj);
-            } else if (parentFolder != null) {
-                parentFolder.AddUniqueNamedChild(gameobj);
-            }
-            if (root is Node rootNode && rootNode != gameobj) {
-                gameobj.Owner = rootNode;
-            }
+        if (gameobj.GetParent() == null && parentNode != null && parentNode != gameobj) {
+            parentNode.AddUniqueNamedChild(gameobj);
+            var owner = parentNode?.Owner ?? parentNode;
+            Debug.Assert(owner != gameobj);
+            gameobj.Owner = owner;
         }
 
-        foreach (var comp in data.Components.OrderBy(o => o.Index)) {
-            await SetupComponent(root, comp, gameobj, importType);
+        if (importType == RszImportType.Placeholders) {
+            gameobj.Name = name;
+            gameobj.Components = new();
+            if (data.Components.FirstOrDefault(t => t.RszClass.name == "via.Transform") is RszInstance transform) {
+                RETransformComponent.ApplyTransform(gameobj, transform);
+            }
+        } else {
+            foreach (var comp in data.Components.OrderBy(o => o.Index)) {
+                SetupComponent(comp, batch, importType);
+            }
         }
 
         var dupeDict = new Dictionary<string, int>();
@@ -615,26 +842,29 @@ public class RszGodotConverter
             } else {
                 dupeDict[childName] = index = 0;
             }
-            await GenerateGameObject(root, child, importType, gameobj, parentFolder, index);
+            var childBatch = ctx.CreateGameObjectBatch();
+            batch.Children.Add(childBatch);
+            PrepareGameObjectBatch(child, importType, childBatch, gameobj, gameobj, index);
         }
     }
 
-    private async Task SetupComponent(IRszContainerNode root, RszInstance instance, REGameObject gameObject, RszImportType importType)
+    private void SetupComponent(RszInstance instance, GameObjectBatch batch, RszImportType importType)
     {
-        if (root.Game == SupportedGame.Unknown) {
+        if (AssetConfig.Game == SupportedGame.Unknown) {
             GD.PrintErr("Game required on rsz container root for SetupComponent");
             return;
         }
+        var gameObject = batch.GameObject;
 
         var classname = instance.RszClass.name;
         var componentInfo = gameObject.GetComponent(classname);
         if (componentInfo != null) {
             // nothing to do here
         } else if (
-            perGameFactories.TryGetValue(root.Game, out var factories) &&
+            perGameFactories.TryGetValue(AssetConfig.Game, out var factories) &&
             factories.TryGetValue(classname, out var factory)
         ) {
-            componentInfo = factory.Invoke(root, gameObject, instance);
+            componentInfo = factory.Invoke(gameObject, instance);
             if (componentInfo == null) {
                 componentInfo = new REComponentPlaceholder();
                 gameObject.AddComponent(componentInfo);
@@ -652,7 +882,10 @@ public class RszGodotConverter
         componentInfo.ResourceName = classname;
         componentInfo.GameObject = gameObject;
         ApplyObjectValues(componentInfo, instance);
-        await componentInfo.Setup(root, gameObject, instance, Options.meshes);
+        var setupTask = componentInfo.Setup(gameObject, instance, Options.meshes);
+        if (!setupTask.IsCompleted) {
+            batch.ComponentTasks.Add(setupTask);
+        }
     }
 
     private REObject CreateOrUpdateObject(RszInstance instance, REObject? obj)
@@ -756,8 +989,8 @@ public class RszGodotConverter
 
 public record RszGodotConversionOptions(
     RszImportType folders = RszImportType.Placeholders,
-    RszImportType prefabs = RszImportType.Import,
-    RszImportType meshes = RszImportType.Import,
+    RszImportType prefabs = RszImportType.CreateOrReuse,
+    RszImportType meshes = RszImportType.CreateOrReuse,
     RszImportType userdata = RszImportType.Placeholders
 );
 
@@ -766,7 +999,7 @@ public enum RszImportType
     /// <summary>If an asset does not exist, only create a placeholder resource for it.</summary>
     Placeholders,
     /// <summary>If an asset does not exist or is merely a placeholder, import and generate its data. Do nothing if any of its contents are already imported.</summary>
-    Import,
+    CreateOrReuse,
     /// <summary>Reimport the full asset from the source file, maintaining any local changes as much as possible.</summary>
     Reimport,
     /// <summary>Discard any local data and regenerate assets.</summary>

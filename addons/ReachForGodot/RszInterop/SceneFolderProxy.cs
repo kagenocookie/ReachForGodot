@@ -8,6 +8,7 @@ using Godot;
 [GlobalClass, Tool]
 public partial class SceneFolderProxy : SceneFolder
 {
+    // TODO: replace with InstancePlaceholder?? https://docs.godotengine.org/en/stable/classes/class_instanceplaceholder.html
     [Export] public bool Enabled
     {
         get => _enabled;

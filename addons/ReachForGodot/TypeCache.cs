@@ -15,6 +15,7 @@ public class TypeCache
 
     public static readonly JsonSerializerOptions jsonOptions = new() {
         WriteIndented = true,
+        DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull
     };
 
     static TypeCache()
@@ -63,6 +64,13 @@ public class TypeCache
         return data;
     }
 
+    public static void UpdateTypecacheEntry(SupportedGame game, string classname, Dictionary<string, PrefabGameObjectRefProperty> propInfoDict)
+    {
+        var reflist = GetOrLoadClassProps(game);
+        reflist[classname] = propInfoDict;
+        UpdateClassProps(game, reflist);
+    }
+
     private static REObjectTypeCache GenerateObjectCache(RszClass cls, SupportedGame game)
     {
         return new REObjectTypeCache(cls, GenerateFields(cls, game), GetClassProps(game, cls.name));
@@ -77,7 +85,7 @@ public class TypeCache
         return data.GetRSZClass(classname);
     }
 
-    private static Dictionary<string, PrefabGameObjectRefProperty>? GetClassProps(SupportedGame game, string classname)
+    private static Dictionary<string, Dictionary<string, PrefabGameObjectRefProperty>> GetOrLoadClassProps(SupportedGame game)
     {
         if (!gameObjectRefProps.TryGetValue(game, out var reflist)) {
             var fn = ReachForGodot.GetPaths(game)?.PfbGameObjectRefPropsPath;
@@ -87,12 +95,25 @@ public class TypeCache
             }
             reflist ??= new(0);
         }
+        return reflist;
+    }
+
+    private static Dictionary<string, PrefabGameObjectRefProperty>? GetClassProps(SupportedGame game, string classname)
+    {
+        var reflist = GetOrLoadClassProps(game);
 
         if (reflist.TryGetValue(classname, out var result)) {
             return result;
         }
 
         return null;
+    }
+
+    private static void UpdateClassProps(SupportedGame game, Dictionary<string, Dictionary<string, PrefabGameObjectRefProperty>> data)
+    {
+        var fn = ReachForGodot.GetPaths(game)?.PfbGameObjectRefPropsPath ?? throw new Exception("Missing pfb cache filepath for " + game);
+        using var fs = File.Create(fn);
+        JsonSerializer.Serialize<Dictionary<string, Dictionary<string, PrefabGameObjectRefProperty>>>(fs, data, jsonOptions);
     }
 
     private static REField[] GenerateFields(RszClass cls, SupportedGame game)
@@ -546,4 +567,5 @@ public class REObjectTypeCache
 public class PrefabGameObjectRefProperty
 {
     public int PropertyId { get; set; }
+    public bool? AutoDetected { get; set; }
 }

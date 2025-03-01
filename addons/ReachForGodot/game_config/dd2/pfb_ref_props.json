@@ -1,64 +1,103 @@
 {
-    "app.Character": {
-        "SpecialFoliageChecker": {
-            "PropertyId": 262244
-        }
-    },
-    "app.Human": {
-        "HeadRef": {
-            "PropertyId": 262163
-        }
-    },
-    "app.HumanCollidersToggler": {
-        "ClimbMarker": {
-            "PropertyId": 131072
-        },
-        "GrassSensor": {
-            "PropertyId": 131073
-        },
-        "LanternLightControl": {
-            "PropertyId": 131074
-        }
-    },
-    "app.CharacterFacialMotionController.TargetSetting": {
-        "HeadObject": {
-            "PropertyId": 131072
-        }
-    },
-    "app.ScaleFacialMotion": {
-        "HeadObject": {
-            "PropertyId": 262146
-        }
-    },
-    "app.SetupScaleFacialMotion": {
-        "HeadObj": {
-            "PropertyId": 262144
-        }
-    },
-    "app.SetupHumanFacial": {
-        "HeadRef": {
-            "PropertyId": 262144
-        }
-    },
-    "app.HumanBlushController": {
-        "HeadObj": {
-            "PropertyId": 262144
-        }
-    },
-    "app.VisionMarker": {
-        "JointTargetObj": {
-            "PropertyId": 262146
-        },
-        "OwnerObject": {
-            "PropertyId": 262150
-        }
-    },
-    "app.BaseMarker": {
-        "JointTargetObj": {
-            "PropertyId": 262146
-        },
-        "OwnerObject": {
-            "PropertyId": 262150
-        }
+  "app.Character": {
+    "SpecialFoliageChecker": {
+      "PropertyId": 262244
     }
+  },
+  "app.Human": {
+    "HeadRef": {
+      "PropertyId": 262163
+    }
+  },
+  "app.HumanCollidersToggler": {
+    "ClimbMarker": {
+      "PropertyId": 131072
+    },
+    "GrassSensor": {
+      "PropertyId": 131073
+    },
+    "LanternLightControl": {
+      "PropertyId": 131074
+    }
+  },
+  "app.CharacterFacialMotionController.TargetSetting": {
+    "HeadObject": {
+      "PropertyId": 131072
+    }
+  },
+  "app.ScaleFacialMotion": {
+    "HeadObject": {
+      "PropertyId": 262146
+    }
+  },
+  "app.SetupScaleFacialMotion": {
+    "HeadObj": {
+      "PropertyId": 262144
+    }
+  },
+  "app.SetupHumanFacial": {
+    "HeadRef": {
+      "PropertyId": 262144
+    }
+  },
+  "app.HumanBlushController": {
+    "HeadObj": {
+      "PropertyId": 262144
+    }
+  },
+  "app.VisionMarker": {
+    "JointTargetObj": {
+      "PropertyId": 262146
+    },
+    "OwnerObject": {
+      "PropertyId": 262150
+    }
+  },
+  "app.BaseMarker": {
+    "JointTargetObj": {
+      "PropertyId": 262146
+    },
+    "OwnerObject": {
+      "PropertyId": 262150
+    }
+  },
+  "app.AIActionGimmickInfoController.AIActionGimmickChildInfo": {
+    "_ChildObj": {
+      "PropertyId": 131072
+    }
+  },
+  "app.AIMapEffectorController": {
+    "LinkToAIMapEffectorObj": {
+      "PropertyId": 262145
+    }
+  },
+  "app.GmInsideChecker": {
+    "_OwnerGameObjects": {
+      "PropertyId": 262144
+    }
+  },
+  "app.Gm51_115": {
+    "SheetObjList": {
+      "PropertyId": 327683,
+      "AutoDetected": true
+    }
+  },
+  "app.Gm80_076": {
+    "UpObj": {
+      "PropertyId": 327685
+    },
+    "DownObj": {
+      "PropertyId": 327686
+    },
+    "AIMapLinkObj": {
+      "PropertyId": 327688,
+      "AutoDetected": true
+    }
+  },
+  "app.Gm50_036": {
+    "PosterObjectRef": {
+      "PropertyId": 327684,
+      "AutoDetected": true
+    }
+  }
 }

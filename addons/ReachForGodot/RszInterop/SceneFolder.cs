@@ -15,6 +15,7 @@ public partial class SceneFolder : Node, IRszContainerNode
     [Export] public Aabb KnownBounds { get; set; }
 
     public bool IsEmpty => GetChildCount() == 0;
+    public SceneFolder? ParentFolder => GetParent()?.FindNodeInParents<SceneFolder>();
 
     public IEnumerable<SceneFolder> Subfolders => FolderContainer?.FindChildrenByType<SceneFolder>() ?? Array.Empty<SceneFolder>();
     public IEnumerable<SceneFolder> AllSubfolders => Subfolders.SelectMany(f => new [] { f }.Concat(f.AllSubfolders));
@@ -82,7 +83,7 @@ public partial class SceneFolder : Node, IRszContainerNode
         return FolderContainer?.FindChildWhere<SceneFolder>(c => c.Name == name);
     }
 
-    public REGameObject? GetTopLevelGameObject(string name, int deduplicationIndex)
+    public REGameObject? GetGameObject(string name, int deduplicationIndex)
     {
         var dupesFound = 0;
         foreach (var child in this.FindChildrenByType<REGameObject>()) {

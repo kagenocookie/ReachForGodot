@@ -26,6 +26,7 @@ public partial class ReachForGodotPlugin : EditorPlugin
     public static IEnumerable<ExportPathSetting> ExportPaths => exportPaths;
 
     private EditorInspectorPlugin[] inspectors = new EditorInspectorPlugin[5];
+    private EditorNode3DGizmoPlugin[] gizmos = Array.Empty<EditorNode3DGizmoPlugin>();
 
     public override void _EnterTree()
     {

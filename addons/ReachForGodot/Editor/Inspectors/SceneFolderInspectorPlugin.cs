@@ -68,7 +68,8 @@ public partial class SceneFolderInspectorPlugin : EditorInspectorPlugin, ISerial
         var importType = container.GetNode<OptionButton>("%ImportTypeOption");
         importType.Clear();
         if (obj is PrefabNode pfb) {
-            importType.AddItem("Full import", (int)RszGodotConverter.PresetImportModes.ImportTreeChanges);
+            importType.AddItem("Import anything missing", (int)RszGodotConverter.PresetImportModes.ImportTreeChanges);
+            importType.AddItem("Discard and reimport structure", (int)RszGodotConverter.PresetImportModes.ReimportStructure);
             importType.AddItem("Fully reimport all resources", (int)RszGodotConverter.PresetImportModes.FullReimport);
         } else if (obj is SceneFolder scn) {
             importType.AddItem("Placeholders only", (int)RszGodotConverter.PresetImportModes.PlaceholderImport);

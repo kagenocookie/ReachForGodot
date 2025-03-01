@@ -11,6 +11,12 @@ public class Importer
     private const string meshImportScriptPath = "addons/ReachForGodot/import_mesh.py";
     private const string texImportScriptPath = "addons/ReachForGodot/import_tex.py";
 
+    private static string? _meshScript;
+    private static string MeshImportScript => _meshScript ??= File.ReadAllText(Path.Combine(System.Environment.CurrentDirectory, meshImportScriptPath));
+
+    private static string? _texScript;
+    private static string TexImportScript => _texScript ??= File.ReadAllText(Path.Combine(System.Environment.CurrentDirectory, texImportScriptPath));
+
     private static readonly byte[] MPLY_mesh_bytes = Encoding.ASCII.GetBytes("MPLY");
 
     public static REResource? FindImportedResourceAsset(Resource? asset)
@@ -136,6 +142,24 @@ public class Importer
         }
     }
 
+    public static bool IsSupportedMeshFile(string? sourceFilePath, SupportedGame game)
+    {
+        if (string.IsNullOrEmpty(sourceFilePath)) return false;
+
+        if (!System.IO.Path.IsPathRooted(sourceFilePath)) {
+            sourceFilePath = PathUtils.ResolveSourceFilePath(sourceFilePath, ReachForGodot.GetAssetConfig(game));
+        }
+        if (string.IsNullOrEmpty(sourceFilePath)) return false;
+
+        using var meshPreview = File.OpenRead(sourceFilePath);
+        var bytes = new byte[4];
+        meshPreview.ReadExactly(bytes);
+        if (bytes.AsSpan().SequenceEqual(MPLY_mesh_bytes)) {
+            return false;
+        }
+        return true;
+    }
+
     public static Task<bool>? ImportMesh(string? sourceFilePath, SupportedGame game)
     {
         var config = ReachForGodot.GetAssetConfig(game);
@@ -143,7 +167,10 @@ public class Importer
         if (!System.IO.Path.IsPathRooted(sourceFilePath)) {
             sourceFilePath = PathUtils.ResolveSourceFilePath(sourceFilePath, config);
         }
-        if (sourceFilePath == null) return Task.FromResult(false);
+        if (sourceFilePath == null || !IsSupportedMeshFile(sourceFilePath, game)) {
+            GD.PrintErr("Unsupported mesh " + sourceFilePath);
+            return Task.FromResult(false);
+        }
 
         var path = Directory.GetCurrentDirectory();
         var outputGlobalized = ProjectSettings.GlobalizePath(importFilepath);
@@ -152,16 +179,7 @@ public class Importer
         // GD.Print($"Importing mesh...\nBlender: {ReachForGodot.BlenderPath}\nFile: {path}\nTarget: {blendPath}\nPython script: {meshImportScriptPath}");
 
         Directory.CreateDirectory(importDir);
-        using (var meshPreview = File.OpenRead(sourceFilePath)) {
-            var bytes = new byte[4];
-            meshPreview.ReadExactly(bytes);
-            if (bytes.AsSpan().SequenceEqual(MPLY_mesh_bytes)) {
-                GD.PrintErr("Unsupported MPLY mesh " + sourceFilePath);
-                return null;
-            }
-        }
-
-        var importScript = File.ReadAllText(meshImportScriptPath)
+        var importScript = MeshImportScript
             .Replace("__FILEPATH__", sourceFilePath)
             .Replace("__FILEDIR__", sourceFilePath.GetBaseDir())
             .Replace("__FILENAME__", sourceFilePath.GetFile())
@@ -200,7 +218,7 @@ public class Importer
 
         Directory.CreateDirectory(importDir);
 
-        var importScript = File.ReadAllText(texImportScriptPath)
+        var importScript = TexImportScript
             .Replace("__FILEPATH__", sourceFilePath)
             .Replace("__FILEDIR__", sourceFilePath.GetBaseDir())
             .Replace("__FILENAME__", sourceFilePath.GetFile());

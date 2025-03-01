@@ -29,6 +29,12 @@ public partial class REGameObject : Node3D, ISerializationListener
         }
     }
 
+    public void Clear()
+    {
+        this.ClearChildren();
+        Components?.Clear();
+    }
+
     public int GetChildDeduplicationIndex(string name, REGameObject? relativeTo)
     {
         int i = 0;
@@ -117,6 +123,7 @@ public partial class REGameObject : Node3D, ISerializationListener
         Aabb bounds = new Aabb();
         Vector3 origin = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
 
+        Components ??= new();
         var visuals = Components.OfType<IVisualREComponent>();
         foreach (var vis in visuals) {
             var compBounds = vis.GetBounds();
