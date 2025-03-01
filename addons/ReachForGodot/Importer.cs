@@ -10,6 +10,7 @@ public class Importer
 {
     private const string meshImportScriptPath = "addons/ReachForGodot/import_mesh.py";
     private const string texImportScriptPath = "addons/ReachForGodot/import_tex.py";
+    private static readonly string EmptyBlend = ProjectSettings.GlobalizePath("res://addons/ReachForGodot/.gdignore/empty.blend");
 
     private static string? _meshScript;
     private static string MeshImportScript => _meshScript ??= File.ReadAllText(Path.Combine(System.Environment.CurrentDirectory, meshImportScriptPath));
@@ -185,13 +186,7 @@ public class Importer
             .Replace("__FILENAME__", sourceFilePath.GetFile())
             .Replace("__OUTPUT_PATH__", blendPath);
 
-        var tempFn = Path.GetTempFileName();
-        using var tmpfile = File.Create(tempFn);
-        tmpfile.Write(importScript.ToUtf8Buffer());
-        tmpfile.Flush();
-        tmpfile.Close();
-
-        return ExecuteBlenderScript(tempFn, false).ContinueWith((_) => {
+        return ExecuteBlenderScript(importScript).ContinueWith((_) => {
             if (!File.Exists(blendPath)) {
                 GD.Print("Unsuccessfully imported mesh " + sourceFilePath);
                 return false;
@@ -223,13 +218,7 @@ public class Importer
             .Replace("__FILEDIR__", sourceFilePath.GetBaseDir())
             .Replace("__FILENAME__", sourceFilePath.GetFile());
 
-        var tempFn = Path.GetTempFileName();
-        using var tmpfile = File.Create(tempFn);
-        tmpfile.Write(importScript.ToUtf8Buffer());
-        tmpfile.Flush();
-        tmpfile.Close();
-
-        return ExecuteBlenderScript(tempFn, true).ContinueWith((_) => {
+        return ExecuteBlenderScript(importScript).ContinueWith((_) => {
             if (File.Exists(convertedFilepath)) {
                 File.Move(convertedFilepath, outputGlobalized, true);
                 QueueFileRescan();
@@ -316,18 +305,18 @@ public class Importer
             ResourcePath = ProjectSettings.LocalizePath(outputFilePath),
         };
         ResourceSaver.Save(newres);
-        // if we later end up adding a proper resource type, call newres.TakeOverPath() to replace the placeholder instance
-        // QueueFileRescan();
         return newres;
     }
 
-    private static Task ExecuteBlenderScript(string scriptFilename, bool background)
+    private static Task ExecuteBlenderScript(string scriptFilename)
     {
+        // var tempFn = Path.GetTempFileName();
+        // File.WriteAllText(tempFn, importScript);
+
         var process = Process.Start(new ProcessStartInfo() {
             UseShellExecute = false,
             FileName = ReachForGodot.BlenderPath,
-            WindowStyle = ProcessWindowStyle.Hidden,
-            Arguments = background ? $"--no-window-focus --background --python \"{scriptFilename}\"" : $"--no-window-focus --python \"{scriptFilename}\"",
+            Arguments = $"\"{EmptyBlend}\" --background --python-expr \"{scriptFilename}\"",
         });
 
         return process!.WaitForExitAsync();

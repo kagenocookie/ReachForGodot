@@ -26,7 +26,7 @@ public static class PresetImportModeExtensions
 public class RszGodotConverter
 {
     public static readonly RszGodotConversionOptions placeholderImport = new(RszImportType.Placeholders, RszImportType.Placeholders, RszImportType.Placeholders, RszImportType.Placeholders);
-    public static readonly RszGodotConversionOptions thisFolderOnly = new(RszImportType.Placeholders, RszImportType.CreateOrReuse, RszImportType.CreateOrReuse, RszImportType.CreateOrReuse);
+    public static readonly RszGodotConversionOptions thisFolderOnly = new(RszImportType.Placeholders, RszImportType.Reimport, RszImportType.CreateOrReuse, RszImportType.Reimport);
     public static readonly RszGodotConversionOptions importMissing = new(RszImportType.CreateOrReuse, RszImportType.CreateOrReuse, RszImportType.CreateOrReuse, RszImportType.CreateOrReuse);
     public static readonly RszGodotConversionOptions importTreeChanges = new(RszImportType.Reimport, RszImportType.Reimport, RszImportType.CreateOrReuse, RszImportType.Reimport);
     public static readonly RszGodotConversionOptions forceReimportStructure = new(RszImportType.ForceReimport, RszImportType.ForceReimport, RszImportType.CreateOrReuse, RszImportType.ForceReimport);
@@ -60,6 +60,11 @@ public class RszGodotConverter
 
         public readonly Stack<IBatchContext> pendingBatches = new();
         public readonly List<IBatchContext> batches = new();
+
+        private DateTime lastDateLog;
+        private DateTime lastStatusUpdateTime;
+
+        public bool IsCancelled { get; internal set; }
 
         public void Clear()
         {
@@ -109,8 +114,6 @@ public class RszGodotConverter
             return batch;
         }
 
-        private DateTime lastDateLog;
-
         public void UpdateUIStatus()
         {
             var importer = AsyncImporter.Instance;
@@ -144,7 +147,23 @@ public class RszGodotConverter
                 importer.CurrentAction = actionLabel;
             }
         }
+
+        public async Task MaybeYield()
+        {
+            if (IsCancelled) {
+                throw new TaskCanceledException("Asset import has been cancelled.");
+            }
+
+            var now = DateTime.Now;
+            if ((now - lastStatusUpdateTime).Seconds > 1) {
+                UpdateUIStatus();
+                await Task.Delay(25);
+
+                lastStatusUpdateTime = now;
+            }
+        }
     }
+
     private sealed class GameObjectBatch : IBatchContext
     {
         public REGameObject GameObject = null!;
@@ -375,14 +394,26 @@ public class RszGodotConverter
     public async Task RegenerateSceneTree(SceneFolder root)
     {
         ctx.Clear();
-        await GenerateSceneTree(root);
+        var task = GenerateSceneTree(root);
+        AsyncImporter.StartAsyncOperation(task, () => ctx.IsCancelled = true);
+        try {
+            await task;
+        } catch (TaskCanceledException) {
+            GD.PrintErr("Import cancelled by the user");
+        }
         ctx.Clear();
     }
 
     public async Task RegeneratePrefabTree(PrefabNode root)
     {
         ctx.Clear();
-        await GeneratePrefabTree(root);
+        var task = GeneratePrefabTree(root);
+        AsyncImporter.StartAsyncOperation(task, () => ctx.IsCancelled = true);
+        try {
+            await task;
+        } catch (TaskCanceledException) {
+            GD.PrintErr("Import cancelled by the user");
+        }
         ctx.Clear();
     }
 
@@ -442,7 +473,7 @@ public class RszGodotConverter
             } else {
                 dupeDict[childName] = index = 0;
             }
-            PrepareGameObjectBatch(gameObj, Options.folders, objBatch, batch.folder, null, index);
+            PrepareGameObjectBatch(gameObj, Options.prefabs, objBatch, batch.folder, null, index);
         }
 
         foreach (var folder in folders) {
@@ -455,6 +486,7 @@ public class RszGodotConverter
     private async Task AwaitFolderBatch(FolderBatch batch)
     {
         ctx.StartBatch(batch);
+        await ctx.MaybeYield();
 
         var folder = batch.folder;
         if (folder is SceneFolderProxy proxy) {
@@ -542,14 +574,17 @@ public class RszGodotConverter
         var cache = TypeCache.GetData(AssetConfig.Game, obj.Classname!);
         var propInfoDict = cache.PfbRefs;
         if (!propInfoDict.TryGetValue(field.SerializedName, out var propInfo)) {
-            var allFieldRefs = file.GameObjectRefInfoList.Where(rr => rr.Data.objectId == idx && rr.Data.arrayIndex == 0);
-            var refcount = allFieldRefs.Count();
-            Debug.Assert(refcount > 0);
-            if (refcount == 1) {
-                var propId = allFieldRefs.First().Data.propertyId;
-                propInfo = new PrefabGameObjectRefProperty() { PropertyId = propId, AutoDetected = true };
-                propInfoDict[field.SerializedName] = propInfo;
-                GD.PrintErr("Auto-detected GameObjectRef property " + field.SerializedName + " as propertyId " + propId + ". May be wrong?");
+            var refValues = file.GameObjectRefInfoList.Where(rr => rr.Data.objectId == idx && rr.Data.arrayIndex == 0).OrderBy(b => b.Data.propertyId);
+            var refFields = obj.TypeInfo.Fields.Where(f => f.RszField.type == RszFieldType.GameObjectRef).OrderBy(f => f.FieldIndex);
+            if (refFields.Count() == refValues.Count()) {
+                propInfoDict = new();
+                int i = 0;
+                foreach (var propId in refValues.Select(r => r.Data.propertyId)) {
+                    var refField = refFields.ElementAt(i++);
+                    propInfo = new PrefabGameObjectRefProperty() { PropertyId = propId, AutoDetected = true };
+                    propInfoDict[refField.SerializedName] = propInfo;
+                    GD.PrintErr("Auto-detected GameObjectRef property " + refField.SerializedName + " as propertyId " + propId + ". It may be wrong, but hopefully not.");
+                }
                 TypeCache.UpdateTypecacheEntry(AssetConfig.Game, obj.Classname!, propInfoDict);
             } else {
                 GD.PrintErr("Found undeclared GameObjectRef property " + field.SerializedName + " in class " + obj.Classname);
@@ -740,7 +775,7 @@ public class RszGodotConverter
     {
         var batch = ctx.CreateGameObjectBatch();
         folderBatch.gameObjects.Add(batch);
-        PrepareGameObjectBatch(data, Options.folders, batch, currentFolder, null, 0);
+        PrepareGameObjectBatch(data, Options.prefabs, batch, currentFolder, null, 0);
     }
 
     private async Task RePrepareBatchedPrefabGameObject(GameObjectBatch batch)

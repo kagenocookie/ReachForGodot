@@ -90,13 +90,135 @@
       "PropertyId": 327686
     },
     "AIMapLinkObj": {
-      "PropertyId": 327688,
-      "AutoDetected": true
+      "PropertyId": 327688
+    },
+    "_AfterRef": {
+      "PropertyId": 327693
     }
   },
   "app.Gm50_036": {
     "PosterObjectRef": {
       "PropertyId": 327684,
+      "AutoDetected": true
+    }
+  },
+  "app.Gm80_003_BreakHate": {
+    "_PileObjects": {
+      "PropertyId": 262144,
+      "AutoDetected": true
+    }
+  },
+  "app.gm80_006": {
+    "EdgePlateRef": {
+      "PropertyId": 262144,
+      "AutoDetected": true
+    },
+    "PileLRef": {
+      "PropertyId": 262145,
+      "AutoDetected": true
+    },
+    "PileRRef": {
+      "PropertyId": 262146,
+      "AutoDetected": true
+    },
+    "AnchorLRef": {
+      "PropertyId": 262147,
+      "AutoDetected": true
+    },
+    "AnchorRRef": {
+      "PropertyId": 262148,
+      "AutoDetected": true
+    }
+  },
+  "app.gm80_004": {
+    "PileLRef": {
+      "PropertyId": 327680,
+      "AutoDetected": true
+    },
+    "PileRRef": {
+      "PropertyId": 327681,
+      "AutoDetected": true
+    },
+    "HalfLRef": {
+      "PropertyId": 327682,
+      "AutoDetected": true
+    },
+    "HalfRRef": {
+      "PropertyId": 327683,
+      "AutoDetected": true
+    },
+    "BrokenLRef": {
+      "PropertyId": 327684,
+      "AutoDetected": true
+    },
+    "BrokenRRef": {
+      "PropertyId": 327685,
+      "AutoDetected": true
+    },
+    "AIMapEffectorUp": {
+      "PropertyId": 327686,
+      "AutoDetected": true
+    },
+    "AIMapEffectorDown": {
+      "PropertyId": 327687,
+      "AutoDetected": true
+    }
+  },
+  "app.gm80_005": {
+    "RopeRef": {
+      "PropertyId": 327680,
+      "AutoDetected": true
+    },
+    "BuddyRef": {
+      "PropertyId": 327681,
+      "AutoDetected": true
+    },
+    "Chain00Ref": {
+      "PropertyId": 327682,
+      "AutoDetected": true
+    },
+    "Chain01Ref": {
+      "PropertyId": 327683,
+      "AutoDetected": true
+    },
+    "AnchorRef": {
+      "PropertyId": 327684,
+      "AutoDetected": true
+    }
+  },
+  "app.gm80_008": {
+    "PlateRef": {
+      "PropertyId": 327680,
+      "AutoDetected": true
+    },
+    "PileRef": {
+      "PropertyId": 327681,
+      "AutoDetected": true
+    }
+  },
+  "app.Gm80_003": {
+    "Edge00Ref": {
+      "PropertyId": 327697,
+      "AutoDetected": true
+    },
+    "Edge01Ref": {
+      "PropertyId": 327698,
+      "AutoDetected": true
+    },
+    "RopeLRef": {
+      "PropertyId": 327699,
+      "AutoDetected": true
+    },
+    "RopeRRef": {
+      "PropertyId": 327700,
+      "AutoDetected": true
+    },
+    "LadderRef": {
+      "PropertyId": 327701,
+      "AutoDetected": true
+    },
+    "_BreakList": {
+      "PropertyId": 327726,
       "AutoDetected": true
     }
   }

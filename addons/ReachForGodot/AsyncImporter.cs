@@ -15,6 +15,7 @@ public partial class AsyncImporter : Window
     private static AsyncImporter? node;
     private static Dictionary<string, Task<Resource?>> finishedResources = new();
     private static Queue<ImportQueueItem> queuedImports = new();
+    private static List<(Task task, Action? cancel)> externalTasks = new();
     private static int asyncLoadCompletedTasks;
 
     private class AsyncLoaderPopup
@@ -57,11 +58,17 @@ public partial class AsyncImporter : Window
 
     public override void _Process(double delta)
     {
-        if (AsyncImporter.ContinueAsyncImports()) {
+        if (AsyncImporter.ContinueAsyncImports() || externalTasks.Any(ext => !ext.task.IsCompleted)) {
             hideElapsedTime = 0;
             hideElapsedProcessFrames = 0;
         } else if ((hideElapsedTime += delta) >= HideDelaySeconds && hideElapsedProcessFrames++ > 10) {
             SetProcess(false);
+            if (cancellationTokenSource?.IsCancellationRequested == true) {
+                foreach (var t in externalTasks) {
+                    t.cancel?.Invoke();
+                }
+            }
+            externalTasks.Clear();
             finishedResources.Clear();
             asyncLoadCompletedTasks = 0;
             Hide();
@@ -130,6 +137,9 @@ public partial class AsyncImporter : Window
 
     public override void _ExitTree()
     {
+        foreach (var t in externalTasks) {
+            t.cancel?.Invoke();
+        }
         instance = null;
     }
 
@@ -156,20 +166,12 @@ public partial class AsyncImporter : Window
         };
     }
 
-    // public static ImportContext CreateAsyncContext()
-    // {
-    //     var ctx = new ImportContext();
-    //     queuedImports.Enqueue(new ImportQueueItem() {
-    //         game = SupportedGame.Unknown,
-    //         importAction = null!,
-    //         importFilename = string.Empty,
-    //         originalFilepath = string.Empty,
-    //         state = ImportState.Triggered,
-    //         awaitTask = ctx.AwaitTasks().ContinueWith(_ => ((Resource?)null)),
-    //     });
-    //     EnsureImporterNode();
-    //     return ctx;
-    // }
+    public static void StartAsyncOperation(Task task, Action onCancel)
+    {
+        cancellationTokenSource ??= new CancellationTokenSource();
+        externalTasks.Add((task, onCancel));
+        EnsureImporterNode();
+    }
 
     private void CancelImports()
     {
@@ -226,11 +228,7 @@ public partial class AsyncImporter : Window
     private static AsyncImporter EnsureImporterNode()
     {
         if (instance == null) {
-            // AsyncImporter.popup
             instance = CreateProgressPopup();
-            // var root = ((SceneTree)Engine.GetMainLoop()).Root;
-            // instance = new AsyncImporter() { Name = nameof(AsyncImporter) };
-            // root.CallDeferred(Window.MethodName.AddChild, instance);
         }
         return instance;
     }

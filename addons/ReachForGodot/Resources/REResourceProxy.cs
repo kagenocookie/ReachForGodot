@@ -12,7 +12,7 @@ public partial class REResourceProxy : REResource
     [Export] public Resource? ImportedResource { get; set; }
 
     [ExportToolButton("Re-Import asset")]
-    private Callable ForceReimport => Callable.From(() => Import().Wait());
+    private Callable ForceReimport => Callable.From(() => { Import(true); });
 
     public Task<Resource?> Import(bool forceReload)
     {
