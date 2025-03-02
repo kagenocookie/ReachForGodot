@@ -582,6 +582,7 @@ public class RszGodotConverter
             var refValues = file.GameObjectRefInfoList.Where(rr => rr.Data.objectId == idx && rr.Data.arrayIndex == 0).OrderBy(b => b.Data.propertyId);
             var refFields = obj.TypeInfo.Fields.Where(f => f.RszField.type == RszFieldType.GameObjectRef).OrderBy(f => f.FieldIndex);
             if (refFields.Count() == refValues.Count()) {
+                // these cases _should_ be trivially inferrable by field order
                 propInfoDict = new();
                 int i = 0;
                 foreach (var propId in refValues.Select(r => r.Data.propertyId)) {
@@ -596,7 +597,11 @@ public class RszGodotConverter
                 TypeCache.UpdateTypecacheEntry(AssetConfig.Game, obj.Classname!, propInfoDict);
                 Debug.Assert(propInfo != null);
             } else {
-                GD.PrintErr("Found undeclared GameObjectRef property " + field.SerializedName + " in class " + obj.Classname);
+                // if any refs from this object do not have a known property Id; this way we only print error if we actually found an unmapped ref
+                if (file.GameObjectRefInfoList.Any(info => info.Data.objectId == idx
+                    && !propInfoDict.Values.Any(entry => entry.PropertyId == info.Data.propertyId))) {
+                    GD.PrintErr("Found undeclared GameObjectRef property " + field.SerializedName + " in class " + obj.Classname + ". If the field had an actual value, it won't be imported correctly.");
+                }
                 return default;
             }
         }
@@ -742,7 +747,6 @@ public class RszGodotConverter
                 isNew = true;
             }
             var subProxy = (SceneFolderProxy)subfolder;
-            subProxy.Contents = Importer.FindOrImportResource<PackedScene>(subfolder.Asset!.AssetFilename, AssetConfig);
 
             if (subfolder.Name != name) {
                 GD.PrintErr("Parent and child scene name mismatch? " + subfolder.Name + " => " + name);

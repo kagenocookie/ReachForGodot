@@ -1,0 +1,22 @@
+{
+    "via.render.Stamp": {
+        "FieldPatches": [
+            {
+                "Name": "v0",
+                "Type": "S32"
+            },
+            {
+                "Name": "v25",
+                "Type": "S32"
+            }
+        ]
+    },
+    "via.render.ComputeSkinning": {
+        "FieldPatches": [
+            {
+                "Name": "v0",
+                "Type": "S32"
+            }
+        ]
+    }
+}

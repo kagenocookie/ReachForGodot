@@ -85,7 +85,9 @@ public static class PathUtils
             extensionVersions[config.Game] = versions = new Dictionary<string, int>();
         }
         versions[extension] = version;
-        using var fs = File.Create(config.Paths.ExtensionVersionsCacheFilepath);
+        var path = config.Paths.ExtensionVersionsCacheFilepath;
+        Directory.CreateDirectory(path.GetBaseDir());
+        using var fs = File.Create(path);
         JsonSerializer.Serialize(fs, versions, TypeCache.jsonOptions);
     }
 

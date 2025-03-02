@@ -15,8 +15,10 @@ public partial class SceneFolderProxy : SceneFolder
     }
     private bool _enabled = false;
 
-    public PackedScene? Contents { get; set; }
+    private PackedScene? _contentScene { get; set; }
     public SceneFolder? RealFolder { get; private set; }
+    public PackedScene? Contents => _contentScene ??=
+        (Asset == null ? null : Importer.FindOrImportResource<PackedScene>(Asset.AssetFilename, ReachForGodot.GetAssetConfig(Game)));
 
     private void ChangeEnabled(bool value)
     {
@@ -48,21 +50,21 @@ public partial class SceneFolderProxy : SceneFolder
                 RealFolder.QueueFree();
                 RealFolder = null;
             }
-            Contents = null;
+            _contentScene = null;
             return;
         }
 
         if (RealFolder != null) return;
-        if (Contents == null) {
+        if (_contentScene == null) {
             if (Asset == null) return;
-            Contents = Importer.FindOrImportResource<PackedScene>(Asset.AssetFilename, ReachForGodot.GetAssetConfig(Game));
-            if (Contents == null) {
+            _contentScene = Importer.FindOrImportResource<PackedScene>(Asset.AssetFilename, ReachForGodot.GetAssetConfig(Game));
+            if (_contentScene == null) {
                 GD.PrintErr("Not found proxy source scene " + Asset.AssetFilename);
                 return;
             }
         }
 
-        RealFolder = Contents?.Instantiate<SceneFolder>(PackedScene.GenEditState.Instance);
+        RealFolder = _contentScene?.Instantiate<SceneFolder>(PackedScene.GenEditState.Instance);
         if (RealFolder != null) {
             RealFolder.Name = Name;
             AddChild(RealFolder);
@@ -77,18 +79,18 @@ public partial class SceneFolderProxy : SceneFolder
         var config = ReachForGodot.GetAssetConfig(Game)!;
         var conv = new RszGodotConverter(config, options);
 
-        if (Contents == null) {
-            Contents = Importer.FindOrImportResource<PackedScene>(Asset!.AssetFilename, conv.AssetConfig)!;
+        if (_contentScene == null) {
+            _contentScene = Importer.FindOrImportResource<PackedScene>(Asset!.AssetFilename, conv.AssetConfig)!;
             EditorInterface.Singleton.CallDeferred(EditorInterface.MethodName.MarkSceneAsUnsaved);
         }
 
-        var tempInstance = Contents!.Instantiate<SceneFolder>();
+        var tempInstance = _contentScene!.Instantiate<SceneFolder>();
         conv.RegenerateSceneTree(tempInstance).ContinueWith((t) => {
             if (t.IsCompletedSuccessfully) {
                 GD.Print("Tree rebuild finished in " + sw.Elapsed);
             } else {
                 GD.Print($"Tree rebuild failed after {sw.Elapsed}:", t.Exception);
-                if (Enabled && Contents != null) {
+                if (Enabled && _contentScene != null) {
                     LoadScene();
                 }
             }
