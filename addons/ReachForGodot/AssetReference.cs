@@ -1,6 +1,7 @@
 #nullable enable
 
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using Godot;
 
 namespace RGE;
@@ -25,6 +26,8 @@ public partial class AssetReference : Resource
         set => _assetFilename = PathUtils.NormalizeResourceFilepath(value);
     }
 
+    public bool IsEmpty => string.IsNullOrWhiteSpace(_assetFilename);
+
     public bool IsSameAsset(string compare)
     {
         if (AssetFilename == compare) return true;
@@ -46,5 +49,6 @@ public partial class AssetReference : Resource
         FileSystemUtils.ShowFileInExplorer(file);
     }
 
-    public static implicit operator string(AssetReference assref) => assref.AssetFilename;
+    [return: NotNullIfNotNull(nameof(assref))]
+    public static implicit operator string?(AssetReference? assref) => assref?.AssetFilename;
 }

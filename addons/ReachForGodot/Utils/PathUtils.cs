@@ -93,6 +93,9 @@ public static class PathUtils
 
     public static int GuessFileVersion(string relativePath, RESupportedFileFormats format, AssetConfig config)
     {
+        if (format == RESupportedFileFormats.Unknown) {
+            format = GetFileFormat(relativePath).format;
+        }
         switch (format) {
             case RESupportedFileFormats.Scene:
                 return config.Game switch {
@@ -152,6 +155,22 @@ public static class PathUtils
     {
         if (fullSourcePath == null) return null;
         return ProjectSettings.LocalizePath(GetDefaultImportPath(fullSourcePath, format, config, false));
+    }
+
+    [return: NotNullIfNotNull(nameof(filename))]
+    public static string AppendFileVersion(string filename, AssetConfig config)
+    {
+        var fmt = GetFileFormat(filename);
+        if (fmt.version != -1) {
+            return filename;
+        }
+
+        var version = GuessFileVersion(filename, fmt.format, config);
+        if (version == -1) {
+            return filename;
+        }
+
+        return $"{filename}.{version}";
     }
 
     private static string? GetDefaultImportPath(string fullSourcePath, RESupportedFileFormats fmt, AssetConfig config, bool resource)

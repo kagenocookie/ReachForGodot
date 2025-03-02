@@ -231,9 +231,10 @@ public static class RszTypeConverter
                 RszFieldType.Vec3 or RszFieldType.Float3 or RszFieldType.Position => ConvertArray(variant.AsVector3Array(), static (val) => val.ToRsz()),
                 RszFieldType.Vec4 or RszFieldType.Float4 => ConvertArray(variant.AsVector4Array(), static (val) => val.ToRsz()),
                 RszFieldType.Data => ConvertArray(variant.AsGodotArray<byte[]>().ToArray()),
-                RszFieldType.Uint2  => ConvertArray(variant.AsGodotArray<Vector2I>(), static v => v.ToRsz()),
-                RszFieldType.Uint3  => ConvertArray(variant.AsGodotArray<Vector3I>(), static v => v.ToRsz()),
-                RszFieldType.Uint4  => ConvertArray(variant.AsGodotArray<Vector4I>(), static v => v.ToRsz()),
+                RszFieldType.Uint2 => ConvertArray(variant.AsGodotArray<Vector2I>(), static v => v.ToRsz()),
+                RszFieldType.Uint3 => ConvertArray(variant.AsGodotArray<Vector3I>(), static v => v.ToRsz()),
+                RszFieldType.Uint4 => ConvertArray(variant.AsGodotArray<Vector4I>(), static v => v.ToRsz()),
+                RszFieldType.Bool => ConvertArray(variant.AsGodotArray<bool>(), static v => v),
                 _ => throw new Exception("Unhandled rsz export array type " + field.RszField.type),
             };
         }

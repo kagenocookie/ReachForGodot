@@ -18,5 +18,21 @@
                 "Type": "S32"
             }
         ]
+    },
+    "via.render.VolumeDecal": {
+        "FieldPatches": [
+            {
+                "Name": "v0",
+                "Type": "S32"
+            },
+            {
+                "Name": "v23",
+                "Type": "S32"
+            },
+            {
+                "Name": "v43",
+                "Type": "S32"
+            }
+        ]
     }
 }
