@@ -45,6 +45,20 @@ public partial class REObject : Resource
         }
     }
 
+    public void CloneFrom(REObject source)
+    {
+        Game = source.Game;
+        Classname = source.Classname;
+        cache = TypeCache.GetData(Game, Classname ?? throw new Exception("Missing REObject classname"));
+        foreach (var field in cache.Fields) {
+            if (source.__Data.TryGetValue(field.SerializedName, out var srcVal)) {
+                __Data[field.SerializedName] = Variant.CreateTakingOwnershipOfDisposableValue(srcVal.CopyNativeVariant());
+            } else {
+                __Data[field.SerializedName] = new Variant();
+            }
+        }
+    }
+
     public override Array<Dictionary> _GetPropertyList()
     {
         if (string.IsNullOrWhiteSpace(Classname)) {

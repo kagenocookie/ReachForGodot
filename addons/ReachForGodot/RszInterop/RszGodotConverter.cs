@@ -948,6 +948,20 @@ public class RszGodotConverter
         return ApplyObjectValues(obj, instance);
     }
 
+    private TREObjectType CreateOrGetObject<TREObjectType>(RszInstance instance) where TREObjectType : REObject, new()
+    {
+        if (ctx.importedObjects.TryGetValue(instance, out var obj)) {
+            return (TREObjectType)obj;
+        }
+
+        var newObj = new TREObjectType();
+        newObj.Game = AssetConfig.Game;
+        newObj.Classname = instance.RszClass.name;
+        ctx.importedObjects[instance] = newObj;
+        ApplyObjectValues(newObj, instance);
+        return newObj;
+    }
+
     private REObject ApplyObjectValues(REObject obj, RszInstance instance)
     {
         ctx.importedObjects[instance] = obj;

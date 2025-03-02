@@ -70,28 +70,19 @@ public sealed class EnumDescriptor<T> : EnumDescriptor where T : struct
     {
         // nasty; maybe add individual enum descriptor types eventually
         if (typeof(T) == typeof(System.Int64)) {
-            converter = static (e) => (T)Convert.ChangeType(e.GetUInt64(), typeof(System.Int64));
+            converter = static (e) => (T)(object)(long)e.GetUInt64();
         } else if (typeof(T) == typeof(System.UInt64)) {
             converter = static (e) => (T)(object)e.GetUInt64();
         } else if (typeof(T) == typeof(System.Int32)) {
-            converter = static (e) => {
-                var v = e.GetInt64();
-                return (T)(object)(int)(v >= 2147483648 ? (v - 2 * 2147483648L) : v);
-            };
+            converter = static (e) => (T)(object)(int)e.GetInt64();
         } else if (typeof(T) == typeof(System.UInt32)) {
             converter = static (e) => (T)(object)e.GetUInt32();
         } else if (typeof(T) == typeof(System.Int16)) {
-            converter = static (e) => {
-                var v = e.GetInt32();
-                return (T)(object)(short)(v >= 32768 ? (v - 2 * 32768) : v);
-            };
+            converter = static (e) => (T)(object)(short)e.GetInt32();
         } else if (typeof(T) == typeof(System.UInt16)) {
             converter = static (e) => (T)(object)e.GetUInt16();
         } else if (typeof(T) == typeof(System.SByte)) {
-            converter = static (e) => {
-                var v = e.GetInt32();
-                return (T)(object)(sbyte)(v >= 128 ? (v - 2 * 128) : v);
-            };
+            converter = static (e) => (T)(object)(sbyte)e.GetInt32();
         } else if (typeof(T) == typeof(System.Byte)) {
             converter = static (e) => (T)(object)e.GetByte();
         } else {

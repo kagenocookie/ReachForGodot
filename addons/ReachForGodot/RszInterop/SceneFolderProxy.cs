@@ -48,6 +48,7 @@ public partial class SceneFolderProxy : SceneFolder
                 RealFolder.QueueFree();
                 RealFolder = null;
             }
+            Contents = null;
             return;
         }
 
