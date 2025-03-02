@@ -16,8 +16,7 @@ public partial class SceneFolderProxy : SceneFolder
     }
     private bool _enabled = false;
 
-    [Export] public PackedScene? Contents { get; set; }
-
+    public PackedScene? Contents { get; set; }
     public SceneFolder? RealFolder { get; private set; }
 
     private void ChangeEnabled(bool value)
@@ -54,6 +53,14 @@ public partial class SceneFolderProxy : SceneFolder
         }
 
         if (RealFolder != null) return;
+        if (Contents == null) {
+            if (Asset == null) return;
+            Contents = Importer.FindOrImportResource<PackedScene>(Asset.AssetFilename, ReachForGodot.GetAssetConfig(Game));
+            if (Contents == null) {
+                GD.PrintErr("Not found proxy source scene " + Asset.AssetFilename);
+                return;
+            }
+        }
 
         RealFolder = Contents?.Instantiate<SceneFolder>(PackedScene.GenEditState.Instance);
         if (RealFolder != null) {
