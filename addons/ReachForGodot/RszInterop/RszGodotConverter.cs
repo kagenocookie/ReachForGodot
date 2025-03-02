@@ -448,7 +448,7 @@ public class RszGodotConverter
         var batch = ctx.CreateFolderBatch(root, null, root.Asset?.AssetFilename);
         ctx.StartBatch(batch);
         GenerateResources(root, file.ResourceInfoList, AssetConfig);
-        PrepareFolderBatch(batch, file.GameObjectDatas!.Where(go => go.Info?.Data.parentId == -1), file.FolderDatas!);
+        PrepareFolderBatch(batch, file.GameObjectDatas!, file.FolderDatas!);
         await AwaitFolderBatch(batch);
         ctx.UpdateUIStatus();
 
@@ -782,13 +782,6 @@ public class RszGodotConverter
             batch.folders.Add(newBatch);
             PrepareFolderBatch(newBatch, folder.GameObjects, folder.Children);
         }
-    }
-
-    private void GenerateSceneGameObject(SceneFolder currentFolder, ScnFile.GameObjectData data, FolderBatch folderBatch)
-    {
-        var batch = ctx.CreateGameObjectBatch(currentFolder.Path + "/root");
-        folderBatch.gameObjects.Add(batch);
-        PrepareGameObjectBatch(data, Options.prefabs, batch, currentFolder, null, 0);
     }
 
     private async Task RePrepareBatchedPrefabGameObject(GameObjectBatch batch)

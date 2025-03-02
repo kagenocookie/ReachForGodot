@@ -85,14 +85,12 @@ public class Exporter
         AssetConfig config = ReachForGodot.GetAssetConfig(root.Game);
         var fileOption = TypeCache.CreateRszFileOptions(config);
 
-        var handler = new FileHandler(PathUtils.ResolveSourceFilePath(root.Asset?.AssetFilename!, config)!);
-        var sourceFile = new ScnFile(fileOption, handler);
-        sourceFile.Read();
-        sourceFile.SetupGameObjects();
+        // var handler = new FileHandler(PathUtils.ResolveSourceFilePath(root.Asset?.AssetFilename!, config)!);
+        // var sourceFile = new ScnFile(fileOption, handler);
+        // sourceFile.Read();
+        // sourceFile.SetupGameObjects();
 
-        foreach (var go in root.ChildObjects.SelectMany(go => go.AllChildrenIncludingSelf)) {
-            go.PreExport();
-        }
+        root.PreExport();
 
         using var file = new ScnFile(fileOption, new FileHandler(outputFile));
         SetResources(root.Resources, file.ResourceInfoList, fileOption);
@@ -101,10 +99,14 @@ public class Exporter
         foreach (var go in root.ChildObjects) {
             if (go is PrefabNode pfbGo) {
                 GD.PrintErr("TODO: PFB sourced game object inside SCN");
+                file.PrefabInfoList.Add(new ScnFile.PrefabInfo() {
+                    Path = pfbGo.Asset!.AssetFilename,
+                    parentId = 0,
+                });
                 continue;
             }
 
-            AddGameObject(go, file.RSZ, file, fileOption, -1);
+            AddGameObject(go, file.RSZ, file, fileOption, 0);
         }
 
         foreach (var folder in root.Subfolders) {
@@ -130,7 +132,7 @@ public class Exporter
         // sourceFile.Read();
         // sourceFile.SetupGameObjects();
 
-        foreach (var go in root.AllChildrenIncludingSelf) {
+        foreach (var go in root.Children) {
             go.PreExport();
         }
 
@@ -151,14 +153,7 @@ public class Exporter
 
     private static void AddFolder(SceneFolder folder, ScnFile file, RszFileOption fileOption, int parentFolderId)
     {
-        var folderId = file.FolderInfoList.Count;
-        file.FolderInfoList.Add(new StructModel<ScnFile.FolderInfo>() { Data = new ScnFile.FolderInfo() {
-            objectId = folderId,
-            parentId = parentFolderId,
-        } });
-
         var folderCls = file.RszParser.GetRSZClass("via.Folder") ?? throw new Exception("Could not get folder rsz class");
-
         var instanceId = file.RSZ.InstanceInfoList.Count;
         var folderInstance = new RszInstance(folderCls, instanceId);
 
@@ -166,14 +161,25 @@ public class Exporter
         file.RSZ.InstanceList.Add(folderInstance);
         file.RSZ.AddToObjectTable(folderInstance);
 
+        file.FolderInfoList.Add(new StructModel<ScnFile.FolderInfo>() { Data = new ScnFile.FolderInfo() {
+            objectId = folderInstance.ObjectTableIndex,
+            parentId = parentFolderId,
+        } });
+
         var linkedSceneFilepath = folder is SceneFolderProxy proxy && proxy.Asset != null ? proxy.Asset.AssetFilename : string.Empty;
         folderInstance.Values[0] = folder.Name.ToString();
-        folderInstance.Values[1] = string.Empty; // ?
+        folderInstance.Values[1] = string.Empty; // tags?
         folderInstance.Values[2] = (byte)1; // ?
         folderInstance.Values[3] = (byte)1; // ?
         folderInstance.Values[4] = (byte)0; // ?
         folderInstance.Values[5] = linkedSceneFilepath;
-        folderInstance.Values[6] = new byte[6]; // ?
+        folderInstance.Values[6] = new byte[18]; // ?
+
+        if (string.IsNullOrEmpty(linkedSceneFilepath)) {
+            foreach (var sub in folder.Subfolders) {
+                AddFolder(sub, file, fileOption, folderInstance.ObjectTableIndex);
+            }
+        }
 
         foreach (var go in folder.ChildObjects) {
             if (go is PrefabNode pfbGo) {
@@ -181,13 +187,7 @@ public class Exporter
                 continue;
             }
 
-            AddGameObject(go, file.RSZ, file, fileOption, -1);
-        }
-
-        if (string.IsNullOrEmpty(linkedSceneFilepath)) {
-            foreach (var sub in folder.Subfolders) {
-                AddFolder(sub, file, fileOption, folderId);
-            }
+            AddGameObject(go, file.RSZ, file, fileOption, folderInstance.ObjectTableIndex);
         }
     }
 
@@ -312,12 +312,24 @@ public class Exporter
 
     private static void AddScnGameObject(int objectId, ScnFile file, REGameObject gameObject, int parentId)
     {
+        var pfbIndex = -1;
+        if (gameObject is PrefabNode pfbNode && pfbNode.Asset?.IsEmpty == false) {
+            pfbIndex = file.PrefabInfoList.FindIndex(pfb => pfb.Path == pfbNode.Asset.AssetFilename);
+            if (pfbIndex == -1) {
+                file.PrefabInfoList.Add(new ScnFile.PrefabInfo() {
+                    parentId = 0,
+                    Path = pfbNode.Asset.AssetFilename,
+                });
+            }
+        }
+
         file.GameObjectInfoList.Add(new StructModel<ScnFile.GameObjectInfo>() {
             Data = new ScnFile.GameObjectInfo() {
                 objectId = objectId,
                 parentId = parentId,
                 componentCount = (short)gameObject.Components.Count,
                 guid = Guid.TryParse(gameObject.Uuid, out var guid) ? guid : Guid.Empty,
+                prefabId = pfbIndex,
             }
         });
     }

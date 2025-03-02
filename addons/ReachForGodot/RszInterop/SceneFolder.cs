@@ -74,6 +74,17 @@ public partial class SceneFolder : Node, IRszContainerNode
         }
     }
 
+    public void PreExport()
+    {
+        foreach (var obj in ChildObjects) {
+            obj.PreExport();
+        }
+
+        foreach (var sub in Subfolders) {
+            sub.PreExport();
+        }
+    }
+
     public void Clear()
     {
         this.ClearChildren();
