@@ -67,7 +67,8 @@ public partial class CompositeMeshComponent : REComponent, IVisualREComponent
         REField? pos = null, rot = null, scale = null;
 
         if (Importer.FindOrImportResource<MeshResource>(meshFilename, ReachForGodot.GetAssetConfig(GameObject.Game)) is MeshResource mr) {
-            var res = await mr.Import(false).ContinueWith(static (t) => t.IsFaulted ? null : t.Result);
+            var (tk, res) = await mr.Import(false).ContinueWith(static (t) => (t, t.IsCompletedSuccessfully ? t.Result : null));
+            if (tk.IsCanceled) return;
 
             var mesh = new MultiMeshInstance3D() { Name = "mesh_" + childCount++ };
             var mm = new MultiMesh();

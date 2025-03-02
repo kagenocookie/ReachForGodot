@@ -21,5 +21,16 @@
   "clip": 62,
   "mot": 698,
   "gpuc": 231011972,
-  "fol": 3
+  "fol": 3,
+  "rtex": 5,
+  "star": 3,
+  "terr": 24008,
+  "ainvmmgr": 8,
+  "aiwayp": 9,
+  "aiwaypmgr": 8,
+  "mpci": 12,
+  "chf": 2,
+  "hf": 4,
+  "ainvm": 30,
+  "coco": 9
 }

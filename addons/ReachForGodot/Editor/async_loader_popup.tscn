@@ -5,7 +5,6 @@
 [node name="Popup" type="Window"]
 initial_position = 5
 size = Vector2i(600, 500)
-visible = false
 exclusive = true
 script = ExtResource("1_jvg3n")
 
@@ -39,7 +38,7 @@ theme_override_constants/separation = 16
 [node name="CurrentAction" type="Label" parent="Container/Panel/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Lorem ipsum dolor sit amet"
+text = "Importing assets ..."
 horizontal_alignment = 1
 
 [node name="ScenesStatus" type="VBoxContainer" parent="Container/Panel/VBoxContainer"]
@@ -66,16 +65,28 @@ horizontal_alignment = 1
 [node name="PrefabProgress" type="ProgressBar" parent="Container/Panel/VBoxContainer/PrefabsStatus"]
 layout_mode = 2
 
-[node name="AssetsStatus" type="VBoxContainer" parent="Container/Panel/VBoxContainer"]
+[node name="ComponentsStatus" type="VBoxContainer" parent="Container/Panel/VBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 
-[node name="Label" type="Label" parent="Container/Panel/VBoxContainer/AssetsStatus"]
+[node name="Label" type="Label" parent="Container/Panel/VBoxContainer/ComponentsStatus"]
 layout_mode = 2
 text = "Converting and importing assets..."
 horizontal_alignment = 1
 
-[node name="AssetProgress" type="ProgressBar" parent="Container/Panel/VBoxContainer/AssetsStatus"]
+[node name="AssetProgress" type="ProgressBar" parent="Container/Panel/VBoxContainer/ComponentsStatus"]
+layout_mode = 2
+
+[node name="OperationsStatus" type="VBoxContainer" parent="Container/Panel/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Container/Panel/VBoxContainer/OperationsStatus"]
+layout_mode = 2
+text = "Queued operations:"
+horizontal_alignment = 1
+
+[node name="AssetProgress" type="ProgressBar" parent="Container/Panel/VBoxContainer/OperationsStatus"]
 layout_mode = 2
 
 [node name="Button" type="Button" parent="Container/Panel/VBoxContainer"]

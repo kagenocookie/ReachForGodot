@@ -93,23 +93,23 @@ public class RszGodotConverter
             UpdateUIStatus();
         }
 
-        public GameObjectBatch CreatePrefabBatch(PrefabNode root)
+        public GameObjectBatch CreatePrefabBatch(PrefabNode root, string? note)
         {
-            var batch = new GameObjectBatch(this) { GameObject = root };
+            var batch = new GameObjectBatch(this, note) { GameObject = root };
             QueueBatch(batch);
             return batch;
         }
 
-        public GameObjectBatch CreateGameObjectBatch()
+        public GameObjectBatch CreateGameObjectBatch(string? note)
         {
-            var batch = new GameObjectBatch(this);
+            var batch = new GameObjectBatch(this, note);
             QueueBatch(batch);
             return batch;
         }
 
-        public FolderBatch CreateFolderBatch(SceneFolder folder, ScnFile.FolderData? data)
+        public FolderBatch CreateFolderBatch(SceneFolder folder, ScnFile.FolderData? data, string? note)
         {
-            var batch = new FolderBatch(this, folder) { scnData = data };
+            var batch = new FolderBatch(this, folder, note) { scnData = data };
             QueueBatch(batch);
             return batch;
         }
@@ -175,14 +175,16 @@ public class RszGodotConverter
         public PrefabQueueParams? prefabData;
 
         private readonly ImportContext ctx;
+        private readonly string? note;
         private int compTaskIndex = 0;
 
-        public GameObjectBatch(ImportContext ctx)
+        public GameObjectBatch(ImportContext ctx, string? note)
         {
             this.ctx = ctx;
+            this.note = note;
         }
 
-        public string Label => "Importing prefab...";
+        public string Label => $"Importing GameObject {note}...";
         public bool IsFinished => compTaskIndex >= ComponentTasks.Count && Children.All(c => c.IsFinished);
 
         public (int total, int finished) FolderCount => (0, 0);
@@ -224,17 +226,19 @@ public class RszGodotConverter
         public readonly HashSet<SceneFolderProxy> finishedFolders = new();
         public ScnFile.FolderData? scnData;
         public readonly SceneFolder folder;
+        private readonly string? note;
         private readonly ImportContext ctx;
 
         public int FinishedFolderCount { get; internal set; }
 
-        public FolderBatch(ImportContext importContext, SceneFolder folder)
+        public FolderBatch(ImportContext importContext, SceneFolder folder, string? note)
         {
             this.ctx = importContext;
             this.folder = folder;
+            this.note = note;
         }
 
-        public string Label => "Importing folder...";
+        public string Label => $"Importing folder {note}...";
         public bool IsFinished => gameObjects.Count == 0 && folders.Count == 0;
 
         public int TotalCount => throw new NotImplementedException();
@@ -441,7 +445,7 @@ public class RszGodotConverter
             root.Clear();
         }
 
-        var batch = ctx.CreateFolderBatch(root, null);
+        var batch = ctx.CreateFolderBatch(root, null, root.Asset?.AssetFilename);
         ctx.StartBatch(batch);
         GenerateResources(root, file.ResourceInfoList, AssetConfig);
         PrepareFolderBatch(batch, file.GameObjectDatas!.Where(go => go.Info?.Data.parentId == -1), file.FolderDatas!);
@@ -464,8 +468,6 @@ public class RszGodotConverter
         foreach (var gameObj in gameobjects) {
             Debug.Assert(gameObj.Info != null);
 
-            var objBatch = ctx.CreateGameObjectBatch();
-            batch.gameObjects.Add(objBatch);
 
             var childName = gameObj.Name ?? "unnamed";
             if (dupeDict.TryGetValue(childName, out var index)) {
@@ -473,6 +475,9 @@ public class RszGodotConverter
             } else {
                 dupeDict[childName] = index = 0;
             }
+
+            var objBatch = ctx.CreateGameObjectBatch(batch.folder.Path + "/" + childName);
+            batch.gameObjects.Add(objBatch);
             PrepareGameObjectBatch(gameObj, Options.prefabs, objBatch, batch.folder, null, index);
         }
 
@@ -540,7 +545,7 @@ public class RszGodotConverter
         }
 
         GenerateResources(root, file.ResourceInfoList, AssetConfig);
-        var batch = ctx.CreatePrefabBatch(root);
+        var batch = ctx.CreatePrefabBatch(root, root.Asset.AssetFilename);
 
         if (Options.prefabs == RszImportType.ForceReimport) {
             root.Clear();
@@ -581,11 +586,15 @@ public class RszGodotConverter
                 int i = 0;
                 foreach (var propId in refValues.Select(r => r.Data.propertyId)) {
                     var refField = refFields.ElementAt(i++);
-                    propInfo = new PrefabGameObjectRefProperty() { PropertyId = propId, AutoDetected = true };
-                    propInfoDict[refField.SerializedName] = propInfo;
+                    var prop = new PrefabGameObjectRefProperty() { PropertyId = propId, AutoDetected = true };
+                    propInfoDict[refField.SerializedName] = prop;
+                    if (refField == field) {
+                        propInfo = prop;
+                    }
                     GD.PrintErr("Auto-detected GameObjectRef property " + refField.SerializedName + " as propertyId " + propId + ". It may be wrong, but hopefully not.");
                 }
                 TypeCache.UpdateTypecacheEntry(AssetConfig.Game, obj.Classname!, propInfoDict);
+                Debug.Assert(propInfo != null);
             } else {
                 GD.PrintErr("Found undeclared GameObjectRef property " + field.SerializedName + " in class " + obj.Classname);
                 return default;
@@ -748,7 +757,7 @@ public class RszGodotConverter
             }
 
             subProxy.UnloadScene();
-            var newBatch = ctx.CreateFolderBatch(subfolder, folder);
+            var newBatch = ctx.CreateFolderBatch(subfolder, folder, scnPath);
             batch.folders.Add(newBatch);
         } else {
             if (subfolder == null) {
@@ -765,7 +774,7 @@ public class RszGodotConverter
                 }
             }
 
-            var newBatch = ctx.CreateFolderBatch(subfolder, folder);
+            var newBatch = ctx.CreateFolderBatch(subfolder, folder, subfolder.Path);
             batch.folders.Add(newBatch);
             PrepareFolderBatch(newBatch, folder.GameObjects, folder.Children);
         }
@@ -773,7 +782,7 @@ public class RszGodotConverter
 
     private void GenerateSceneGameObject(SceneFolder currentFolder, ScnFile.GameObjectData data, FolderBatch folderBatch)
     {
-        var batch = ctx.CreateGameObjectBatch();
+        var batch = ctx.CreateGameObjectBatch(currentFolder.Path + "/root");
         folderBatch.gameObjects.Add(batch);
         PrepareGameObjectBatch(data, Options.prefabs, batch, currentFolder, null, 0);
     }
@@ -877,7 +886,7 @@ public class RszGodotConverter
             } else {
                 dupeDict[childName] = index = 0;
             }
-            var childBatch = ctx.CreateGameObjectBatch();
+            var childBatch = ctx.CreateGameObjectBatch(gameobj.Path + "/" + childName);
             batch.Children.Add(childBatch);
             PrepareGameObjectBatch(child, importType, childBatch, gameobj, gameobj, index);
         }

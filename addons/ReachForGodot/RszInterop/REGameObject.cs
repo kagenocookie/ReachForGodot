@@ -15,11 +15,17 @@ public partial class REGameObject : Node3D, ISerializationListener
     [Export] public REObject? Data { get; set; }
     [Export] public Godot.Collections.Array<REComponent> Components { get; set; } = null!;
 
-    public SceneFolder? SceneRoot => this.FindNodeInParents<SceneFolder>();
+    public SceneFolder? ParentFolder => this.FindNodeInParents<SceneFolder>();
 
     public IEnumerable<REGameObject> Children => this.FindChildrenByType<REGameObject>();
     public IEnumerable<REGameObject> AllChildren => this.FindChildrenByType<REGameObject>().SelectMany(c => new [] { c }.Concat(c.AllChildren));
     public IEnumerable<REGameObject> AllChildrenIncludingSelf => new [] { this }.Concat(AllChildren);
+
+    public string Path => ParentFolder is SceneFolder scn
+        ? $"{scn.Path}/{scn.GetPathTo(this)}"
+        : this is PrefabNode pfb
+            ? $"{pfb.Path}/{pfb.GetPathTo(this)}"
+            : Owner != null ? Owner.GetPathTo(this) : Name;
 
     public override void _EnterTree()
     {

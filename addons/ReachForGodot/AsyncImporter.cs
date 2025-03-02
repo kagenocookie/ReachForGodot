@@ -116,15 +116,30 @@ public partial class AsyncImporter : Window
             }
         }
 
-        if (GetNode<Control>("%AssetsStatus") is Control status3) {
+        if (GetNode<Control>("%ComponentsStatus") is Control status3) {
             if (AssetCount.total == 0) {
                 status3.Visible = false;
             } else {
                 status3.Visible = true;
-                if (status3.TryFindChildByType<Label>(out var label)) label.Text = $"Assets: {AssetCount.finished}/{AssetCount.total}";
+                if (status3.TryFindChildByType<Label>(out var label)) label.Text = $"Components: {AssetCount.finished}/{AssetCount.total}";
                 if (status3.TryFindChildByType<ProgressBar>(out var progress)) {
                     progress.Value = AssetCount.finished;
                     progress.MaxValue = AssetCount.total;
+                }
+            }
+        }
+
+        if (GetNode<Control>("%OperationsStatus") is Control status4) {
+            var finished = asyncLoadCompletedTasks;
+            var total = asyncLoadCompletedTasks + queuedImports.Count;
+            if (total == 0) {
+                status4.Visible = false;
+            } else {
+                status4.Visible = true;
+                if (status4.TryFindChildByType<Label>(out var label)) label.Text = $"Queued operations: {finished}/{total}";
+                if (status4.TryFindChildByType<ProgressBar>(out var progress)) {
+                    progress.Value = finished;
+                    progress.MaxValue = total;
                 }
             }
         }
@@ -313,7 +328,7 @@ public partial class AsyncImporter : Window
         }
         Resource? res = null;
         var attempts = 10;
-        while (attempts-- > 0) {
+        while (attempts-- > 0 && res == null) {
             try {
                 res = ResourceLoader.Load<Resource>(queueItem.importFilename);
             } catch (Exception) {
@@ -321,7 +336,7 @@ public partial class AsyncImporter : Window
             }
         }
 
-        if (attempts >= 0) {
+        if (attempts < 0) {
             GD.PrintErr("Asset import timed out: " + queueItem.importFilename);
         }
 

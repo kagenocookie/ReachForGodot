@@ -221,5 +221,11 @@
       "PropertyId": 327726,
       "AutoDetected": true
     }
+  },
+  "app.Gm81_005": {
+    "RopeObj": {
+      "PropertyId": 327682,
+      "AutoDetected": true
+    }
   }
 }

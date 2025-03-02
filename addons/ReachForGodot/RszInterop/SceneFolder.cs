@@ -20,6 +20,8 @@ public partial class SceneFolder : Node, IRszContainerNode
     public IEnumerable<SceneFolder> Subfolders => FolderContainer?.FindChildrenByType<SceneFolder>() ?? Array.Empty<SceneFolder>();
     public IEnumerable<SceneFolder> AllSubfolders => Subfolders.SelectMany(f => new [] { f }.Concat(f.AllSubfolders));
 
+    public string Path => Owner is SceneFolder ownerScn ? $"{ownerScn.Asset?.AssetFilename}:{Owner.GetPathTo(this)}" : $"{Asset?.AssetFilename}:{Name}";
+
     public void AddFolder(SceneFolder folder)
     {
         Debug.Assert(folder != this);
@@ -105,10 +107,10 @@ public partial class SceneFolder : Node, IRszContainerNode
         sw.Start();
         var conv = new RszGodotConverter(ReachForGodot.GetAssetConfig(Game!)!, options);
         conv.RegenerateSceneTree(this).ContinueWith((t) => {
-            if (t.IsFaulted) {
-                GD.Print("Tree rebuild failed:", t.Exception);
-            } else {
+            if (t.IsCompletedSuccessfully) {
                 GD.Print("Tree rebuild finished in " + sw.Elapsed);
+            } else {
+                GD.Print("Tree rebuild failed:", t.Exception);
             }
             EditorInterface.Singleton.CallDeferred(EditorInterface.MethodName.MarkSceneAsUnsaved);
         });

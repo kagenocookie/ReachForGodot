@@ -20,6 +20,9 @@ public class Importer
 
     private static readonly byte[] MPLY_mesh_bytes = Encoding.ASCII.GetBytes("MPLY");
 
+    private static CancellationTokenSource? cancellationTokenSource;
+    private const int blenderTimeoutMs = 15000;
+
     public static REResource? FindImportedResourceAsset(Resource? asset)
     {
         if (asset == null) return null;
@@ -186,13 +189,13 @@ public class Importer
             .Replace("__FILENAME__", sourceFilePath.GetFile())
             .Replace("__OUTPUT_PATH__", blendPath);
 
-        return ExecuteBlenderScript(importScript).ContinueWith((_) => {
-            if (!File.Exists(blendPath)) {
+        return ExecuteBlenderScript(importScript).ContinueWith((t) => {
+            if (!t.IsCompletedSuccessfully || !File.Exists(blendPath)) {
                 GD.Print("Unsuccessfully imported mesh " + sourceFilePath);
                 return false;
             }
 
-            QueueFileRescan();
+            ForceEditorImportNewFile(blendPath);
             return true;
         });
     }
@@ -218,8 +221,8 @@ public class Importer
             .Replace("__FILEDIR__", sourceFilePath.GetBaseDir())
             .Replace("__FILENAME__", sourceFilePath.GetFile());
 
-        return ExecuteBlenderScript(importScript).ContinueWith((_) => {
-            if (File.Exists(convertedFilepath)) {
+        return ExecuteBlenderScript(importScript).ContinueWith((t) => {
+            if (t.IsCompletedSuccessfully && File.Exists(convertedFilepath)) {
                 File.Move(convertedFilepath, outputGlobalized, true);
                 QueueFileRescan();
                 return true;
@@ -275,6 +278,14 @@ public class Importer
         if (!fs.IsScanning()) fs.CallDeferred(EditorFileSystem.MethodName.Scan);
     }
 
+    public static void ForceEditorImportNewFile(string file)
+    {
+        QueueFileRescan();
+        // var fs = EditorInterface.Singleton.GetResourceFilesystem();
+        // fs.CallDeferred(EditorFileSystem.MethodName.UpdateFile, file);
+        // fs.CallDeferred(EditorFileSystem.MethodName.ReimportFiles, new Godot.Collections.Array<string>(new[] { file }));
+    }
+
     private static T? ImportResource<T>(string? sourceFilePath, string outputFilePath, AssetConfig config)
         where T : REResource, new()
     {
@@ -308,7 +319,7 @@ public class Importer
         return newres;
     }
 
-    private static Task ExecuteBlenderScript(string scriptFilename)
+    private static async Task ExecuteBlenderScript(string script)
     {
         // var tempFn = Path.GetTempFileName();
         // File.WriteAllText(tempFn, importScript);
@@ -316,10 +327,19 @@ public class Importer
         var process = Process.Start(new ProcessStartInfo() {
             UseShellExecute = false,
             FileName = ReachForGodot.BlenderPath,
-            Arguments = $"\"{EmptyBlend}\" --background --python-expr \"{scriptFilename}\"",
+            Arguments = $"\"{EmptyBlend}\" --background --python-expr \"{script}\"",
         });
 
-        return process!.WaitForExitAsync();
+        if (cancellationTokenSource == null || cancellationTokenSource.IsCancellationRequested) {
+            cancellationTokenSource = new();
+        }
+
+        var delay = Task.Delay(blenderTimeoutMs, cancellationTokenSource.Token);
+        var completedTask = await Task.WhenAny(process!.WaitForExitAsync(cancellationTokenSource.Token), delay);
+        if (completedTask == delay) {
+            cancellationTokenSource.Cancel();
+            cancellationTokenSource = null;
+        }
     }
 }
 

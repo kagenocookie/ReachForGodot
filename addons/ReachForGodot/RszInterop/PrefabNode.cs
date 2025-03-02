@@ -10,6 +10,7 @@ public partial class PrefabNode : REGameObject, IRszContainerNode
     [Export] public REResource[]? Resources { get; set; }
 
     public bool IsEmpty => GetChildCount() == 0;
+    public new string Path => $"{Asset?.AssetFilename}:{Name}";
 
     public void BuildTree(RszGodotConversionOptions options)
     {
@@ -17,10 +18,10 @@ public partial class PrefabNode : REGameObject, IRszContainerNode
         sw.Start();
         var conv = new RszGodotConverter(ReachForGodot.GetAssetConfig(Game!)!, options);
         conv.RegeneratePrefabTree(this).ContinueWith((t) => {
-            if (t.IsFaulted) {
-                GD.Print("Tree rebuild failed:", t.Exception);
-            } else {
+            if (t.IsCompletedSuccessfully) {
                 GD.Print("Tree rebuild finished in " + sw.Elapsed);
+            } else {
+                GD.Print("Tree rebuild failed:", t.Exception);
             }
             EditorInterface.Singleton.CallDeferred(EditorInterface.MethodName.MarkSceneAsUnsaved);
         });

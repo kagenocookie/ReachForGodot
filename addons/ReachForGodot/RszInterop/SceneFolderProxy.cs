@@ -8,7 +8,6 @@ using Godot;
 [GlobalClass, Tool]
 public partial class SceneFolderProxy : SceneFolder
 {
-    // TODO: replace with InstancePlaceholder?? https://docs.godotengine.org/en/stable/classes/class_instanceplaceholder.html
     [Export] public bool Enabled
     {
         get => _enabled;
@@ -84,10 +83,10 @@ public partial class SceneFolderProxy : SceneFolder
 
         var tempInstance = Contents!.Instantiate<SceneFolder>();
         conv.RegenerateSceneTree(tempInstance).ContinueWith((t) => {
-            if (t.IsFaulted) {
-                GD.Print("Tree rebuild failed:", t.Exception);
-            } else {
+            if (t.IsCompletedSuccessfully) {
                 GD.Print("Tree rebuild finished in " + sw.Elapsed);
+            } else {
+                GD.Print($"Tree rebuild failed after {sw.Elapsed}:", t.Exception);
                 if (Enabled && Contents != null) {
                     LoadScene();
                 }

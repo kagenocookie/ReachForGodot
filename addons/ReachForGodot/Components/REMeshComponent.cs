@@ -46,7 +46,7 @@ public partial class REMeshComponent : REComponent, IVisualREComponent
         return MeshFilepath != null && mr.Asset?.IsSameAsset(MeshFilepath) == true;
     }
 
-    public override Task Setup(REGameObject gameObject, RszInstance rsz, RszImportType importType)
+    public override async Task Setup(REGameObject gameObject, RszInstance rsz, RszImportType importType)
     {
         GameObject = gameObject;
         meshNode ??= GetOrFindMeshNode();
@@ -54,14 +54,14 @@ public partial class REMeshComponent : REComponent, IVisualREComponent
         if (string.IsNullOrEmpty(path)) {
             meshNode?.QueueFree();
             meshNode = null;
-            return Task.CompletedTask;
+            return;
         }
 
         if (importType == RszImportType.Placeholders || importType == RszImportType.CreateOrReuse && meshNode != null) {
-            return Task.CompletedTask;
+            return;
         }
 
-        return ReloadMesh(Importer.FindOrImportResource<MeshResource>(path, ReachForGodot.GetAssetConfig(gameObject.Game)), importType == RszImportType.ForceReimport);
+        await ReloadMesh(Importer.FindOrImportResource<MeshResource>(path, ReachForGodot.GetAssetConfig(gameObject.Game)), importType == RszImportType.ForceReimport);
     }
 
     public override void PreExport()
@@ -76,7 +76,8 @@ public partial class REMeshComponent : REComponent, IVisualREComponent
     protected async Task ReloadMesh(MeshResource? mr, bool forceReload)
     {
         if (mr != null) {
-            var res = await mr.Import(forceReload).ContinueWith(static (t) => t.IsFaulted ? null : t.Result);
+            var (tk, res) = await mr.Import(forceReload).ContinueWith(static (t) => (t, t.IsCompletedSuccessfully ? t.Result : null));
+            if (tk.IsCanceled) return;
             await ReinstantiateMesh(res as PackedScene);
         } else {
             meshNode?.QueueFree();
