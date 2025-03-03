@@ -106,7 +106,7 @@ public class Exporter
                 continue;
             }
 
-            AddGameObject(go, file.RSZ, file, fileOption, 0);
+            AddGameObject(go, file.RSZ, file, fileOption, -1);
         }
 
         foreach (var folder in root.Subfolders) {
@@ -175,12 +175,6 @@ public class Exporter
         folderInstance.Values[5] = linkedSceneFilepath;
         folderInstance.Values[6] = new byte[18]; // ?
 
-        if (string.IsNullOrEmpty(linkedSceneFilepath)) {
-            foreach (var sub in folder.Subfolders) {
-                AddFolder(sub, file, fileOption, folderInstance.ObjectTableIndex);
-            }
-        }
-
         foreach (var go in folder.ChildObjects) {
             if (go is PrefabNode pfbGo) {
                 GD.PrintErr("TODO: PFB sourced game object inside SCN");
@@ -188,6 +182,12 @@ public class Exporter
             }
 
             AddGameObject(go, file.RSZ, file, fileOption, folderInstance.ObjectTableIndex);
+        }
+
+        if (string.IsNullOrEmpty(linkedSceneFilepath)) {
+            foreach (var sub in folder.Subfolders) {
+                AddFolder(sub, file, fileOption, folderInstance.ObjectTableIndex);
+            }
         }
     }
 

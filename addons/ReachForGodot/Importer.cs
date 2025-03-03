@@ -242,7 +242,7 @@ public class Importer
             GD.PrintErr("Scene file not found: " + sourceFilePath);
             return null;
         }
-        var conv = new RszGodotConverter(config, RszGodotConverter.placeholderImport);
+        var conv = new GodotRszImporter(config, GodotRszImporter.placeholderImport);
         return conv.CreateOrReplaceScene(sourceFilePath, outputFilePath);
     }
 
@@ -255,7 +255,7 @@ public class Importer
             GD.PrintErr("Prefab file not found: " + sourceFilePath);
             return null;
         }
-        var conv = new RszGodotConverter(config, RszGodotConverter.placeholderImport);
+        var conv = new GodotRszImporter(config, GodotRszImporter.placeholderImport);
         return conv.CreateOrReplacePrefab(sourceFilePath, outputFilePath);
     }
 
@@ -268,7 +268,7 @@ public class Importer
             GD.PrintErr("Userdata file not found: " + sourceFilePath);
             return null;
         }
-        var conv = new RszGodotConverter(config, RszGodotConverter.placeholderImport);
+        var conv = new GodotRszImporter(config, GodotRszImporter.placeholderImport);
         return conv.CreateOrReplaceUserdata(sourceFilePath, outputFilePath);
     }
 

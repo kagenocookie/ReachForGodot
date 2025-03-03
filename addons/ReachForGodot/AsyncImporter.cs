@@ -176,7 +176,7 @@ public partial class AsyncImporter : Window
 
     static AsyncImporter()
     {
-        System.Runtime.Loader.AssemblyLoadContext.GetLoadContext(typeof(RszGodotConverter).Assembly)!.Unloading += (c) => {
+        System.Runtime.Loader.AssemblyLoadContext.GetLoadContext(typeof(GodotRszImporter).Assembly)!.Unloading += (c) => {
             instance?.CancelImports();
         };
     }

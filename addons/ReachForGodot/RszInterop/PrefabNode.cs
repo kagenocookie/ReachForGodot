@@ -16,7 +16,7 @@ public partial class PrefabNode : REGameObject, IRszContainerNode
     {
         var sw = new Stopwatch();
         sw.Start();
-        var conv = new RszGodotConverter(ReachForGodot.GetAssetConfig(Game!)!, options);
+        var conv = new GodotRszImporter(ReachForGodot.GetAssetConfig(Game!)!, options);
         conv.RegeneratePrefabTree(this).ContinueWith((t) => {
             if (t.IsCompletedSuccessfully) {
                 GD.Print("Tree rebuild finished in " + sw.Elapsed);

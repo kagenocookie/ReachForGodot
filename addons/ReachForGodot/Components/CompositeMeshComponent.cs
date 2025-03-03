@@ -12,9 +12,11 @@ public partial class CompositeMeshComponent : REComponent, IVisualREComponent
     private Node3D? meshNode;
     private int childCount = 0;
 
+    private static readonly REObjectFieldAccessor MeshGroupsField = new REObjectFieldAccessor("MeshGroups", "v15");
+
     public Node3D? GetOrFindMeshNode() => meshNode ??= GameObject.FindChildWhere<Node3D>(child => child is not REGameObject && child.Name == "__CompositeMesh");
     private Godot.Collections.Array<REObject>? FindStoredMeshGroups()
-        => TryGetFieldValue(TypeInfo.GetFieldOrFallback("MeshGroups", f => f.SerializedName == "v15"), out var groups) ? groups.AsGodotArray<REObject>() : null;
+        => TryGetFieldValue(MeshGroupsField.Get(this), out var groups) ? groups.AsGodotArray<REObject>() : null;
 
     public override void OnDestroy()
     {

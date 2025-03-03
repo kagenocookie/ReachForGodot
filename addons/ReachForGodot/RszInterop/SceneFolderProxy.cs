@@ -78,7 +78,7 @@ public partial class SceneFolderProxy : SceneFolder
         var sw = new Stopwatch();
         sw.Start();
         var config = ReachForGodot.GetAssetConfig(Game)!;
-        var conv = new RszGodotConverter(config, options);
+        var conv = new GodotRszImporter(config, options);
 
         if (_contentScene == null) {
             _contentScene = Importer.FindOrImportResource<PackedScene>(Asset!.AssetFilename, conv.AssetConfig)!;

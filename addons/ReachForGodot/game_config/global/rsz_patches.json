@@ -46,5 +46,37 @@
                 "Type": "S32"
             }
         ]
+    },
+    "via.physics.CapsuleShape": {
+      "FieldPatches": [
+        {
+          "Name": "v0",
+          "Type": "S32"
+        },
+        {
+          "Name": "v1",
+          "Type": "Capsule"
+        }
+      ]
+    },
+    "via.physics.BoxShape": {
+      "FieldPatches": [
+        {
+          "Name": "v0",
+          "Type": "S32"
+        },
+        {
+          "Name": "v1",
+          "Type": "OBB"
+        }
+      ]
+    },
+    "via.render.Mesh": {
+      "FieldPatches": [
+        {
+          "Name": "v0",
+          "Type": "S32"
+        }
+      ]
     }
 }

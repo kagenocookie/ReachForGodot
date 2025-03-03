@@ -8,35 +8,38 @@ using RszTool;
 
 public class TypeCache
 {
-    private static readonly Dictionary<SupportedGame, RszParser> rszData = new();
-    private static readonly Dictionary<SupportedGame, Dictionary<string, REObjectTypeCache>> serializationCache = new();
-    private static readonly Dictionary<SupportedGame, Il2cppCache> il2cppCache = new();
-    private static readonly Dictionary<SupportedGame, Dictionary<string, Dictionary<string, PrefabGameObjectRefProperty>>> gameObjectRefProps = new();
+    private static readonly Dictionary<SupportedGame, PerGameCache> allCacheData = new();
 
     public static readonly JsonSerializerOptions jsonOptions = new() {
         WriteIndented = true,
         DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull
     };
 
+    private sealed class PerGameCache
+    {
+        public RszParser? parser;
+        public Dictionary<string, REObjectTypeCache>? serializationCache;
+        public Il2cppCache? il2CppCache;
+        public Dictionary<string, Dictionary<string, PrefabGameObjectRefProperty>>? gameObjectRefProps;
+        public Dictionary<string, RszClassPatch>? rszTypePatches;
+    }
+
     static TypeCache()
     {
-        System.Runtime.Loader.AssemblyLoadContext.GetLoadContext(typeof(RszGodotConverter).Assembly)!.Unloading += (c) => {
+        System.Runtime.Loader.AssemblyLoadContext.GetLoadContext(typeof(GodotRszImporter).Assembly)!.Unloading += (c) => {
             var assembly = typeof(System.Text.Json.JsonSerializerOptions).Assembly;
             var updateHandlerType = assembly.GetType("System.Text.Json.JsonSerializerOptionsUpdateHandler");
             var clearCacheMethod = updateHandlerType?.GetMethod("ClearCache", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public);
             clearCacheMethod!.Invoke(null, new object?[] { null });
 
-            rszData.Clear();
-            serializationCache.Clear();
-            il2cppCache.Clear();
+            allCacheData.Clear();
         };
     }
 
     public static void InitializeGame(SupportedGame game)
     {
-        if (!rszData.TryGetValue(game, out var data)) {
-            rszData[game] = data = LoadRsz(game);
-        }
+        var data = GetCacheRoot(game);
+        data.parser ??= LoadRsz(game);
     }
 
     public static RszFileOption CreateRszFileOptions(AssetConfig config)
@@ -49,10 +52,9 @@ public class TypeCache
 
     public static REObjectTypeCache GetData(SupportedGame game, string classname)
     {
-        if (!serializationCache.TryGetValue(game, out var cacheData)) {
-            serializationCache[game] = cacheData = new();
-        }
+        var baseCache = GetCacheRoot(game);
 
+        var cacheData = baseCache.serializationCache ??= new();
         if (!cacheData.TryGetValue(classname, out var data)) {
             var cls = GetRszClass(game, classname);
             if (cls != null) {
@@ -78,24 +80,34 @@ public class TypeCache
 
     public static RszClass? GetRszClass(SupportedGame game, string classname)
     {
-        if (!rszData.TryGetValue(game, out var data)) {
-            rszData[game] = data = LoadRsz(game);
+        if (!allCacheData.TryGetValue(game, out var data)) {
+            allCacheData[game] = data = new();
         }
 
-        return data.GetRSZClass(classname);
+        data.parser ??= LoadRsz(game);
+        return data.parser.GetRSZClass(classname);
+    }
+
+    private static PerGameCache GetCacheRoot(SupportedGame game)
+    {
+        if (!allCacheData.TryGetValue(game, out var data)) {
+            allCacheData[game] = data = new();
+        }
+        return data;
     }
 
     private static Dictionary<string, Dictionary<string, PrefabGameObjectRefProperty>> GetOrLoadClassProps(SupportedGame game)
     {
-        if (!gameObjectRefProps.TryGetValue(game, out var reflist)) {
-            var fn = ReachForGodot.GetPaths(game)?.PfbGameObjectRefPropsPath;
-            if (File.Exists(fn)) {
-                using var fs = File.OpenRead(fn);
-                reflist = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, PrefabGameObjectRefProperty>>>(fs);
-            }
-            reflist ??= new(0);
+        var data = GetCacheRoot(game);
+        if (data.gameObjectRefProps != null) return data.gameObjectRefProps;
+
+        var fn = ReachForGodot.GetPaths(game)?.PfbGameObjectRefPropsPath;
+        if (File.Exists(fn)) {
+            using var fs = File.OpenRead(fn);
+            data.gameObjectRefProps = JsonSerializer.Deserialize<Dictionary<string, Dictionary<string, PrefabGameObjectRefProperty>>>(fs);
         }
-        return reflist;
+        data.gameObjectRefProps ??= new(0);
+        return data.gameObjectRefProps;
     }
 
     private static Dictionary<string, PrefabGameObjectRefProperty>? GetClassProps(SupportedGame game, string classname)
@@ -398,6 +410,40 @@ public class TypeCache
         }
     }
 
+    public static void StoreInferredRszTypes(RSZFile rsz, AssetConfig config)
+    {
+        var handled = new HashSet<RszClass>();
+        var cache = GetCacheRoot(config.Game);
+        int changes = 0;
+        cache.rszTypePatches ??= new();
+        foreach (var inst in rsz.InstanceList) {
+            if (!handled.Add(inst.RszClass)) continue;
+
+            foreach (var f in inst.RszClass.fields) {
+                if (!f.IsTypeInferred) continue;
+                if (!cache.rszTypePatches.TryGetValue(inst.RszClass.name, out var props)) {
+                    cache.rszTypePatches[inst.RszClass.name] = props = new();
+                }
+
+                var entry = props.FieldPatches?.FirstOrDefault(patch => patch.Name == f.name);
+                if (entry == null) {
+                    entry = new RszFieldPatch() { Name = f.name, Type = f.type };
+                    props.FieldPatches = props.FieldPatches == null ? [entry] : props.FieldPatches.Append(entry).ToArray();
+                    changes++;
+                } else if (entry.Type != f.type) {
+                    entry.Type = f.type;
+                    changes++;
+                }
+            }
+        }
+        if (changes > 0) {
+            Directory.CreateDirectory(config.Paths.RszPatchPath.GetBaseDir());
+            using var file = File.Create(config.Paths.RszPatchPath);
+            JsonSerializer.Serialize(file, cache.rszTypePatches, jsonOptions);
+            GD.Print($"Updating RSZ inferred field type cache with {changes} changes");
+        }
+    }
+
     private static RszParser LoadRsz(SupportedGame game)
     {
         var paths = ReachForGodot.GetPaths(game);
@@ -407,15 +453,21 @@ public class TypeCache
             return null!;
         }
 
+        var config = GetCacheRoot(game);
+
         GD.Print("Loading RSZ data...");
         var time = new Stopwatch();
         time.Start();
         var parser = RszParser.GetInstance(jsonPath);
         parser.ReadPatch(GamePaths.RszPatchGlobalPath);
+        if (File.Exists(paths.RszPatchPath)) {
+            using FileStream fileStream = File.OpenRead(paths.RszPatchPath);
+            config.rszTypePatches = JsonSerializer.Deserialize<Dictionary<string, RszClassPatch>>(fileStream);
+        }
         parser.ReadPatch(paths.RszPatchPath);
         time.Stop();
         GD.Print("Loaded RSZ data in " + time.Elapsed);
-        return rszData[game] = parser;
+        return parser;
     }
 
     public static EnumDescriptor GetEnumDescriptor(SupportedGame game, string classname)
@@ -430,14 +482,15 @@ public class TypeCache
 
     private static Il2cppCache SetupIl2cppData(GamePaths paths)
     {
-        if (il2cppCache.TryGetValue(paths.Game, out var cache)) {
-            return cache;
-        }
+        var dataRoot = GetCacheRoot(paths.Game);
+        if (dataRoot.il2CppCache != null) return dataRoot.il2CppCache;
+
+        var cache = dataRoot.il2CppCache;
 
         GD.Print("Loading il2cpp data...");
         var time = new Stopwatch();
         time.Start();
-        il2cppCache[paths.Game] = cache = new Il2cppCache();
+        dataRoot.il2CppCache = cache = new Il2cppCache();
         var baseCacheFile = paths.EnumCacheFilename;
         var overrideFile = paths.EnumOverridesFilename;
         if (File.Exists(baseCacheFile)) {
@@ -508,6 +561,45 @@ public class REField
     public string? HintString { get; set; }
 
     public string SerializedName => RszField.name;
+}
+
+public readonly struct REObjectFieldAccessor
+{
+    public readonly string preferredName;
+    private readonly Func<REField[], REField?> getter;
+    private readonly Dictionary<SupportedGame, REField?> _cache = new(1);
+
+    public REObjectFieldAccessor(string preferredName, Func<REField[], REField?> getter)
+    {
+        this.preferredName = preferredName;
+        this.getter = getter;
+    }
+
+    public REObjectFieldAccessor(string preferredName, string fallbackName)
+    {
+        this.preferredName = preferredName;
+        this.getter = (fields) => fields.FirstOrDefault(f => f.SerializedName == fallbackName);
+    }
+
+    public readonly REField Get(REObject target)
+    {
+        if (_cache.TryGetValue(target.Game, out var cachedField)) {
+            Debug.Assert(cachedField != null);
+            return cachedField;
+        }
+
+        return _cache[target.Game] = cachedField = getter.Invoke(target.TypeInfo.Fields)!;
+    }
+
+    public readonly REField Get(SupportedGame game, REObjectTypeCache typecache)
+    {
+        if (_cache.TryGetValue(game, out var cachedField)) {
+            Debug.Assert(cachedField != null);
+            return cachedField;
+        }
+
+        return _cache[game] = cachedField = getter.Invoke(typecache.Fields)!;
+    }
 }
 
 public class REObjectTypeCache

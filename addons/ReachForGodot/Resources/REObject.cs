@@ -116,8 +116,11 @@ public partial class REObject : Resource
 
     public void SetField(string field, Variant value)
     {
-        var fieldRef = TypeInfo.GetFieldOrFallback(field, static (o) => o.FieldIndex == 0);
-        __Data[fieldRef.SerializedName] = value;
+        if (TypeInfo.FieldsByName.TryGetValue(field, out var fieldRef)) {
+            __Data[fieldRef.SerializedName] = value;
+        } else {
+            GD.PrintErr($"Could not set unknown field {field} for class {Classname}");
+        }
     }
 
     protected Dictionary CreatePropertyCategory(string name, string? hintstring = null)

@@ -7,16 +7,18 @@ using RszTool;
 [GlobalClass, Tool, REComponentClass("via.render.Mesh")]
 public partial class REMeshComponent : REComponent, IVisualREComponent
 {
+    private static readonly REObjectFieldAccessor MeshField = new REObjectFieldAccessor("Mesh", (fields) => fields.FirstOrDefault(f => f.VariantType == Variant.Type.String));
+    private static readonly REObjectFieldAccessor MaterialField = new REObjectFieldAccessor("Material", (fields) => fields.Where(f => f.VariantType == Variant.Type.String).Skip(1).FirstOrDefault());
+
     private Node3D? meshNode;
-    private REField MeshField => TypeInfo.GetFieldOrFallback("Mesh", static (f) => f.VariantType == Variant.Type.String);
-    public string? MeshFilepath => TryGetFieldValue(MeshField, out var path) ? path.AsString() : null;
+    public string? MeshFilepath => TryGetFieldValue(MeshField.Get(this), out var path) ? path.AsString() : null;
 
     [ExportToolButton("Reinstantiate mesh")]
     private Callable ForceReinstance => Callable.From(FindResourceAndReinit);
 
     public Node3D? GetOrFindMeshNode()
     {
-        meshNode ??= GameObject.FindChildWhere<Node3D>(child => child is not REGameObject && child.Name.ToString().StartsWith("__"));
+        meshNode ??= GameObject.FindChildWhere<Node3D>(child => child.GetType() == typeof(Node3D) && child.Name.ToString().StartsWith("__"));
         if (!IsInstanceValid(meshNode)) {
             meshNode = null;
         }
@@ -66,11 +68,12 @@ public partial class REMeshComponent : REComponent, IVisualREComponent
 
     public override void PreExport()
     {
-        base.PreExport();
+        meshNode ??= GetOrFindMeshNode();
         var resource = Importer.FindImportedResourceAsset(meshNode?.SceneFilePath) as MeshResource;
         var meshScenePath = resource?.Asset?.AssetFilename;
+        var name = GameObject.Name.ToString();
 
-        SetField("Mesh", meshScenePath ?? string.Empty);
+        SetField(MeshField.Get(this), meshScenePath ?? string.Empty);
     }
 
     protected async Task ReloadMesh(MeshResource? mr, bool forceReload)

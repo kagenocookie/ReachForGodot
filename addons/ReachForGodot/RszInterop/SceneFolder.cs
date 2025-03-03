@@ -5,7 +5,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using Godot;
 
-[GlobalClass, Tool]
+[GlobalClass, Tool, Icon("res://addons/ReachForGodot/icons/folder.png")]
 public partial class SceneFolder : Node, IRszContainerNode
 {
     [Export] public SupportedGame Game { get; set; }
@@ -117,7 +117,7 @@ public partial class SceneFolder : Node, IRszContainerNode
     {
         var sw = new Stopwatch();
         sw.Start();
-        var conv = new RszGodotConverter(ReachForGodot.GetAssetConfig(Game!)!, options);
+        var conv = new GodotRszImporter(ReachForGodot.GetAssetConfig(Game!)!, options);
         conv.RegenerateSceneTree(this).ContinueWith((t) => {
             if (t.IsCompletedSuccessfully) {
                 GD.Print("Tree rebuild finished in " + sw.Elapsed);

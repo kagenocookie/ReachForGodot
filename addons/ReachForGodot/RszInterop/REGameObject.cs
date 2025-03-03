@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Godot;
 using RszTool;
 
-[GlobalClass, Tool]
+[GlobalClass, Tool, Icon("res://addons/ReachForGodot/icons/gear.png")]
 public partial class REGameObject : Node3D, ISerializationListener
 {
     [Export] public SupportedGame Game { get; set; }

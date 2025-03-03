@@ -12,18 +12,18 @@ using Shouldly;
 
 public static class PresetImportModeExtensions
 {
-    public static RszGodotConversionOptions ToOptions(this RszGodotConverter.PresetImportModes mode) => mode switch {
-        RszGodotConverter.PresetImportModes.PlaceholderImport => RszGodotConverter.placeholderImport,
-        RszGodotConverter.PresetImportModes.ThisFolderOnly => RszGodotConverter.thisFolderOnly,
-        RszGodotConverter.PresetImportModes.ImportMissingItems => RszGodotConverter.importMissing,
-        RszGodotConverter.PresetImportModes.ImportTreeChanges => RszGodotConverter.importTreeChanges,
-        RszGodotConverter.PresetImportModes.ReimportStructure => RszGodotConverter.forceReimportStructure,
-        RszGodotConverter.PresetImportModes.FullReimport => RszGodotConverter.fullReimport,
-        _ => RszGodotConverter.placeholderImport,
+    public static RszGodotConversionOptions ToOptions(this GodotRszImporter.PresetImportModes mode) => mode switch {
+        GodotRszImporter.PresetImportModes.PlaceholderImport => GodotRszImporter.placeholderImport,
+        GodotRszImporter.PresetImportModes.ThisFolderOnly => GodotRszImporter.thisFolderOnly,
+        GodotRszImporter.PresetImportModes.ImportMissingItems => GodotRszImporter.importMissing,
+        GodotRszImporter.PresetImportModes.ImportTreeChanges => GodotRszImporter.importTreeChanges,
+        GodotRszImporter.PresetImportModes.ReimportStructure => GodotRszImporter.forceReimportStructure,
+        GodotRszImporter.PresetImportModes.FullReimport => GodotRszImporter.fullReimport,
+        _ => GodotRszImporter.placeholderImport,
     };
 }
 
-public class RszGodotConverter
+public class GodotRszImporter
 {
     public static readonly RszGodotConversionOptions placeholderImport = new(RszImportType.Placeholders, RszImportType.Placeholders, RszImportType.Placeholders, RszImportType.Placeholders);
     public static readonly RszGodotConversionOptions thisFolderOnly = new(RszImportType.Placeholders, RszImportType.Reimport, RszImportType.CreateOrReuse, RszImportType.Reimport);
@@ -191,7 +191,7 @@ public class RszGodotConverter
         public (int total, int finished) ComponentsCount => (ComponentTasks.Count, compTaskIndex);
         public (int total, int finished) GameObjectCount => (1, IsFinished ? 1 : 0);
 
-        public async Task Await(RszGodotConverter converter)
+        public async Task Await(GodotRszImporter converter)
         {
             ctx.StartBatch(this);
             if (prefabData != null) {
@@ -246,7 +246,7 @@ public class RszGodotConverter
         public (int total, int finished) ComponentsCount => (0, 0);
         public (int total, int finished) GameObjectCount => (0, 0);
 
-        public async Task AwaitGameObjects(RszGodotConverter converter)
+        public async Task AwaitGameObjects(GodotRszImporter converter)
         {
             foreach (var subtask in gameObjects) {
                 await subtask.Await(converter);
@@ -266,12 +266,12 @@ public class RszGodotConverter
     }
 
 
-    static RszGodotConverter()
+    static GodotRszImporter()
     {
-        AssemblyLoadContext.GetLoadContext(typeof(RszGodotConverter).Assembly)!.Unloading += (c) => {
+        AssemblyLoadContext.GetLoadContext(typeof(GodotRszImporter).Assembly)!.Unloading += (c) => {
             perGameFactories.Clear();
         };
-        InitComponents(typeof(RszGodotConverter).Assembly);
+        InitComponents(typeof(GodotRszImporter).Assembly);
     }
 
     public static void InitComponents(Assembly assembly)
@@ -312,7 +312,7 @@ public class RszGodotConverter
         }
     }
 
-    public RszGodotConverter(AssetConfig paths, RszGodotConversionOptions options)
+    public GodotRszImporter(AssetConfig paths, RszGodotConversionOptions options)
     {
         AssetConfig = paths;
         Options = options;
@@ -439,6 +439,8 @@ public class RszGodotConverter
         }
 
         file.SetupGameObjects();
+
+        TypeCache.StoreInferredRszTypes(file.RSZ, AssetConfig);
 
         if (Options.folders == RszImportType.ForceReimport) {
             root.Clear();
