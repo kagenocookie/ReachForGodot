@@ -7,7 +7,7 @@ public static class ReachForGodot
     public static readonly SupportedGame[] GameList = Enum.GetValues<SupportedGame>().Where(n => n != SupportedGame.Unknown).ToArray();
     public static readonly string[] GameNames = Enum.GetNames<SupportedGame>().Where(n => n != SupportedGame.Unknown.ToString()).ToArray();
 
-    private static readonly Dictionary<SupportedGame, (AssetConfig? config, GamePaths paths)> assetConfigData = new();
+    private static readonly Dictionary<SupportedGame, (AssetConfig? config, GamePaths? paths)> assetConfigData = new();
 
     public static string BlenderPath {
         get {
@@ -48,7 +48,8 @@ public static class ReachForGodot
             }
         }
 
-        var defaultResourcePath = "res://asset_config_" + game.ToString()!.ToSnakeCase();
+        var gameShortname = data.paths?.ShortName ?? GamePaths.GetShortName(game);
+        var defaultResourcePath = "res://asset_config_" + gameShortname + ".tres";
         if (ResourceLoader.Exists(defaultResourcePath)) {
             data.config = ResourceLoader.Load<AssetConfig>(defaultResourcePath);
         } else {
@@ -68,7 +69,7 @@ public static class ReachForGodot
         }
 
         if (data.config == null) {
-            data.config = new AssetConfig() { ResourcePath = defaultResourcePath, AssetDirectory = data.paths.ShortName };
+            data.config = new AssetConfig() { ResourcePath = defaultResourcePath, AssetDirectory = gameShortname + "/", Game = game };
             ResourceSaver.Save(data.config);
         }
 

@@ -54,7 +54,8 @@ public partial class SceneFolderProxy : SceneFolder
             return;
         }
 
-        if (RealFolder != null) return;
+        if ((RealFolder ??= GetChildOrNull<SceneFolder>(0)) != null) return;
+
         if (_contentScene == null) {
             if (Asset == null) return;
             _contentScene = Importer.FindOrImportResource<PackedScene>(Asset.AssetFilename, ReachForGodot.GetAssetConfig(Game));

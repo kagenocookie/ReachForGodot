@@ -188,7 +188,6 @@ public class RszGodotConverter
         public bool IsFinished => compTaskIndex >= ComponentTasks.Count && Children.All(c => c.IsFinished);
 
         public (int total, int finished) FolderCount => (0, 0);
-
         public (int total, int finished) ComponentsCount => (ComponentTasks.Count, compTaskIndex);
         public (int total, int finished) GameObjectCount => (1, IsFinished ? 1 : 0);
 

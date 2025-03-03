@@ -74,7 +74,7 @@ public partial class SceneFolderInspectorPlugin : EditorInspectorPlugin, ISerial
         } else if (obj is SceneFolder scn) {
             importType.AddItem("Placeholders only", (int)RszGodotConverter.PresetImportModes.PlaceholderImport);
             importType.AddItem("Import just this scene, no subfolders", (int)RszGodotConverter.PresetImportModes.ThisFolderOnly);
-            importType.AddItem("Import everything", (int)RszGodotConverter.PresetImportModes.ImportMissingItems);
+            importType.AddItem("Import missing objects", (int)RszGodotConverter.PresetImportModes.ImportMissingItems);
             importType.AddItem("Discard and reimport scene structure", (int)RszGodotConverter.PresetImportModes.ReimportStructure);
             importType.AddItem("Force reimport all resources", (int)RszGodotConverter.PresetImportModes.FullReimport);
         } else {

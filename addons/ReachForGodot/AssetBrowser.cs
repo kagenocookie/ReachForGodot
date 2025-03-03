@@ -15,10 +15,11 @@ public partial class AssetBrowser : Resource
     {
         get => _assets;
         set {
-            if (value != null && value != _assets && _dialog != null) {
-                _dialog.CurrentPath = ReachForGodot.GetChunkPath(value.Game);
-            }
+            var gameChanged = (value != null && (value != _assets || value.Game != _assets.Game) && _dialog != null);
             _assets = value;
+            if (gameChanged) {
+                ResetFilePickerPath();
+            }
         }
     }
 
@@ -39,7 +40,14 @@ public partial class AssetBrowser : Resource
 
     private FileDialog? _dialog;
 
-    private void ShowFilePicker()
+    public void ResetFilePickerPath()
+    {
+        if (_dialog != null && Assets != null) {
+            _dialog.CurrentPath = Assets.Paths.ChunkPath;
+        }
+    }
+
+    public void ShowFilePicker()
     {
         Assets ??= AssetConfig.DefaultInstance;
         if (Assets.Game == SupportedGame.Unknown) {
@@ -47,7 +55,7 @@ public partial class AssetBrowser : Resource
             return;
         }
 
-        var basepath = ReachForGodot.GetChunkPath(Assets.Game);
+        var basepath = Assets.Paths.ChunkPath;
         if (basepath == null) {
             GD.PrintErr("Chunk path not configured. Set the path to the game in editor settings and select the game in the asset browser.");
             return;
@@ -61,7 +69,7 @@ public partial class AssetBrowser : Resource
             _dialog.FileMode = FileDialog.FileModeEnum.OpenFiles;
             _dialog.CurrentPath = basepath;
             _dialog.FileSelected += ImportAssetSync;
-            _dialog.FilesSelected += ImportAssetsSync;
+            _dialog.FilesSelected += (files) => _ = ImportAssetsAsync(files);
         }
 
         _dialog.Show();
@@ -86,6 +94,28 @@ public partial class AssetBrowser : Resource
         }
 
         ImportMultipleAssets(files).Wait();
+        var importPaths = files.Select(f => PathUtils.GetLocalizedImportPath(f, Assets));
+        GD.Print("Files imported to:\n" + string.Join('\n', importPaths));
+
+        if (importPaths.FirstOrDefault(x => x != null) is string str && ResourceLoader.Exists(str)) {
+            var fmt = PathUtils.GetFileFormat(files.First(x => x != null));
+            if (fmt.format == RESupportedFileFormats.Scene || fmt.format == RESupportedFileFormats.Prefab) {
+                EditorInterface.Singleton.CallDeferred(EditorInterface.MethodName.OpenSceneFromPath, str);
+            } else {
+                EditorInterface.Singleton.CallDeferred(EditorInterface.MethodName.SelectFile, str);
+            }
+        }
+    }
+
+    private async Task ImportAssetsAsync(string[] files)
+    {
+        Debug.Assert(Assets != null);
+        if (files.Length == 0) {
+            GD.PrintErr("Empty import file list");
+            return;
+        }
+
+        await ImportMultipleAssets(files);
         var importPaths = files.Select(f => PathUtils.GetLocalizedImportPath(f, Assets));
         GD.Print("Files imported to:\n" + string.Join('\n', importPaths));
 

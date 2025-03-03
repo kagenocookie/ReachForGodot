@@ -6,7 +6,7 @@ namespace RGE;
 #nullable enable
 
 [Tool]
-public partial class ReachForGodotPlugin : EditorPlugin
+public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
 {
     private const string SettingBase = "reach_for_godot";
     private const string Setting_BlenderPath = "filesystem/import/blender/blender_path";
@@ -25,12 +25,20 @@ public partial class ReachForGodotPlugin : EditorPlugin
     private static readonly List<ExportPathSetting> exportPaths = new();
     public static IEnumerable<ExportPathSetting> ExportPaths => exportPaths;
 
+    private static ReachForGodotPlugin? _pluginInstance;
+
     private EditorInspectorPlugin[] inspectors = new EditorInspectorPlugin[5];
     private EditorNode3DGizmoPlugin[] gizmos = Array.Empty<EditorNode3DGizmoPlugin>();
+    private PopupMenu toolMenu = null!;
+    private AssetBrowser? browser;
 
     public override void _EnterTree()
     {
+        _pluginInstance = this;
         AddSettings();
+
+        toolMenu = new PopupMenu() { Name = "Reach for Godot Engine" };
+        AddToolSubmenuItem(toolMenu.Name, toolMenu);
 
         EditorInterface.Singleton.GetEditorSettings().SettingsChanged += OnProjectSettingsChanged;
         OnProjectSettingsChanged();
@@ -39,10 +47,43 @@ public partial class ReachForGodotPlugin : EditorPlugin
         AddInspectorPlugin(inspectors[2] = new ResourceInspectorPlugin());
         AddInspectorPlugin(inspectors[3] = new AssetExportInspectorPlugin());
         AddInspectorPlugin(inspectors[4] = new GameObjectInspectorPlugin());
+        RefreshToolMenu();
+        toolMenu.IdPressed += (id) => {
+            if (id < 100) {
+                var game = (SupportedGame)id;
+                OpenAssetImporterWindow(game);
+            }
+        };
+    }
+
+    private void RefreshToolMenu()
+    {
+        toolMenu.Clear();
+        foreach (var game in ReachForGodot.GameList) {
+            var pathSetting = ChunkPathSetting(game);
+            if (!string.IsNullOrEmpty(EditorInterface.Singleton.GetEditorSettings().GetSetting(pathSetting).AsString())) {
+                toolMenu.AddItem($"Import {game} assets...", (int)game);
+            }
+        }
+    }
+
+    private void OpenAssetImporterWindow(SupportedGame game)
+    {
+        var config = ReachForGodot.GetAssetConfig(game);
+        if (config == null) {
+            GD.PrintErr("Could not resolve asset config for game " + game);
+            return;
+        }
+
+        browser ??= new AssetBrowser();
+        browser.Assets = config;
+        browser.CallDeferred(AssetBrowser.MethodName.ShowFilePicker);
     }
 
     public override void _ExitTree()
     {
+        RemoveToolMenuItem(toolMenu.Name);
+        browser = null;
         foreach (var insp in inspectors) {
             RemoveInspectorPlugin(insp);
         }
@@ -60,10 +101,10 @@ public partial class ReachForGodotPlugin : EditorPlugin
 
     public static void ReloadSettings()
     {
-        OnProjectSettingsChanged();
+        _pluginInstance?.OnProjectSettingsChanged();
     }
 
-    private static void OnProjectSettingsChanged()
+    private void OnProjectSettingsChanged()
     {
         var settings = EditorInterface.Singleton.GetEditorSettings();
         foreach (var game in ReachForGodot.GameList) {
@@ -89,6 +130,7 @@ public partial class ReachForGodotPlugin : EditorPlugin
             var filepath = parts.Length >= 2 ? parts[1] : parts[0];
             exportPaths.Add(new ExportPathSetting(filepath, label));
         }
+        RefreshToolMenu();
     }
 
     private void AddProjectSetting(string name, Variant.Type type, Variant initialValue)
@@ -124,6 +166,17 @@ public partial class ReachForGodotPlugin : EditorPlugin
 
         settings.SetInitialValue(name, initialValue, false);
         settings.AddPropertyInfo(dict);
+    }
+
+    public void OnBeforeSerialize()
+    {
+        toolMenu.Clear();
+    }
+
+    public void OnAfterDeserialize()
+    {
+        RefreshToolMenu();
+        _pluginInstance = this;
     }
 }
 

@@ -24,6 +24,7 @@ public record GamePaths(SupportedGame Game, string ChunkPath, string? Il2cppPath
             default: return GameName.unknown;
         }
     }
+    public static string GetShortName(SupportedGame game) => new GamePaths(game, "", null, null).ShortName;
 
     public string ShortName => Game switch {
         SupportedGame.DragonsDogma2 => "dd2",

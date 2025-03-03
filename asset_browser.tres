@@ -1,9 +1,0 @@
-[gd_resource type="Resource" script_class="AssetBrowser" load_steps=3 format=3 uid="uid://0qnm18y53oc3"]
-
-[ext_resource type="Script" uid="uid://c35arpw180ebe" path="res://addons/ReachForGodot/AssetBrowser.cs" id="1_1liff"]
-[ext_resource type="Resource" uid="uid://dqc5pyvvkf41g" path="res://asset_config_dd2.tres" id="1_a2isy"]
-
-[resource]
-script = ExtResource("1_1liff")
-Assets = ExtResource("1_a2isy")
-metadata/_custom_type_script = ExtResource("1_1liff")
