@@ -8,6 +8,8 @@ namespace RGE;
 [Tool]
 public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
 {
+    public static ReachForGodotPlugin Instance => _pluginInstance!;
+
     private const string SettingBase = "reach_for_godot";
     private const string Setting_BlenderPath = "filesystem/import/blender/blender_path";
     private const string Setting_GameChunkPath = $"{SettingBase}/paths/{{game}}/game_chunk_path";
@@ -15,6 +17,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
     private const string Setting_RszJsonPath = $"{SettingBase}/paths/{{game}}/rsz_json_file";
     private const string Setting_OutputPaths = $"{SettingBase}/paths/export_output_paths";
 
+    public static IEnumerable<ExportPathSetting> ExportPaths => exportPaths;
     public static string BlenderPath => EditorInterface.Singleton.GetEditorSettings().GetSetting(Setting_BlenderPath).AsString()
         ?? throw new System.Exception("Blender path not defined in editor settings");
 
@@ -23,7 +26,6 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
     private static string RszPathSetting(SupportedGame game) => Setting_RszJsonPath.Replace("{game}", game.ToString());
 
     private static readonly List<ExportPathSetting> exportPaths = new();
-    public static IEnumerable<ExportPathSetting> ExportPaths => exportPaths;
 
     private static ReachForGodotPlugin? _pluginInstance;
 
@@ -67,7 +69,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
         }
     }
 
-    private void OpenAssetImporterWindow(SupportedGame game)
+    public void OpenAssetImporterWindow(SupportedGame game)
     {
         var config = ReachForGodot.GetAssetConfig(game);
         if (config == null) {
@@ -75,6 +77,11 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
             return;
         }
 
+        OpenAssetImporterWindow(config);
+    }
+
+    public void OpenAssetImporterWindow(AssetConfig config)
+    {
         browser ??= new AssetBrowser();
         browser.Assets = config;
         browser.CallDeferred(AssetBrowser.MethodName.ShowFilePicker);

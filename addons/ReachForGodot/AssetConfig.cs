@@ -30,6 +30,9 @@ public partial class AssetConfig : Resource
     [Export] public SupportedGame Game = SupportedGame.Unknown;
     [Export(PropertyHint.Dir)] public string AssetDirectory = "assets/";
 
+    [ExportToolButton("Import assets...")]
+    private Callable ImportBtn => Callable.From(() => ReachForGodotPlugin.Instance.OpenAssetImporterWindow(this));
+
     private void InvokeCallback(Callable callable)
     {
         callable.Call();
