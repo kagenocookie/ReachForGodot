@@ -37,8 +37,8 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
         _pluginInstance = this;
         AddSettings();
 
-        toolMenu = new PopupMenu() { Name = "Reach for Godot Engine" };
-        AddToolSubmenuItem(toolMenu.Name, toolMenu);
+        toolMenu = new PopupMenu() { Title = "RE ENGINE: Import assets ..." };
+        AddToolSubmenuItem(toolMenu.Title, toolMenu);
 
         EditorInterface.Singleton.GetEditorSettings().SettingsChanged += OnProjectSettingsChanged;
         OnProjectSettingsChanged();
@@ -82,7 +82,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
 
     public override void _ExitTree()
     {
-        RemoveToolMenuItem(toolMenu.Name);
+        RemoveToolMenuItem(toolMenu.Title);
         browser = null;
         foreach (var insp in inspectors) {
             RemoveInspectorPlugin(insp);
