@@ -190,12 +190,12 @@
   "via.physics.Colliders": {
     "FieldPatches": [
       {
-        "Name": "v5",
-        "Type": "Object"
-      },
-      {
         "Name": "v2",
         "Type": "S32"
+      },
+      {
+        "Name": "v5",
+        "Type": "Object"
       }
     ]
   },
@@ -868,6 +868,10 @@
       {
         "Name": "v0",
         "Type": "S32"
+      },
+      {
+        "Name": "v1",
+        "Type": "Resource"
       }
     ]
   },

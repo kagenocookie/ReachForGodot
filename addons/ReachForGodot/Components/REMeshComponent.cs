@@ -11,12 +11,12 @@ public partial class REMeshComponent : REComponent, IVisualREComponent
 {
     private static readonly REObjectFieldAccessor MeshField = new REObjectFieldAccessor(
         "Mesh",
-        (fields) => fields.FirstOrDefault(f => f.RszField.type == RszFieldType.Resource),
+        (fields) => fields.FirstOrDefault(f => f.RszField.type is RszFieldType.String or RszFieldType.Resource),
         (field) => field.ResourceType = RESupportedFileFormats.Mesh);
 
     private static readonly REObjectFieldAccessor MaterialField = new REObjectFieldAccessor(
         "Material",
-        (fields) => fields.Where(f => f.RszField.type == RszFieldType.Resource).Skip(1).FirstOrDefault(),
+        (fields) => fields.Where(f => f.RszField.type is RszFieldType.String or RszFieldType.Resource).Skip(1).FirstOrDefault(),
         (field) => field.ResourceType = RESupportedFileFormats.Material);
 
     private Node3D? meshNode;

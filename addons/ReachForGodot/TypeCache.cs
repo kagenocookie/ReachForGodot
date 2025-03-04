@@ -221,13 +221,18 @@ public class TypeCache
                 var accessor = (REObjectFieldAccessor)field.GetValue(null)!;
                 if (accessor.overrideFunc == null) continue;
 
+                var curclass = classname;
+                if (field.GetCustomAttribute<REObjectFieldTargetAttribute>() is REObjectFieldTargetAttribute overrideAttr) {
+                    curclass = overrideAttr.Classname;
+                }
+
                 var games = supportedGames.Length == 0 ? ReachForGodot.GameList : supportedGames;
 
                 foreach (var game in games) {
                     var cache = GetCacheRoot(game);
                     cache.fieldOverrides ??= new();
-                    if (!cache.fieldOverrides.TryGetValue(classname, out var pergame)) {
-                        cache.fieldOverrides[classname] = pergame = new();
+                    if (!cache.fieldOverrides.TryGetValue(curclass, out var pergame)) {
+                        cache.fieldOverrides[curclass] = pergame = new();
                     }
                     pergame.Add(accessor);
                 }
@@ -669,6 +674,15 @@ public class REField
     }
 
     public string SerializedName => RszField.name;
+
+    public void MarkAsResource(string resourceTypeName)
+    {
+        RszField.type = RszFieldType.Resource;
+        RszField.IsTypeInferred = true;
+        VariantType = Variant.Type.Object;
+        Hint = PropertyHint.ResourceType;
+        HintString = resourceTypeName;
+    }
 }
 
 public readonly struct REObjectFieldAccessor
@@ -681,6 +695,13 @@ public readonly struct REObjectFieldAccessor
     public REObjectFieldAccessor(string preferredName, Func<REField[], REField?> getter, Action<REField>? overrideFunc = null)
     {
         this.preferredName = preferredName;
+        this.getter = getter;
+        this.overrideFunc = overrideFunc;
+    }
+
+    public REObjectFieldAccessor(Func<REField[], REField?> getter, Action<REField>? overrideFunc = null)
+    {
+        this.preferredName = "_____never";
         this.getter = getter;
         this.overrideFunc = overrideFunc;
     }

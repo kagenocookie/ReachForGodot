@@ -43,9 +43,15 @@ If you've ever worked with a game engine before, the basic UI should be more or 
 - user files: import and export through integrated RszTool
 - other resource files: imported as placeholders
 
+Mapping of engine objects:
+- <img src="addons/ReachForGodot/icons/folder.png" alt="isolated" width="16"/> `via.Folder` (scn file) => Node (`SceneFolder` or `SceneFolderProxy`)
+- <img src="addons/ReachForGodot/icons/gear.png" alt="isolated" width="16"/> `via.GameObject` => Node3D (`REGameObject` or `PrefabNode`)
+- `via.Component` => Components array inside `REGameObject`
+
 Specific components support:
 - `via.Transform`: transforms are transformed to Godot equivalents on the game object node
     - you can move the REGameObject nodes directly and the transforms will get updated on export
+    - all other Node transforms will be ignored and not transferred over to the game
 - `via.render.Mesh`: meshes are imported automatically into an additional mesh Node3D child of the game object with a `__{mesh_name}` prefix
     - meshes can be swapped around by changing the mesh field within the component's data
     - keep in mind that resources (mesh and mdf2) also need to be linked to in the containing scene/pfb's Resources list, resource lists are not automated at the moment
@@ -75,17 +81,16 @@ Specific components support:
     - Fully reimport: discards the structure, reimports everything including recreating assets
 
 ## Asset exporting
+- every exportable asset has a base path picker and export button at the top of its inspector
 - configure any export base folders you need in editor settings
 - You can specify either just the full path, or also add a label for it to make it easier to identify with a | separator, e.g. `DD2: my awesome mod|D:/mods/dd2/awesome_mod/natives/stm/`
-- every exportable asset has a base path picker and export button at the top of its inspector
 
-## Planned features
+## Planned and potential features
 - enums
     - flag enums (autodetect flag enums maybe)
     - configurable place for overriding enum settings (IsFlags, custom entries)
-- scn/pfb
+- scn
     - properly show and resolve guid gameobject references
-- export any changes back over their original file formats (into a configurable output folder so we don't override the source files)
 - support serializing objects to JSON - Content Editor integration
 - unpacker integration - automatically extract files from paks as needed instead of requiring everything to be pre-extracted
 - game specific tooling to make navigation between scenes easier (mainly looking at DD2 / open world assets)
