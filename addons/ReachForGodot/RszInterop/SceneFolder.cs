@@ -11,13 +11,12 @@ public partial class SceneFolder : Node, IRszContainerNode
     [Export] public SupportedGame Game { get; set; }
     [Export] public AssetReference? Asset { get; set; }
     [Export] public REResource[]? Resources { get; set; }
-    [Export] public Node? FolderContainer { get; private set; }
     [Export] public Aabb KnownBounds { get; set; }
 
     public bool IsEmpty => GetChildCount() == 0;
     public SceneFolder? ParentFolder => GetParent()?.FindNodeInParents<SceneFolder>();
 
-    public IEnumerable<SceneFolder> Subfolders => FolderContainer?.FindChildrenByType<SceneFolder>() ?? Array.Empty<SceneFolder>();
+    public IEnumerable<SceneFolder> Subfolders => this.FindChildrenByType<SceneFolder>() ?? Array.Empty<SceneFolder>();
     public IEnumerable<SceneFolder> AllSubfolders => Subfolders.SelectMany(f => new [] { f }.Concat(f.AllSubfolders));
     public IEnumerable<REGameObject> ChildObjects => this.FindChildrenByType<REGameObject>();
 
@@ -26,19 +25,14 @@ public partial class SceneFolder : Node, IRszContainerNode
     public void AddFolder(SceneFolder folder)
     {
         Debug.Assert(folder != this);
-        if ((FolderContainer ??= FindChild("Folders")) == null) {
-            AddChild(FolderContainer = new Node() { Name = "Folders" });
-            FolderContainer.Owner = Owner ?? this;
-            MoveChild(FolderContainer, 0);
-        }
-        FolderContainer.AddChild(folder);
+        AddChild(folder);
         folder.Owner = Owner ?? this;
     }
 
     public void RemoveFolder(SceneFolder folder)
     {
-        if (FolderContainer != null && folder.GetParent() == FolderContainer) {
-            FolderContainer.RemoveChild(folder);
+        if (folder.GetParent() == this) {
+            RemoveChild(folder);
             folder.QueueFree();
         }
     }
@@ -88,13 +82,12 @@ public partial class SceneFolder : Node, IRszContainerNode
     public void Clear()
     {
         this.ClearChildren();
-        FolderContainer = null;
         Resources = Array.Empty<REResource>();
     }
 
     public SceneFolder? GetFolder(string name)
     {
-        return FolderContainer?.FindChildWhere<SceneFolder>(c => c.Name == name);
+        return this.FindChildWhere<SceneFolder>(c => c.Name == name);
     }
 
     public REGameObject? GetGameObject(string name, int deduplicationIndex)
