@@ -141,6 +141,8 @@ public class Importer
                 return ImportPrefab(sourceFilePath, outputFilePath, config);
             case RESupportedFileFormats.Userdata:
                 return ImportUserdata(sourceFilePath, outputFilePath, config);
+            case RESupportedFileFormats.Material:
+                return ImportMaterial(sourceFilePath, outputFilePath, config);
             default:
                 return ImportResource<REResource>(sourceFilePath, outputFilePath, config);
         }
@@ -272,6 +274,32 @@ public class Importer
         return conv.CreateOrReplaceUserdata(sourceFilePath, outputFilePath);
     }
 
+    public static MaterialResource? ImportMaterial(string? sourceFilePath, string? outputFilePath, AssetConfig config)
+    {
+        if (!System.IO.Path.IsPathRooted(sourceFilePath)) {
+            sourceFilePath = PathUtils.ResolveSourceFilePath(sourceFilePath, config);
+        }
+        if (!File.Exists(sourceFilePath)) {
+            GD.PrintErr("Userdata file not found: " + sourceFilePath);
+            return null;
+        }
+        var importPath = ProjectSettings.LocalizePath(outputFilePath);
+
+        var mat = new MaterialResource() {
+            Game = config.Game,
+            ResourceType = RESupportedFileFormats.Material,
+            ResourceName = PathUtils.GetFilepathWithoutVersion(sourceFilePath).GetFile(),
+            Asset = new AssetReference(config.Paths.GetChunkRelativePath(sourceFilePath)),
+        };
+        if (ResourceLoader.Exists(importPath)) {
+            mat.TakeOverPath(importPath);
+        } else {
+            mat.ResourcePath = importPath;
+        }
+        ResourceSaver.Save(mat);
+        return mat;
+    }
+
     public static void QueueFileRescan()
     {
         var fs = EditorInterface.Singleton.GetResourceFilesystem();
@@ -301,11 +329,11 @@ public class Importer
         if (!File.Exists(sourceFilePath)) {
             GD.PrintErr("Resource file not found: " + sourceFilePath);
             format = RESupportedFileFormats.Unknown;
-            sourceFilePath = Path.GetRelativePath(config.Paths.ChunkPath, sourceFilePath);
         } else {
             format = PathUtils.GetFileFormat(sourceFilePath).format;
-            sourceFilePath = Path.GetRelativePath(config.Paths.ChunkPath, sourceFilePath);
         }
+
+        sourceFilePath = config.Paths.GetChunkRelativePath(sourceFilePath);
 
         Directory.CreateDirectory(outputFilePath.GetBaseDir());
         var newres = new T() {
@@ -351,6 +379,7 @@ public enum RESupportedFileFormats
     Scene,
     Prefab,
     Userdata,
+    Material,
 }
 
 public record struct REFileFormat(RESupportedFileFormats format, int version)

@@ -106,6 +106,14 @@
         "Type": "S32"
       },
       {
+        "Name": "v2",
+        "Type": "Resource"
+      },
+      {
+        "Name": "v3",
+        "Type": "Resource"
+      },
+      {
         "Name": "v29",
         "Type": "Object"
       },
@@ -159,7 +167,7 @@
       },
       {
         "Name": "v34",
-        "Type": "Object"
+        "Type": "S32"
       }
     ]
   },

@@ -212,7 +212,7 @@ public partial class AsyncImporter : Window
             case RESupportedFileFormats.Texture:
                 return QueueAssetImport(originalFilepath, game, format, Importer.ImportTexture, callback).awaitTask;
             default:
-                return Task.FromException<Resource?>(new ArgumentException("Invalid import asset " + originalFilepath));
+                return Task.FromException<Resource?>(new ArgumentException("Invalid async import asset " + originalFilepath));
         }
     }
 

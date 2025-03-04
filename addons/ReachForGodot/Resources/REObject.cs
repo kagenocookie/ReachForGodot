@@ -14,7 +14,7 @@ public partial class REObject : Resource
     [Export] protected Godot.Collections.Dictionary<StringName, Variant> __Data = new();
 
     public bool IsEmpty => __Data.Count == 0;
-    public REObjectTypeCache TypeInfo => cache ??= TypeCache.GetData(Game, Classname ?? throw new Exception("Missing classname"));
+    public REObjectTypeCache TypeInfo => cache ??= TypeCache.GetData(Game, Classname ?? throw new Exception("Missing classname at " + ResourcePath));
 
     private REObjectTypeCache? cache;
 

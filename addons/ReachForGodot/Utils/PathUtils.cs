@@ -54,16 +54,28 @@ public static class PathUtils
         if (extension.SequenceEqual("scn")) return RESupportedFileFormats.Scene;
         if (extension.SequenceEqual("pfb")) return RESupportedFileFormats.Prefab;
         if (extension.SequenceEqual("user")) return RESupportedFileFormats.Userdata;
+        if (extension.SequenceEqual("mdf2")) return RESupportedFileFormats.Material;
         return RESupportedFileFormats.Unknown;
     }
 
     public static string? GetFileExtensionFromFormat(RESupportedFileFormats format) => format switch {
         RESupportedFileFormats.Mesh => "mesh",
         RESupportedFileFormats.Texture => "tex",
+        RESupportedFileFormats.Material => "mdf2",
         RESupportedFileFormats.Scene => "scn",
         RESupportedFileFormats.Prefab => "pfb",
         RESupportedFileFormats.Userdata => "user",
         _ => null,
+    };
+
+    public static Type GetResourceTypeFromFormat(RESupportedFileFormats format) => format switch {
+        RESupportedFileFormats.Mesh => typeof(MeshResource),
+        RESupportedFileFormats.Texture => typeof(Texture),
+        RESupportedFileFormats.Material => typeof(MaterialResource),
+        RESupportedFileFormats.Scene => typeof(PackedScene),
+        RESupportedFileFormats.Prefab => typeof(PackedScene),
+        RESupportedFileFormats.Userdata => typeof(UserdataResource),
+        _ => typeof(REResource),
     };
 
     private static bool TryFindFileExtensionVersion(AssetConfig config, string extension, out int version)

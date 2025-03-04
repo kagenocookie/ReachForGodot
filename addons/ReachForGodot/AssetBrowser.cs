@@ -63,7 +63,7 @@ public partial class AssetBrowser : Resource
 
         if (_dialog == null) {
             _dialog = new FileDialog();
-            _dialog.Filters = ["*.mesh.*", "*.tex.*", "*.scn.*", "*.pfb.*", "*.user.*"];
+            _dialog.Filters = ["*.mesh.*", "*.tex.*", "*.scn.*", "*.pfb.*", "*.user.*", "*.mdf2.*"];
             _dialog.Access = FileDialog.AccessEnum.Filesystem;
             _dialog.UseNativeDialog = true;
             _dialog.FileMode = FileDialog.FileModeEnum.OpenFiles;

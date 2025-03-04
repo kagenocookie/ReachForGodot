@@ -3,5 +3,25 @@
     "PlayMotionWeaponObjRefs": {
       "PropertyId": 393218
     }
+  },
+  "app.ropeway.FlashLight": {
+    "IESLightRef": {
+      "PropertyId": 458759,
+      "AutoDetected": true
+    },
+    "LightShaftRef": {
+      "PropertyId": 458760,
+      "AutoDetected": true
+    },
+    "FakeGIRef": {
+      "PropertyId": 458761,
+      "AutoDetected": true
+    }
+  },
+  "app.ropeway.effect.script.FlashLightReflectionEffect": {
+    "TargetLight": {
+      "PropertyId": 393216,
+      "AutoDetected": true
+    }
   }
 }

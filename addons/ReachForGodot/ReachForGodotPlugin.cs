@@ -184,6 +184,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
     {
         RefreshToolMenu();
         _pluginInstance = this;
+        OnProjectSettingsChanged();
     }
 }
 

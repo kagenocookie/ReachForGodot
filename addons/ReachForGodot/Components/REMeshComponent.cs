@@ -2,22 +2,37 @@ namespace RGE;
 
 using System.Threading.Tasks;
 using Godot;
+using Godot.Collections;
+using JetBrains.Annotations;
 using RszTool;
 
 [GlobalClass, Tool, REComponentClass("via.render.Mesh")]
 public partial class REMeshComponent : REComponent, IVisualREComponent
 {
-    private static readonly REObjectFieldAccessor MeshField = new REObjectFieldAccessor("Mesh", (fields) => fields.FirstOrDefault(f => f.VariantType == Variant.Type.String));
-    private static readonly REObjectFieldAccessor MaterialField = new REObjectFieldAccessor("Material", (fields) => fields.Where(f => f.VariantType == Variant.Type.String).Skip(1).FirstOrDefault());
+    [Export] private PackedScene? overrideMesh;
+    [Export] private MaterialResource? overrideMaterial;
+
+    private static readonly REObjectFieldAccessor MeshField = new REObjectFieldAccessor(
+        "Mesh",
+        (fields) => fields.FirstOrDefault(f => f.RszField.type == RszFieldType.Resource),
+        (field) => field.ResourceType = RESupportedFileFormats.Mesh);
+
+    private static readonly REObjectFieldAccessor MaterialField = new REObjectFieldAccessor(
+        "Material",
+        (fields) => fields.Where(f => f.RszField.type == RszFieldType.Resource).Skip(1).FirstOrDefault(),
+        (field) => field.ResourceType = RESupportedFileFormats.Material);
 
     private Node3D? meshNode;
-    public string? MeshFilepath => TryGetFieldValue(MeshField.Get(this), out var path) ? path.AsString() : null;
+    public MeshResource? Resource => TryGetFieldValue(MeshField.Get(this), out var path) ? path.As<MeshResource>() : null;
 
     [ExportToolButton("Reinstantiate mesh")]
     private Callable ForceReinstance => Callable.From(FindResourceAndReinit);
 
     public Node3D? GetOrFindMeshNode()
     {
+        if (meshNode != null && !IsInstanceValid(meshNode)) {
+            meshNode = null;
+        }
         meshNode ??= GameObject.FindChildWhere<Node3D>(child => child.GetType() == typeof(Node3D) && child.Name.ToString().StartsWith("__"));
         if (!IsInstanceValid(meshNode)) {
             meshNode = null;
@@ -25,11 +40,9 @@ public partial class REMeshComponent : REComponent, IVisualREComponent
         return meshNode;
     }
 
-    private MeshResource? GetMeshResource() => SerializedContainers.Select(parent => parent.FindResource<MeshResource>(MeshFilepath)).FirstOrDefault();
-
     private void FindResourceAndReinit()
     {
-        _ = ReloadMesh(GetMeshResource(), true);
+        _ = ReloadMesh(Resource, true);
     }
 
     public override void OnDestroy()
@@ -45,15 +58,23 @@ public partial class REMeshComponent : REComponent, IVisualREComponent
 
     private bool IsCorrectMesh(MeshResource mr)
     {
-        return MeshFilepath != null && mr.Asset?.IsSameAsset(MeshFilepath) == true;
+        return Resource?.ResourcePath == mr.ResourcePath;
+    }
+
+    public override bool _Set(StringName property, Variant value)
+    {
+        var r = base._Set(property, value);
+        if (MeshField.IsMatch(this, property)) {
+            ReinstantiateMesh(value.As<MeshResource>()?.ImportedResource as PackedScene);
+        }
+        return r;
     }
 
     public override async Task Setup(REGameObject gameObject, RszInstance rsz, RszImportType importType)
     {
         GameObject = gameObject;
         meshNode ??= GetOrFindMeshNode();
-        var path = MeshFilepath;
-        if (string.IsNullOrEmpty(path)) {
+        if (Resource == null) {
             meshNode?.QueueFree();
             meshNode = null;
             return;
@@ -63,17 +84,7 @@ public partial class REMeshComponent : REComponent, IVisualREComponent
             return;
         }
 
-        await ReloadMesh(Importer.FindOrImportResource<MeshResource>(path, ReachForGodot.GetAssetConfig(gameObject.Game)), importType == RszImportType.ForceReimport);
-    }
-
-    public override void PreExport()
-    {
-        meshNode ??= GetOrFindMeshNode();
-        var resource = Importer.FindImportedResourceAsset(meshNode?.SceneFilePath) as MeshResource;
-        var meshScenePath = resource?.Asset?.AssetFilename;
-        var name = GameObject.Name.ToString();
-
-        SetField(MeshField.Get(this), meshScenePath ?? string.Empty);
+        await ReloadMesh(Resource, importType == RszImportType.ForceReimport);
     }
 
     protected async Task ReloadMesh(MeshResource? mr, bool forceReload)
@@ -85,12 +96,12 @@ public partial class REMeshComponent : REComponent, IVisualREComponent
         } else {
             meshNode?.QueueFree();
             meshNode = null;
-            GD.Print("Missing mesh " + MeshFilepath + " at path: " + GameObject.Owner.GetPathTo(GameObject));
         }
     }
 
     public Task ReinstantiateMesh(PackedScene? scene)
     {
+        meshNode = GetOrFindMeshNode();
         meshNode?.Free();
         if (scene != null) {
             meshNode = scene.Instantiate<Node3D>(PackedScene.GenEditState.Instance);

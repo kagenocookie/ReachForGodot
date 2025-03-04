@@ -32,8 +32,6 @@ public class GodotRszImporter
     public static readonly RszGodotConversionOptions forceReimportStructure = new(RszImportType.ForceReimport, RszImportType.ForceReimport, RszImportType.CreateOrReuse, RszImportType.ForceReimport);
     public static readonly RszGodotConversionOptions fullReimport = new(RszImportType.ForceReimport, RszImportType.ForceReimport, RszImportType.ForceReimport, RszImportType.ForceReimport);
 
-    private static readonly Dictionary<SupportedGame, Dictionary<string, Func<REGameObject, RszInstance, REComponent?>>> perGameFactories = new();
-
     public enum PresetImportModes
     {
         PlaceholderImport = 0,
@@ -263,53 +261,6 @@ public class GodotRszImporter
         public (int total, int finished) FolderCount { get; }
         public (int total, int finished) ComponentsCount { get; }
         public (int total, int finished) GameObjectCount { get; }
-    }
-
-
-    static GodotRszImporter()
-    {
-        AssemblyLoadContext.GetLoadContext(typeof(GodotRszImporter).Assembly)!.Unloading += (c) => {
-            perGameFactories.Clear();
-        };
-        InitComponents(typeof(GodotRszImporter).Assembly);
-    }
-
-    public static void InitComponents(Assembly assembly)
-    {
-        var componentTypes = assembly.GetTypes()
-            .Where(t => t.GetCustomAttribute<REComponentClassAttribute>() != null && !t.IsAbstract);
-
-        foreach (var type in componentTypes) {
-            if (!type.IsAssignableTo(typeof(REComponent))) {
-                GD.PrintErr($"Invalid REComponentClass annotated type {type.FullName}.\nMust be a non-abstract REComponent node.");
-                continue;
-            }
-            if (type.GetCustomAttribute<ToolAttribute>() == null || type.GetCustomAttribute<GlobalClassAttribute>() == null) {
-                GD.PrintErr($"REComponentClass annotated type {type.FullName} must also be [Tool] and [GlobalClass].");
-                continue;
-            }
-
-            var attr = type.GetCustomAttribute<REComponentClassAttribute>()!;
-            DefineComponentFactory(attr.Classname, (obj, instance) => {
-                var node = (REComponent)Activator.CreateInstance(type)!;
-                return node;
-            }, attr.SupportedGames);
-        }
-    }
-
-    public static void DefineComponentFactory(string componentType, Func<REGameObject, RszInstance, REComponent?> factory, params SupportedGame[] supportedGames)
-    {
-        if (supportedGames.Length == 0) {
-            supportedGames = ReachForGodot.GameList;
-        }
-
-        foreach (var game in supportedGames) {
-            if (!perGameFactories.TryGetValue(game, out var factories)) {
-                perGameFactories[game] = factories = new();
-            }
-
-            factories[componentType] = factory;
-        }
     }
 
     public GodotRszImporter(AssetConfig paths, RszGodotConversionOptions options)
@@ -902,11 +853,7 @@ public class GodotRszImporter
         var componentInfo = gameObject.GetComponent(classname);
         if (componentInfo != null) {
             // nothing to do here
-        } else if (
-            perGameFactories.TryGetValue(AssetConfig.Game, out var factories) &&
-            factories.TryGetValue(classname, out var factory)
-        ) {
-            componentInfo = factory.Invoke(gameObject, instance);
+        } else if (TypeCache.TryCreateComponent(AssetConfig.Game, classname, gameObject, instance, out componentInfo)) {
             if (componentInfo == null) {
                 componentInfo = new REComponentPlaceholder();
                 gameObject.AddComponent(componentInfo);
@@ -998,7 +945,7 @@ public class GodotRszImporter
                 return fieldInst.Index == 0 ? new Variant() : CreateOrGetObject(fieldInst);
             case RszFieldType.Resource:
                 if (value is string str && !string.IsNullOrWhiteSpace(str)) {
-                    return Importer.FindOrImportResource<Resource>(str, ReachForGodot.GetAssetConfig(AssetConfig.Game))!;
+                    return Importer.FindOrImportResource<Resource>(str, AssetConfig)!;
                 } else {
                     return new Variant();
                 }

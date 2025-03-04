@@ -43,7 +43,7 @@ public record GamePaths(SupportedGame Game, string ChunkPath, string? Il2cppPath
         _ => Game.ToString(),
     };
 
-    public string GetChunkRelativePath(string path) => string.IsNullOrEmpty(ChunkPath) ? path : path.Replace(ChunkPath, "");
+    public string GetChunkRelativePath(string path) => string.IsNullOrEmpty(ChunkPath) ? path : Path.GetRelativePath(ChunkPath, path);
 
     public static readonly string RszPatchGlobalPath = ProjectSettings.GlobalizePath($"res://addons/ReachForGodot/game_config/global/rsz_patches.json");
     public string RszPatchPath => ProjectSettings.GlobalizePath($"res://addons/ReachForGodot/game_config/{ShortName}/rsz_patches.json");

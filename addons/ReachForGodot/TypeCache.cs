@@ -2,6 +2,7 @@ namespace RGE;
 
 using System;
 using System.Diagnostics;
+using System.Reflection;
 using System.Text.Json;
 using Godot;
 using RszTool;
@@ -15,6 +16,8 @@ public class TypeCache
         DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull
     };
 
+    private static readonly Dictionary<SupportedGame, Dictionary<string, Func<REGameObject, RszInstance, REComponent?>>> perGameFactories = new();
+
     private sealed class PerGameCache
     {
         public RszParser? parser;
@@ -22,6 +25,7 @@ public class TypeCache
         public Il2cppCache? il2CppCache;
         public Dictionary<string, Dictionary<string, PrefabGameObjectRefProperty>>? gameObjectRefProps;
         public Dictionary<string, RszClassPatch>? rszTypePatches;
+        public Dictionary<string, List<REObjectFieldAccessor>>? fieldOverrides;
     }
 
     static TypeCache()
@@ -34,6 +38,57 @@ public class TypeCache
 
             allCacheData.Clear();
         };
+        InitComponents(typeof(GodotRszImporter).Assembly);
+    }
+
+    public static void InitComponents(Assembly assembly)
+    {
+        foreach (var type in assembly.GetTypes()) {
+            if (!type.IsAbstract && type.GetCustomAttribute<REComponentClassAttribute>() is REComponentClassAttribute attr) {
+                if (!type.IsAssignableTo(typeof(REComponent))) {
+                    GD.PrintErr($"Invalid REComponentClass annotated type {type.FullName}.\nMust be a non-abstract REComponent node.");
+                    continue;
+                }
+                if (type.GetCustomAttribute<ToolAttribute>() == null || type.GetCustomAttribute<GlobalClassAttribute>() == null) {
+                    GD.PrintErr($"REComponentClass annotated type {type.FullName} must also be [Tool] and [GlobalClass].");
+                    continue;
+                }
+
+                DefineComponentFactory(attr.Classname, (obj, instance) => {
+                    var node = (REComponent)Activator.CreateInstance(type)!;
+                    return node;
+                }, attr.SupportedGames);
+
+                TypeCache.HandleFieldOverrideAttributes(type, attr.Classname, attr.SupportedGames);
+            } else if (type.GetCustomAttribute<REObjectClassAttribute>() is REObjectClassAttribute classAttr) {
+                if (!type.IsAssignableTo(typeof(REObject))) {
+                    GD.PrintErr($"Invalid REObjectClass annotated type {type.FullName}.\nMust be a non-abstract REObject object.");
+                    continue;
+                }
+
+                if (type.GetCustomAttribute<ToolAttribute>() == null || type.GetCustomAttribute<GlobalClassAttribute>() == null) {
+                    GD.PrintErr($"REObjectClass annotated type {type.FullName} must also be [Tool] and [GlobalClass].");
+                    continue;
+                }
+
+                TypeCache.HandleFieldOverrideAttributes(type, classAttr.Classname, classAttr.SupportedGames);
+            }
+        }
+    }
+
+    public static void DefineComponentFactory(string componentType, Func<REGameObject, RszInstance, REComponent?> factory, params SupportedGame[] supportedGames)
+    {
+        if (supportedGames.Length == 0) {
+            supportedGames = ReachForGodot.GameList;
+        }
+
+        foreach (var game in supportedGames) {
+            if (!perGameFactories.TryGetValue(game, out var factories)) {
+                perGameFactories[game] = factories = new();
+            }
+
+            factories[componentType] = factory;
+        }
     }
 
     public static void InitializeGame(SupportedGame game)
@@ -70,12 +125,28 @@ public class TypeCache
     {
         var reflist = GetOrLoadClassProps(game);
         reflist[classname] = propInfoDict;
+        GetData(game, classname).PfbRefs = propInfoDict;
         UpdateClassProps(game, reflist);
     }
 
     private static REObjectTypeCache GenerateObjectCache(RszClass cls, SupportedGame game)
     {
-        return new REObjectTypeCache(cls, GenerateFields(cls, game), GetClassProps(game, cls.name));
+        var cache = new REObjectTypeCache(cls, GenerateFields(cls, game), GetClassProps(game, cls.name));
+        var root = GetCacheRoot(game);
+        if (root.fieldOverrides?.TryGetValue(cls.name, out var yes) == true) {
+            foreach (var accessor in yes) {
+                if (accessor.overrideFunc != null) {
+                    var field = accessor.Get(game, cache);
+                    if (field != null) {
+                        accessor.overrideFunc.Invoke(field);
+                        var prop = cache.PropertyList.First(dict => dict["name"].AsString() == field.SerializedName);
+                        cache.RebuildFieldProperty(field, prop);
+                    }
+                }
+            }
+        }
+
+        return cache;
     }
 
     public static RszClass? GetRszClass(SupportedGame game, string classname)
@@ -141,6 +212,27 @@ public class TypeCache
             RszFieldToVariantType(srcField, refield, game);
         }
         return fields;
+    }
+
+    internal static void HandleFieldOverrideAttributes(Type type, string classname, SupportedGame[] supportedGames)
+    {
+        foreach (var field in type.GetFields(BindingFlags.Public|BindingFlags.NonPublic|BindingFlags.Static)) {
+            if (field.FieldType == typeof(REObjectFieldAccessor)) {
+                var accessor = (REObjectFieldAccessor)field.GetValue(null)!;
+                if (accessor.overrideFunc == null) continue;
+
+                var games = supportedGames.Length == 0 ? ReachForGodot.GameList : supportedGames;
+
+                foreach (var game in games) {
+                    var cache = GetCacheRoot(game);
+                    cache.fieldOverrides ??= new();
+                    if (!cache.fieldOverrides.TryGetValue(classname, out var pergame)) {
+                        cache.fieldOverrides[classname] = pergame = new();
+                    }
+                    pergame.Add(accessor);
+                }
+            }
+        }
     }
 
     private static void RszFieldToVariantType(RszField srcField, REField refield, SupportedGame game)
@@ -550,6 +642,19 @@ public class TypeCache
         }
         return false;
     }
+
+    public static bool TryCreateComponent(SupportedGame game, string classname, REGameObject gameObject, RszInstance instance, out REComponent? componentInfo)
+    {
+
+        if (perGameFactories.TryGetValue(game, out var factories) &&
+            factories.TryGetValue(classname, out var factory)) {
+            componentInfo = factory.Invoke(gameObject, instance);
+            return true;
+        }
+
+        componentInfo = null;
+        return false;
+    }
 }
 
 public class REField
@@ -559,6 +664,9 @@ public class REField
     public Variant.Type VariantType { get; set; }
     public PropertyHint Hint { get; set; }
     public string? HintString { get; set; }
+    public RESupportedFileFormats ResourceType {
+        set => HintString = PathUtils.GetResourceTypeFromFormat(value).Name;
+    }
 
     public string SerializedName => RszField.name;
 }
@@ -568,17 +676,20 @@ public readonly struct REObjectFieldAccessor
     public readonly string preferredName;
     private readonly Func<REField[], REField?> getter;
     private readonly Dictionary<SupportedGame, REField?> _cache = new(1);
+    public readonly Action<REField>? overrideFunc;
 
-    public REObjectFieldAccessor(string preferredName, Func<REField[], REField?> getter)
+    public REObjectFieldAccessor(string preferredName, Func<REField[], REField?> getter, Action<REField>? overrideFunc = null)
     {
         this.preferredName = preferredName;
         this.getter = getter;
+        this.overrideFunc = overrideFunc;
     }
 
-    public REObjectFieldAccessor(string preferredName, string fallbackName)
+    public REObjectFieldAccessor(string preferredName, string fallbackName, Action<REField>? overrideFunc = null)
     {
         this.preferredName = preferredName;
         this.getter = (fields) => fields.FirstOrDefault(f => f.SerializedName == fallbackName);
+        this.overrideFunc = overrideFunc;
     }
 
     public readonly REField Get(REObject target)
@@ -590,6 +701,8 @@ public readonly struct REObjectFieldAccessor
 
         return _cache[target.Game] = cachedField = getter.Invoke(target.TypeInfo.Fields)!;
     }
+
+    public readonly bool IsMatch(REObject target, StringName name) => Get(target).SerializedName == name;
 
     public readonly REField Get(SupportedGame game, REObjectTypeCache typecache)
     {
@@ -610,7 +723,7 @@ public class REObjectTypeCache
     public Dictionary<string, REField> FieldsByName { get; }
     public Godot.Collections.Array<Godot.Collections.Dictionary> PropertyList { get; }
     public RszClass RszClass { get; set; }
-    public Dictionary<string, PrefabGameObjectRefProperty> PfbRefs { get; }
+    public Dictionary<string, PrefabGameObjectRefProperty> PfbRefs { get; set; }
 
     public REField GetFieldOrFallback(string name, Func<REField, bool> fallbackFilter)
     {
@@ -642,17 +755,19 @@ public class REObjectTypeCache
         });
         foreach (var f in fields) {
             FieldsByName[f.SerializedName] = f;
-
-            var dict = new Godot.Collections.Dictionary()
-            {
-                { "name", f.SerializedName },
-                { "type", (int)f.VariantType },
-                { "hint", (int)f.Hint },
-                { "usage", (int)(PropertyUsageFlags.Editor|PropertyUsageFlags.ScriptVariable) }
-            };
-            if (f.HintString != null) dict["hint_string"] = f.HintString;
+            var dict = new Godot.Collections.Dictionary();
             PropertyList.Add(dict);
+            RebuildFieldProperty(f, dict);
         }
+    }
+
+    public void RebuildFieldProperty(REField field, Godot.Collections.Dictionary dict)
+    {
+        dict["name"] = field.SerializedName;
+        dict["type"] = (int)field.VariantType;
+        dict["hint"] = (int)field.Hint;
+        dict["usage"] = (int)(PropertyUsageFlags.Editor|PropertyUsageFlags.ScriptVariable);
+        if (field.HintString != null) dict["hint_string"] = field.HintString;
     }
 }
 
