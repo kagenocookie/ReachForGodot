@@ -1,79 +1,111 @@
 # Reach for Godot Engine (RGE)
 Godot-based visual scene editor for RE Engine games.
 
-Integrates various open source tools dealing with RE Engine games and packs them into a fully functional game data and content editor using Godot.
+Integrates various open source tools dealing with RE Engine games and packs them into a full game data and content / scene editor inside Godot.
+
+<p align="center">
+  <img src="logo.png" alt="Reach for Godot Engine" />
+</p>
+
+## Supported games
+- in theory, any RE engine game, but I can only test what I own
+- RE2 RT (and likely anything newer than RE3): all features should work fine
+- DMC5 (probably including RE2 non-rt, RE7): meshes and prefabs _can_ be loaded, though full embedded userdata support is TBD since it's using a slightly different file format that RszTool doesn't support yet
+- DD2, MH Wilds?: all features should work fine. Lack of MPLY mesh support means levels are mostly just placeholder meshes. The scene structure is a mess thanks to the devs, slow and hard to edit, but functional; could be improved with future DD2-specific tooling additions once the common core functionality is stabilized.
 
 ## Prerequisites
+- Godot 4.4+ w/ .NET
 - Blender
 - [RE Mesh Editor](https://github.com/NSACloud/RE-Mesh-Editor) - used for mesh and texture import / export
-- Extract all relevant chunk files you wish to edit somewhere - [written guide here](https://github.com/Modding-Haven/REEngine-Modding-Documentation/wiki/Extracting-Game-Files)
-- Godot 4.4+ w/ .NET (aiming for 4.5 or whatever version this PR gets merged into: https://github.com/godotengine/godot/pull/101994)
+- Extract all relevant chunk files you wish to edit somewhere - [guide](https://github.com/Modding-Haven/REEngine-Modding-Documentation/wiki/Extracting-Game-Files)
 - Download the latest RSZ json for the game you're trying to edit, place it wherever
-- Generate the il2cpp dump json for the game you're trying to edit
+- The addon stores its own cache of relevant il2cpp json data (`adons/ReachForGodot/game_settings/{game}/il2cpp_cache.json`), but for games that don't have those in the repository or if the game gets updated, the il2cpp dump json for the game you're trying to edit is required to (re-)generate the cache file.
 
-## Godot setup
+## Setup
+- Create a fresh godot project anywhere
+- Clone or download the `addons/ReachForGodot` folder into it (the file should stay in the same relative folder; the other files in this project are not needed)
+- On first launch, you'll get an addon load error - you need to Build the project (the hammer icon in the top right)
 - Enable the ReachForGodot plugin in Project settings>Plugins
 - Restart the editor if needed
 - Configure the blender path in Godot's editor settings (filesystem/import/blender/blender_path)
 - Configure the game paths in Editor Settings > `Reach for Godot/Paths/{game name}`
-- Create an AssetBrowser resource anywhere in the project and press "Import Assets"
-- If it doesn't exist yet, an asset config resource file will be created automatically, select the game there
 
 ## Usage
-Start by selecting the Asset Browser resource and picking a file to import. The appdata/contents.scn.20 might be a good start (DD2) since it's basically the root scene for the world.
+Start by going into the top menu: Project > Tools > RE ENGINE > Import assets and pick a file. Something like the appdata/contents.scn.20 (DD2) might be a good start since it's basically the root scene for the world. Once you have a scene file imported, you can import any further child scenes and referenced resources from the inspector there.
 
+If you've ever worked with a game engine before, the basic UI should be more or less familiar - scene node tree on the left, inspector with all the data for a selected node on the right (for the default layout at least). There's some additional tool buttons in the inspector for importing and exporting from and to RE Engine file formats.
 
 ## Current features
-- normal meshes: automatic import through RE Mesh editor into blend files
-- MPLY / composite meshes: unsupported
-- textures: automatic import through RE Mesh editor
-- pfb files: import through integrated RszTool (no support for exporting yet)
-- scn files: import through integrated RszTool (no support for exporting yet); although without composite MPLY meshes, they can look pretty empty sometimes
-- user files: import through integrated RszTool (no support for exporting yet)
+- meshes: automatic import through RE Mesh editor into blend files (MPLY / composite meshes: currently unsupported)
+- textures: prepared import through RE Mesh editor; not quite functional yet due to Godot's lacking DDS support
+- pfb files: import and export through integrated RszTool (tested with DD2 player pfb)
+- scn files: import through integrated RszTool (export tested with some RE2 RT levels)
+- user files: import and export through integrated RszTool
 - other resource files: imported as placeholders
 
 Specific components support:
-- `via.Transform`: transforms are transformed to Godot equivalents
-- `via.render.Mesh`: meshes are imported automatically
+- `via.Transform`: transforms are transformed to Godot equivalents on the game object node
+    - you can move the REGameObject nodes directly and the transforms will get updated on export
+- `via.render.Mesh`: meshes are imported automatically into an additional mesh Node3D child of the game object with a `__{mesh_name}` prefix
+    - meshes can be swapped around by changing the mesh field within the component's data
+    - keep in mind that resources (mesh and mdf2) also need to be linked to in the containing scene/pfb's Resources list, resource lists are not automated at the moment
+- `via.render.CompositeMesh`: composite meshes are mapped into several MultiMeshInstance3D nodes (although MPLY meshes are placeholders for now)
+
+## Scene editing
+- import the scene file you wish to edit; best to start with whichever the root scene equivalent is for the game, e.g. `appdata/maincontents.scn.20` for DD2
+- open the newly created packed scene from godot's filesystem
+- it will just be an empty placeholder file initially, click on the root node and use the import options in the inspector panel to import the actual contents
+- there are several import options to choose from so you don't need to wait for the whole game to convert:
+    - Placeholders: will generate the direct gameobjects of the scene and only placeholders for any subfolder scn file
+    - Import just his scene: will fully generate everything inside this scene and only make placefolders for subfolders. This is recommended for anything that contains a lot of subfolders like the main / root scenes
+    - Import missing objects: will import everything within this scn file as well as all subfolders that don't exist yet, but anything that's already in the tree will be left untouched; _Bear in mind that this will take a while for the root scene and the editor will probably not like it as godot isn't quite optimized for open world data streaming and huge node trees - prefer to use the previous two options for individual scn files linking to a lot of content_
+    - Discard and reimport: The tree will be reset and everything reimported, but meshes and other assets will be kept and reused
+    - Force reimport: will import and replace all existing data, any meshes and other assets will also be reimported instead of reused
+- nested scn files are imported using a proxy node system and linked through PackedScenes, this is to mitigate editor performance dying due to having too much stuff loaded at once
+    - to make the proxy folder's contents show, use the Show Linked Folder checkbox or click the Toggle subfolders button
+- except when doing Placeholders import, all prefabs linked from scn files will automatically be imported
+- the "Find me something to look at" button will move the editor camera to the center of a scene's bounds since positions aren't always centered around (0,0,0)
+    - this is mainly a concern with the open world games (DD2, MHWs) since they're all over the coordinate system
+    - if the button isn't working, check the "Known Bounds" value - if it's all 0, try opening the scene file directly in editor, as well as the "Recalc bounds" button to make the values properly reflect. If it's still all 0, it might just not have any visual nodes inside it or it wasn't fully imported
+
+## Prefab editing
+- import options:
+    - Import anything missing: will only import objects that aren't there yet, leaving any node tree additions mostly intact
+    - Discard and reimport structure: will discard any data within and recreate the whole tree
+    - Fully reimport: discards the structure, reimports everything including recreating assets
 
 ## Asset exporting
 - configure any export base folders you need in editor settings
 - You can specify either just the full path, or also add a label for it to make it easier to identify with a | separator, e.g. `DD2: my awesome mod|D:/mods/dd2/awesome_mod/natives/stm/`
-- every exportable asset has a path picker and export button at the top of its inspector
+- every exportable asset has a base path picker and export button at the top of its inspector
 
 ## Planned features
 - enums
-    - autodetect if it's a flag enum
+    - flag enums (autodetect flag enums maybe)
     - configurable place for overriding enum settings (IsFlags, custom entries)
 - scn/pfb
     - properly show and resolve guid gameobject references
 - export any changes back over their original file formats (into a configurable output folder so we don't override the source files)
 - support serializing objects to JSON - Content Editor integration
-- RETool integration - automatically extract files from paks as needed instead of requiring everything to be pre-extracted
-- look into GUI support
-
-## Room for improvement
-- large scene files are SLOW. Don't fully generate the root contents scene because you won't be able to actually do anything with it. I'll provide some sort of wrapper node that lets you toggle individual subfolder loading eventually
-- import files in batches, keep blender instance open and just re-clear the file
-- find a way to not put blender in the foreground while its doing the imports
-- when re-deserializing RSZ values from godot formats, sometimes the types get mismatched because the base rsz json doesn't always contain correct types. Can be fixed by manually fixing the data in the game specific patch json files, or by re-importing from source file. Will eventually add automatic re-import of just the RSZ Data from the source file when potential cases of this are detected, maybe automatic patch file modifications as well.
+- unpacker integration - automatically extract files from paks as needed instead of requiring everything to be pre-extracted
+- game specific tooling to make navigation between scenes easier (mainly looking at DD2 / open world assets)
+- look into potential GUI support
 
 ## Known issues
-- mesh textures don't show up (likely fixed once Godot gets DDS image format support - https://github.com/godotengine/godot/pull/101994)
-- no MPLY format support (meaning DD2 levels are mostly empty aside from the occasional simple mesh)
-- some meshes fail to import on RE Mesh Editor's side (AttributeError: 'NoneType' object has no attribute 'count' - if reMesh.skeletonHeader.remapCount != reMesh.boneBoundingBoxHeader.count)
-
-## Self notes
-- Nice and chunky env: AppData/Contents/TWN01_02/Env_6216/Environment.scn.20
-
-## DD2 specific additions
-- app.AISituationObject: show some sort of 3d gizmo to indicate AI node objects
-
-## General additions
-- soundlib.SoundSphere: show _Sphere gizmo
+- mesh textures don't show up - waiting for Godot to fix DDS support for incomplete mipmaps; there are open pull requests that will likely fix it
+- no MPLY format mesh support yet (meaning DD2 levels are mostly empty aside from the occasional simple mesh) - waiting for RE Mesh Editor
+- some meshes fail to import on RE Mesh Editor's side (AttributeError: 'NoneType' object has no attribute 'count' -- when reMesh.skeletonHeader.remapCount != reMesh.boneBoundingBoxHeader.count)
+- some PFBs with `via.GameObjectRef` fields might not export correctly by default, as they rely on some arcane propertyId values that don't seem to have any direct correlation with RSZ or class data; some cases can be automated fairly accurately, but otherwise need to be manually reversed out of existing pfbs and defined in `addons/ReachForGodot/game_configs/{game}/pfb_ref_props.json` files. Feel free to make a PR adding more of these entries as you come across them
+- the first time you save any large scenes after opening the project takes a hot minute when there's a lot of files. This is probably a Godot thing.
+- there tends to be some godot/c++ errors spewed out while it's doing mass importing of assets, most of them are safe to ignore
+- pfb/scn files with embedded userdata aren't supported yet (DMC5 and earlier engine versions, I might extend support for those if there's demand)
+- large scene files are SLOW, but that's just godot not being optimized to handle massive scenes. Disabling any SceneFolderProxy scenes before saving helps.
+- while the addon does support multiple games in one project, if you're going to import a lot of data, consider making separate projects, because startup becomes slower the more files there are
+- some scn and pfb files might not import or export quite correctly, as the RE_RSZ jsons don't always contain full and correct data. These values get updated as they get loaded in but can sometimes be wrong as they're mainly guesses. Any overrides are stored in `addons/ReachForGodot/game_configs/{game}/rsz_patches.json` files, can be modified manually for cases when the automation doesn't do a good job. Feel free to make PRs adding more of these overrides, so that eventually we'll have everything mapped out correctly.
 
 ## Credits
 - RE Mesh Editor - NSACloud
 - RszTool - czastack
 - REFramework and related tools - praydog
+- RE_RSZ and the 010 template - alphazolam
 - All the members of the RE engine modding community for getting it to where it is

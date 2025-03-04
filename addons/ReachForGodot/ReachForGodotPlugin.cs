@@ -39,7 +39,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
         _pluginInstance = this;
         AddSettings();
 
-        toolMenu = new PopupMenu() { Title = "RE ENGINE: Import assets ..." };
+        toolMenu = new PopupMenu() { Title = "RE ENGINE" };
         AddToolSubmenuItem(toolMenu.Title, toolMenu);
 
         EditorInterface.Singleton.GetEditorSettings().SettingsChanged += OnProjectSettingsChanged;

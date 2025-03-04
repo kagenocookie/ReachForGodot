@@ -462,7 +462,7 @@ public class GodotRszImporter
                     return;
                 }
             }
-            proxy.Enabled = true; // TODO configurable by import type?
+            proxy.ShowLinkedFolder = true; // TODO configurable by import type?
         }
 
         await batch.AwaitGameObjects(this);

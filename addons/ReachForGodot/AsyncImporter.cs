@@ -12,19 +12,12 @@ public partial class AsyncImporter : Window
 
     private static CancellationTokenSource? cancellationTokenSource;
 
-    private static AsyncImporter? node;
     private static Dictionary<string, Task<Resource?>> finishedResources = new();
     private static Queue<ImportQueueItem> queuedImports = new();
     private static List<(Task task, Action? cancel)> externalTasks = new();
     private static int asyncLoadCompletedTasks;
 
-    private class AsyncLoaderPopup
-    {
-        public ProgressBar? progress;
-        public Label? label;
-    }
-
-    private class ImportQueueItem
+    private sealed class ImportQueueItem
     {
         public required string originalFilepath;
         public required string importFilename;
@@ -233,9 +226,7 @@ public partial class AsyncImporter : Window
         if (callback != null) {
             queueItem.callbacks.Add(callback);
         }
-        if (node == null) {
-            EnsureImporterNode();
-        }
+        EnsureImporterNode();
 
         return queueItem;
     }

@@ -9,9 +9,6 @@ using RszTool;
 [GlobalClass, Tool, REComponentClass("via.render.Mesh")]
 public partial class REMeshComponent : REComponent, IVisualREComponent
 {
-    [Export] private PackedScene? overrideMesh;
-    [Export] private MaterialResource? overrideMaterial;
-
     private static readonly REObjectFieldAccessor MeshField = new REObjectFieldAccessor(
         "Mesh",
         (fields) => fields.FirstOrDefault(f => f.RszField.type == RszFieldType.Resource),

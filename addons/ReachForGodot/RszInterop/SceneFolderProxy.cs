@@ -5,10 +5,10 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using Godot;
 
-[GlobalClass, Tool]
+[GlobalClass, Tool, Icon("res://addons/ReachForGodot/icons/folder_link.png")]
 public partial class SceneFolderProxy : SceneFolder
 {
-    [Export] public bool Enabled
+    [Export] public bool ShowLinkedFolder
     {
         get => _enabled;
         set => ChangeEnabled(value);
@@ -91,7 +91,7 @@ public partial class SceneFolderProxy : SceneFolder
                 GD.Print("Tree rebuild finished in " + sw.Elapsed);
             } else {
                 GD.Print($"Tree rebuild failed after {sw.Elapsed}:", t.Exception);
-                if (Enabled && _contentScene != null) {
+                if (ShowLinkedFolder && _contentScene != null) {
                     LoadScene();
                 }
             }
@@ -100,28 +100,28 @@ public partial class SceneFolderProxy : SceneFolder
 
     public override void RecalculateBounds(bool deepRecalculate)
     {
-        var wasShown = Enabled;
-        Enabled = true;
+        var wasShown = ShowLinkedFolder;
+        ShowLinkedFolder = true;
 
         if (RealFolder != null) {
             RealFolder.RecalculateBounds(deepRecalculate);
             KnownBounds = RealFolder.KnownBounds;
         }
 
-        if (wasShown != Enabled) {
+        if (wasShown != ShowLinkedFolder) {
             if (!wasShown && KnownBounds.Size.IsZeroApprox() && KnownBounds.Position.IsZeroApprox()) {
                 GD.PrintErr("Try pressing the recalculate button again after the actual scene is loaded in. Sorry for the inconvenience.");
             } else {
-                Enabled = wasShown;
+                ShowLinkedFolder = wasShown;
             }
         }
     }
 
     public void LoadAllChildren(bool load)
     {
-        Enabled = load;
+        ShowLinkedFolder = load;
         foreach (var ch in AllSubfolders.OfType<SceneFolderProxy>()) {
-            ch.Enabled = load;
+            ch.ShowLinkedFolder = load;
             ch.LoadAllChildren(load);
         }
     }

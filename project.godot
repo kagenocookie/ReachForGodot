@@ -12,7 +12,7 @@ config_version=5
 
 config/name="ReachForGodot"
 config/features=PackedStringArray("4.4", "C#", "Forward Plus")
-config/icon="res://icon.svg"
+config/icon="uid://cexvhnrhwdqp8"
 
 [dotnet]
 

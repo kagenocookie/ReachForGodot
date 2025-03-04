@@ -41,11 +41,11 @@ public partial class SceneFolderInspectorPlugin : EditorInspectorPlugin, ISerial
                 loadbtn.Pressed += () => {
                     bool? targetValue = null;
                     if (scene is SceneFolderProxy proxy) {
-                        proxy.LoadAllChildren(!proxy.Enabled);
+                        proxy.LoadAllChildren(!proxy.ShowLinkedFolder);
                     } else {
                         foreach (var ch in scene.AllSubfolders.OfType<SceneFolderProxy>()) {
                             if (targetValue == null) {
-                                targetValue = !ch.Enabled;
+                                targetValue = !ch.ShowLinkedFolder;
                             }
                             ch.LoadAllChildren(targetValue.Value);
                         }
