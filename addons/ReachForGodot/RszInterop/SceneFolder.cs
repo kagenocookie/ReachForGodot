@@ -11,6 +11,7 @@ public partial class SceneFolder : Node, IRszContainerNode
     [Export] public SupportedGame Game { get; set; }
     [Export] public AssetReference? Asset { get; set; }
     [Export] public REResource[]? Resources { get; set; }
+    [Export] public string? OriginalName { get; set; }
     [Export] public Aabb KnownBounds { get; set; }
 
     public bool IsEmpty => GetChildCount() == 0;
@@ -87,7 +88,7 @@ public partial class SceneFolder : Node, IRszContainerNode
 
     public SceneFolder? GetFolder(string name)
     {
-        return this.FindChildWhere<SceneFolder>(c => c.Name == name);
+        return this.FindChildWhere<SceneFolder>(c => string.IsNullOrEmpty(c.OriginalName) ? c.Name == name : c.OriginalName == name);
     }
 
     public REGameObject? GetGameObject(string name, int deduplicationIndex)

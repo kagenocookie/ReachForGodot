@@ -61,6 +61,7 @@ public partial class SceneFolderInspectorPlugin : EditorInspectorPlugin, ISerial
                     var index = folder.GetIndex();
                     var proxy = new SceneFolderProxy() {
                         Game = folder.Game,
+                        OriginalName = folder.OriginalName,
                         Asset = new AssetReference(folder.Asset!.AssetFilename),
                         KnownBounds = folder.KnownBounds,
                     };

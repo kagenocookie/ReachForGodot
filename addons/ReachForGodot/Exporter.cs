@@ -167,7 +167,7 @@ public class Exporter
         } });
 
         var linkedSceneFilepath = folder is SceneFolderProxy proxy && proxy.Asset != null ? proxy.Asset.AssetFilename : string.Empty;
-        folderInstance.Values[0] = folder.Name.ToString();
+        folderInstance.Values[0] = folder.OriginalName ?? folder.Name.ToString();
         folderInstance.Values[1] = string.Empty; // tags?
         folderInstance.Values[2] = (byte)1; // ?
         folderInstance.Values[3] = (byte)1; // ?

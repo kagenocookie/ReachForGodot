@@ -694,16 +694,13 @@ public class GodotRszImporter
         if (folder.Instance?.GetFieldValue("v5") is string scnPath && !string.IsNullOrWhiteSpace(scnPath)) {
             var isNew = false;
             if (subfolder == null) {
-                subfolder = new SceneFolderProxy() { Name = name, Asset = new AssetReference(scnPath), Game = AssetConfig.Game };
+                subfolder = new SceneFolderProxy() { Name = name, OriginalName = name, Asset = new AssetReference(scnPath), Game = AssetConfig.Game };
                 parent.AddFolder(subfolder);
                 isNew = true;
             }
             var subProxy = (SceneFolderProxy)subfolder;
 
-            if (subfolder.Name != name) {
-                GD.PrintErr("Parent and child scene name mismatch? " + subfolder.Name + " => " + name);
-            }
-            subfolder.Name = name;
+            subfolder.OriginalName = name;
             if (folder.Children.Any()) {
                 GD.PrintErr($"Unexpected situation: resource-linked scene also has additional children in parent scene.\nParent scene:{root.Asset?.AssetFilename}\nSubfolder:{scnPath}");
             }
@@ -720,7 +717,8 @@ public class GodotRszImporter
                 GD.Print("Creating folder " + name);
                 subfolder = new SceneFolder() {
                     Game = root.Game,
-                    Name = name
+                    Name = name,
+                    OriginalName = name,
                 };
                 parent.AddFolder(subfolder);
             } else {
