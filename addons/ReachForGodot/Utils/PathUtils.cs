@@ -192,13 +192,8 @@ public static class PathUtils
             throw new ArgumentException($"{config.Game} chunk path not configured");
         }
         var relativePath = fullSourcePath.Replace(basepath, "");
-        var realOsFilepath = ResolveSourceFilePath(relativePath, config);
-        if (string.IsNullOrEmpty(realOsFilepath)) {
-            GD.PrintErr($"{config.Game} file not found: " + relativePath);
-            return null;
-        }
+        relativePath = PathUtils.AppendFileVersion(relativePath, config);
 
-        relativePath = realOsFilepath.Replace(basepath, "");
         var targetPath = Path.Combine(config.AssetDirectory, relativePath);
 
         switch (fmt) {
@@ -232,5 +227,14 @@ public static class PathUtils
         }
 
         return extractedFilePath;
+    }
+
+    public static string? ImportPathToRelativePath(string importPath, AssetConfig config)
+    {
+        if (string.IsNullOrEmpty(importPath)) return null;
+
+        var relativePath = importPath.Replace("res://" + config.AssetDirectory, "");
+        if (relativePath.StartsWith('/')) relativePath = relativePath.Substring(1);
+        return PathUtils.GetFilepathWithoutVersion(relativePath);
     }
 }

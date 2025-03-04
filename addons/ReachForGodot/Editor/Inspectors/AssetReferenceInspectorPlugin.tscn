@@ -11,9 +11,9 @@ theme_override_constants/margin_right = 2
 
 [node name="GridContainer" type="GridContainer" parent="."]
 layout_mode = 2
-columns = 2
 
 [node name="Label" type="Label" parent="GridContainer"]
+visible = false
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Asset"
@@ -22,11 +22,19 @@ text = "Asset"
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="Button" type="Button" parent="GridContainer/HBoxContainer"]
+[node name="ShowBtn" type="Button" parent="GridContainer/HBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 text = "Show"
 
-[node name="TextEdit" type="TextEdit" parent="GridContainer/HBoxContainer"]
+[node name="UpdatePathBtn" type="Button" parent="GridContainer/HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+tooltip_text = "The path of this resource file does not match the expected path for the game.
+Press to change the asset path to the Godot filesystem one."
+text = "Update path"
+
+[node name="Input" type="LineEdit" parent="GridContainer/HBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-scroll_fit_content_height = true

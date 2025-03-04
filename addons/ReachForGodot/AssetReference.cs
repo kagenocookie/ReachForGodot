@@ -23,7 +23,7 @@ public partial class AssetReference : Resource
     [Export] public string AssetFilename
     {
         get => _assetFilename;
-        set => _assetFilename = PathUtils.NormalizeResourceFilepath(value);
+        set {_assetFilename = PathUtils.NormalizeResourceFilepath(value); EmitChanged();}
     }
 
     public bool IsEmpty => string.IsNullOrWhiteSpace(_assetFilename);

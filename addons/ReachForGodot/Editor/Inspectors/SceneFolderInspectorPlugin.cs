@@ -54,6 +54,28 @@ public partial class SceneFolderInspectorPlugin : EditorInspectorPlugin, ISerial
             }
         }
 
+        if (container.GetNode<Button>("%ConvertSceneToProxy") is Button proxyBtn) {
+            if (obj is SceneFolder folder && folder is not SceneFolderProxy && folder.GetParent() != null && folder.GetParent() is not SceneFolderProxy && folder.Owner != null) {
+                proxyBtn.Pressed += () => {
+                    var parent = folder.GetParent();
+                    var index = folder.GetIndex();
+                    var proxy = new SceneFolderProxy() {
+                        Game = folder.Game,
+                        Asset = new AssetReference(folder.Asset!.AssetFilename),
+                        KnownBounds = folder.KnownBounds,
+                    };
+                    parent.AddChild(proxy);
+                    parent.MoveChild(proxy, index);
+                    folder.Reparent(proxy);
+                    proxy.Owner = folder.Owner;
+                    proxy.Name = folder.Name;
+                    proxy.ShowLinkedFolder = true;
+                };
+            } else {
+                proxyBtn.Visible = false;
+            }
+        }
+
         if (container.GetNode<Button>("%RecalcBounds") is Button recalcBtn) {
             if (obj is SceneFolder scene) {
                 recalcBtn.Pressed += () => {

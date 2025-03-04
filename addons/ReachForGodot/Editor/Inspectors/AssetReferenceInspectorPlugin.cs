@@ -24,21 +24,11 @@ public partial class AssetReferenceInspectorPlugin : EditorInspectorPlugin, ISer
     public override bool _ParseProperty(GodotObject @object, Variant.Type type, string name, PropertyHint hintType, string hintString, PropertyUsageFlags usageFlags, bool wide)
     {
         if (type == Variant.Type.Object && name == "Asset" && @object.Get(name).As<AssetReference>() is AssetReference asset) {
-            inspectorScene ??= ResourceLoader.Load<PackedScene>("res://addons/ReachForGodot/Editor/Inspectors/AssetReferenceInspectorPlugin.tscn");
+            var propertyEdit = new AssetReferenceProperty();
+            AddPropertyEditor("Asset", propertyEdit);
 
-            var container = inspectorScene.Instantiate<Control>();
-            container.RequireChildByTypeRecursive<Button>().Pressed += () => asset.OpenSourceFile(@object.Get("Game").As<SupportedGame>());
-            var text = container.RequireChildByTypeRecursive<TextEdit>();
-            text.Text = asset.AssetFilename;
-            text.TextChanged += () => {
-                var fixedText = FilepathRegex().Replace(text.Text, "");
-                if (fixedText != text.Text) {
-                    text.Text = fixedText;
-                }
-                asset.AssetFilename = text.Text;
-            };
-            AddCustomControl(container);
-            pluginSerializationFixer.Register(asset, container);
+
+            pluginSerializationFixer.Register(asset, propertyEdit);
             return true;
         }
         return base._ParseProperty(@object, type, name, hintType, hintString, usageFlags, wide);
