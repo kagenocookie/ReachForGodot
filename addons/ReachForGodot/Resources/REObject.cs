@@ -120,6 +120,12 @@ public partial class REObject : Resource
         __Data[field.SerializedName] = value;
     }
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public void SetField(REObjectFieldAccessor field, Variant value)
+    {
+        __Data[field.Get(this).SerializedName] = value;
+    }
+
     public void SetField(string field, Variant value)
     {
         if (TypeInfo.FieldsByName.TryGetValue(field, out var fieldRef)) {

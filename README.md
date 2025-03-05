@@ -56,6 +56,7 @@ Specific components support:
     - meshes can be swapped around by changing the mesh field within the component's data
     - keep in mind that resources (mesh and mdf2) also need to be linked to in the containing scene/pfb's Resources list, resource lists are not automated at the moment
 - `via.render.CompositeMesh`: composite meshes are mapped into several MultiMeshInstance3D nodes (although MPLY meshes are placeholders for now)
+- `via.physics.Colliders`: Basic colliders get converted to godot equivalents. Mesh colliders can only be edited directly in the component data.
 
 ## Scene editing
 - import the scene file you wish to edit; best to start with whichever the root scene equivalent is for the game, e.g. `appdata/maincontents.scn.20` for DD2

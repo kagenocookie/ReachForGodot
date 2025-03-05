@@ -1,5 +1,7 @@
 namespace RGE;
 
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Threading.Tasks;
 using Godot;
 using RszTool;
@@ -7,7 +9,7 @@ using RszTool;
 [GlobalClass, Tool, REComponentClass("via.physics.Colliders")]
 public partial class PhysicsCollidersComponent : REComponent, IVisualREComponent
 {
-    private StaticBody3D? meshNode;
+    private StaticBody3D? colliderRoot;
     private static readonly StringName CollidersNodeName = "__Colliders";
     private static readonly REObjectFieldAccessor CollidersList = new REObjectFieldAccessor(
         list => list.FirstOrDefault(f => f.RszField.array && f.RszField.type is not (RszFieldType.String or RszFieldType.Resource)));
@@ -36,53 +38,105 @@ public partial class PhysicsCollidersComponent : REComponent, IVisualREComponent
 
     public StaticBody3D? GetOrFindContainerNode()
     {
-        if (meshNode != null && !IsInstanceValid(meshNode)) {
-            meshNode = null;
+        if (colliderRoot != null && !IsInstanceValid(colliderRoot)) {
+            colliderRoot = null;
         }
-        meshNode ??= GameObject.FindChildWhere<StaticBody3D>(child => child is StaticBody3D && child.Name == CollidersNodeName);
-        if (!IsInstanceValid(meshNode)) {
-            meshNode = null;
+        colliderRoot ??= GameObject.FindChildWhere<StaticBody3D>(child => child is StaticBody3D && child.Name == CollidersNodeName);
+        if (!IsInstanceValid(colliderRoot)) {
+            colliderRoot = null;
         }
-        return meshNode;
+        return colliderRoot;
     }
 
     public override void OnDestroy()
     {
-        meshNode ??= GetOrFindContainerNode();
-        if (meshNode != null) {
-            if (!meshNode.IsQueuedForDeletion()) {
-                meshNode.GetParent().CallDeferred(Node.MethodName.RemoveChild, meshNode);
-                meshNode.QueueFree();
+        colliderRoot ??= GetOrFindContainerNode();
+        if (colliderRoot != null) {
+            if (!colliderRoot.IsQueuedForDeletion()) {
+                colliderRoot.GetParent().CallDeferred(Node.MethodName.RemoveChild, colliderRoot);
+                colliderRoot.QueueFree();
             }
-            meshNode = null;
+            colliderRoot = null;
         }
     }
 
     public override async Task Setup(REGameObject gameObject, RszInstance rsz, RszImportType importType)
     {
         GameObject = gameObject;
-        meshNode ??= GetOrFindContainerNode();
+        colliderRoot ??= GetOrFindContainerNode();
 
-        if (meshNode == null) {
-            meshNode = new StaticBody3D() { Name = CollidersNodeName };
-            await gameObject.AddChildAsync(meshNode, gameObject.Owner ?? gameObject);
-            await ReinstantiateCollisions(meshNode);
+        if (colliderRoot == null) {
+            colliderRoot = new StaticBody3D() { Name = CollidersNodeName };
+            await gameObject.AddChildAsync(colliderRoot, gameObject.Owner ?? gameObject);
+            await ReinstantiateCollisions(colliderRoot);
         } else {
-            await ReinstantiateCollisions(meshNode);
+            await ReinstantiateCollisions(colliderRoot);
         }
     }
 
     public override void PreExport()
     {
-        // var resource = Importer.FindImportedResourceAsset(meshNode?.SceneFilePath) as MeshResource;
-        // var meshScenePath = resource?.Asset?.AssetFilename;
+        colliderRoot ??= GetOrFindContainerNode();
+        if (colliderRoot == null) return;
+        var colliders = GetField(CollidersList).AsGodotArray<REObject>();
+        if (colliders == null) {
+            SetField(CollidersList.Get(this), colliders = new Godot.Collections.Array<REObject>());
+        }
+        foreach (var child in colliderRoot.FindChildrenByType<CollisionShape3D>()) {
+            var name = child.Name.ToString();
+            var sub1 = name.IndexOf('_');
+            var sub2 = sub1 == -1 ? -1 : name.IndexOf('_', sub1 + 1);
+            if (sub2 == -1) continue;
+            if (int.TryParse(name.AsSpan()[(sub1 + 1)..sub2], CultureInfo.InvariantCulture, out var id)) {
+                var index = id - 1;
+                REObject shape;
+                switch (child.Shape) {
+                    case BoxShape3D box:
+                        GetOrAddShape(Game, "via.physics.BoxShape", colliders, index, out shape);
+                        var obb = shape.GetField(MeshShape).As<OrientedBoundingBox>();
+                        obb.extent = box.Size;
+                        obb.coord = new Projection(child.Transform);
+                        break;
+                    case SphereShape3D sphere:
+                        GetOrAddShape(Game, "via.physics.SphereShape", colliders, index, out shape);
+                        var pos = child.Position;
+                        shape.SetField(SphereShape, new Vector4(pos.X, pos.Y, pos.Z, sphere.Radius));
+                        break;
+                    case CapsuleShape3D capsule:
+                        GetOrAddShape(Game, "via.physics.CapsuleShape", colliders, index, out shape);
+                        var cap = shape.GetField(MeshShape).As<Capsule>();
+                        cap.r = capsule.Radius;
+                        var cappos = child.Position;
+                        var up = child.Transform.Basis.Y.Normalized();
+                        cap.p0 = cappos - up * 0.5f * capsule.Height;
+                        cap.p1 = cappos + up * 0.5f * capsule.Height;
+                        break;
+                    default:
+                        GD.PrintErr("Unsupported collider type " + child.Shape.GetType() + " at " + Path);
+                        break;
+                }
+            }
+        }
 
-        // SetField("Mesh", meshScenePath ?? string.Empty);
+        static void GetOrAddShape(SupportedGame game, string classname, Godot.Collections.Array<REObject> colliders, int index, out REObject shape)
+        {
+            var collider = colliders.Count > index ? colliders[index] : null!;
+            shape = collider == null ? new REObject() : collider.GetField(ColliderShapeField).As<REObject>();
+            if (shape == null || shape.Classname != classname) {
+                shape = new REObject(game, classname);
+                if (colliders.Count <= index) {
+                    colliders.Add(shape);
+                } else {
+                    colliders[index] = shape;
+                }
+                shape.ResetProperties();
+            }
+        }
     }
 
     public Task ReinstantiateCollisions(Node3D node)
     {
-        meshNode ??= GetOrFindContainerNode();
+        colliderRoot ??= GetOrFindContainerNode();
         var colliders = GetField(CollidersList).AsGodotArray<REObject>();
         node.ClearChildren();
         int n = 1;
@@ -91,7 +145,7 @@ public partial class PhysicsCollidersComponent : REComponent, IVisualREComponent
             node.AddChild(collider);
             var shape = coll.GetField(ColliderShapeField.Get(coll)).As<REObject>();
             if (shape == null) {
-
+                GD.Print("Missing collider shape " + n + " at " + Path);
             } else {
                 switch (shape.Classname) {
                     case "via.physics.MeshShape":
