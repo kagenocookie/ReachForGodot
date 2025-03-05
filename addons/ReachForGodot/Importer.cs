@@ -163,6 +163,10 @@ public class Importer
         if (bytes.AsSpan().SequenceEqual(MPLY_mesh_bytes)) {
             return false;
         }
+        // empty occlusion or whatever meshes, we can't really import them since they're empty
+        if (sourceFilePath.Contains("_OCC.mesh.")) {
+            return false;
+        }
         return true;
     }
 

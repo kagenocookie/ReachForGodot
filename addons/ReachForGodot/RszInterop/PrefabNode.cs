@@ -3,7 +3,7 @@ namespace RGE;
 using System.Diagnostics;
 using Godot;
 
-[GlobalClass, Tool]
+[GlobalClass, Tool, Icon("res://addons/ReachForGodot/icons/prefab.png")]
 public partial class PrefabNode : REGameObject, IRszContainerNode
 {
     [Export] public AssetReference? Asset { get; set; }

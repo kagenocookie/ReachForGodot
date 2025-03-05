@@ -11,7 +11,7 @@ public abstract partial class REComponent : REObject, ISerializationListener
     private Callable TriggerPreExport => Callable.From(PreExport);
 
     public REGameObject GameObject { get; set; } = null!;
-    public string Path => (GameObject?.Owner != null ? GameObject.Owner.GetPathTo(GameObject) : GameObject?.Name) + "/" + Classname;
+    public string Path => (GameObject?.Path) + "/" + Classname;
 
     public REComponent() { }
     public REComponent(SupportedGame game, string classname) : base(game, classname) {}

@@ -16,9 +16,9 @@ public partial class AssetReferenceProperty : EditorProperty
     [GeneratedRegex("[^a-zA-Z0-9-_/\\.]")]
     private static partial Regex FilepathRegex();
 
-    private AssetReference GetAsset() => (GetEditedObject() as IRszContainerNode)?.Asset ?? throw new NullReferenceException("Edited object has no asset reference object");
+    private AssetReference? GetAsset() => GetEditedObject().Get(GetEditedProperty()).As<AssetReference>();
     private string? CurrentResourcePath => GetEditedObject() is Resource res ? res.ResourcePath.GetBaseName() : GetEditedObject() is Node node && !string.IsNullOrEmpty(node.SceneFilePath) ? node.SceneFilePath.GetBaseName() : null;
-    private SupportedGame Game => (GetEditedObject() as IRszContainerNode)?.Game ?? SupportedGame.Unknown;
+    private SupportedGame Game => (GetEditedObject() as IRszContainerNode)?.Game ?? (GetEditedObject() as REResource)?.Game ?? SupportedGame.Unknown;
 
     public override void _EnterTree()
     {
@@ -30,7 +30,7 @@ public partial class AssetReferenceProperty : EditorProperty
 
     private void DoShow()
     {
-        GetAsset().OpenSourceFile(Game);
+        GetAsset()?.OpenSourceFile(Game);
     }
 
     private void DoUpdatePath()
@@ -38,7 +38,7 @@ public partial class AssetReferenceProperty : EditorProperty
         var text = container.GetNode<LineEdit>("%Input");
         var updatePathBtn = container.GetNode<Button>("%UpdatePathBtn");
         text.Text = PathUtils.ImportPathToRelativePath(CurrentResourcePath!, ReachForGodot.GetAssetConfig(Game))!;
-        this.SetPropertyUndoable(GetAsset(), AssetReference.PropertyName.AssetFilename, text.Text);
+        UpdatePath(text.Text);
         updatePathBtn.Visible = false;
     }
 
@@ -51,7 +51,20 @@ public partial class AssetReferenceProperty : EditorProperty
             text.Text = newText = fixedText;
         }
 
-        this.SetPropertyUndoable(GetAsset(), AssetReference.PropertyName.AssetFilename, newText);
+        UpdatePath(newText);
+    }
+
+    private void UpdatePath(string newPath)
+    {
+        var asset = GetAsset();
+        if (asset == null) {
+            asset = new AssetReference(newPath);
+            lastAsset = asset;
+            asset.Changed += ValueChanged;
+            this.SetPropertyUndoable(GetEditedObject(), GetEditedProperty(), asset);
+        } else {
+            this.SetPropertyUndoable(asset, AssetReference.PropertyName.AssetFilename, newPath);
+        }
     }
 
     private void SetupUI()
@@ -64,10 +77,12 @@ public partial class AssetReferenceProperty : EditorProperty
 
         lastAsset = GetAsset();
 
-        text.Text = lastAsset!.AssetFilename ?? string.Empty;
+        text.Text = lastAsset?.AssetFilename ?? string.Empty;
         RefreshUI();
 
-        lastAsset.Changed += ValueChanged;
+        if (lastAsset != null) {
+            lastAsset.Changed += ValueChanged;
+        }
         showBtn.Pressed += DoShow;
         updatePathBtn.Pressed += DoUpdatePath;
         text.TextChanged += DoTextChanged;

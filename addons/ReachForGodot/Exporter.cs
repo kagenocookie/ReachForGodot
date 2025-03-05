@@ -113,6 +113,8 @@ public class Exporter
             AddFolder(folder, file, fileOption, -1);
         }
 
+        SetupScnGameObjectReferences(root, root);
+
         var success = file.Save();
         if (!success && File.Exists(outputFile) && new FileInfo(outputFile).Length == 0) {
             File.Delete(outputFile);
@@ -141,7 +143,8 @@ public class Exporter
         file.RSZ.ClearInstances();
 
         AddGameObject(root, file.RSZ, file, fileOption, -1);
-        SetupGameObjectReferences(file, root, root);
+        SetupPfbGameObjectReferences(file, root, root);
+        SetupGameObjectReferenceGuids(root, root);
         var success = file.Save();
 
         if (!success && File.Exists(outputFile) && new FileInfo(outputFile).Length == 0) {
@@ -168,12 +171,12 @@ public class Exporter
 
         var linkedSceneFilepath = folder is SceneFolderProxy proxy && proxy.Asset != null ? proxy.Asset.AssetFilename : string.Empty;
         folderInstance.Values[0] = folder.OriginalName ?? folder.Name.ToString();
-        folderInstance.Values[1] = string.Empty; // tags?
-        folderInstance.Values[2] = (byte)1; // ?
-        folderInstance.Values[3] = (byte)1; // ?
-        folderInstance.Values[4] = (byte)0; // ?
+        folderInstance.Values[1] = folder.Tag ?? string.Empty;
+        folderInstance.Values[2] = folder.Update ? (byte)1 : (byte)0;
+        folderInstance.Values[3] = folder.Draw ? (byte)1 : (byte)0;
+        folderInstance.Values[4] = folder.Active ? (byte)1 : (byte)0;
         folderInstance.Values[5] = linkedSceneFilepath;
-        folderInstance.Values[6] = new byte[18]; // ?
+        folderInstance.Values[6] = folder.Data ?? new byte[24];
 
         foreach (var go in folder.ChildObjects) {
             if (go is PrefabNode pfbGo) {
@@ -216,22 +219,106 @@ public class Exporter
         return instanceId;
     }
 
-    private static void SetupGameObjectReferences(PfbFile pfb, REGameObject gameobj, PrefabNode root)
+    private static void SetupPfbGameObjectReferences(PfbFile pfb, REGameObject gameobj, PrefabNode root)
     {
         foreach (var comp in gameobj.Components) {
-            RecurseSetupGameObjectReferences(pfb, comp, comp, root);
+            RecurseSetupPfbGameObjectReferences(pfb, comp, comp, root);
         }
 
         foreach (var child in gameobj.Children) {
-            SetupGameObjectReferences(pfb, child, root);
+            SetupPfbGameObjectReferences(pfb, child, root);
         }
     }
 
-    private static void RecurseSetupGameObjectReferences(PfbFile pfb, REObject data, REComponent component, PrefabNode root, int arrayIndex = 0)
+    private static void SetupScnGameObjectReferences(SceneFolder folder, SceneFolder root)
+    {
+        foreach (var gameobj in folder.ChildObjects) {
+            SetupGameObjectReferenceGuids(gameobj, root);
+        }
+
+        foreach (var sub in folder.Subfolders) {
+            if (sub is not SceneFolderProxy) {
+                SetupScnGameObjectReferences(sub, root);
+            }
+        }
+    }
+
+    private static void SetupGameObjectReferenceGuids(REGameObject gameobj, Node root)
+    {
+        foreach (var comp in gameobj.Components) {
+            RecurseSetupGameObjectReferenceGuids(comp, comp, root);
+        }
+
+        foreach (var child in gameobj.Children) {
+            SetupGameObjectReferenceGuids(child, root);
+        }
+    }
+
+    private static void RecurseSetupGameObjectReferenceGuids(REObject data, REComponent component, Node root)
+    {
+        foreach (var field in data.TypeInfo.Fields) {
+            if (field.RszField.type == RszFieldType.GameObjectRef) {
+                if (!exportedInstances.TryGetValue(data, out var dataInst)) {
+                    GD.PrintErr($"Could not resolve GameObjectRef source instance for field {field.SerializedName} in {component.Path}");
+                    continue;
+                }
+
+                if (data.TryGetFieldValue(field, out var value)) {
+                    if (field.RszField.array) {
+                        var paths = value.AsGodotArray<NodePath>();
+                        var values = new object[paths.Count];
+                        int i = 0;
+                        foreach (var path in paths) {
+                            if (path != null && !path.IsEmpty) {
+                                var target = component.GameObject.GetNode(path) as REGameObject;
+                                if (target == null) {
+                                    GD.Print("Invalid node path reference " + path + " at " + component.Path);
+                                    values[i++] = Guid.Empty;
+                                    continue;
+                                }
+
+                                values[i++] = target.ObjectGuid;
+                            } else {
+                                values[i++] = Guid.Empty;
+                            }
+                        }
+                        dataInst.Values[field.FieldIndex] = values;
+                    } else {
+                        if (value.AsNodePath() is NodePath nodepath && !nodepath.IsEmpty) {
+                            var target = component.GameObject.GetNode(nodepath) as REGameObject;
+                            if (target == null) {
+                                GD.Print("Invalid node path reference " + nodepath + " at " + component.Path);
+                                continue;
+                            }
+
+                            dataInst.Values[field.FieldIndex] = target.ObjectGuid;
+                        }
+                    }
+                }
+            } else if (field.RszField.type == RszFieldType.Object) {
+                if (data.TryGetFieldValue(field, out var child)) {
+                    if (field.RszField.array) {
+                        if (child.AsGodotArray<REObject>() is Godot.Collections.Array<REObject> children) {
+                            foreach (var childObj in children) {
+                                if (childObj != null) {
+                                    RecurseSetupGameObjectReferenceGuids(childObj, component, root);
+                                }
+                            }
+                        }
+                    } else {
+                        if (child.VariantType != Variant.Type.Nil && child.As<REObject>() is REObject childObj) {
+                            RecurseSetupGameObjectReferenceGuids(childObj, component, root);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private static void RecurseSetupPfbGameObjectReferences(PfbFile pfb, REObject data, REComponent component, PrefabNode root, int arrayIndex = 0)
     {
         Dictionary<string, PrefabGameObjectRefProperty>? propInfoDict = null;
-        var ti = data.TypeInfo;
-        foreach (var field in ti.Fields) {
+        foreach (var field in data.TypeInfo.Fields) {
             if (field.RszField.type == RszFieldType.GameObjectRef) {
                 if (field.RszField.array) {
                     GD.PrintErr("GameObjectRef array export currently unsupported!! " + root.GetPathTo(component.GameObject));
@@ -285,13 +372,13 @@ public class Exporter
                             int i = 0;
                             foreach (var childObj in children) {
                                 if (childObj != null) {
-                                    RecurseSetupGameObjectReferences(pfb, childObj, component, root, i++);
+                                    RecurseSetupPfbGameObjectReferences(pfb, childObj, component, root, i++);
                                 }
                             }
                         }
                     } else {
                         if (child.VariantType != Variant.Type.Nil && child.As<REObject>() is REObject childObj) {
-                            RecurseSetupGameObjectReferences(pfb, childObj, component, root);
+                            RecurseSetupPfbGameObjectReferences(pfb, childObj, component, root);
                         }
                     }
                 }

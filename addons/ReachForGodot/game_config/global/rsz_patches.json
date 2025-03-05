@@ -11,6 +11,38 @@
             }
         ]
     },
+    "via.Folder": {
+        "FieldPatches": [
+            {
+                "Name": "v0",
+                "ReplaceName": "Name"
+            },
+            {
+                "Name": "v1",
+                "ReplaceName": "Tag"
+            },
+            {
+                "Name": "v2",
+                "ReplaceName": "Update"
+            },
+            {
+                "Name": "v3",
+                "ReplaceName": "Draw"
+            },
+            {
+                "Name": "v4",
+                "ReplaceName": "Active"
+            },
+            {
+                "Name": "v5",
+                "ReplaceName": "Path"
+            },
+            {
+                "Name": "v6",
+                "ReplaceName": "Data"
+            }
+        ]
+    },
     "via.Transform": {
         "FieldPatches": [
             {

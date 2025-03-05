@@ -11,6 +11,11 @@ public partial class SceneFolder : Node, IRszContainerNode
     [Export] public SupportedGame Game { get; set; }
     [Export] public AssetReference? Asset { get; set; }
     [Export] public REResource[]? Resources { get; set; }
+    [Export] public bool Update { get; set; } = true;
+    [Export] public bool Draw { get; set; } = true;
+    [Export] public bool Active { get; set; } = true;
+    [Export] public byte[]? Data { get; set; }
+    [Export] public string? Tag { get; set; }
     [Export] public string? OriginalName { get; set; }
     [Export] public Aabb KnownBounds { get; set; }
 

@@ -53,6 +53,8 @@ public class GodotRszImporter
     {
         public readonly Dictionary<string, Resource?> resolvedResources = new();
         public readonly Dictionary<RszInstance, REObject> importedObjects = new();
+        public readonly Dictionary<REObject, RszInstance> objectSourceInstances = new();
+        public readonly Dictionary<Guid, REGameObject> gameObjects = new();
         public readonly List<PrefabNode> pendingPrefabs = new();
         public readonly Dictionary<SceneFolder, FolderBatch> sceneBatches = new();
 
@@ -68,7 +70,9 @@ public class GodotRszImporter
         {
             resolvedResources.Clear();
             importedObjects.Clear();
+            objectSourceInstances.Clear();
             pendingPrefabs.Clear();
+            gameObjects.Clear();
             pendingBatches.Clear();
         }
 
@@ -406,11 +410,85 @@ public class GodotRszImporter
 
         root.RecalculateBounds(true);
 
+        if (root.Owner == null) {
+            root.Update = true;
+            root.Draw = true;
+            root.Active = true;
+            ReconstructScnFolderGameObjectRefs(file, root, root);
+        }
+
         ctx.EndBatch(batch);
 
         GD.Print(" Finished scene tree " + root.Name);
         if (!root.IsInsideTree()) {
             UpdateSceneResource(root);
+        }
+    }
+
+    private void ReconstructScnFolderGameObjectRefs(ScnFile file, SceneFolder folder, SceneFolder root)
+    {
+        foreach (var go in folder.ChildObjects.SelectMany(ch => ch.AllChildrenIncludingSelf)) {
+            foreach (var comp in go.Components) {
+                ReconstructScnGameObjectRefs(file, comp, comp, go, root);
+            }
+        }
+
+        foreach (var sub in folder.Subfolders) {
+            ReconstructScnFolderGameObjectRefs(file, sub, root);
+        }
+    }
+
+    private void ReconstructScnGameObjectRefs(ScnFile file, REObject obj, REComponent component, REGameObject gameobj, SceneFolder root)
+    {
+        RszInstance? instance = null;
+        foreach (var field in obj.TypeInfo.Fields) {
+            if (field.RszField.type == RszFieldType.GameObjectRef) {
+                instance ??= ctx.objectSourceInstances[obj];
+                if (field.RszField.array) {
+                    var paths = new Godot.Collections.Array<NodePath>();
+                    var indices = (IList<object>)instance.Values[field.FieldIndex];
+                    for (int i = 0; i < indices.Count; ++i) {
+                        var guid = (Guid)indices[i];
+                        if (ctx.gameObjects.TryGetValue(guid, out var refTarget)) {
+                            paths.Add(gameobj.GetPathTo(refTarget));
+                        } else {
+                            if (guid != Guid.Empty) {
+                                GD.PrintErr($"Couldn't resolve scn GameObjectRef node path field {field.SerializedName}[{i}] in {component.Path}.\n Could be a legit case, or maybe we missed something.");
+                            }
+                            paths.Add(new NodePath(""));
+                        }
+                    }
+                    obj.SetField(field, paths);
+                } else {
+                    var guid = (Guid)instance.Values[field.FieldIndex];
+                    if (ctx.gameObjects.TryGetValue(guid, out var refTarget)) {
+                        obj.SetField(field, gameobj.GetPathTo(refTarget));
+                    } else {
+                        if (guid != Guid.Empty) {
+                            GD.PrintErr($"Couldn't resolve scn GameObjectRef node path field {field.SerializedName} in {component.Path}.\n Could be a legit case, or maybe we missed something.");
+                        }
+                        obj.SetField(field, new NodePath(""));
+                    }
+                }
+
+                // GD.Print("Found GameObjectRef link: " + obj + " => " + targetGameobj + " == " + obj.GetField(field));
+            } else if (field.RszField.type is RszFieldType.Object) {
+                if (!obj.TryGetFieldValue(field, out var child)) continue;
+
+                if (field.RszField.array) {
+                    if (child.AsGodotArray<REObject>() is Godot.Collections.Array<REObject> children) {
+                        foreach (var childObj in children) {
+                            if (childObj != null) {
+                                ReconstructScnGameObjectRefs(file, childObj, component, gameobj, root);
+                            }
+                        }
+                    }
+                } else {
+                    if (child.As<REObject>() is REObject childObj) {
+                        ReconstructScnGameObjectRefs(file, childObj, component, gameobj, root);
+                    }
+                }
+            }
         }
     }
 
@@ -513,15 +591,14 @@ public class GodotRszImporter
 
         foreach (var go in root.AllChildrenIncludingSelf) {
             foreach (var comp in go.Components) {
-                ReconstructGameObjectRefs(file, comp, comp, go, root);
+                ReconstructPfbGameObjectRefs(file, comp, comp, root);
             }
         }
     }
 
-    private NodePath? ResolveGameObjectRef(PfbFile file, REField field, REObject obj, ref RszInstance? instance, REComponent component, REGameObject root, int arrayIndex)
+    private NodePath? ResolveGameObjectRef(PfbFile file, REField field, REObject obj, RszInstance instance, REComponent component, REGameObject root, int arrayIndex)
     {
         // god help me...
-        instance ??= ctx.importedObjects.FirstOrDefault(kv => kv.Value == obj).Key;
         Debug.Assert(instance != null);
         int idx = instance.ObjectTableIndex;
 
@@ -581,29 +658,33 @@ public class GodotRszImporter
             return default;
         }
 
-        return root.GetPathTo(targetGameobj);
+        return component.GameObject.GetPathTo(targetGameobj);
     }
 
-    private void ReconstructGameObjectRefs(PfbFile file, REObject obj, REComponent component, REGameObject gameobj, REGameObject root, int arrayIndex = 0)
+    private void ReconstructPfbGameObjectRefs(PfbFile file, REObject obj, REComponent component, REGameObject root, int arrayIndex = 0)
     {
         RszInstance? instance = null;
         foreach (var field in obj.TypeInfo.Fields) {
             if (field.RszField.type == RszFieldType.GameObjectRef) {
+                instance ??= ctx.objectSourceInstances[obj];
                 if (field.RszField.array) {
-                    instance ??= ctx.importedObjects.FirstOrDefault(kv => kv.Value == obj).Key;
                     var indices = (IList<object>)instance.Values[field.FieldIndex];
                     var paths = new Godot.Collections.Array<NodePath>();
                     for (int i = 0; i < indices.Count; ++i) {
-                        var refval = ResolveGameObjectRef(file, field, obj, ref instance, component, root, i);
+                        var refval = ResolveGameObjectRef(file, field, obj, instance, component, root, i);
+                        if (refval == null) {
+                            GD.PrintErr($"Couldn't resolve pfb GameObjectRef node path field {field.SerializedName}[{i}] in {component.Path}");
+                        }
                         paths.Add(refval ?? new NodePath(""));
                     }
                     obj.SetField(field, paths);
                 } else {
-                    var refval = ResolveGameObjectRef(file, field, obj, ref instance, component, root, 0);
+                    var refval = ResolveGameObjectRef(file, field, obj, instance, component, root, 0);
+                    if (refval == null) {
+                        GD.PrintErr($"Couldn't resolve pfb GameObjectRef node path in field {field.SerializedName} {component.Path}");
+                    }
                     obj.SetField(field, refval ?? new Variant());
                 }
-
-                // GD.Print("Found GameObjectRef link: " + obj + " => " + targetGameobj + " == " + obj.GetField(field));
             } else if (field.RszField.type is RszFieldType.Object) {
                 if (!obj.TryGetFieldValue(field, out var child)) continue;
 
@@ -612,13 +693,13 @@ public class GodotRszImporter
                         int i = 0;
                         foreach (var childObj in children) {
                             if (childObj != null) {
-                                ReconstructGameObjectRefs(file, childObj, component, gameobj, root, i++);
+                                ReconstructPfbGameObjectRefs(file, childObj, component, root, i++);
                             }
                         }
                     }
                 } else {
                     if (child.As<REObject>() is REObject childObj) {
-                        ReconstructGameObjectRefs(file, childObj, component, gameobj, root);
+                        ReconstructPfbGameObjectRefs(file, childObj, component, root);
                     }
                 }
             }
@@ -691,7 +772,7 @@ public class GodotRszImporter
         Debug.Assert(folder.Info != null);
         var name = folder.Name ?? "UnnamedFolder";
         var subfolder = parent.GetFolder(name);
-        if (folder.Instance?.GetFieldValue("v5") is string scnPath && !string.IsNullOrWhiteSpace(scnPath)) {
+        if (folder.Instance?.GetFieldValue("Path") is string scnPath && !string.IsNullOrWhiteSpace(scnPath)) {
             var isNew = false;
             if (subfolder == null) {
                 subfolder = new SceneFolderProxy() { Name = name, OriginalName = name, Asset = new AssetReference(scnPath), Game = AssetConfig.Game };
@@ -705,13 +786,12 @@ public class GodotRszImporter
                 GD.PrintErr($"Unexpected situation: resource-linked scene also has additional children in parent scene.\nParent scene:{root.Asset?.AssetFilename}\nSubfolder:{scnPath}");
             }
 
-            if (Options.folders == RszImportType.Placeholders || !isNew && Options.folders == RszImportType.CreateOrReuse) {
-                return;
+            var skipImport = (Options.folders == RszImportType.Placeholders || !isNew && Options.folders == RszImportType.CreateOrReuse);
+            if (!skipImport) {
+                subProxy.UnloadScene();
+                var newBatch = ctx.CreateFolderBatch(subfolder, folder, scnPath);
+                batch.folders.Add(newBatch);
             }
-
-            subProxy.UnloadScene();
-            var newBatch = ctx.CreateFolderBatch(subfolder, folder, scnPath);
-            batch.folders.Add(newBatch);
         } else {
             if (subfolder == null) {
                 GD.Print("Creating folder " + name);
@@ -722,7 +802,6 @@ public class GodotRszImporter
                 };
                 parent.AddFolder(subfolder);
             } else {
-                GD.Print("Found existing folder " + name);
                 if (!string.IsNullOrEmpty(subfolder.SceneFilePath)) {
                     GD.PrintErr($"Found local folder that was also instantiated from a scene - could this be problematic?\nParent scene:{root.Asset?.AssetFilename}\nSubfolder:{name}");
                 }
@@ -732,6 +811,12 @@ public class GodotRszImporter
             batch.folders.Add(newBatch);
             PrepareFolderBatch(newBatch, folder.GameObjects, folder.Children);
         }
+
+        subfolder.Tag = folder.Instance!.GetFieldValue("Tag") as string;
+        subfolder.Update = (byte)folder.Instance!.GetFieldValue("Update")! != 0;
+        subfolder.Draw = (byte)folder.Instance!.GetFieldValue("Draw")! != 0;
+        subfolder.Active = (byte)folder.Instance!.GetFieldValue("Active")! != 0;
+        subfolder.Data = folder.Instance!.GetFieldValue("Data") as byte[];
     }
 
     private async Task RePrepareBatchedPrefabGameObject(GameObjectBatch batch)
@@ -749,7 +834,6 @@ public class GodotRszImporter
 
         Debug.Assert(data.Instance != null);
 
-        string? uuid = null;
         REGameObject? gameobj = batch.GameObject;
         if (gameobj == null && parentNode != null) {
             if (parentNode is REGameObject obj) {
@@ -763,12 +847,11 @@ public class GodotRszImporter
         }
 
         if (data is ScnFile.GameObjectData scnData) {
-            uuid = scnData.Info?.Data.guid.ToString();
-
             // note: some PFB files aren't shipped with the game, hence the CheckResourceExists check
             // presumably they are only used directly within scn files and not instantiated during runtime
             if (!string.IsNullOrEmpty(scnData.Prefab?.Path) && Importer.CheckResourceExists(scnData.Prefab.Path, AssetConfig)) {
                 if (ctx.resolvedResources.TryGetValue(PathUtils.GetLocalizedImportPath(scnData.Prefab.Path, AssetConfig)!, out var pfb) && pfb is PackedScene resolvedPfb) {
+                    // TODO: if we already matched a gameobj earlier, delete it first? and/or verify if it's already an instance of the right pfb file
                     gameobj = resolvedPfb.Instantiate<PrefabNode>(PackedScene.GenEditState.Instance);
                 } else if (Importer.FindOrImportResource<PackedScene>(scnData.Prefab.Path, AssetConfig) is PackedScene packedPfb) {
                     var pfbInstance = packedPfb.Instantiate<PrefabNode>(PackedScene.GenEditState.Instance);
@@ -790,7 +873,7 @@ public class GodotRszImporter
         }
 
         if (gameobj == null) {
-            gameobj ??= new REGameObject() {
+            gameobj = new REGameObject() {
                 Game = AssetConfig.Game,
                 Name = name,
                 OriginalName = name,
@@ -800,8 +883,10 @@ public class GodotRszImporter
         }
         batch.GameObject = gameobj;
 
-        if (uuid != null) {
-            gameobj.Uuid = uuid;
+        if (data is ScnFile.GameObjectData scnData2) {
+            var guid = scnData2.Info!.Data.guid;
+            gameobj.Uuid = guid.ToString();
+            ctx.gameObjects[guid] = gameobj;
         }
 
         gameobj.Data = CreateOrUpdateObject(data.Instance, gameobj.Data);
@@ -888,6 +973,7 @@ public class GodotRszImporter
 
         obj = new REObject(AssetConfig.Game, instance.RszClass.name);
         ctx.importedObjects[instance] = obj;
+        ctx.objectSourceInstances[obj] = instance;
         return ApplyObjectValues(obj, instance);
     }
 
@@ -901,6 +987,7 @@ public class GodotRszImporter
         newObj.Game = AssetConfig.Game;
         newObj.Classname = instance.RszClass.name;
         ctx.importedObjects[instance] = newObj;
+        ctx.objectSourceInstances[newObj] = instance;
         ApplyObjectValues(newObj, instance);
         return newObj;
     }
@@ -908,6 +995,7 @@ public class GodotRszImporter
     private REObject ApplyObjectValues(REObject obj, RszInstance instance)
     {
         ctx.importedObjects[instance] = obj;
+        ctx.objectSourceInstances[obj] = instance;
         foreach (var field in obj.TypeInfo.Fields) {
             var value = instance.Values[field.FieldIndex];
             obj.SetField(field, ConvertRszValue(field, value));
@@ -975,7 +1063,11 @@ public class GodotRszImporter
 
         if (rsz.RSZUserData is RSZUserDataInfo ud1) {
             if (!string.IsNullOrEmpty(ud1.Path)) {
-                return ctx.importedObjects[rsz] = Importer.FindOrImportResource<UserdataResource>(ud1.Path, AssetConfig)!;
+                var userdataResource = Importer.FindOrImportResource<UserdataResource>(ud1.Path, AssetConfig)!;
+                if (userdataResource != null) {
+                    ctx.objectSourceInstances[userdataResource] = rsz;
+                }
+                return ctx.importedObjects[rsz] = userdataResource!;
             }
         } else if (rsz.RSZUserData is RSZUserDataInfo_TDB_LE_67 ud2) {
             GD.PrintErr("Unsupported userdata reference TDB_LE_67");

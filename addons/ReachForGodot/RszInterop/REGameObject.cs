@@ -14,6 +14,7 @@ public partial class REGameObject : Node3D, ISerializationListener
     [Export] public string OriginalName { get; set; } = string.Empty;
     [Export] public REObject? Data { get; set; }
     [Export] public Godot.Collections.Array<REComponent> Components { get; set; } = null!;
+    public Guid ObjectGuid => System.Guid.TryParse(Uuid, out var guid) ? guid : Guid.Empty;
 
     public SceneFolder? ParentFolder => this.FindNodeInParents<SceneFolder>();
 
@@ -22,9 +23,9 @@ public partial class REGameObject : Node3D, ISerializationListener
     public IEnumerable<REGameObject> AllChildrenIncludingSelf => new [] { this }.Concat(AllChildren);
 
     public string Path => ParentFolder is SceneFolder scn
-        ? $"{scn.Path}/{scn.GetPathTo(this)}"
+        ? $"{scn.Path}:/{scn.GetPathTo(this)}"
         : this is PrefabNode pfb
-            ? $"{pfb.Path}/{pfb.GetPathTo(this)}"
+            ? $"{pfb.Path}:/{pfb.GetPathTo(this)}"
             : Owner != null ? Owner.GetPathTo(this) : Name;
 
     public override void _EnterTree()

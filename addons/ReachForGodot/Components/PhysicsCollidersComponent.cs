@@ -111,6 +111,8 @@ public partial class PhysicsCollidersComponent : REComponent, IVisualREComponent
                         cap.p0 = cappos - up * 0.5f * capsule.Height;
                         cap.p1 = cappos + up * 0.5f * capsule.Height;
                         break;
+                    case null:
+                        break;
                     default:
                         GD.PrintErr("Unsupported collider type " + child.Shape.GetType() + " at " + Path);
                         break;
@@ -143,36 +145,37 @@ public partial class PhysicsCollidersComponent : REComponent, IVisualREComponent
         foreach (var coll in colliders) {
             var collider = new CollisionShape3D() { Name = "Collider_" + n++ + "_" + coll.Classname };
             node.AddChild(collider);
+            collider.Owner = GameObject.Owner ?? GameObject;
             var shape = coll.GetField(ColliderShapeField.Get(coll)).As<REObject>();
             if (shape == null) {
                 GD.Print("Missing collider shape " + n + " at " + Path);
-            } else {
-                switch (shape.Classname) {
-                    case "via.physics.MeshShape":
-                        // var mcol = shape.GetField(MeshShape).As<REResource>();
-                        // collider.Shape = new ConvexPolygonShape3D();
-                        break;
-                    case "via.physics.SphereShape":
-                        var sphere = shape.GetField(SphereShape).AsVector4();
-                        collider.Shape = new SphereShape3D() { Radius = sphere.W };
-                        collider.Position = sphere.ToVector3();
-                        break;
-                    case "via.physics.BoxShape":
-                        var obb = shape.GetField(BoxShape).As<OrientedBoundingBox>();
-                        collider.Shape = new BoxShape3D() { Size = obb.extent };
-                        collider.Transform = (Transform3D)obb.coord;
-                        break;
-                    case "via.physics.CapsuleShape":
-                        var capsule = shape.GetField(BoxShape).As<Capsule>();
-                        collider.Shape = new CapsuleShape3D() { Height = capsule.p0.DistanceTo(capsule.p1), Radius = capsule.r };
-                        collider.Position = (capsule.p0 + capsule.p1) / 2;
-                        break;
-                    default:
-                        GD.Print("Unhandled collider shape " + shape.Classname);
-                        break;
-                }
+                continue;
             }
-            collider.Owner = GameObject.Owner;
+
+            switch (shape.Classname) {
+                case "via.physics.MeshShape":
+                    // var mcol = shape.GetField(MeshShape).As<REResource>();
+                    // collider.Shape = new ConvexPolygonShape3D();
+                    break;
+                case "via.physics.SphereShape":
+                    var sphere = shape.GetField(SphereShape).AsVector4();
+                    collider.Shape = new SphereShape3D() { Radius = sphere.W };
+                    collider.Position = sphere.ToVector3();
+                    break;
+                case "via.physics.BoxShape":
+                    var obb = shape.GetField(BoxShape).As<OrientedBoundingBox>();
+                    collider.Shape = new BoxShape3D() { Size = obb.extent };
+                    collider.Transform = (Transform3D)obb.coord;
+                    break;
+                case "via.physics.CapsuleShape":
+                    var capsule = shape.GetField(BoxShape).As<Capsule>();
+                    collider.Shape = new CapsuleShape3D() { Height = capsule.p0.DistanceTo(capsule.p1), Radius = capsule.r };
+                    collider.Position = (capsule.p0 + capsule.p1) / 2;
+                    break;
+                default:
+                    GD.Print("Unhandled collider shape " + shape.Classname);
+                    break;
+            }
         }
         return Task.CompletedTask;
     }
