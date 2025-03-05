@@ -40,7 +40,7 @@ public partial class AssetExportInspectorPlugin : EditorInspectorPlugin, ISerial
         var selectedIndex = -1;
         int i = 0;
         exportPath.Clear();
-        var paths = ReachForGodot.ExportPaths.ToArray();
+        var paths = ReachForGodot.GetAssetConfig(res.Game).Paths.AdditionalPaths;
         foreach (var path in paths) {
             exportPath.AddItem(path.DisplayLabel);
             if (path.path == selected?.path) {

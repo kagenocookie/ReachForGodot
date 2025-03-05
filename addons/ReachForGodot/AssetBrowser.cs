@@ -68,7 +68,7 @@ public partial class AssetBrowser : Resource
             _dialog.UseNativeDialog = true;
             _dialog.FileMode = FileDialog.FileModeEnum.OpenFiles;
             _dialog.CurrentPath = basepath;
-            _dialog.FileSelected += ImportAssetSync;
+            // _dialog.FileSelected += ImportAssetSync;
             _dialog.FilesSelected += (files) => _ = ImportAssetsAsync(files);
         }
 
