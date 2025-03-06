@@ -10,7 +10,20 @@ using RszTool;
 public partial class REObject : Resource
 {
     [Export] public SupportedGame Game { get; set; }
-    [Export] public string? Classname { get; set; }
+    private string? _classname;
+    [Export] public string? Classname
+    {
+        get => _classname;
+        set {
+            if (_classname != value && !string.IsNullOrEmpty(_classname) && !string.IsNullOrEmpty(value)) {
+                _classname = value;
+                ResetProperties();
+                return;
+            }
+            _classname = value;
+        }
+    }
+
     [Export] protected Godot.Collections.Dictionary<StringName, Variant> __Data = new();
 
     public bool IsEmpty => __Data.Count == 0;

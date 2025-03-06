@@ -1,215 +1,325 @@
 {
-    "via.navigation.NavigationWaypoint": {
-        "FieldPatches": [
-            {
-                "Name": "v58",
-                "Type": "Object",
-                "OriginalType": "via.navigation.map.InteractionShapeBase"
-            },
-            {
-                "Name": "v61",
-                "Type": "Object",
-                "OriginalType": "via.navigation.map.InteractionShapeBase"
-            }
-        ]
-    },
-    "app.QuestTreeData.NodeData": {
-        "FieldPatches": [
-            {
-                "Name": "_QuestID",
-                "OriginalType": "app.QuestDefine.ID"
-            }
-        ]
-    },
-    "via.render.CompositeMesh": {
-        "FieldPatches": [
-            {
-                "Name": "v0",
-                "Type": "S32"
-            },
-            {
-                "Name": "v15",
-                "ReplaceName": "MeshGroups",
-                "Type": "Object",
-                "OriginalType": "via.render.CompositeMeshInstanceGroup"
-            }
-        ]
-    },
-    "via.render.CompositeMeshInstanceGroup": {
-        "FieldPatches": [
-            {
-                "Name": "v0",
-                "ReplaceName": "Mesh"
-            },
-            {
-                "Name": "v1",
-                "ReplaceName": "Material"
-            },
-            {
-                "Name": "v2",
-                "ReplaceName": "Materials"
-            },
-            {
-                "Name": "v3",
-                "ReplaceName": "Transform",
-                "Type": "Object",
-                "OriginalType": "via.render.CompositeMeshTransformController"
-            }
-        ]
-    },
-    "via.render.CompositeMeshTransformController": {
-        "FieldPatches": [
-            {
-                "Name": "v2",
-                "ReplaceName": "Position"
-            },
-            {
-                "Name": "v3",
-                "ReplaceName": "Rotation"
-            },
-            {
-                "Name": "v4",
-                "ReplaceName": "Scale"
-            }
-        ]
-    },
-    "via.render.Mesh": {
-        "FieldPatches": [
-            {
-                "Name": "v0",
-                "Type": "S32"
-            },
-            {
-                "Name": "v2",
-                "ReplaceName": "Mesh"
-            },
-            {
-                "Name": "v3",
-                "ReplaceName": "Material"
-            },
-            {
-                "Name": "v5",
-                "Type": "F32"
-            },
-            {
-                "Name": "v8",
-                "Type": "F32"
-            },
-            {
-                "Name": "v10",
-                "Type": "S32"
-            },
-            {
-                "Name": "v46",
-                "Type": "S32"
-            }
-        ]
-    },
-    "via.render.CompositeMeshMaterialController": {
-        "FieldPatches": [
-            {
-                "Name": "v1",
-                "ReplaceName": "MaterialVariable"
-            },
-            {
-                "Name": "v3",
-                "ReplaceName": "TexturePath"
-            }
-        ]
-    },
-    "via.physics.SphereShape": {
-        "FieldPatches": [
-            {
-                "Name": "v1",
-                "Type": "UserData"
-            }
-        ]
-    },
-    "via.physics.Collider": {
-        "FieldPatches": [
-            {
-                "Name": "v2",
-                "Type": "Object",
-                "OriginalType": "via.physics.Shape"
-            },
-            {
-                "Name": "v3",
-                "Type": "Object",
-                "OriginalType": "via.physics.FilterInfo"
-            },
-            {
-                "Name": "v4",
-                "Type": "Object"
-            }
-        ]
-    },
-    "via.physics.Colliders": {
-        "FieldPatches": [
-            {
-                "Name": "v5",
-                "ReplaceName": "Colliders",
-                "Type": "Object"
-            }
-        ]
-    },
-    "via.GameObject": {
-        "FieldPatches": [
-            {
-                "Name": "v4",
-                "Type": "F32"
-            }
-        ]
-    },
-    "via.motion.Motion": {
-        "FieldPatches": [
-            {
-                "Name": "v24",
-                "Type": "Object"
-            },
-            {
-                "Name": "v26",
-                "Type": "Object"
-            }
-        ]
-    },
-    "via.physics.RequestSetCollider": {
-        "FieldPatches": [
-            {
-                "Name": "v24",
-                "Type": "Object"
-            },
-            {
-                "Name": "v26",
-                "Type": "Object"
-            }
-        ]
-    },
-    "via.motion.Chain": {
-        "FieldPatches": [
-            {
-                "Name": "v13",
-                "Type": "S32"
-            }
-        ]
-    },
-    "via.render.VolumeDecal": {
-        "FieldPatches": [
-            {
-                "Name": "v0",
-                "Type": "S32"
-            },
-            {
-                "Name": "v30",
-                "Type": "S32"
-            }
-        ]
-    },
-    "via.render.PointLight": {
-        "FieldPatches": [
-            {
-                "Name": "v2",
-                "Type": "S32"
-            }
-        ]
-    }
+  "via.navigation.NavigationWaypoint": {
+    "FieldPatches": [
+      {
+        "Name": "v58",
+        "OriginalType": "via.navigation.map.InteractionShapeBase",
+        "Type": "Object"
+      },
+      {
+        "Name": "v61",
+        "OriginalType": "via.navigation.map.InteractionShapeBase",
+        "Type": "Object"
+      }
+    ]
+  },
+  "app.QuestTreeData.NodeData": {
+    "FieldPatches": [
+      {
+        "Name": "_QuestID",
+        "OriginalType": "app.QuestDefine.ID",
+        "Type": "ukn_error"
+      }
+    ]
+  },
+  "via.render.CompositeMesh": {
+    "FieldPatches": [
+      {
+        "Name": "v0",
+        "Type": "S32"
+      },
+      {
+        "Name": "v15",
+        "ReplaceName": "MeshGroups",
+        "OriginalType": "via.render.CompositeMeshInstanceGroup",
+        "Type": "Object"
+      }
+    ]
+  },
+  "via.render.CompositeMeshInstanceGroup": {
+    "FieldPatches": [
+      {
+        "Name": "v0",
+        "ReplaceName": "Mesh",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "v1",
+        "ReplaceName": "Material",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "v2",
+        "ReplaceName": "Materials",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "v3",
+        "ReplaceName": "Transform",
+        "OriginalType": "via.render.CompositeMeshTransformController",
+        "Type": "Object"
+      }
+    ]
+  },
+  "via.render.CompositeMeshTransformController": {
+    "FieldPatches": [
+      {
+        "Name": "v2",
+        "ReplaceName": "Position",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "v3",
+        "ReplaceName": "Rotation",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "v4",
+        "ReplaceName": "Scale",
+        "Type": "ukn_error"
+      }
+    ]
+  },
+  "via.render.Mesh": {
+    "FieldPatches": [
+      {
+        "Name": "v0",
+        "Type": "S32"
+      },
+      {
+        "Name": "v2",
+        "ReplaceName": "Mesh",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "v3",
+        "ReplaceName": "Material",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "v5",
+        "Type": "F32"
+      },
+      {
+        "Name": "v8",
+        "Type": "F32"
+      },
+      {
+        "Name": "v10",
+        "Type": "S32"
+      },
+      {
+        "Name": "v46",
+        "Type": "S32"
+      }
+    ]
+  },
+  "via.render.CompositeMeshMaterialController": {
+    "FieldPatches": [
+      {
+        "Name": "v1",
+        "ReplaceName": "MaterialVariable",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "v3",
+        "ReplaceName": "TexturePath",
+        "Type": "ukn_error"
+      }
+    ]
+  },
+  "via.physics.SphereShape": {
+    "FieldPatches": [
+      {
+        "Name": "v0",
+        "ReplaceName": "BoundingAabb",
+        "Type": "AABB"
+      },
+      {
+        "Name": "v1",
+        "Type": "UserData"
+      },
+      {
+        "Name": "BoundingAabb",
+        "Type": "AABB"
+      }
+    ]
+  },
+  "via.physics.Collider": {
+    "FieldPatches": [
+      {
+        "Name": "v2",
+        "OriginalType": "via.physics.Shape",
+        "Type": "Object"
+      },
+      {
+        "Name": "v3",
+        "OriginalType": "via.physics.FilterInfo",
+        "Type": "Object"
+      },
+      {
+        "Name": "v4",
+        "Type": "Object"
+      }
+    ]
+  },
+  "via.physics.Colliders": {
+    "FieldPatches": [
+      {
+        "Name": "v5",
+        "ReplaceName": "Colliders",
+        "Type": "Object"
+      },
+      {
+        "Name": "v2",
+        "Type": "S32"
+      },
+      {
+        "Name": "Colliders",
+        "Type": "Object"
+      }
+    ]
+  },
+  "via.GameObject": {
+    "FieldPatches": [
+      {
+        "Name": "v4",
+        "Type": "F32"
+      }
+    ]
+  },
+  "via.motion.Motion": {
+    "FieldPatches": [
+      {
+        "Name": "v24",
+        "Type": "Object"
+      },
+      {
+        "Name": "v26",
+        "Type": "Object"
+      }
+    ]
+  },
+  "via.physics.RequestSetCollider": {
+    "FieldPatches": [
+      {
+        "Name": "v24",
+        "Type": "Object"
+      },
+      {
+        "Name": "v26",
+        "Type": "Object"
+      }
+    ]
+  },
+  "via.motion.Chain": {
+    "FieldPatches": [
+      {
+        "Name": "v13",
+        "Type": "S32"
+      }
+    ]
+  },
+  "via.render.VolumeDecal": {
+    "FieldPatches": [
+      {
+        "Name": "v0",
+        "Type": "S32"
+      },
+      {
+        "Name": "v30",
+        "Type": "S32"
+      }
+    ]
+  },
+  "via.render.PointLight": {
+    "FieldPatches": [
+      {
+        "Name": "v2",
+        "Type": "S32"
+      }
+    ]
+  },
+  "via.physics.BoxShape": {
+    "FieldPatches": [
+      {
+        "Name": "v0",
+        "ReplaceName": "BoundingAabb",
+        "Type": "AABB"
+      },
+      {
+        "Name": "v1",
+        "Type": "OBB"
+      },
+      {
+        "Name": "BoundingAabb",
+        "Type": "AABB"
+      }
+    ]
+  },
+  "via.physics.FilterInfo": {
+    "FieldPatches": [
+      {
+        "Name": "v0",
+        "Type": "S32"
+      },
+      {
+        "Name": "v1",
+        "Type": "S32"
+      },
+      {
+        "Name": "v2",
+        "Type": "S32"
+      },
+      {
+        "Name": "v3",
+        "Type": "S32"
+      },
+      {
+        "Name": "v4",
+        "Type": "S32"
+      }
+    ]
+  },
+  "via.physics.AabbShape": {
+    "FieldPatches": [
+      {
+        "Name": "v1",
+        "Type": "S32"
+      },
+      {
+        "Name": "v0",
+        "ReplaceName": "BoundingAabb",
+        "Type": "AABB"
+      },
+      {
+        "Name": "v2",
+        "Type": "AABB"
+      },
+      {
+        "Name": "BoundingAabb",
+        "Type": "AABB"
+      }
+    ]
+  },
+  "via.effect.script.EffectCustomExternParameter": {
+    "FieldPatches": [
+      {
+        "Name": "v1",
+        "Type": "S32"
+      },
+      {
+        "Name": "v2",
+        "Type": "F32"
+      },
+      {
+        "Name": "v3",
+        "Type": "F32"
+      },
+      {
+        "Name": "v5",
+        "Type": "S32"
+      }
+    ]
+  }
 }

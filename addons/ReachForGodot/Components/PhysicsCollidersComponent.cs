@@ -30,6 +30,12 @@ public partial class PhysicsCollidersComponent : REComponent, IVisualREComponent
     private static readonly REObjectFieldAccessor CapsuleShape = new REObjectFieldAccessor(
         list => list.FirstOrDefault(f => f.RszField.type == RszFieldType.Capsule));
 
+    [REObjectFieldTarget("via.physics.AabbShape")]
+    private static readonly REObjectFieldAccessor AabbShape = new REObjectFieldAccessor(
+        "Aabb",
+        list => list.Where(f => f.RszField.size == 32 && !f.RszField.array).LastOrDefault(),
+        (f) => f.MarkAsType(RszFieldType.AABB, nameof(Aabb)));
+
     [REObjectFieldTarget("via.physics.MeshShape")]
     private static readonly REObjectFieldAccessor MeshShape = new REObjectFieldAccessor(
         "Mesh",
@@ -92,10 +98,17 @@ public partial class PhysicsCollidersComponent : REComponent, IVisualREComponent
                 REObject shape;
                 switch (child.Shape) {
                     case BoxShape3D box:
-                        GetOrAddShape(Game, "via.physics.BoxShape", colliders, index, out shape);
-                        var obb = shape.GetField(MeshShape).As<OrientedBoundingBox>();
-                        obb.extent = box.Size;
-                        obb.coord = new Projection(child.Transform);
+                        if (child.Transform.Basis.IsEqualApprox(Basis.Identity)) {
+                            GetOrAddShape(Game, "via.physics.AabbShape", colliders, index, out shape);
+                            var aabb = shape.GetField(AabbShape).As<Aabb>();
+                            aabb.Size = box.Size;
+                            aabb.Position = child.Position;
+                        } else {
+                            GetOrAddShape(Game, "via.physics.BoxShape", colliders, index, out shape);
+                            var obb = shape.GetField(BoxShape).As<OrientedBoundingBox>();
+                            obb.extent = box.Size;
+                            obb.coord = new Projection(child.Transform);
+                        }
                         break;
                     case SphereShape3D sphere:
                         GetOrAddShape(Game, "via.physics.SphereShape", colliders, index, out shape);
@@ -151,6 +164,7 @@ public partial class PhysicsCollidersComponent : REComponent, IVisualREComponent
                 GD.Print("Missing collider shape " + n + " at " + Path);
                 continue;
             }
+            // TODO: DD2 has a BoundingAabb for all shapes in v0 - do we need to modify that too? RE2RT has an s32 instead.
 
             switch (shape.Classname) {
                 case "via.physics.MeshShape":
@@ -164,6 +178,7 @@ public partial class PhysicsCollidersComponent : REComponent, IVisualREComponent
                     break;
                 case "via.physics.BoxShape":
                     var obb = shape.GetField(BoxShape).As<OrientedBoundingBox>();
+                    // TODO: sometime the obb extents are all == 0. should we use the BoundingAabb for size instead?
                     obb.extent.X = Mathf.Max(0.001f, Mathf.Abs(obb.extent.X));
                     obb.extent.Y = Mathf.Max(0.001f, Mathf.Abs(obb.extent.Y));
                     obb.extent.Z = Mathf.Max(0.001f, Mathf.Abs(obb.extent.Z));
@@ -174,6 +189,11 @@ public partial class PhysicsCollidersComponent : REComponent, IVisualREComponent
                     var capsule = shape.GetField(BoxShape).As<Capsule>();
                     collider.Shape = new CapsuleShape3D() { Height = capsule.p0.DistanceTo(capsule.p1), Radius = capsule.r };
                     collider.Position = (capsule.p0 + capsule.p1) / 2;
+                    break;
+                case "via.physics.AabbShape":
+                    var aabb = shape.GetField(AabbShape).As<Aabb>();
+                    collider.Shape = new BoxShape3D() { Size = aabb.Size };
+                    collider.Position = aabb.Position;
                     break;
                 default:
                     GD.Print("Unhandled collider shape " + shape.Classname);

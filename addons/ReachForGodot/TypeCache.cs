@@ -155,7 +155,19 @@ public class TypeCache
             allCacheData[game] = data = new();
         }
 
-        data.parser ??= LoadRsz(game);
+        if (data.parser == null) {
+            data.parser = LoadRsz(game);
+
+            if (data.fieldOverrides != null) {
+                foreach (var (cn, accessors) in data.fieldOverrides) {
+                    foreach (var acc in accessors) {
+                        var cls = data.parser.GetRSZClass(cn)!;
+                        GenerateObjectCache(cls, game);
+                    }
+                }
+            }
+        }
+
         return data.parser.GetRSZClass(classname);
     }
 
@@ -681,6 +693,15 @@ public class REField
         VariantType = Variant.Type.Object;
         Hint = PropertyHint.ResourceType;
         HintString = resourceTypeName;
+    }
+
+    public void MarkAsType(RszFieldType rszType, string godotResourceTypeName)
+    {
+        RszField.type = rszType;
+        RszField.IsTypeInferred = true;
+        VariantType = Variant.Type.Object;
+        Hint = PropertyHint.ResourceType;
+        HintString = godotResourceTypeName;
     }
 }
 

@@ -442,7 +442,7 @@ public class GodotRszImporter
                     for (int i = 0; i < paths.Count; ++i) {
                         var path = paths[i];
                         if (ctx.gameObjects.TryGetValue(path.TargetGuid, out var refTarget) && gameobj.Owner == refTarget.Owner) {
-                            path.Path = gameobj.GetPathTo(refTarget);
+                            path.ModifyPathNoCheck(gameobj.GetPathTo(refTarget));
                         } else {
                             // for cross-scn references, we can't guaranteed resolve them so just store the guid without a path
                             path.Path = null;
@@ -452,7 +452,7 @@ public class GodotRszImporter
                 } else {
                     var path = value.As<GameObjectRef>();
                     if (ctx.gameObjects.TryGetValue(path.TargetGuid, out var refTarget) && gameobj.Owner == refTarget.Owner) {
-                        path.Path = gameobj.GetPathTo(refTarget);
+                        path.ModifyPathNoCheck(gameobj.GetPathTo(refTarget));
                     } else {
                         // for cross-scn references, we can't guaranteed resolve them so just store the guid without a path
                         path.Path = null;

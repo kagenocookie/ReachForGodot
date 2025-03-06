@@ -17,7 +17,9 @@ public partial class GameObjectRef : Resource
 #if TOOLS
             if (value != null && value != _path) {
                 var sourceNode = EditorInterface.Singleton.GetSelection().GetSelectedNodes().FirstOrDefault();
-                guid = sourceNode?.GetNodeOrNull<REGameObject>(value)?.Uuid ?? Guid.Empty.ToString();
+                if (sourceNode != null) {
+                    guid = sourceNode?.GetNodeOrNull<REGameObject>(value)?.Uuid ?? Guid.Empty.ToString();
+                }
             }
 #endif
             _path = value;
@@ -28,6 +30,8 @@ public partial class GameObjectRef : Resource
         get => Guid.TryParse(guid, out var parsed) ? parsed : Guid.Empty;
         set => guid = value.ToString();
     }
+
+    public bool IsEmpty => Path?.IsEmpty != false;
 
     public GameObjectRef()
     {
@@ -43,6 +47,11 @@ public partial class GameObjectRef : Resource
     {
         this.Path = path;
         this.guid = target;
+    }
+
+    public void ModifyPathNoCheck(NodePath? newPath)
+    {
+        _path = newPath;
     }
 
     public override void _ValidateProperty(Dictionary property)
@@ -67,8 +76,6 @@ public partial class GameObjectRef : Resource
 
         return sourceGameObject.GetNodeOrNull<REGameObject>(Path)?.ObjectGuid ?? TargetGuid;
     }
-
-    public bool IsEmpty => Path?.IsEmpty != false;
 
     public override string ToString()
     {
