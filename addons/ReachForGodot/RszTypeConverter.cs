@@ -163,7 +163,7 @@ public static class RszTypeConverter
             case RszFieldType.Uri:
                 return ((Guid)value).ToString();
             case RszFieldType.GameObjectRef:
-                return new NodePath();
+                return new GameObjectRef((Guid)value);
             case RszFieldType.AABB:
                 return ((RszTool.via.AABB)value).ToGodot();
             case RszFieldType.Mat4:
@@ -293,7 +293,7 @@ public static class RszTypeConverter
             RszFieldType.OBB => variant.As<OrientedBoundingBox>().ToRsz(),
             RszFieldType.AABB => (RszTool.via.AABB)variant.AsAabb().ToRsz(),
             RszFieldType.Guid or RszFieldType.Uri => Guid.TryParse(variant.AsString(), out var guid) ? guid : Guid.Empty,
-            RszFieldType.GameObjectRef => new NodePath(),
+            RszFieldType.GameObjectRef => variant.As<GameObjectRef>().TargetGuid,
             RszFieldType.Color => (RszTool.via.Color)variant.AsColor().ToRsz(),
             RszFieldType.Range => (RszTool.via.Range)variant.AsVector2().ToRszRange(),
             RszFieldType.RangeI => (RszTool.via.RangeI)variant.AsVector2I().ToRszRange(),

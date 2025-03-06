@@ -7,7 +7,7 @@ using RszTool;
 [GlobalClass, Tool]
 public abstract partial class REComponent : REObject, ISerializationListener
 {
-    [ExportToolButton("Store modifications from nodes")]
+    [ExportToolButton("Trigger pre-export action")]
     private Callable TriggerPreExport => Callable.From(PreExport);
 
     public REGameObject GameObject { get; set; } = null!;

@@ -330,9 +330,7 @@ public class TypeCache
         switch (srcField.type) {
             case RszFieldType.Object:
             case RszFieldType.UserData:
-                refield.VariantType = Variant.Type.Object;
-                refield.Hint = PropertyHint.ResourceType;
-                refield.HintString = nameof(REObject);
+                ResourceHint(refield, nameof(REObject));
                 break;
             case RszFieldType.S8:
             case RszFieldType.S16:
@@ -410,9 +408,7 @@ public class TypeCache
                 refield.VariantType = Variant.Type.Aabb;
                 break;
             case RszFieldType.GameObjectRef:
-                refield.VariantType = Variant.Type.NodePath;
-                refield.Hint = PropertyHint.NodePathValidTypes;
-                refield.HintString = nameof(REGameObject);
+                ResourceHint(refield, nameof(GameObjectRef));
                 break;
             case RszFieldType.Guid:
             case RszFieldType.Uri:

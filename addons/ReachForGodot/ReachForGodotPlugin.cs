@@ -27,7 +27,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
 
     private static ReachForGodotPlugin? _pluginInstance;
 
-    private EditorInspectorPlugin[] inspectors = new EditorInspectorPlugin[5];
+    private EditorInspectorPlugin[] inspectors = null!;
     private EditorNode3DGizmoPlugin[] gizmos = Array.Empty<EditorNode3DGizmoPlugin>();
     private PopupMenu toolMenu = null!;
     private AssetBrowser? browser;
@@ -42,11 +42,16 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
 
         EditorInterface.Singleton.GetEditorSettings().SettingsChanged += OnProjectSettingsChanged;
         OnProjectSettingsChanged();
-        AddInspectorPlugin(inspectors[0] = new SceneFolderInspectorPlugin());
-        AddInspectorPlugin(inspectors[1] = new AssetReferenceInspectorPlugin());
-        AddInspectorPlugin(inspectors[2] = new ResourceInspectorPlugin());
-        AddInspectorPlugin(inspectors[3] = new AssetExportInspectorPlugin());
-        AddInspectorPlugin(inspectors[4] = new GameObjectInspectorPlugin());
+
+        inspectors = new EditorInspectorPlugin[] {
+            new SceneFolderInspectorPlugin(),
+            new AssetReferenceInspectorPlugin(),
+            new ResourceInspectorPlugin(),
+            new AssetExportInspectorPlugin(),
+            new GameObjectInspectorPlugin(),
+        };
+        foreach (var i in inspectors) AddInspectorPlugin(i);
+
         RefreshToolMenu();
         toolMenu.IdPressed += (id) => {
             if (id < 100) {

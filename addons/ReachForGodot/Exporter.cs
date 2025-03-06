@@ -265,33 +265,16 @@ public class Exporter
 
                 if (data.TryGetFieldValue(field, out var value)) {
                     if (field.RszField.array) {
-                        var paths = value.AsGodotArray<NodePath>();
-                        var values = new object[paths.Count];
+                        var refs = value.AsGodotArray<GameObjectRef>();
+                        var values = new object[refs.Count];
                         int i = 0;
-                        foreach (var path in paths) {
-                            if (path != null && !path.IsEmpty) {
-                                var target = component.GameObject.GetNode(path) as REGameObject;
-                                if (target == null) {
-                                    GD.Print("Invalid node path reference " + path + " at " + component.Path);
-                                    values[i++] = Guid.Empty;
-                                    continue;
-                                }
-
-                                values[i++] = target.ObjectGuid;
-                            } else {
-                                values[i++] = Guid.Empty;
-                            }
+                        foreach (var path in refs) {
+                            values[i++] = path.ResolveGuid(component.GameObject);
                         }
                         dataInst.Values[field.FieldIndex] = values;
                     } else {
-                        if (value.AsNodePath() is NodePath nodepath && !nodepath.IsEmpty) {
-                            var target = component.GameObject.GetNode(nodepath) as REGameObject;
-                            if (target == null) {
-                                GD.Print("Invalid node path reference " + nodepath + " at " + component.Path);
-                                continue;
-                            }
-
-                            dataInst.Values[field.FieldIndex] = target.ObjectGuid;
+                        if (value.As<GameObjectRef>() is GameObjectRef goref && !goref.IsEmpty) {
+                            dataInst.Values[field.FieldIndex] = goref.ResolveGuid(component.GameObject);
                         }
                     }
                 }
@@ -323,11 +306,10 @@ public class Exporter
                 if (field.RszField.array) {
                     GD.PrintErr("GameObjectRef array export currently unsupported!! " + component.Path);
                 } else {
-                    if (data.TryGetFieldValue(field, out var path) && path.AsNodePath() is NodePath nodepath && !nodepath.IsEmpty) {
-                        // GD.Print($"Found GameObjectRef {component.GameObject}/{component} => {field.SerializedName} {nodepath}");
-                        var target = component.GameObject.GetNode(nodepath) as REGameObject;
+                    if (data.TryGetFieldValue(field, out var path) && path.As<GameObjectRef>() is GameObjectRef objref && !objref.IsEmpty) {
+                        var target = objref.Resolve(component.GameObject);
                         if (target == null) {
-                            GD.Print("Invalid node path reference " + nodepath + " at " + component.Path);
+                            GD.Print("Invalid pfb node path reference " + objref + " at " + component.Path);
                             continue;
                         }
 
@@ -415,7 +397,7 @@ public class Exporter
                 objectId = objectId,
                 parentId = parentId,
                 componentCount = (short)gameObject.Components.Count,
-                guid = Guid.TryParse(gameObject.Uuid, out var guid) ? guid : Guid.Empty,
+                guid = gameObject.ObjectGuid,
                 prefabId = pfbIndex,
             }
         });
@@ -495,11 +477,10 @@ public class Exporter
                         }
                         break;
                     case RszFieldType.GameObjectRef:
-                        // TODO handle guids in scenes
                         if (field.RszField.array) {
-                            values[i++] = value.AsGodotArray<NodePath>().Select(p => (object)Guid.Empty).ToArray();
+                            values[i++] = value.AsGodotArray<GameObjectRef>().Select(p => (object)p.TargetGuid).ToArray();
                         } else {
-                            values[i++] = Guid.Empty;
+                            values[i++] = value.As<GameObjectRef>().TargetGuid;
                         }
                         break;
                     default:

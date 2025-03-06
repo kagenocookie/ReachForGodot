@@ -14,8 +14,8 @@ public partial class REGameObject : Node3D, ISerializationListener
     [Export] public string OriginalName { get; set; } = string.Empty;
     [Export] public REObject? Data { get; set; }
     [Export] public Godot.Collections.Array<REComponent> Components { get; set; } = null!;
-    public Guid ObjectGuid => System.Guid.TryParse(Uuid, out var guid) ? guid : Guid.Empty;
 
+    public Guid ObjectGuid => System.Guid.TryParse(Uuid, out var guid) ? guid : Guid.Empty;
     public SceneFolder? ParentFolder => this.FindNodeInParents<SceneFolder>();
 
     public IEnumerable<REGameObject> Children => this.FindChildrenByType<REGameObject>();

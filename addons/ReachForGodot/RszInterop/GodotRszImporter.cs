@@ -424,7 +424,7 @@ public class GodotRszImporter
     {
         foreach (var go in folder.ChildObjects.SelectMany(ch => ch.AllChildrenIncludingSelf)) {
             foreach (var comp in go.Components) {
-                ReconstructScnGameObjectRefs(file, comp, comp, go, root);
+                ReconstructScnGameObjectRefs(comp, comp, go, root);
             }
         }
 
@@ -433,45 +433,32 @@ public class GodotRszImporter
         }
     }
 
-    private void ReconstructScnGameObjectRefs(ScnFile file, REObject obj, REComponent component, REGameObject gameobj, SceneFolder root)
+    private void ReconstructScnGameObjectRefs(REObject obj, REComponent component, REGameObject gameobj, SceneFolder root)
     {
-        RszInstance? instance = null;
         foreach (var field in obj.TypeInfo.Fields) {
-            if (field.RszField.type == RszFieldType.GameObjectRef) {
-                instance ??= ctx.objectSourceInstances[obj];
+            if (field.RszField.type == RszFieldType.GameObjectRef && obj.TryGetFieldValue(field, out var value)) {
                 if (field.RszField.array) {
-                    var paths = new Godot.Collections.Array<NodePath>();
-                    var indices = (IList<object>)instance.Values[field.FieldIndex];
-                    for (int i = 0; i < indices.Count; ++i) {
-                        var guid = (Guid)indices[i];
-                        if (ctx.gameObjects.TryGetValue(guid, out var refTarget)) {
-                            paths.Add(gameobj.GetPathTo(refTarget));
+                    var paths = value.AsGodotArray<GameObjectRef>();
+                    for (int i = 0; i < paths.Count; ++i) {
+                        var path = paths[i];
+                        if (ctx.gameObjects.TryGetValue(path.TargetGuid, out var refTarget) && gameobj.Owner == refTarget.Owner) {
+                            path.Path = gameobj.GetPathTo(refTarget);
                         } else {
-                            if (guid != Guid.Empty) {
-                                GD.PrintErr($"Couldn't resolve scn GameObjectRef node path field {field.SerializedName}[{i}] in {component.Path}.\n Could be a legit case, or maybe we missed something.");
-                            }
-                            paths.Add(new NodePath(""));
+                            // for cross-scn references, we can't guaranteed resolve them so just store the guid without a path
+                            path.Path = null;
                         }
                     }
                     obj.SetField(field, paths);
                 } else {
-                    var guid = (Guid)instance.Values[field.FieldIndex];
-                    if (ctx.gameObjects.TryGetValue(guid, out var refTarget)) {
-                        if (gameobj.Owner != refTarget.Owner) {
-                            // TODO cross-scn references
-                            GD.PrintErr("TODO cross-scn references " + component.Path + " to " + refTarget.Path);
-                        } else {
-                            obj.SetField(field, gameobj.GetPathTo(refTarget));
-                        }
+                    var path = value.As<GameObjectRef>();
+                    if (ctx.gameObjects.TryGetValue(path.TargetGuid, out var refTarget) && gameobj.Owner == refTarget.Owner) {
+                        path.Path = gameobj.GetPathTo(refTarget);
                     } else {
-                        if (guid != Guid.Empty) {
-                            GD.PrintErr($"Couldn't resolve scn GameObjectRef node path field {field.SerializedName} in {component.Path}.\n Could be a legit case, or maybe we missed something.");
-                        }
-                        obj.SetField(field, new NodePath(""));
+                        // for cross-scn references, we can't guaranteed resolve them so just store the guid without a path
+                        path.Path = null;
                     }
                 }
 
-                // GD.Print("Found GameObjectRef link: " + obj + " => " + targetGameobj + " == " + obj.GetField(field));
             } else if (field.RszField.type is RszFieldType.Object) {
                 if (!obj.TryGetFieldValue(field, out var child)) continue;
 
@@ -479,13 +466,13 @@ public class GodotRszImporter
                     if (child.AsGodotArray<REObject>() is Godot.Collections.Array<REObject> children) {
                         foreach (var childObj in children) {
                             if (childObj != null) {
-                                ReconstructScnGameObjectRefs(file, childObj, component, gameobj, root);
+                                ReconstructScnGameObjectRefs(childObj, component, gameobj, root);
                             }
                         }
                     }
                 } else {
                     if (child.As<REObject>() is REObject childObj) {
-                        ReconstructScnGameObjectRefs(file, childObj, component, gameobj, root);
+                        ReconstructScnGameObjectRefs(childObj, component, gameobj, root);
                     }
                 }
             }
@@ -599,7 +586,7 @@ public class GodotRszImporter
         }
     }
 
-    private NodePath? ResolveGameObjectRef(PfbFile file, REField field, REObject obj, RszInstance instance, REComponent component, REGameObject root, int arrayIndex)
+    private GameObjectRef? ResolveGameObjectRef(PfbFile file, REField field, REObject obj, RszInstance instance, REComponent component, REGameObject root, int arrayIndex)
     {
         // god help me...
         Debug.Assert(instance != null);
@@ -661,7 +648,7 @@ public class GodotRszImporter
             return default;
         }
 
-        return component.GameObject.GetPathTo(targetGameobj);
+        return new GameObjectRef(targetGameobj.Uuid, component.GameObject.GetPathTo(targetGameobj));
     }
 
     private void ReconstructPfbGameObjectRefs(PfbFile file, REObject obj, REComponent component, REGameObject root, int arrayIndex = 0)
@@ -672,19 +659,19 @@ public class GodotRszImporter
                 instance ??= ctx.objectSourceInstances[obj];
                 if (field.RszField.array) {
                     var indices = (IList<object>)instance.Values[field.FieldIndex];
-                    var paths = new Godot.Collections.Array<NodePath>();
+                    var paths = new Godot.Collections.Array<GameObjectRef>();
                     for (int i = 0; i < indices.Count; ++i) {
                         var refval = ResolveGameObjectRef(file, field, obj, instance, component, root, i);
                         if (refval == null) {
-                            GD.PrintErr($"Couldn't resolve pfb GameObjectRef node path field {field.SerializedName}[{i}] in {component.Path}");
+                            GD.PrintErr($"Couldn't resolve pfb GameObjectRef node path field {field.SerializedName}[{i}] for {component.Path}");
                         }
-                        paths.Add(refval ?? new NodePath(""));
+                        paths.Add(refval ?? new GameObjectRef());
                     }
                     obj.SetField(field, paths);
                 } else {
                     var refval = ResolveGameObjectRef(file, field, obj, instance, component, root, 0);
                     if (refval == null) {
-                        GD.PrintErr($"Couldn't resolve pfb GameObjectRef node path in field {field.SerializedName} {component.Path}");
+                        GD.PrintErr($"Couldn't resolve pfb GameObjectRef node path in field {field.SerializedName} for {component.Path}");
                     }
                     obj.SetField(field, refval ?? new Variant());
                 }
