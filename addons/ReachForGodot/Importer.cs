@@ -76,7 +76,7 @@ public class Importer
 
         var importPath = PathUtils.GetLocalizedImportPath(sourceFile, config);
         if (!ResourceLoader.Exists(importPath)) {
-            var sourcePath = PathUtils.ResolveSourceFilePath(sourceFile, config);
+            var sourcePath = PathUtils.FindSourceFilePath(sourceFile, config);
             if (sourcePath == null) return false;
             Importer.Import(sourcePath, config, importPath);
             return true;
@@ -95,8 +95,7 @@ public class Importer
         if (importPath == null) return false;
         if (ResourceLoader.Exists(importPath)) return true;
 
-        var sourcePath = PathUtils.ResolveSourceFilePath(sourceFile, config);
-        return File.Exists(sourcePath);
+        return PathUtils.FindSourceFilePath(sourceFile, config) != null;
     }
 
     /// <summary>
@@ -116,7 +115,7 @@ public class Importer
         }
 
         if (!ResourceLoader.Exists(importPath)) {
-            var sourcePath = PathUtils.ResolveSourceFilePath(chunkRelativeFilepath, config);
+            var sourcePath = PathUtils.FindSourceFilePath(chunkRelativeFilepath, config);
             if (sourcePath == null) return null;
             return Importer.Import(sourcePath, config, importPath) as T;
         }
@@ -153,7 +152,7 @@ public class Importer
         if (string.IsNullOrEmpty(sourceFilePath)) return false;
 
         if (!System.IO.Path.IsPathRooted(sourceFilePath)) {
-            sourceFilePath = PathUtils.ResolveSourceFilePath(sourceFilePath, ReachForGodot.GetAssetConfig(game));
+            sourceFilePath = PathUtils.FindSourceFilePath(sourceFilePath, ReachForGodot.GetAssetConfig(game));
         }
         if (string.IsNullOrEmpty(sourceFilePath)) return false;
 
@@ -175,7 +174,7 @@ public class Importer
         var config = ReachForGodot.GetAssetConfig(game);
         var importFilepath = PathUtils.GetAssetImportPath(sourceFilePath, RESupportedFileFormats.Mesh, config);
         if (!System.IO.Path.IsPathRooted(sourceFilePath)) {
-            sourceFilePath = PathUtils.ResolveSourceFilePath(sourceFilePath, config);
+            sourceFilePath = PathUtils.FindSourceFilePath(sourceFilePath, config);
         }
         if (sourceFilePath == null || !IsSupportedMeshFile(sourceFilePath, game)) {
             GD.PrintErr("Unsupported mesh " + sourceFilePath);
@@ -211,7 +210,7 @@ public class Importer
         var config = ReachForGodot.GetAssetConfig(game);
         var importFilepath = PathUtils.GetAssetImportPath(sourceFilePath, RESupportedFileFormats.Texture, config);
         if (!System.IO.Path.IsPathRooted(sourceFilePath)) {
-            sourceFilePath = PathUtils.ResolveSourceFilePath(sourceFilePath, config);
+            sourceFilePath = PathUtils.FindSourceFilePath(sourceFilePath, config);
         }
         if (sourceFilePath == null) return Task.FromResult(false);
 
@@ -241,10 +240,8 @@ public class Importer
 
     public static PackedScene? ImportScene(string? sourceFilePath, string outputFilePath, AssetConfig config)
     {
-        if (!System.IO.Path.IsPathRooted(sourceFilePath)) {
-            sourceFilePath = PathUtils.ResolveSourceFilePath(sourceFilePath, config);
-        }
-        if (!File.Exists(sourceFilePath)) {
+        sourceFilePath = PathUtils.FindSourceFilePath(sourceFilePath, config);
+        if (sourceFilePath == null) {
             GD.PrintErr("Scene file not found: " + sourceFilePath);
             return null;
         }
@@ -254,10 +251,8 @@ public class Importer
 
     public static PackedScene? ImportPrefab(string? sourceFilePath, string outputFilePath, AssetConfig config)
     {
-        if (!System.IO.Path.IsPathRooted(sourceFilePath)) {
-            sourceFilePath = PathUtils.ResolveSourceFilePath(sourceFilePath, config);
-        }
-        if (!File.Exists(sourceFilePath)) {
+        sourceFilePath = PathUtils.FindSourceFilePath(sourceFilePath, config);
+        if (sourceFilePath == null) {
             GD.PrintErr("Prefab file not found: " + sourceFilePath);
             return null;
         }
@@ -267,10 +262,8 @@ public class Importer
 
     public static UserdataResource? ImportUserdata(string? sourceFilePath, string outputFilePath, AssetConfig config)
     {
-        if (!System.IO.Path.IsPathRooted(sourceFilePath)) {
-            sourceFilePath = PathUtils.ResolveSourceFilePath(sourceFilePath, config);
-        }
-        if (!File.Exists(sourceFilePath)) {
+        sourceFilePath = PathUtils.FindSourceFilePath(sourceFilePath, config);
+        if (sourceFilePath == null) {
             GD.PrintErr("Userdata file not found: " + sourceFilePath);
             return null;
         }
@@ -280,10 +273,8 @@ public class Importer
 
     public static MaterialResource? ImportMaterial(string? sourceFilePath, string? outputFilePath, AssetConfig config)
     {
-        if (!System.IO.Path.IsPathRooted(sourceFilePath)) {
-            sourceFilePath = PathUtils.ResolveSourceFilePath(sourceFilePath, config);
-        }
-        if (!File.Exists(sourceFilePath)) {
+        sourceFilePath = PathUtils.FindSourceFilePath(sourceFilePath, config);
+        if (sourceFilePath == null) {
             GD.PrintErr("Userdata file not found: " + sourceFilePath);
             return null;
         }
@@ -293,7 +284,7 @@ public class Importer
             Game = config.Game,
             ResourceType = RESupportedFileFormats.Material,
             ResourceName = PathUtils.GetFilepathWithoutVersion(sourceFilePath).GetFile(),
-            Asset = new AssetReference(config.Paths.GetChunkRelativePath(sourceFilePath)),
+            Asset = new AssetReference(PathUtils.FullToRelativePath(sourceFilePath, config) ?? sourceFilePath),
         };
         if (ResourceLoader.Exists(importPath)) {
             mat.TakeOverPath(importPath);
@@ -322,29 +313,29 @@ public class Importer
         where T : REResource, new()
     {
         if (string.IsNullOrEmpty(sourceFilePath)) return null;
-        if (!System.IO.Path.IsPathRooted(sourceFilePath)) {
-            var resolved = PathUtils.ResolveSourceFilePath(sourceFilePath, config);
-            if (resolved != null) {
-                sourceFilePath = resolved;
-            }
-        }
+        var resolvedPath = PathUtils.FindSourceFilePath(sourceFilePath, config);
 
         RESupportedFileFormats format;
-        if (!File.Exists(sourceFilePath)) {
+        if (resolvedPath == null) {
             GD.PrintErr("Resource file not found: " + sourceFilePath);
             format = RESupportedFileFormats.Unknown;
         } else {
+            sourceFilePath = resolvedPath;
             format = PathUtils.GetFileFormat(sourceFilePath).format;
         }
 
-        sourceFilePath = config.Paths.GetChunkRelativePath(sourceFilePath);
+        var relativePath = PathUtils.FullToRelativePath(sourceFilePath, config);
+        if (relativePath == null) {
+            GD.PrintErr("Could not determine proper relative path for file " + sourceFilePath);
+            relativePath = sourceFilePath;
+        }
 
         Directory.CreateDirectory(outputFilePath.GetBaseDir());
         var newres = new T() {
-            Asset = new AssetReference(sourceFilePath),
+            Asset = new AssetReference(relativePath),
             ResourceType = format,
             Game = config.Game,
-            ResourceName = sourceFilePath.GetFile(),
+            ResourceName = relativePath.GetFile(),
             ResourcePath = ProjectSettings.LocalizePath(outputFilePath),
         };
         ResourceSaver.Save(newres);

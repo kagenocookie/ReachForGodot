@@ -60,7 +60,7 @@ public class Exporter
         AssetConfig config = ReachForGodot.GetAssetConfig(userdata.Game);
         var fileOption = TypeCache.CreateRszFileOptions(config);
 
-        var handler = new FileHandler(PathUtils.ResolveSourceFilePath(userdata.Asset?.AssetFilename!, config)!);
+        // var handler = new FileHandler(PathUtils.ResolveSourceFilePath(userdata.Asset?.AssetFilename!, config)!);
         // var sourceFile = new UserFile(fileOption, new FileHandler(Importer.ResolveSourceFilePath(userdata.Asset?.AssetFilename!, config)!));
         // sourceFile.Read();
 
@@ -321,13 +321,13 @@ public class Exporter
         foreach (var field in data.TypeInfo.Fields) {
             if (field.RszField.type == RszFieldType.GameObjectRef) {
                 if (field.RszField.array) {
-                    GD.PrintErr("GameObjectRef array export currently unsupported!! " + root.GetPathTo(component.GameObject));
+                    GD.PrintErr("GameObjectRef array export currently unsupported!! " + component.Path);
                 } else {
                     if (data.TryGetFieldValue(field, out var path) && path.AsNodePath() is NodePath nodepath && !nodepath.IsEmpty) {
                         // GD.Print($"Found GameObjectRef {component.GameObject}/{component} => {field.SerializedName} {nodepath}");
                         var target = component.GameObject.GetNode(nodepath) as REGameObject;
                         if (target == null) {
-                            GD.Print("Invalid node path reference " + nodepath + " at " + root.GetPathTo(component.GameObject));
+                            GD.Print("Invalid node path reference " + nodepath + " at " + component.Path);
                             continue;
                         }
 

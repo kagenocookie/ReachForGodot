@@ -141,7 +141,10 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
                 .Select(path => {
                     var parts = path.Split('|');
                     string? label = parts.Length >= 2 ? parts[0] : null;
-                    var filepath = parts.Length >= 2 ? parts[1] : parts[0];
+                    var filepath = (parts.Length >= 2 ? parts[1] : parts[0]).Replace('\\', '/');
+                    if (!filepath.EndsWith('/')) {
+                        filepath = filepath + '/';
+                    }
                     return new LabelledPathSetting(filepath, label);
                 }).ToArray();
 

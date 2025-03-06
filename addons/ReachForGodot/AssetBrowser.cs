@@ -34,7 +34,7 @@ public partial class AssetBrowser : Resource
         }
         Process.Start(new ProcessStartInfo("explorer.exe") {
             UseShellExecute = false,
-            Arguments = $"\"{ReachForGodot.GetChunkPath(Assets.Game)!.Replace('/', '\\')}\"",
+            Arguments = $"\"{Assets.Paths.ChunkPath.Replace('/', '\\')}\"",
         });
     });
 
@@ -75,38 +75,6 @@ public partial class AssetBrowser : Resource
         _dialog.Show();
     }
 
-    private void ImportAssetSync(string filepath)
-    {
-        Debug.Assert(Assets != null);
-        var resource = Importer.Import(filepath, Assets);
-        GD.Print("File imported to " + PathUtils.GetLocalizedImportPath(filepath, Assets));
-        if (resource is REResourceProxy proxy) {
-            proxy.Import(true).Wait();
-        }
-    }
-
-    private void ImportAssetsSync(string[] files)
-    {
-        Debug.Assert(Assets != null);
-        if (files.Length == 0) {
-            GD.PrintErr("Empty import file list");
-            return;
-        }
-
-        ImportMultipleAssets(files).Wait();
-        var importPaths = files.Select(f => PathUtils.GetLocalizedImportPath(f, Assets));
-        GD.Print("Files imported to:\n" + string.Join('\n', importPaths));
-
-        if (importPaths.FirstOrDefault(x => x != null) is string str && ResourceLoader.Exists(str)) {
-            var fmt = PathUtils.GetFileFormat(files.First(x => x != null));
-            if (fmt.format == RESupportedFileFormats.Scene || fmt.format == RESupportedFileFormats.Prefab) {
-                EditorInterface.Singleton.CallDeferred(EditorInterface.MethodName.OpenSceneFromPath, str);
-            } else {
-                EditorInterface.Singleton.CallDeferred(EditorInterface.MethodName.SelectFile, str);
-            }
-        }
-    }
-
     private async Task ImportAssetsAsync(string[] files)
     {
         Debug.Assert(Assets != null);
@@ -132,8 +100,23 @@ public partial class AssetBrowser : Resource
     private Task ImportMultipleAssets(string[] files)
     {
         Debug.Assert(Assets != null);
-        return Task.WhenAll(files.Select(file => Importer.Import(file, Assets))
-            .Select(res => (res as REResourceProxy)?.Import(true) ?? Task.CompletedTask));
+        return Task.WhenAll(files.Select(ImportSingleAsset));
+    }
+
+    private async Task ImportSingleAsset(string file)
+    {
+        Debug.Assert(Assets != null);
+        if (!file.StartsWith(Assets.Paths.ChunkPath)) {
+            Assets.Paths.SourcePathOverride = PathUtils.GetSourceFileBasePath(file, Assets);
+        }
+        try {
+            var res = Importer.Import(file, Assets);
+            if (res is REResourceProxy resp) {
+                await resp.Import(true);
+            }
+        } finally {
+            Assets.Paths.SourcePathOverride = null;
+        }
     }
 }
 #endif

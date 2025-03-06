@@ -47,6 +47,14 @@ public static class PathUtils
         return filepath;
     }
 
+    public static string GetFilenameWithoutExtensionOrVersion(string filename)
+    {
+        var versionDot = filename.LastIndexOf('.');
+        if (versionDot == -1 && int.TryParse(filename.AsSpan()[(versionDot+1)..], out _)) return filename.GetFile().GetBaseName();
+
+        return filename.GetFile().GetBaseName().GetBaseName();
+    }
+
     public static RESupportedFileFormats GetFileFormatFromExtension(ReadOnlySpan<char> extension)
     {
         if (extension.SequenceEqual("mesh")) return RESupportedFileFormats.Mesh;
@@ -133,7 +141,7 @@ public static class PathUtils
             relativePath = relativePath.Substring(1);
         }
 
-        var fullpath = Path.Join(config.Paths.ChunkPath, relativePath);
+        var fullpath = RelativeToFullPath(relativePath, config);
         var ext = GetFileExtensionFromFormat(format) ?? relativePath.GetExtension();
         if (TryFindFileExtensionVersion(config, ext, out var version)) {
             return version;
@@ -157,7 +165,7 @@ public static class PathUtils
 
     public static string? GetLocalizedImportPath(string fullSourcePath, AssetConfig config)
     {
-        var path = GetDefaultImportPath(fullSourcePath, GetFileFormat(fullSourcePath).format, config, true);
+        var path = FullOrRelativePathToImportPath(fullSourcePath, GetFileFormat(fullSourcePath).format, config, true);
         if (string.IsNullOrEmpty(path)) return null;
 
         return ProjectSettings.LocalizePath(path);
@@ -166,10 +174,9 @@ public static class PathUtils
     public static string? GetAssetImportPath(string? fullSourcePath, RESupportedFileFormats format, AssetConfig config)
     {
         if (fullSourcePath == null) return null;
-        return ProjectSettings.LocalizePath(GetDefaultImportPath(fullSourcePath, format, config, false));
+        return ProjectSettings.LocalizePath(FullOrRelativePathToImportPath(fullSourcePath, format, config, false));
     }
 
-    [return: NotNullIfNotNull(nameof(filename))]
     public static string AppendFileVersion(string filename, AssetConfig config)
     {
         var fmt = GetFileFormat(filename);
@@ -179,20 +186,98 @@ public static class PathUtils
 
         var version = GuessFileVersion(filename, fmt.format, config);
         if (version == -1) {
+            GD.PrintErr("Could not determine file version for file: " + filename);
             return filename;
         }
 
         return $"{filename}.{version}";
     }
 
-    private static string? GetDefaultImportPath(string fullSourcePath, RESupportedFileFormats fmt, AssetConfig config, bool resource)
+    /// <summary>
+    /// Search through all known file paths for the game to find the full path to a file.<br/>
+    /// Search priority: Override > Chunk path > Additional paths
+    /// </summary>
+    /// <returns>The resolved path, or null if the file was not found.</returns>
+    public static string? FindSourceFilePath(string? sourceFilePath, AssetConfig config)
     {
-        var basepath = ReachForGodot.GetChunkPath(config.Game);
-        if (basepath == null) {
-            throw new ArgumentException($"{config.Game} chunk path not configured");
+        if (Path.IsPathRooted(sourceFilePath)) {
+            return File.Exists(sourceFilePath) ? sourceFilePath : null;
         }
-        var relativePath = fullSourcePath.Replace(basepath, "");
-        relativePath = PathUtils.AppendFileVersion(relativePath, config);
+
+        if (sourceFilePath == null) return null;
+        sourceFilePath = AppendFileVersion(sourceFilePath, config);
+
+        if (!string.IsNullOrEmpty(config.Paths.SourcePathOverride) && File.Exists(Path.Combine(config.Paths.SourcePathOverride, sourceFilePath))) {
+            return Path.Combine(config.Paths.SourcePathOverride, sourceFilePath);
+        }
+
+        if (File.Exists(Path.Combine(config.Paths.ChunkPath, sourceFilePath))) {
+            return Path.Combine(config.Paths.ChunkPath, sourceFilePath);
+        }
+
+        foreach (var extra in config.Paths.AdditionalPaths) {
+            if (File.Exists(Path.Combine(extra, sourceFilePath))) {
+                return Path.Combine(extra, sourceFilePath);
+            }
+        }
+
+        return null;
+    }
+
+    public static string RelativeToFullPath(string relativeSourcePath, AssetConfig config)
+    {
+        if (!string.IsNullOrEmpty(config.Paths.SourcePathOverride)) {
+            var overridePath = Path.Join(config.Paths.ChunkPath, relativeSourcePath);
+            if (File.Exists(overridePath)) {
+                return overridePath.Replace('\\', '/');
+            }
+        }
+
+        return Path.Join(config.Paths.ChunkPath, relativeSourcePath).Replace('\\', '/');
+    }
+
+    public static string? GetSourceFileBasePath(string fullSourcePath, AssetConfig config)
+    {
+        if (!string.IsNullOrEmpty(config.Paths.SourcePathOverride) && fullSourcePath.StartsWith(config.Paths.SourcePathOverride)) {
+            return config.Paths.SourcePathOverride;
+        }
+
+        if (fullSourcePath.StartsWith(config.Paths.ChunkPath)) {
+            return config.Paths.ChunkPath;
+        }
+
+        foreach (var extra in config.Paths.AdditionalPaths) {
+            if (fullSourcePath.StartsWith(extra)) {
+                return extra;
+            }
+        }
+
+        // TODO: try and find stm root in the given path
+        GD.PrintErr("Could not determine import file base path. Make sure to configure the ChunkPath setting correctly in editor settings.\nPath: " + fullSourcePath);
+        return null;
+    }
+
+    public static string? FullToRelativePath(string fullSourcePath, AssetConfig config)
+    {
+        var basepath = GetSourceFileBasePath(fullSourcePath, config);
+        return basepath == null ? null : fullSourcePath.Replace(basepath, "");
+    }
+
+    public static string? ImportPathToRelativePath(string importPath, AssetConfig config)
+    {
+        if (string.IsNullOrEmpty(importPath)) return null;
+
+        var relativePath = importPath.Replace("res://" + config.AssetDirectory, "");
+        if (relativePath.StartsWith('/')) relativePath = relativePath.Substring(1);
+        return PathUtils.GetFilepathWithoutVersion(relativePath);
+    }
+
+    private static string? FullOrRelativePathToImportPath(string sourcePath, RESupportedFileFormats fmt, AssetConfig config, bool resource)
+    {
+        var relativePath = Path.IsPathRooted(sourcePath) ? FullToRelativePath(sourcePath, config) : sourcePath;
+        if (relativePath == null) return null;
+
+        relativePath = AppendFileVersion(relativePath, config);
 
         var targetPath = Path.Combine(config.AssetDirectory, relativePath);
 
@@ -209,32 +294,5 @@ public static class PathUtils
             default:
                 return targetPath + ".tres";
         }
-    }
-
-    public static string? ResolveSourceFilePath(string? relativeSourcePath, AssetConfig config)
-    {
-        if (relativeSourcePath == null) return null;
-        var fmt = GetFileFormat(relativeSourcePath);
-        string extractedFilePath;
-        if (fmt.version == -1) {
-            fmt.version = GuessFileVersion(relativeSourcePath, fmt.format, config);
-            if (fmt.version == -1) {
-                return null;
-            }
-            extractedFilePath = Path.Join(config.Paths.ChunkPath, relativeSourcePath + "." + fmt.version).Replace('\\', '/');
-        } else {
-            extractedFilePath = Path.Join(config.Paths.ChunkPath, relativeSourcePath).Replace('\\', '/');
-        }
-
-        return extractedFilePath;
-    }
-
-    public static string? ImportPathToRelativePath(string importPath, AssetConfig config)
-    {
-        if (string.IsNullOrEmpty(importPath)) return null;
-
-        var relativePath = importPath.Replace("res://" + config.AssetDirectory, "");
-        if (relativePath.StartsWith('/')) relativePath = relativePath.Substring(1);
-        return PathUtils.GetFilepathWithoutVersion(relativePath);
     }
 }

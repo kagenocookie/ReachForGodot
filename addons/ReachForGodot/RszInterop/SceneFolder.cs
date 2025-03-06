@@ -26,7 +26,7 @@ public partial class SceneFolder : Node, IRszContainerNode
     public IEnumerable<SceneFolder> AllSubfolders => Subfolders.SelectMany(f => new [] { f }.Concat(f.AllSubfolders));
     public IEnumerable<REGameObject> ChildObjects => this.FindChildrenByType<REGameObject>();
 
-    public string Path => Owner is SceneFolder ownerScn ? $"{ownerScn.Asset?.AssetFilename}:{Owner.GetPathTo(this)}" : $"{Asset?.AssetFilename}:{Name}";
+    public string Path => string.IsNullOrEmpty(SceneFilePath) && Owner is SceneFolder ownerScn ? $"{ownerScn.Asset?.AssetFilename}@{Owner.GetPathTo(this)}" : $"{Asset?.AssetFilename}";
 
     public void AddFolder(SceneFolder folder)
     {

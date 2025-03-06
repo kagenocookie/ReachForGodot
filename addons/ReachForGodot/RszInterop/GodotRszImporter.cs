@@ -292,22 +292,20 @@ public class GodotRszImporter
 
     private PackedScene? SaveOrReplaceSceneResource<TRoot>(string sourceFilePath, string importFilepath) where TRoot : Node, IRszContainerNode, new()
     {
-        var relativeSourceFile = AssetConfig.Paths.GetChunkRelativePath(sourceFilePath);
-        var name = sourceFilePath.GetFile().GetBaseName().GetBaseName();
+        var relativeSourceFile = PathUtils.FullToRelativePath(sourceFilePath, AssetConfig)!;
+        var name = PathUtils.GetFilenameWithoutExtensionOrVersion(sourceFilePath);
         var scene = new PackedScene();
         scene.Pack(new TRoot() { Game = AssetConfig.Game, Name = name, Asset = new AssetReference(relativeSourceFile) });
-        return SaveOrReplaceResource(scene, sourceFilePath, importFilepath);
+        return SaveOrReplaceResource(scene, importFilepath);
     }
 
     private PackedScene? UpdateSceneResource<TRoot>(TRoot root) where TRoot : Node, IRszContainerNode, new()
     {
         var relativeSourceFile = root.Asset!.AssetFilename;
-        var sourceFilePath = PathUtils.ResolveSourceFilePath(relativeSourceFile, AssetConfig) ?? throw new Exception("Invalid source asset file " + relativeSourceFile);
         var importFilepath = PathUtils.GetLocalizedImportPath(relativeSourceFile, AssetConfig) ?? throw new Exception("Couldn't resolve import path for resource " + relativeSourceFile);
-        var name = sourceFilePath.GetFile().GetBaseName().GetBaseName();
         var scene = ResourceLoader.Exists(importFilepath) ? ResourceLoader.Load<PackedScene>(importFilepath) : new PackedScene();
         scene.Pack(root);
-        return SaveOrReplaceResource(scene, sourceFilePath, importFilepath);
+        return SaveOrReplaceResource(scene, importFilepath);
     }
 
     private TRes? SaveOrReplaceRszResource<TRes>(TRes newResource, string sourceFilePath, string importFilepath) where TRes : Resource, IRszContainerNode
@@ -317,25 +315,19 @@ public class GodotRszImporter
             return null;
         }
 
-        var relativeSourceFile = AssetConfig.Paths.GetChunkRelativePath(sourceFilePath);
-        var name = sourceFilePath.GetFile().GetBaseName().GetBaseName();
+        var relativeSourceFile = PathUtils.FullToRelativePath(sourceFilePath, AssetConfig)!;
+        var name = PathUtils.GetFilenameWithoutExtensionOrVersion(sourceFilePath);
 
         newResource.ResourceName = name;
         newResource.ResourcePath = importFilepath;
         newResource.Game = AssetConfig.Game;
         newResource.Asset = new AssetReference(relativeSourceFile);
 
-        return SaveOrReplaceResource(newResource, sourceFilePath, importFilepath);
+        return SaveOrReplaceResource(newResource, importFilepath);
     }
 
-    private TRes? SaveOrReplaceResource<TRes>(TRes newResource, string sourceFilePath, string importFilepath) where TRes : Resource
+    private TRes? SaveOrReplaceResource<TRes>(TRes newResource, string importFilepath) where TRes : Resource
     {
-        if (!File.Exists(sourceFilePath)) {
-            GD.PrintErr("Invalid resource source file, does not exist: " + sourceFilePath);
-            ctx.resolvedResources[sourceFilePath] = null;
-            return null;
-        }
-
         if (ResourceLoader.Exists(importFilepath)) {
             newResource.TakeOverPath(importFilepath);
         } else {
@@ -377,11 +369,14 @@ public class GodotRszImporter
 
     private async Task GenerateSceneTree(SceneFolder root)
     {
-        var scnFullPath = root.Asset?.ResolveSourceFile(AssetConfig);
-        if (scnFullPath == null) return;
+        var fullPath = PathUtils.FindSourceFilePath(root.Asset?.AssetFilename, AssetConfig);
+        if (fullPath == null) {
+            GD.PrintErr("File not found: " + fullPath);
+            return;
+        }
 
-        GD.Print("Opening scn file " + scnFullPath);
-        using var file = new ScnFile(fileOption, new FileHandler(scnFullPath));
+        GD.Print("Opening scn file " + fullPath);
+        using var file = new ScnFile(fileOption, new FileHandler(fullPath));
         try {
             file.Read();
         } catch (RszRetryOpenException e) {
@@ -389,7 +384,7 @@ public class GodotRszImporter
             await GenerateSceneTree(root);
             return;
         } catch (Exception e) {
-            GD.PrintErr("Failed to parse file " + scnFullPath, e);
+            GD.PrintErr("Failed to parse file " + fullPath, e);
             return;
         }
 
@@ -462,7 +457,12 @@ public class GodotRszImporter
                 } else {
                     var guid = (Guid)instance.Values[field.FieldIndex];
                     if (ctx.gameObjects.TryGetValue(guid, out var refTarget)) {
-                        obj.SetField(field, gameobj.GetPathTo(refTarget));
+                        if (gameobj.Owner != refTarget.Owner) {
+                            // TODO cross-scn references
+                            GD.PrintErr("TODO cross-scn references " + component.Path + " to " + refTarget.Path);
+                        } else {
+                            obj.SetField(field, gameobj.GetPathTo(refTarget));
+                        }
                     } else {
                         if (guid != Guid.Empty) {
                             GD.PrintErr($"Couldn't resolve scn GameObjectRef node path field {field.SerializedName} in {component.Path}.\n Could be a legit case, or maybe we missed something.");
@@ -532,7 +532,7 @@ public class GodotRszImporter
                 proxy.KnownBounds = tempInstance.KnownBounds;
                 proxy.Contents.Pack(tempInstance);
                 var importPath = proxy.Asset?.GetImportFilepath(AssetConfig);
-                var childFullPath = proxy.Asset?.ResolveSourceFile(AssetConfig);
+                var childFullPath = proxy.Asset?.FindSourceFile(AssetConfig);
                 batch.finishedFolders.Add(proxy);
 
                 if (importPath == null || childFullPath == null) {
@@ -561,16 +561,19 @@ public class GodotRszImporter
 
     private async Task GeneratePrefabTree(PrefabNode root)
     {
-        var scnFullPath = PathUtils.ResolveSourceFilePath(root.Asset!.AssetFilename, AssetConfig);
-        if (scnFullPath == null) return;
+        var fullPath = PathUtils.FindSourceFilePath(root.Asset!.AssetFilename, AssetConfig);
+        if (fullPath == null) {
+            GD.PrintErr("File not found: " + fullPath);
+            return;
+        }
 
-        GD.Print("Opening pfb file " + scnFullPath);
-        using var file = new PfbFile(fileOption, new FileHandler(scnFullPath));
+        GD.Print("Opening pfb file " + fullPath);
+        using var file = new PfbFile(fileOption, new FileHandler(fullPath));
         try {
             file.Read();
             file.SetupGameObjects();
         } catch (Exception e) {
-            GD.PrintErr("Failed to parse file " + scnFullPath, e);
+            GD.PrintErr("Failed to parse file " + fullPath, e);
             return;
         }
 
@@ -708,7 +711,7 @@ public class GodotRszImporter
 
     public void GenerateUserdata(UserdataResource root)
     {
-        var scnFullPath = PathUtils.ResolveSourceFilePath(root.Asset!.AssetFilename, AssetConfig);
+        var scnFullPath = PathUtils.FindSourceFilePath(root.Asset!.AssetFilename, AssetConfig);
         if (scnFullPath == null) return;
 
         GD.Print("Opening user file " + scnFullPath);

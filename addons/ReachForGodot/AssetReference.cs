@@ -36,7 +36,7 @@ public partial class AssetReference : Resource
         return dot == -1 ? false : AssetFilename.AsSpan().Slice(0, dot).SequenceEqual(compare);
     }
 
-    public string? ResolveSourceFile(AssetConfig config) => PathUtils.ResolveSourceFilePath(AssetFilename, config);
+    public string? FindSourceFile(AssetConfig config) => PathUtils.FindSourceFilePath(AssetFilename, config);
     public string? GetImportFilepath(AssetConfig config) => PathUtils.GetLocalizedImportPath(AssetFilename, config);
 
     public void OpenSourceFile(SupportedGame game)
@@ -45,7 +45,7 @@ public partial class AssetReference : Resource
             GD.PrintErr("Unknown game for asset " + AssetFilename);
             return;
         }
-        var file = ResolveSourceFile(ReachForGodot.GetAssetConfig(game))?.Replace('/', '\\');
+        var file = PathUtils.FindSourceFilePath(AssetFilename, ReachForGodot.GetAssetConfig(game))?.Replace('/', '\\');
         FileSystemUtils.ShowFileInExplorer(file);
     }
 

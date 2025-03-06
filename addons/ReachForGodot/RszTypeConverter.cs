@@ -347,10 +347,10 @@ public static class RszTypeConverter
     public static Projection ToProjection(this RszTool.via.mat4 mat)
     {
         return new Projection(
-            new Vector4(mat.m00, mat.m01, mat.m02, mat.m03),
             new Vector4(mat.m10, mat.m11, mat.m12, mat.m13),
             new Vector4(mat.m20, mat.m21, mat.m22, mat.m23),
-            new Vector4(mat.m30, mat.m31, mat.m32, mat.m33)
+            new Vector4(mat.m30, mat.m31, mat.m32, mat.m33),
+            new Vector4(mat.m00, mat.m01, mat.m02, mat.m03)
         );
     }
     public static System.Numerics.Vector2 ToRsz(this Vector2 val) => new System.Numerics.Vector2(val.X, val.Y);

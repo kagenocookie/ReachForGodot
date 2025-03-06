@@ -22,11 +22,11 @@ public partial class REGameObject : Node3D, ISerializationListener
     public IEnumerable<REGameObject> AllChildren => this.FindChildrenByType<REGameObject>().SelectMany(c => new [] { c }.Concat(c.AllChildren));
     public IEnumerable<REGameObject> AllChildrenIncludingSelf => new [] { this }.Concat(AllChildren);
 
-    public string Path => ParentFolder is SceneFolder scn
-        ? $"{scn.Path}:/{scn.GetPathTo(this)}"
-        : this is PrefabNode pfb
-            ? $"{pfb.Path}:/{pfb.GetPathTo(this)}"
-            : Owner != null ? Owner.GetPathTo(this) : Name;
+    public string Path => this is PrefabNode pfb
+            ? pfb.Asset?.AssetFilename ?? SceneFilePath
+            : Owner is SceneFolder scn
+                ? $"{scn.Path}:/{scn.GetPathTo(this)}"
+                : Owner != null ? Owner.GetPathTo(this) : Name;
 
     public override void _EnterTree()
     {

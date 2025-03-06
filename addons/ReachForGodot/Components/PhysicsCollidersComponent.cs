@@ -164,6 +164,9 @@ public partial class PhysicsCollidersComponent : REComponent, IVisualREComponent
                     break;
                 case "via.physics.BoxShape":
                     var obb = shape.GetField(BoxShape).As<OrientedBoundingBox>();
+                    obb.extent.X = Mathf.Max(0.001f, Mathf.Abs(obb.extent.X));
+                    obb.extent.Y = Mathf.Max(0.001f, Mathf.Abs(obb.extent.Y));
+                    obb.extent.Z = Mathf.Max(0.001f, Mathf.Abs(obb.extent.Z));
                     collider.Shape = new BoxShape3D() { Size = obb.extent };
                     collider.Transform = (Transform3D)obb.coord;
                     break;

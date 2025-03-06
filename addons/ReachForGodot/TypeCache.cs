@@ -518,6 +518,9 @@ public class TypeCache
 
             foreach (var f in inst.RszClass.fields) {
                 if (!f.IsTypeInferred) continue;
+                if (f.type < RszFieldType.Undefined) {
+                    continue;
+                }
                 if (!cache.rszTypePatches.TryGetValue(inst.RszClass.name, out var props)) {
                     cache.rszTypePatches[inst.RszClass.name] = props = new();
                 }

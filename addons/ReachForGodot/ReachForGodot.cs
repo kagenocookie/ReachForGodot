@@ -70,8 +70,6 @@ public static class ReachForGodot
         return data.config;
     }
 
-    public static string? GetChunkPath(SupportedGame game) => GetPaths(game)?.ChunkPath;
-
 #if TOOLS
     public static void ReloadSettings()
     {
