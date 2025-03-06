@@ -30,7 +30,7 @@ public record GamePaths(SupportedGame Game, string ChunkPath, string? Il2cppPath
             case SupportedGame.ResidentEvil8: return GameName.re8;
             case SupportedGame.MonsterHunterRise: return GameName.mhrise;
             case SupportedGame.StreetFighter6: return GameName.sf6;
-            case SupportedGame.MonsterHunterWilds: return GameName.unknown;
+            case SupportedGame.MonsterHunterWilds: return GameName.mhwilds;
             default: return GameName.unknown;
         }
     }
