@@ -371,7 +371,7 @@ public class GodotRszImporter
     {
         var fullPath = PathUtils.FindSourceFilePath(root.Asset?.AssetFilename, AssetConfig);
         if (fullPath == null) {
-            GD.PrintErr("File not found: " + fullPath);
+            GD.PrintErr("File not found: " + root.Asset?.AssetFilename);
             return;
         }
 
@@ -550,7 +550,7 @@ public class GodotRszImporter
     {
         var fullPath = PathUtils.FindSourceFilePath(root.Asset!.AssetFilename, AssetConfig);
         if (fullPath == null) {
-            GD.PrintErr("File not found: " + fullPath);
+            GD.PrintErr("File not found: " + root.Asset?.AssetFilename);
             return;
         }
 

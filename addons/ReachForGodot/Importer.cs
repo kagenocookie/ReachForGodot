@@ -240,41 +240,41 @@ public class Importer
 
     public static PackedScene? ImportScene(string? sourceFilePath, string outputFilePath, AssetConfig config)
     {
-        sourceFilePath = PathUtils.FindSourceFilePath(sourceFilePath, config);
-        if (sourceFilePath == null) {
+        var resolvedPath = PathUtils.FindSourceFilePath(sourceFilePath, config);
+        if (resolvedPath == null) {
             GD.PrintErr("Scene file not found: " + sourceFilePath);
             return null;
         }
         var conv = new GodotRszImporter(config, GodotRszImporter.placeholderImport);
-        return conv.CreateOrReplaceScene(sourceFilePath, outputFilePath);
+        return conv.CreateOrReplaceScene(resolvedPath, outputFilePath);
     }
 
     public static PackedScene? ImportPrefab(string? sourceFilePath, string outputFilePath, AssetConfig config)
     {
-        sourceFilePath = PathUtils.FindSourceFilePath(sourceFilePath, config);
-        if (sourceFilePath == null) {
+        var resolvedPath = PathUtils.FindSourceFilePath(sourceFilePath, config);
+        if (resolvedPath == null) {
             GD.PrintErr("Prefab file not found: " + sourceFilePath);
             return null;
         }
         var conv = new GodotRszImporter(config, GodotRszImporter.placeholderImport);
-        return conv.CreateOrReplacePrefab(sourceFilePath, outputFilePath);
+        return conv.CreateOrReplacePrefab(resolvedPath, outputFilePath);
     }
 
     public static UserdataResource? ImportUserdata(string? sourceFilePath, string outputFilePath, AssetConfig config)
     {
-        sourceFilePath = PathUtils.FindSourceFilePath(sourceFilePath, config);
-        if (sourceFilePath == null) {
+        var resolvedPath = PathUtils.FindSourceFilePath(sourceFilePath, config);
+        if (resolvedPath == null) {
             GD.PrintErr("Userdata file not found: " + sourceFilePath);
             return null;
         }
         var conv = new GodotRszImporter(config, GodotRszImporter.placeholderImport);
-        return conv.CreateOrReplaceUserdata(sourceFilePath, outputFilePath);
+        return conv.CreateOrReplaceUserdata(resolvedPath, outputFilePath);
     }
 
     public static MaterialResource? ImportMaterial(string? sourceFilePath, string? outputFilePath, AssetConfig config)
     {
-        sourceFilePath = PathUtils.FindSourceFilePath(sourceFilePath, config);
-        if (sourceFilePath == null) {
+        var resolvedPath = PathUtils.FindSourceFilePath(sourceFilePath, config);
+        if (resolvedPath == null) {
             GD.PrintErr("Userdata file not found: " + sourceFilePath);
             return null;
         }
@@ -283,8 +283,8 @@ public class Importer
         var mat = new MaterialResource() {
             Game = config.Game,
             ResourceType = RESupportedFileFormats.Material,
-            ResourceName = PathUtils.GetFilepathWithoutVersion(sourceFilePath).GetFile(),
-            Asset = new AssetReference(PathUtils.FullToRelativePath(sourceFilePath, config) ?? sourceFilePath),
+            ResourceName = PathUtils.GetFilepathWithoutVersion(resolvedPath).GetFile(),
+            Asset = new AssetReference(PathUtils.FullToRelativePath(resolvedPath, config) ?? resolvedPath),
         };
         if (ResourceLoader.Exists(importPath)) {
             mat.TakeOverPath(importPath);
