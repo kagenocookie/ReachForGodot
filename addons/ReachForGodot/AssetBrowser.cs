@@ -113,6 +113,8 @@ public partial class AssetBrowser : Resource
             var res = Importer.Import(file, Assets);
             if (res is REResourceProxy resp) {
                 await resp.Import(true);
+            } else if (res is UserdataResource ud) {
+                ud.Reimport();
             }
         } finally {
             Assets.Paths.SourcePathOverride = null;

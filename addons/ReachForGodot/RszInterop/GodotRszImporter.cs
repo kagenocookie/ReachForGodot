@@ -662,7 +662,7 @@ public class GodotRszImporter
                     var paths = new Godot.Collections.Array<GameObjectRef>();
                     for (int i = 0; i < indices.Count; ++i) {
                         var refval = ResolveGameObjectRef(file, field, obj, instance, component, root, i);
-                        if (refval == null) {
+                        if (refval == null && (Guid)indices[i] != Guid.Empty) {
                             GD.PrintErr($"Couldn't resolve pfb GameObjectRef node path field {field.SerializedName}[{i}] for {component.Path}");
                         }
                         paths.Add(refval ?? new GameObjectRef());
@@ -670,7 +670,7 @@ public class GodotRszImporter
                     obj.SetField(field, paths);
                 } else {
                     var refval = ResolveGameObjectRef(file, field, obj, instance, component, root, 0);
-                    if (refval == null) {
+                    if (refval == null && (Guid)instance.Values[field.FieldIndex] != Guid.Empty) {
                         GD.PrintErr($"Couldn't resolve pfb GameObjectRef node path in field {field.SerializedName} for {component.Path}");
                     }
                     obj.SetField(field, refval ?? new Variant());
@@ -1056,6 +1056,10 @@ public class GodotRszImporter
                 var userdataResource = Importer.FindOrImportResource<UserdataResource>(ud1.Path, AssetConfig)!;
                 if (userdataResource != null) {
                     ctx.objectSourceInstances[userdataResource] = rsz;
+                    if (userdataResource.IsEmpty && string.IsNullOrEmpty(userdataResource.Classname)) {
+                        userdataResource.Classname = rsz.RszClass.name;
+                        ResourceSaver.Save(userdataResource);
+                    }
                 }
                 return ctx.importedObjects[rsz] = userdataResource!;
             }

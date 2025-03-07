@@ -224,7 +224,11 @@ public static class GodotObjectExtensions
 
     public static T AddUniqueNamedChild<T>(this Node parent, T child, string separator = "___") where T : Node
     {
-        var basename = child.Name;
+        var basename = child.Name.ToString();
+        var currentSeparatorPos = basename.IndexOf(separator);
+        if (currentSeparatorPos != -1 && int.TryParse(basename.AsSpan()[(currentSeparatorPos + separator.Length)..], out _)) {
+            basename = basename.Substr(0, currentSeparatorPos);
+        }
         if (parent.FindChild(basename) != null) {
             var index = 1;
             string nextname;

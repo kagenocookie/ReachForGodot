@@ -80,7 +80,7 @@ public partial class CompositeMeshComponent : REComponent, IVisualREComponent
             if (res is PackedScene scene && scene.Instantiate<Node3D>(PackedScene.GenEditState.Instance).FindChildByTypeRecursive<MeshInstance3D>() is MeshInstance3D meshinst) {
                 mm.Mesh = meshinst.Mesh;
             } else {
-                mm.Mesh = new SphereMesh() { Radius = 0.5f, Height = 1 };
+                mm.Mesh = new SphereMesh() { Radius = 0.5f, Height = 1, RadialSegments = 4, Rings = 2 };
             }
 
             mm.InstanceCount = transforms.Count();

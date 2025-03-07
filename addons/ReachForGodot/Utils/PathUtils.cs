@@ -252,7 +252,14 @@ public static class PathUtils
             }
         }
 
-        // TODO: try and find stm root in the given path
+        var stmroot = fullSourcePath.Replace('\\', '/').IndexOf("/stm/", StringComparison.OrdinalIgnoreCase);
+        if (stmroot == -1) {
+            stmroot = fullSourcePath.Replace('\\', '/').IndexOf("/x64/", StringComparison.OrdinalIgnoreCase);
+        }
+        if (stmroot != -1) {
+            return fullSourcePath.Substring(0, stmroot + 5).Replace('\\', '/');
+        }
+
         GD.PrintErr("Could not determine import file base path. Make sure to configure the ChunkPath setting correctly in editor settings.\nPath: " + fullSourcePath);
         return null;
     }

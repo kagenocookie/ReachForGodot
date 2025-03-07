@@ -88,6 +88,7 @@ public partial class PhysicsCollidersComponent : REComponent, IVisualREComponent
         if (colliders == null) {
             SetField(CollidersList.Get(this), colliders = new Godot.Collections.Array<REObject>());
         }
+        bool showWarning = false;
         foreach (var child in colliderRoot.FindChildrenByType<CollisionShape3D>()) {
             var name = child.Name.ToString();
             var sub1 = name.IndexOf('_');
@@ -98,25 +99,25 @@ public partial class PhysicsCollidersComponent : REComponent, IVisualREComponent
                 REObject shape;
                 switch (child.Shape) {
                     case BoxShape3D box:
-                        if (child.Transform.Basis.IsEqualApprox(Basis.Identity)) {
-                            GetOrAddShape(Game, "via.physics.AabbShape", colliders, index, out shape);
+                        if (child.IsInsideTree() ? child.GlobalTransform.Basis.IsEqualApprox(Basis.Identity) : child.Name.ToString().Contains("AabbShape")) {
+                            GetOrAddShape(Game, "via.physics.AabbShape", colliders, index, out shape, ref showWarning);
                             var aabb = shape.GetField(AabbShape).As<Aabb>();
                             aabb.Size = box.Size;
                             aabb.Position = child.Position;
                         } else {
-                            GetOrAddShape(Game, "via.physics.BoxShape", colliders, index, out shape);
+                            GetOrAddShape(Game, "via.physics.BoxShape", colliders, index, out shape, ref showWarning);
                             var obb = shape.GetField(BoxShape).As<OrientedBoundingBox>();
                             obb.extent = box.Size;
                             obb.coord = new Projection(child.Transform);
                         }
                         break;
                     case SphereShape3D sphere:
-                        GetOrAddShape(Game, "via.physics.SphereShape", colliders, index, out shape);
+                        GetOrAddShape(Game, "via.physics.SphereShape", colliders, index, out shape, ref showWarning);
                         var pos = child.Position;
                         shape.SetField(SphereShape, new Vector4(pos.X, pos.Y, pos.Z, sphere.Radius));
                         break;
                     case CapsuleShape3D capsule:
-                        GetOrAddShape(Game, "via.physics.CapsuleShape", colliders, index, out shape);
+                        GetOrAddShape(Game, "via.physics.CapsuleShape", colliders, index, out shape, ref showWarning);
                         var cap = shape.GetField(MeshShape).As<Capsule>();
                         cap.r = capsule.Radius;
                         var cappos = child.Position;
@@ -133,19 +134,31 @@ public partial class PhysicsCollidersComponent : REComponent, IVisualREComponent
             }
         }
 
-        static void GetOrAddShape(SupportedGame game, string classname, Godot.Collections.Array<REObject> colliders, int index, out REObject shape)
+        if (showWarning) {
+            GD.Print("New colliders were created, some additional fields might be unset - please verify: " + Path);
+        }
+
+        static void GetOrAddShape(SupportedGame game, string classname, Godot.Collections.Array<REObject> colliders, int index, out REObject shape, ref bool warning)
         {
-            var collider = colliders.Count > index ? colliders[index] : null!;
+            var collider = index < colliders.Count ? colliders[index] : null;
             shape = collider == null ? new REObject() : collider.GetField(ColliderShapeField).As<REObject>();
             if (shape == null || shape.Classname != classname) {
                 shape = new REObject(game, classname);
-                if (colliders.Count <= index) {
-                    colliders.Add(shape);
-                } else {
-                    colliders[index] = shape;
-                }
                 shape.ResetProperties();
             }
+            if (collider == null) {
+                collider = new REObject(game, "via.physics.Collider");
+                var firstCollider = colliders.FirstOrDefault();
+                if (firstCollider == null) {
+                    collider.ResetProperties();
+                    warning = true;
+                } else {
+                    collider.ShallowCopyFrom(firstCollider);
+                }
+                colliders.Add(collider);
+            }
+
+            collider.SetField(ColliderShapeField, shape);
         }
     }
 
@@ -156,10 +169,10 @@ public partial class PhysicsCollidersComponent : REComponent, IVisualREComponent
         node.ClearChildren();
         int n = 1;
         foreach (var coll in colliders) {
-            var collider = new CollisionShape3D() { Name = "Collider_" + n++ + "_" + coll.Classname };
+            var shape = coll.GetField(ColliderShapeField.Get(coll)).As<REObject>();
+            var collider = new CollisionShape3D() { Name = "Collider_" + n++ + "_" + shape?.ClassBaseName };
             node.AddChild(collider);
             collider.Owner = GameObject.Owner ?? GameObject;
-            var shape = coll.GetField(ColliderShapeField.Get(coll)).As<REObject>();
             if (shape == null) {
                 GD.Print("Missing collider shape " + n + " at " + Path);
                 continue;

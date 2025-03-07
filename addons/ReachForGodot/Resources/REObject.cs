@@ -11,8 +11,8 @@ public partial class REObject : Resource
 {
     [Export] public SupportedGame Game { get; set; }
     private string? _classname;
-    [Export] public string? Classname
-    {
+    [Export]
+    public string? Classname {
         get => _classname;
         set {
             if (_classname != value && !string.IsNullOrEmpty(_classname) && !string.IsNullOrEmpty(value)) {
@@ -23,6 +23,7 @@ public partial class REObject : Resource
             _classname = value;
         }
     }
+    public string? ClassBaseName => _classname?.Substring(_classname.LastIndexOf('.') + 1);
 
     [Export] protected Godot.Collections.Dictionary<StringName, Variant> __Data = new();
 
@@ -45,27 +46,37 @@ public partial class REObject : Resource
     public override void _ValidateProperty(Dictionary property)
     {
         if (property["name"].AsStringName() == PropertyName.__Data) {
-            property["usage"] = (int)(PropertyUsageFlags.Storage|PropertyUsageFlags.ScriptVariable);
+            property["usage"] = (int)(PropertyUsageFlags.Storage | PropertyUsageFlags.ScriptVariable);
         }
         base._ValidateProperty(property);
     }
 
     public void ResetProperties()
     {
+        if (cache != null && cache.RszClass.name != Classname) {
+            cache = null;
+        }
         cache ??= TypeCache.GetData(Game, Classname ?? throw new Exception("Missing REObject classname"));
         foreach (var field in cache.Fields) {
             __Data[field.SerializedName] = RszTypeConverter.FromRszValue(field, RszInstance.CreateNormalObject(field.RszField), Game);
         }
     }
 
-    public void CloneFrom(REObject source)
+    public void ShallowCopyFrom(REObject source, params string[] fields)
     {
         Game = source.Game;
         Classname = source.Classname;
         cache = TypeCache.GetData(Game, Classname ?? throw new Exception("Missing REObject classname"));
         foreach (var field in cache.Fields) {
+            if (fields != null && fields.Length > 0 && !fields.Contains(field.SerializedName)) {
+                continue;
+            }
             if (source.__Data.TryGetValue(field.SerializedName, out var srcVal)) {
-                __Data[field.SerializedName] = Variant.CreateTakingOwnershipOfDisposableValue(srcVal.CopyNativeVariant());
+                if (srcVal.VariantType == Variant.Type.Object && srcVal.As<REObject>() is REObject) {
+                    __Data[field.SerializedName] = srcVal;
+                } else {
+                    __Data[field.SerializedName] = Variant.CreateTakingOwnershipOfDisposableValue(srcVal.CopyNativeVariant());
+                }
             } else {
                 __Data[field.SerializedName] = new Variant();
             }

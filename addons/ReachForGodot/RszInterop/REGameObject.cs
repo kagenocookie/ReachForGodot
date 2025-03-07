@@ -5,7 +5,7 @@ using Godot;
 using RszTool;
 
 [GlobalClass, Tool, Icon("res://addons/ReachForGodot/icons/gear.png")]
-public partial class REGameObject : Node3D, ISerializationListener
+public partial class REGameObject : Node3D, ISerializationListener, ICloneable
 {
     [Export] public SupportedGame Game { get; set; }
     [Export] public bool Enabled { get; set; } = true;
@@ -13,7 +13,17 @@ public partial class REGameObject : Node3D, ISerializationListener
     [Export] public string? Prefab { get; set; }
     [Export] public string OriginalName { get; set; } = string.Empty;
     [Export] public REObject? Data { get; set; }
-    [Export] public Godot.Collections.Array<REComponent> Components { get; set; } = null!;
+    private Godot.Collections.Array<REComponent> _components = null!;
+    [Export] public Godot.Collections.Array<REComponent> Components
+    {
+        get => _components;
+        set {
+            _components = value;
+            foreach (var comp in value) {
+                comp.GameObject = this;
+            }
+        }
+    }
 
     public Guid ObjectGuid => System.Guid.TryParse(Uuid, out var guid) ? guid : Guid.Empty;
     public SceneFolder? ParentFolder => this.FindNodeInParents<SceneFolder>();
@@ -26,7 +36,9 @@ public partial class REGameObject : Node3D, ISerializationListener
             ? pfb.Asset?.AssetFilename ?? SceneFilePath
             : Owner is SceneFolder scn
                 ? $"{scn.Path}:/{scn.GetPathTo(this)}"
-                : Owner != null ? Owner.GetPathTo(this) : Name;
+                : Owner is PrefabNode pfbParent
+                    ? $"{pfbParent.Path}:/{pfbParent.GetPathTo(this)}"
+                    : Owner != null ? Owner.GetPathTo(this) : Name;
 
     public override void _EnterTree()
     {
@@ -97,6 +109,49 @@ public partial class REGameObject : Node3D, ISerializationListener
     {
         Components ??= new();
         Components.Add(component);
+    }
+
+    object ICloneable.Clone() => this.Clone();
+    public REGameObject Clone()
+    {
+        var clone = RecursiveClone();
+        return clone;
+    }
+
+    private REGameObject RecursiveClone()
+    {
+        // If it looks stupid that we're doing this manually instead of calling Duplicate(), that's because it is.
+        // The issue is that Godot's Duplicate somehow modifies the original node's data to point to the clone.
+        // Maybe it's just non-exported fields? Either way, doing it manually to be more reliable.
+        var clone = CloneSelf();
+        foreach (var child in GetChildren()) {
+            if (child is ICloneable cloneable) {
+                var childClone = (Node)cloneable.Clone();
+                clone.AddChild(childClone);
+            } else {
+                clone.AddChild(child.Duplicate());
+            }
+        }
+        return clone;
+    }
+
+    private REGameObject CloneSelf()
+    {
+        var clone = new REGameObject() {
+            Name = Name,
+            Game = Game,
+            OriginalName = OriginalName,
+            Uuid = Guid.NewGuid().ToString(),
+            Data = Data?.Duplicate(true) as REObject,
+            Components = new Godot.Collections.Array<REComponent>(),
+            Enabled = Enabled,
+            Prefab = Prefab,
+        };
+        clone.Transform = Transform;
+        foreach (var comp in Components) {
+            clone.Components.Add(comp.Clone(clone));
+        }
+        return clone;
     }
 
     public REComponent? GetComponent(string classname)

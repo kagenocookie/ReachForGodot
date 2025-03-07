@@ -23,17 +23,61 @@ public partial class GameObjectInspectorPlugin : EditorInspectorPlugin, ISeriali
 
     public override bool _CanHandle(GodotObject @object)
     {
-        // return @object is REGameObject;
-        return false;
+        return @object is REGameObject;
+    }
+
+    public override void _ParseBegin(GodotObject @object)
+    {
+        if (@object is REGameObject gameobj) {
+            AddButtons(gameobj);
+        }
+        base._ParseBegin(@object);
+    }
+
+    private void AddButtons(REGameObject gameobj)
+    {
+        if (gameobj.Owner == null) return;
+
+        var container = new MarginContainer();
+        container.AddThemeConstantOverride("margin_left", 2);
+        container.AddThemeConstantOverride("margin_bottom", 6);
+        var container2 = new HBoxContainer();
+        var btn = new Button() { Text = "Clone this GameObject" };
+        btn.Pressed += () => {
+            new GameObjectCloneAction(gameobj).Trigger();
+        };
+        container2.AddChild(btn);
+        container.AddChild(container2);
+
+        AddCustomControl(container);
+        pluginSerializationFixer.Register(gameobj, container);
+    }
+
+    private void DoClone(REGameObject source)
+    {
+        var clone = source.Clone();
+        source.GetParent().AddUniqueNamedChild(clone);
+        source.GetParent().MoveChild(clone, source.GetIndex() + 1);
+        SetChildrenOwner(clone, source.Owner);
+    }
+
+    private static void SetChildrenOwner(Node node, Node owner)
+    {
+        foreach (var child in node.GetChildren()) {
+            child.Owner = owner;
+            if (string.IsNullOrEmpty(child.SceneFilePath)) {
+                SetChildrenOwner(child, owner);
+            }
+        }
     }
 
     public override bool _ParseProperty(GodotObject @object, Variant.Type type, string name, PropertyHint hintType, string hintString, PropertyUsageFlags usageFlags, bool wide)
     {
         if (@object is REGameObject target) {
-            if (name == nameof(REGameObject.Components)) {
-                CreateComponentsUI(target);
-                return true;
-            }
+            // if (name == nameof(REGameObject.Components)) {
+            //     CreateComponentsUI(target);
+            //     return true;
+            // }
         }
         return base._ParseProperty(@object, type, name, hintType, hintString, usageFlags, wide);
     }
@@ -53,14 +97,6 @@ public partial class GameObjectInspectorPlugin : EditorInspectorPlugin, ISeriali
 
         placeholder.Components = new Godot.Collections.Array<REComponent>(target.Components);
 
-        // inspector = EditorInspector.InstantiatePropertyEditor(
-        //     placeholder,
-        //     Variant.Type.Array,
-        //     "Components",
-        //     PropertyHint.TypeString,
-        //     $"{(int)Variant.Type.Object}/{(int)PropertyHint.ResourceType}:{nameof(REComponent)}",
-        //     (uint)(PropertyUsageFlags.ScriptVariable|PropertyUsageFlags.Default|PropertyUsageFlags.ReadOnly),
-        //     true);
         placeholder.Component = target.Components[0];
         inspector = EditorInspector.InstantiatePropertyEditor(
             target,
@@ -76,23 +112,10 @@ public partial class GameObjectInspectorPlugin : EditorInspectorPlugin, ISeriali
         placeholder.Component = target.Components[0];
         inspector.SetObjectAndProperty(placeholder, nameof(GameobjectEditorPlaceholder.Component));
         placeholder.Component = target.Components[0];
-        // Task.Delay(100).ContinueWith((_) => {
-        //     inspector.NotifyPropertyListChanged();
-        //     placeholder.NotifyPropertyListChanged();
-        //     inspector.SetObjectAndProperty(placeholder, nameof(GameobjectEditorPlaceholder.Component));
-        //     GD.Print("WOOOOOOOOO");
-        // });
             inspector.NotifyPropertyListChanged();
             placeholder.NotifyPropertyListChanged();
 
         filter.TextChanged += (text) => {
-            // Debug.Assert(target != null);
-            // Debug.Assert(target.Components != null);
-            // Debug.Assert(placeholder != null);
-            // placeholder.Components = new Godot.Collections.Array<REComponent>(
-            //     string.IsNullOrEmpty(text)
-            //     ? target.Components
-            //     : target.Components.Where(x => x.Classname?.Contains(text, StringComparison.OrdinalIgnoreCase) == true));
             inspector.SetObjectAndProperty(placeholder, nameof(GameobjectEditorPlaceholder.Component));
             inspector.UpdateProperty();
         };

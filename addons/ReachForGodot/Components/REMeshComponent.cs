@@ -106,7 +106,7 @@ public partial class REMeshComponent : REComponent, IVisualREComponent
         } else {
             var mi = new MeshInstance3D() { Name = "__Mesh" };
             meshNode = mi;
-            mi.Mesh = new SphereMesh() { Radius = 0.5f, Height = 1 };
+            mi.Mesh = new SphereMesh() { Radius = 0.5f, Height = 1, RadialSegments = 6, Rings = 6 };
         }
         if (GameObject != null) {
             return GameObject.AddChildAsync(meshNode, GameObject.Owner ?? GameObject);

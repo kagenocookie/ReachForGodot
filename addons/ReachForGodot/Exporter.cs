@@ -68,7 +68,7 @@ public class Exporter
         SetResources(userdata.Resources, file.ResourceInfoList, fileOption);
         file.RSZ.ClearInstances();
 
-        var rootInstance = ConstructObjectInstances(userdata, file.RSZ, fileOption, file);
+        var rootInstance = ConstructObjectInstances(userdata, file.RSZ, fileOption, file, true);
         file.RSZ.AddToObjectTable(file.RSZ.InstanceList[rootInstance]);
         var success = file.Save();
 
@@ -412,14 +412,14 @@ public class Exporter
         }
     }
 
-    private static int ConstructObjectInstances(REObject target, RSZFile rsz, RszFileOption fileOption, BaseRszFile container)
+    private static int ConstructObjectInstances(REObject target, RSZFile rsz, RszFileOption fileOption, BaseRszFile container, bool isRoot = false)
     {
         if (exportedInstances.TryGetValue(target, out var instance)) {
             return instance.Index;
         }
         int i = 0;
         RszClass rszClass;
-        if (target is UserdataResource userdata) {
+        if (target is UserdataResource userdata && !isRoot) {
             rszClass = target.TypeInfo.RszClass;
             if (string.IsNullOrEmpty(target.Classname)) {
                 userdata.Reimport();
@@ -430,7 +430,7 @@ public class Exporter
             var path = userdata.Asset!.AssetFilename;
             RSZUserDataInfo? userDataInfo = rsz.RSZUserDataInfoList.FirstOrDefault(u => (u as RSZUserDataInfo)?.Path == path) as RSZUserDataInfo;
             if (userDataInfo == null) {
-                var fileUserdataList = (container as PfbFile)?.UserdataInfoList ?? (container as ScnFile)?.UserdataInfoList;
+                var fileUserdataList = (container as PfbFile)?.UserdataInfoList ?? (container as ScnFile)?.UserdataInfoList ?? (container as UserFile)?.UserdataInfoList;
                 fileUserdataList!.Add(new UserdataInfo() { CRC = rszClass.crc, typeId = rszClass.typeId, Path = path });
                 userDataInfo = new RSZUserDataInfo() { typeId = rszClass.typeId, Path = path, instanceId = rsz.InstanceList.Count };
                 rsz.RSZUserDataInfoList.Add(userDataInfo);

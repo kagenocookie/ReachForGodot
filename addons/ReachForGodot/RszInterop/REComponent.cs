@@ -25,6 +25,13 @@ public abstract partial class REComponent : REObject, ISerializationListener
     {
     }
 
+    public REComponent Clone(REGameObject gameObject)
+    {
+        var clone = (REComponent)Duplicate(true);
+        clone.GameObject = gameObject;
+        return clone;
+    }
+
     public IEnumerable<IRszContainerNode> SerializedContainers => GameObject is IRszContainerNode rsz
         ? new [] { rsz }.Concat(GameObject.FindParentsByType<IRszContainerNode>())
         : GameObject.FindParentsByType<IRszContainerNode>();

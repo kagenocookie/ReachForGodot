@@ -733,15 +733,7 @@ public readonly struct REObjectFieldAccessor
         this.overrideFunc = overrideFunc;
     }
 
-    public readonly REField Get(REObject target)
-    {
-        if (_cache.TryGetValue(target.Game, out var cachedField)) {
-            Debug.Assert(cachedField != null);
-            return cachedField;
-        }
-
-        return _cache[target.Game] = cachedField = getter.Invoke(target.TypeInfo.Fields)!;
-    }
+    public readonly REField Get(REObject target) => Get(target.Game, target.TypeInfo);
 
     public readonly bool IsMatch(REObject target, StringName name) => Get(target).SerializedName == name;
 
