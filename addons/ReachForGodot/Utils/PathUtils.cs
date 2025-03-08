@@ -160,6 +160,7 @@ public static class PathUtils
             return version;
         }
 
+        GD.PrintErr("Could not determine file version for file: " + relativePath);
         return -1;
     }
 
@@ -186,7 +187,6 @@ public static class PathUtils
 
         var version = GuessFileVersion(filename, fmt.format, config);
         if (version == -1) {
-            GD.PrintErr("Could not determine file version for file: " + filename);
             return filename;
         }
 
