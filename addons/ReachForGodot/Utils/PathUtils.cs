@@ -346,7 +346,7 @@ public static class PathUtils
 
         switch (fmt) {
             case RESupportedFileFormats.Mesh:
-                return targetPath + (resource ? ".tres" : ".blend");
+                return targetPath + (resource ? ".tres" : ".glb");
             case RESupportedFileFormats.Texture:
                 return targetPath + (resource ? ".tres" : ".dds");
             case RESupportedFileFormats.Scene:

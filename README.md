@@ -55,7 +55,7 @@ Start by going into the top menu: Project > Tools > RE ENGINE > Import assets an
 If you've ever worked with a game engine before, the basic UI should be more or less familiar - scene node tree on the left, inspector with all the data for a selected node on the right (for the default layout at least). There's some additional tool buttons in the inspector for importing and exporting from and to RE Engine file formats.
 
 ## Current features
-- meshes: automatic import through RE Mesh editor into blend files (MPLY / composite meshes: currently unsupported)
+- meshes: automatic import through RE Mesh editor into blend files (MPLY / composite meshes: currently unsupported); untextured because exporting the RE Mesh Editor shader properly is complicated
 - textures: prepared import through RE Mesh editor; not quite functional yet due to Godot's lacking DDS support
 - pfb files: import and export through integrated RszTool (tested with DD2 player pfb)
 - scn files: import and export through integrated RszTool (export tested with some RE2 RT levels)
@@ -114,8 +114,9 @@ Specific components support:
 - look into potential GUI support
 
 ## Known issues
-- mesh textures don't show up - waiting for Godot to fix DDS support for incomplete mipmaps; there are open pull requests that will likely fix it
 - no MPLY format mesh support yet (meaning DD2 levels are mostly empty aside from the occasional simple mesh) - waiting for RE Mesh Editor
+- DDS textures don't import - waiting for Godot to fix DDS support for incomplete mipmaps; there are open pull requests that will likely fix it
+- meshes are untextured because of complications with exporting them from blender
 - some meshes fail to import on RE Mesh Editor's side (AttributeError: 'NoneType' object has no attribute 'count' -- when reMesh.skeletonHeader.remapCount != reMesh.boneBoundingBoxHeader.count)
 - some PFBs with `via.GameObjectRef` fields might not export correctly by default, as they rely on some arcane propertyId values that don't seem to have any direct correlation with RSZ or class data; some cases can be automated fairly accurately, but otherwise need to be manually reversed out of existing pfbs and defined in `addons/ReachForGodot/game_configs/{game}/pfb_ref_props.json` files. Feel free to make a PR adding more of these entries as you come across them
 - the first time you save any large scenes after opening the project takes a hot minute when there's a lot of files. This is probably a Godot thing.

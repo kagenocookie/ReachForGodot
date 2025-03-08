@@ -30,8 +30,8 @@ public class Importer
 
         var path = asset.ResourcePath;
         if (asset is PackedScene ps) {
-            // could be tscn (pfb, scn) or a mesh (.blend)
-            if (path.EndsWith(".blend")) {
+            // packed scene could be tscn (pfb, scn) or a mesh (.blend/.glb)
+            if (path.EndsWith(".blend") || path.EndsWith(".glb")) {
                 return FindImportedResourceAsset(path);
             }
         }
@@ -43,7 +43,7 @@ public class Importer
     {
         if (string.IsNullOrEmpty(resourceFilepath)) return null;
 
-        if (resourceFilepath.EndsWith(".blend")) {
+        if (resourceFilepath.EndsWith(".blend") || resourceFilepath.EndsWith(".glb")) {
             var resLocalized = ProjectSettings.LocalizePath(resourceFilepath.GetBaseName() + ".tres");
             if (ResourceLoader.Exists(resLocalized)) {
                 return ResourceLoader.Load<REResource>(resLocalized);
