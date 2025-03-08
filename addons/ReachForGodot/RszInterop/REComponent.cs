@@ -32,10 +32,10 @@ public abstract partial class REComponent : REObject, ISerializationListener
         return clone;
     }
 
-    public IEnumerable<IRszContainerNode> SerializedContainers => GameObject is IRszContainerNode rsz
-        ? new [] { rsz }.Concat(GameObject.FindParentsByType<IRszContainerNode>())
-        : GameObject.FindParentsByType<IRszContainerNode>();
-    public T? FindResource<T>(string filepath) where T : REResource => SerializedContainers.Select(sc => sc.FindResource<T>(filepath)).FirstOrDefault();
+    public IRszContainerNode? GetContainer() => GameObject == null ? null
+        : GameObject is IRszContainerNode rsz ? rsz
+        : GameObject.Owner is IRszContainerNode owner ? owner
+        : GameObject.FindNodeInParents<IRszContainerNode>();
 
     public override string ToString() => (GameObject != null ? GameObject.ToString() + ":" : "") + (Classname ?? nameof(REComponent));
 
@@ -46,5 +46,12 @@ public abstract partial class REComponent : REObject, ISerializationListener
 
     public void OnAfterDeserialize()
     {
+    }
+
+    protected void EnsureResourceInContainer(REResource resource)
+    {
+        if (GetContainer()?.EnsureContainsResource(resource) == true) {
+            GD.Print($"Resource {resource.ResourceName} registered in owner {GetContainer()?.Path ?? Path}");
+        }
     }
 }

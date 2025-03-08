@@ -62,7 +62,12 @@ public partial class REMeshComponent : REComponent, IVisualREComponent
     {
         var r = base._Set(property, value);
         if (MeshField.IsMatch(this, property)) {
-            ReinstantiateMesh(value.As<MeshResource>()?.ImportedResource as PackedScene);
+            var resource = value.As<MeshResource>();
+            ReinstantiateMesh(resource?.ImportedResource as PackedScene);
+            if (resource != null) EnsureResourceInContainer(resource);
+        }
+        if (MaterialField.IsMatch(this, property)) {
+            EnsureResourceInContainer(value.As<MaterialResource>());
         }
         return r;
     }
