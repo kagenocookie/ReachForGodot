@@ -73,31 +73,6 @@ public partial class SceneFolderProxy : SceneFolder
         }
     }
 
-    public override void BuildTree(RszGodotConversionOptions options)
-    {
-        var sw = new Stopwatch();
-        sw.Start();
-        var config = ReachForGodot.GetAssetConfig(Game)!;
-        var conv = new GodotRszImporter(config, options);
-
-        if (_contentScene == null) {
-            _contentScene = Importer.FindOrImportResource<PackedScene>(Asset!.AssetFilename, conv.AssetConfig)!;
-            EditorInterface.Singleton.CallDeferred(EditorInterface.MethodName.MarkSceneAsUnsaved);
-        }
-
-        var tempInstance = _contentScene!.Instantiate<SceneFolder>();
-        conv.RegenerateSceneTree(tempInstance).ContinueWith((t) => {
-            if (t.IsCompletedSuccessfully) {
-                GD.Print("Tree rebuild finished in " + sw.Elapsed);
-            } else {
-                GD.Print($"Tree rebuild failed after {sw.Elapsed}:", t.Exception);
-                if (ShowLinkedFolder && _contentScene != null) {
-                    LoadScene();
-                }
-            }
-        });
-    }
-
     public override void RecalculateBounds(bool deepRecalculate)
     {
         var wasShown = ShowLinkedFolder;

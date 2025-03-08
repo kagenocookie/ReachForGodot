@@ -112,21 +112,6 @@ public partial class SceneFolder : Node, IRszContainerNode
         return null;
     }
 
-    public virtual void BuildTree(RszGodotConversionOptions options)
-    {
-        var sw = new Stopwatch();
-        sw.Start();
-        var conv = new GodotRszImporter(ReachForGodot.GetAssetConfig(Game!)!, options);
-        conv.RegenerateSceneTree(this).ContinueWith((t) => {
-            if (t.IsCompletedSuccessfully) {
-                GD.Print("Tree rebuild finished in " + sw.Elapsed);
-            } else {
-                GD.Print("Tree rebuild failed:", t.Exception);
-            }
-            EditorInterface.Singleton.CallDeferred(EditorInterface.MethodName.MarkSceneAsUnsaved);
-        });
-    }
-
     public virtual void RecalculateBounds(bool deepRecalculate)
     {
         Aabb bounds = new Aabb();

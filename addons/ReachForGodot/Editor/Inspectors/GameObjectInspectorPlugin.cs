@@ -44,7 +44,9 @@ public partial class GameObjectInspectorPlugin : EditorInspectorPlugin, ISeriali
         var container2 = new HBoxContainer();
         var btn = new Button() { Text = "Clone this GameObject" };
         btn.Pressed += () => {
-            new GameObjectCloneAction(gameobj).Trigger();
+            var action = new GameObjectCloneAction(gameobj);
+            action.Trigger();
+            EditorInterface.Singleton.EditNode(action.Clone);
         };
         container2.AddChild(btn);
         container.AddChild(container2);

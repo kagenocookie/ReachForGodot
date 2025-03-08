@@ -183,7 +183,7 @@ public class Importer
 
         var path = Directory.GetCurrentDirectory();
         var outputGlobalized = ProjectSettings.GlobalizePath(importFilepath);
-        var blendPath = Path.GetFullPath(outputGlobalized).Replace('\\', '/');
+        var blendPath = PathUtils.NormalizeSourceFilePath(Path.GetFullPath(outputGlobalized));
         var importDir = Path.GetFullPath(outputGlobalized.GetBaseDir());
         // GD.Print($"Importing mesh...\nBlender: {ReachForGodot.BlenderPath}\nFile: {path}\nTarget: {blendPath}\nPython script: {meshImportScriptPath}");
 

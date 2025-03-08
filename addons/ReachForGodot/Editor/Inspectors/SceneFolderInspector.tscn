@@ -54,3 +54,17 @@ popup/item_0/id = 0
 unique_name_in_owner = true
 layout_mode = 2
 text = "Import"
+
+[node name="ImportSourceContainer" type="HBoxContainer" parent="VBoxContainer/HBoxContainer2"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Label2" type="Label" parent="VBoxContainer/HBoxContainer2/ImportSourceContainer"]
+layout_mode = 2
+text = "From:"
+
+[node name="ImportSourceOption" type="OptionButton" parent="VBoxContainer/HBoxContainer2/ImportSourceContainer"]
+layout_mode = 2
+item_count = 1
+popup/item_0/text = "Placeholder"
+popup/item_0/id = 0

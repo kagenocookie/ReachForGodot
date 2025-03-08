@@ -146,21 +146,14 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
                 .Select(path => {
                     var parts = path.Split('|');
                     string? label = parts.Length >= 2 ? parts[0] : null;
-                    var filepath = (parts.Length >= 2 ? parts[1] : parts[0]).Replace('\\', '/');
-                    if (!filepath.EndsWith('/')) {
-                        filepath = filepath + '/';
-                    }
+                    var filepath = PathUtils.NormalizeSourceFolderPath((parts.Length >= 2 ? parts[1] : parts[0]));
                     return new LabelledPathSetting(filepath, label);
                 }).ToArray();
 
             if (string.IsNullOrWhiteSpace(pathChunks)) {
                 ReachForGodot.SetConfiguration(game, null, null);
             } else {
-                pathChunks = pathChunks.Replace('\\', '/');
-                if (!pathChunks.EndsWith('/')) {
-                    pathChunks = pathChunks + '/';
-                }
-
+                pathChunks = PathUtils.NormalizeSourceFolderPath(pathChunks);
                 ReachForGodot.SetConfiguration(game, null, new GamePaths(game, pathChunks, pathIl2cpp, pathRsz, additional));
             }
         }

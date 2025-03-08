@@ -9,6 +9,7 @@ public partial class GameObjectCloneAction : NodeModificationAction
 {
     private REGameObject source = null!;
     private REGameObject? clone;
+    public REGameObject? Clone => clone;
 
     private GameObjectCloneAction() {}
 

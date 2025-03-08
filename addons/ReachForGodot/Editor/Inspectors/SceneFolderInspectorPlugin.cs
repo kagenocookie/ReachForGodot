@@ -1,4 +1,6 @@
 #if TOOLS
+using System.Diagnostics;
+using System.Threading.Tasks;
 using Godot;
 
 namespace RGE;
@@ -104,15 +106,74 @@ public partial class SceneFolderInspectorPlugin : EditorInspectorPlugin, ISerial
             importType.AddItem("Full import", (int)GodotRszImporter.PresetImportModes.ImportTreeChanges);
         }
 
+        var fileSources = PathUtils.FindFileSourceFolders(obj.Asset?.AssetFilename, ReachForGodot.GetAssetConfig(obj.Game)).ToArray();
+        var sourcesContainer = container.GetNode<Control>("%ImportSourceContainer");
+        var sourceOption = sourcesContainer.RequireChildByType<OptionButton>();
+        if (fileSources.Length > 1) {
+            sourcesContainer.Visible = true;
+            sourceOption.Clear();
+            foreach (var src in fileSources) {
+                sourceOption.AddItem(src.label);
+            }
+        } else {
+            sourcesContainer.Visible = false;
+        }
+
         var importBtn = container.GetNode<Button>("%ImportButton");
-        importBtn.Pressed += () => {
-            var options = ((GodotRszImporter.PresetImportModes)importType.GetSelectedId()).ToOptions();
-            if (obj is SceneFolder scn) scn.BuildTree(options);
-            if (obj is PrefabNode pfb) pfb.BuildTree(options);
+        importBtn.Pressed += async () => {
+            var source = sourceOption.Selected == -1 ? fileSources.First() : fileSources[sourceOption.Selected];
+            var config = ReachForGodot.GetAssetConfig(obj.Game);
+            config.Paths.SourcePathOverride = source;
+            try {
+                var options = ((GodotRszImporter.PresetImportModes)importType.GetSelectedId()).ToOptions();
+                await DoRebuild(obj, options);
+            } finally {
+                config.Paths.SourcePathOverride = null;
+            }
         };
 
         AddCustomControl(container);
         pluginSerializationFixer.Register((GodotObject)obj, container);
+    }
+
+    private async Task DoRebuild(IRszContainerNode root, RszGodotConversionOptions options)
+    {
+        var sw = new Stopwatch();
+        sw.Start();
+
+        var conv = new GodotRszImporter(ReachForGodot.GetAssetConfig(root.Game), options);
+
+        Task task;
+        if (root is PrefabNode pfb) {
+            task = conv.RegeneratePrefabTree(pfb);
+        } else if (root is SceneFolder scn) {
+            if (scn.GetParent() is SceneFolderProxy parentProxy) {
+                root = scn = parentProxy;
+            }
+            if (scn is SceneFolderProxy proxy) {
+                var realScene = proxy.Contents;
+                scn = realScene!.Instantiate<SceneFolder>();
+                proxy.UnloadScene();
+            }
+            task = conv.RegenerateSceneTree(scn);
+        } else {
+            GD.PrintErr("I have no idea how to import a " + root.GetType());
+            return;
+        }
+
+        try {
+            await task;
+            GD.Print("Tree rebuild finished in " + sw.Elapsed);
+            if (root is SceneFolderProxy proxy) {
+                if (proxy.ShowLinkedFolder) {
+                    proxy.LoadScene();
+                }
+            } else {
+                EditorInterface.Singleton.CallDeferred(EditorInterface.MethodName.MarkSceneAsUnsaved);
+            }
+        } catch (Exception e) {
+            GD.Print("Tree rebuild failed:", e);
+        }
     }
 }
 #endif

@@ -34,7 +34,7 @@ public static class PathUtils
         if (filepath.StartsWith("res://") == true) {
             throw new Exception("Can't normalize godot res:// filepath");
         }
-        return GetFilepathWithoutVersion(filepath).Replace('\\', '/');
+        return NormalizeSourceFilePath(GetFilepathWithoutVersion(filepath));
     }
 
     public static string GetFilepathWithoutVersion(string filepath)
@@ -224,20 +224,76 @@ public static class PathUtils
         return null;
     }
 
+    /// <summary>
+    /// Search through all known file paths for the game to find the full path to a file.<br/>
+    /// Search priority: Override > Chunk path > Additional paths
+    /// </summary>
+    /// <returns>The resolved path, or null if the file was not found.</returns>
+    public static IEnumerable<LabelledPathSetting> FindFileSourceFolders(string? sourceFilePath, AssetConfig config)
+    {
+        if (Path.IsPathRooted(sourceFilePath)) {
+            sourceFilePath = FullToRelativePath(sourceFilePath, config);
+        }
+
+        if (string.IsNullOrEmpty(sourceFilePath)) yield break;
+
+        sourceFilePath = AppendFileVersion(sourceFilePath, config);
+
+        var overridePath = config.Paths.SourcePathOverride;
+
+        if (File.Exists(Path.Combine(config.Paths.ChunkPath, sourceFilePath))) {
+            yield return new LabelledPathSetting(Path.Combine(config.Paths.ChunkPath, sourceFilePath), "Chunks folder");
+            if (overridePath == config.Paths.ChunkPath) overridePath = null;
+        }
+
+        foreach (var extra in config.Paths.AdditionalPaths) {
+            if (extra != config.Paths.ChunkPath && File.Exists(Path.Combine(extra, sourceFilePath))) {
+                yield return extra;
+                if (overridePath == config.Paths.ChunkPath) overridePath = null;
+            }
+        }
+
+        if (!string.IsNullOrEmpty(overridePath)) {
+            yield return new LabelledPathSetting(overridePath, "Temp override path");
+        }
+    }
+
     public static string RelativeToFullPath(string relativeSourcePath, AssetConfig config)
     {
         if (!string.IsNullOrEmpty(config.Paths.SourcePathOverride)) {
             var overridePath = Path.Join(config.Paths.ChunkPath, relativeSourcePath);
             if (File.Exists(overridePath)) {
-                return overridePath.Replace('\\', '/');
+                return NormalizeSourceFilePath(overridePath);
             }
         }
 
-        return Path.Join(config.Paths.ChunkPath, relativeSourcePath).Replace('\\', '/');
+        return NormalizeSourceFilePath(Path.Join(config.Paths.ChunkPath, relativeSourcePath));
+    }
+
+    /// <summary>
+    /// Normalize a file path - replace any backslashes (\) with forward slashes (/)
+    /// </summary>
+    public static string NormalizeSourceFilePath(string filepath)
+    {
+        return filepath.Replace('\\', '/');
+    }
+
+    /// <summary>
+    /// Normalize a folder path - replace any backslashes (\) with forward slashes (/), add a trailing slash.
+    /// </summary>
+    public static string NormalizeSourceFolderPath(string folderPath)
+    {
+        folderPath = folderPath.Replace('\\', '/');
+        if (!folderPath.EndsWith('/')) {
+            folderPath += '/';
+        }
+        return folderPath;
     }
 
     public static string? GetSourceFileBasePath(string fullSourcePath, AssetConfig config)
     {
+        fullSourcePath = NormalizeSourceFilePath(fullSourcePath);
+
         if (!string.IsNullOrEmpty(config.Paths.SourcePathOverride) && fullSourcePath.StartsWith(config.Paths.SourcePathOverride)) {
             return config.Paths.SourcePathOverride;
         }
@@ -252,12 +308,12 @@ public static class PathUtils
             }
         }
 
-        var stmroot = fullSourcePath.Replace('\\', '/').IndexOf("/stm/", StringComparison.OrdinalIgnoreCase);
+        var stmroot = fullSourcePath.IndexOf("/stm/", StringComparison.OrdinalIgnoreCase);
         if (stmroot == -1) {
-            stmroot = fullSourcePath.Replace('\\', '/').IndexOf("/x64/", StringComparison.OrdinalIgnoreCase);
+            stmroot = fullSourcePath.IndexOf("/x64/", StringComparison.OrdinalIgnoreCase);
         }
         if (stmroot != -1) {
-            return fullSourcePath.Substring(0, stmroot + 5).Replace('\\', '/');
+            return NormalizeSourceFolderPath(fullSourcePath.Substring(0, stmroot + 5));
         }
 
         GD.PrintErr("Could not determine import file base path. Make sure to configure the ChunkPath setting correctly in editor settings.\nPath: " + fullSourcePath);
