@@ -126,6 +126,9 @@ public partial class SceneFolder : Node, IRszContainerNode
         }
 
         foreach (var subfolder in Subfolders) {
+            if (subfolder is not SceneFolderProxy) {
+                subfolder.RecalculateBounds(deepRecalculate);
+            }
             var subBounds = subfolder.KnownBounds;
             if (!subBounds.Size.IsZeroApprox()) {
                 bounds = bounds.Size.IsZeroApprox() && bounds.Position.IsZeroApprox() ? subBounds : bounds.Merge(subBounds);

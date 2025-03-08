@@ -123,6 +123,6 @@ public partial class REMeshComponent : REComponent, IVisualREComponent
     {
         var meshnode = GetOrFindMeshNode();
         if (meshnode == null) return new Aabb();
-        return meshnode.GetNode3DAABB(false);
+        return GameObject.Transform * meshnode.GetNode3DAABB(false);
     }
 }

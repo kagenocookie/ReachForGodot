@@ -112,7 +112,7 @@ op = {
 }
 
 try:
-    bpy.ops.re_mesh.importfile('INVOKE_DEFAULT', filepath=filename, files=files, directory=dir)
+    bpy.ops.re_mesh.importfile('INVOKE_DEFAULT', filepath=filename, files=files, directory=dir, loadMDFData=False)
     bpy.ops.export_scene.gltf(**op)
 except Exception as e:
     print('something failed ... ')

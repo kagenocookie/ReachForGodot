@@ -199,7 +199,7 @@ public partial class REGameObject : Node3D, ISerializationListener, ICloneable
         foreach (var child in Children) {
             var childBounds = child.CalculateBounds();
             if (!childBounds.Size.IsZeroApprox()) {
-                var transformedChildBounds = child.Transform * childBounds;
+                var transformedChildBounds = Transform * childBounds;
                 bounds = bounds.Size.IsZeroApprox() ? transformedChildBounds : bounds.Merge(transformedChildBounds);
             }
         }
