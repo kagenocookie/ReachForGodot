@@ -69,8 +69,14 @@ public partial class SceneFolder : Node, IRszContainerNode
         if (cam != null) {
             var campos = cam.GlobalPosition;
             var bounds = KnownBounds;
+            var bcenter = bounds.GetCenter();
             var size = !bounds.Size.IsZeroApprox() ? bounds.Size.LimitLength(50) : new Vector3(30, 30, 30);
-            cam.LookAtFromPosition(bounds.GetCenter() + size, bounds.GetCenter());
+            var newPosition = bounds.GetCenter() + size;
+            if (campos.DistanceSquaredTo(newPosition) > 50) {
+                cam.LookAtFromPosition(newPosition, bounds.GetCenter());
+            } else {
+                cam.LookAt(bounds.GetCenter());
+            }
         }
     }
 
@@ -131,9 +137,9 @@ public partial class SceneFolder : Node, IRszContainerNode
             }
             var subBounds = subfolder.KnownBounds;
             if (!subBounds.Size.IsZeroApprox()) {
-                bounds = bounds.Size.IsZeroApprox() && bounds.Position.IsZeroApprox() ? subBounds : bounds.Merge(subBounds);
-            } else if (!subBounds.Position.IsZeroApprox()) {
-                bounds = bounds.Position.IsZeroApprox() ? subBounds : bounds.Expand(subBounds.Position);
+                bounds = bounds.Size.IsZeroApprox() ? subBounds : bounds.Merge(subBounds);
+            } else if (!subBounds.Position.IsZeroApprox() && bounds.Position.IsZeroApprox()) {
+                bounds = subBounds;
             }
         }
 
