@@ -1,4 +1,4 @@
-namespace RGE;
+namespace ReaGE;
 
 using System.Diagnostics;
 using Godot;

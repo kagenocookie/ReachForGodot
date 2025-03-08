@@ -2,7 +2,7 @@ using Godot;
 using GC = Godot.Collections;
 
 #if TOOLS
-namespace RGE;
+namespace ReaGE;
 #nullable enable
 
 [Tool]

@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Godot;
 
-namespace RGE;
+namespace ReaGE;
 
 public partial class GameObjectInspectorPlugin : EditorInspectorPlugin, ISerializationListener
 {

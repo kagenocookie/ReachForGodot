@@ -5,7 +5,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using Godot;
 
-namespace RGE;
+namespace ReaGE;
 
 [GlobalClass, Tool]
 public partial class AssetBrowser : Resource

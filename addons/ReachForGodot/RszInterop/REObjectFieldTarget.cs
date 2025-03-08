@@ -1,4 +1,4 @@
-namespace RGE;
+namespace ReaGE;
 
 /// <summary>
 /// Attribute to annotate static REObjectFieldAccessor fields to override the class they override.

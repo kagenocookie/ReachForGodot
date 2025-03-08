@@ -2,7 +2,7 @@ using System;
 using System.Diagnostics;
 using Godot;
 
-namespace RGE;
+namespace ReaGE;
 
 public static  class FileSystemUtils
 {

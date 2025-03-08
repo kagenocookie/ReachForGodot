@@ -1,4 +1,4 @@
-namespace RGE;
+namespace ReaGE;
 
 using System;
 using System.Diagnostics.CodeAnalysis;

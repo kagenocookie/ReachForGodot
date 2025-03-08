@@ -1,4 +1,4 @@
-# Reach for Godot Engine (RGE)
+# Reach for Godot Engine (ReaGE)
 Godot-based visual scene editor for RE Engine games.
 
 Integrates various open source tools dealing with RE Engine games and packs them into a full game data and content / scene editor inside Godot.
@@ -8,10 +8,29 @@ Integrates various open source tools dealing with RE Engine games and packs them
 </p>
 
 ## Supported games
-- in theory, any RE engine game, but I can only test what I own
-- RE2 RT (and likely anything newer than RE3): all features should work fine
-- DMC5 (probably including RE2 non-rt, RE7): meshes and prefabs _can_ be loaded, though full embedded userdata support is TBD since it's using a slightly different file format that RszTool doesn't support yet
-- DD2, MH Wilds?: all features should work fine. Lack of MPLY mesh support means levels are mostly just placeholder meshes. The scene structure is a mess thanks to the devs, slow and hard to edit, but functional; could be improved with future DD2-specific tooling additions once the common core functionality is stabilized.
+Should work for any RE engine game (mostly based on RszTool's support), but I can only test what I own
+
+- Dragon's Dogma 2*
+- Resident Evil 2 RT
+- Devil May Cry 5**
+- Resident Evil 2 non-RT** (untested)
+- Resident Evil 3 non-RT (untested)
+- Resident Evil 3 RT (untested)
+- Resident Evil 4 (untested)
+- Resident Evil 7 non-RT** (untested)
+- Resident Evil 7 RT (untested)
+- Resident Evil 8 (untested)
+- Monster Hunter Rise (untested)
+- Street Fighter 6 (untested)
+- Monster Hunter Wilds*** (untested)
+
+For the open world games: The scene structure is a mess thanks to how the devs structured it, slow and tedious to edit, but functional; could be improved with future game-specific tooling additions once the common core functionality is stabilized.
+
+\* Many of the terrain meshes use MPLY format meshes which are currently unsupported by RE Mesh Editor and will therefore be loaded as placeholders
+
+** Partial support: files with embedded userdata do not fully load and therefore won't export correctly either
+
+*** Partial support: some user files work fine; most pfbs or scn, probably due to rsz data issues, don't
 
 ## Prerequisites
 - Godot 4.4+ w/ .NET
@@ -39,7 +58,7 @@ If you've ever worked with a game engine before, the basic UI should be more or 
 - meshes: automatic import through RE Mesh editor into blend files (MPLY / composite meshes: currently unsupported)
 - textures: prepared import through RE Mesh editor; not quite functional yet due to Godot's lacking DDS support
 - pfb files: import and export through integrated RszTool (tested with DD2 player pfb)
-- scn files: import through integrated RszTool (export tested with some RE2 RT levels)
+- scn files: import and export through integrated RszTool (export tested with some RE2 RT levels)
 - user files: import and export through integrated RszTool
 - other resource files: imported as placeholders
 
@@ -54,9 +73,8 @@ Specific components support:
     - all other Node transforms will be ignored and not transferred over to the game
 - `via.render.Mesh`: meshes are imported automatically into an additional mesh Node3D child of the game object with a `__{mesh_name}` prefix
     - meshes can be swapped around by changing the mesh field within the component's data
-    - keep in mind that resources (mesh and mdf2) also need to be linked to in the containing scene/pfb's Resources list, resource lists are not automated at the moment
 - `via.render.CompositeMesh`: composite meshes are mapped into several MultiMeshInstance3D nodes (although MPLY meshes are placeholders for now)
-- `via.physics.Colliders`: Basic colliders get converted to godot equivalents. Mesh colliders can only be edited directly in the component data.
+- `via.physics.Colliders`: Basic shape colliders get converted to godot equivalents and can be moved around in scene. Mesh colliders can only be edited directly in the component data. Although collider modifications don't seem to actually work ingame, still figuring out what's up with that.
 
 ## Scene editing
 - import the scene file you wish to edit; best to start with whichever the root scene equivalent is for the game, e.g. `appdata/maincontents.scn.20` for DD2
@@ -65,7 +83,7 @@ Specific components support:
 - there are several import options to choose from so you don't need to wait for the whole game to convert:
     - Placeholders: will generate the direct gameobjects of the scene and only placeholders for any subfolder scn file
     - Import just his scene: will fully generate everything inside this scene and only make placefolders for subfolders. This is recommended for anything that contains a lot of subfolders like the main / root scenes
-    - Import missing objects: will import everything within this scn file as well as all subfolders that don't exist yet, but anything that's already in the tree will be left untouched; _Bear in mind that this will take a while for the root scene and the editor will probably not like it as godot isn't quite optimized for open world data streaming and huge node trees - prefer to use the previous two options for individual scn files linking to a lot of content_
+    - Import missing objects: will import everything within this scn file as well as all subfolders that don't exist yet, but anything that's already in the tree will be left untouched; _Bear in mind that this will take a while if done on the root scene and the editor will probably not like it as godot isn't quite optimized for open world data streaming and huge node trees - prefer to use the previous two options for individual scn files linking to a lot of content_
     - Discard and reimport: The tree will be reset and everything reimported, but meshes and other assets will be kept and reused
     - Force reimport: will import and replace all existing data, any meshes and other assets will also be reimported instead of reused
 - nested scn files are imported using a proxy node system and linked through PackedScenes, this is to mitigate editor performance dying due to having too much stuff loaded at once
@@ -89,9 +107,7 @@ Specific components support:
 ## Planned and potential features
 - enums
     - flag enums (autodetect flag enums maybe)
-    - configurable place for overriding enum settings (IsFlags, custom entries)
-- scn
-    - properly show and resolve guid gameobject references
+    - support manually overriding enum settings (IsFlags, custom entries)
 - support serializing objects to JSON - Content Editor integration
 - unpacker integration - automatically extract files from paks as needed instead of requiring everything to be pre-extracted
 - game specific tooling to make navigation between scenes easier (mainly looking at DD2 / open world assets)
@@ -110,8 +126,7 @@ Specific components support:
 - some scn and pfb files might not import or export quite correctly, as the RE_RSZ jsons don't always contain full and correct data. These values get updated as they get loaded in but can sometimes be wrong as they're mainly guesses. Any overrides are stored in `addons/ReachForGodot/game_configs/{game}/rsz_patches.json` files, can be modified manually for cases when the automation doesn't do a good job. Feel free to make PRs adding more of these overrides, so that eventually we'll have everything mapped out correctly.
 
 ## Credits
-- RE Mesh Editor - NSACloud
-- RszTool - czastack
-- REFramework and related tools - praydog
-- RE_RSZ and the 010 template - alphazolam
-- All the members of the RE engine modding community for getting it to where it is
+- [NSACloud](https://github.com/NSACloud) - RE Mesh Editor
+- [czastack](https://github.com/czastack) - RszTool
+- [praydog](https://github.com/praydog) - REFramework and related tools
+- [alphazolam](https://github.com/alphazolam) - RE_RSZ and the 010 template

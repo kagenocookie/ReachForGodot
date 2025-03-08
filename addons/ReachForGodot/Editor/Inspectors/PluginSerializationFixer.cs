@@ -1,7 +1,7 @@
 #if TOOLS
 using Godot;
 
-namespace RGE;
+namespace ReaGE;
 
 public class PluginSerializationFixer : ISerializationListener
 {

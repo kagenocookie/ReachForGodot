@@ -5,7 +5,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Godot;
 
-namespace RGE;
+namespace ReaGE;
 
 public static class PathUtils
 {

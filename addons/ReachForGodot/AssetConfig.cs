@@ -3,7 +3,7 @@
 
 using Godot;
 
-namespace RGE;
+namespace ReaGE;
 
 [GlobalClass, Tool]
 public partial class AssetConfig : Resource

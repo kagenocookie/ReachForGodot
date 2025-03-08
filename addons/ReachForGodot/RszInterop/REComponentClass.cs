@@ -1,4 +1,4 @@
-namespace RGE;
+namespace ReaGE;
 
 [System.AttributeUsage(System.AttributeTargets.Class, Inherited = true, AllowMultiple = false)]
 public sealed class REComponentClassAttribute : System.Attribute

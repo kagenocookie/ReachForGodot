@@ -4,7 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Godot;
 
-namespace RGE;
+namespace ReaGE;
 
 public class Importer
 {

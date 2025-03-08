@@ -1,4 +1,4 @@
-namespace RGE;
+namespace ReaGE;
 
 public static class RszExtensions
 {

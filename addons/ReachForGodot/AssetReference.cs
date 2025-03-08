@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using Godot;
 
-namespace RGE;
+namespace ReaGE;
 
 [GlobalClass, Tool]
 public partial class AssetReference : Resource

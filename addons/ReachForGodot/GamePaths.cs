@@ -1,7 +1,7 @@
 using Godot;
 using RszTool;
 
-namespace RGE;
+namespace ReaGE;
 
 public record GamePaths(SupportedGame Game, string ChunkPath, string? Il2cppPath, string? RszJsonPath, LabelledPathSetting[] AdditionalPaths)
 {

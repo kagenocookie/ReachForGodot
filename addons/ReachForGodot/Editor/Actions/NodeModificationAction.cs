@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Godot;
 
-namespace RGE;
+namespace ReaGE;
 
 [Tool]
 public abstract partial class NodeModificationAction : GodotObject

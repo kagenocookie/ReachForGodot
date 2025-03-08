@@ -2,7 +2,7 @@
 using System.Text.RegularExpressions;
 using Godot;
 
-namespace RGE;
+namespace ReaGE;
 
 public partial class ResourceInspectorPlugin : EditorInspectorPlugin, ISerializationListener
 {

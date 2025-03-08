@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Godot;
 
-namespace RGE;
+namespace ReaGE;
 
 [Tool]
 public partial class GameObjectCloneAction : NodeModificationAction
