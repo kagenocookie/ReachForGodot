@@ -53,6 +53,8 @@ public partial class SceneFolderInspectorPlugin : EditorInspectorPlugin, ISerial
                         }
                     }
                 };
+            } else {
+                loadbtn.Visible = false;
             }
         }
 
