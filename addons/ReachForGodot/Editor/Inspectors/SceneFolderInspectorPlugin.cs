@@ -60,7 +60,8 @@ public partial class SceneFolderInspectorPlugin : EditorInspectorPlugin, ISerial
         }
 
         if (container.GetNode<Button>("%ConvertSceneToProxy") is Button proxyBtn) {
-            if (obj is SceneFolder folder && folder is not SceneFolderProxy && folder.GetParent() != null && folder.GetParent() is not SceneFolderProxy && folder.Owner != null) {
+            if (obj is SceneFolder folder && folder is not SceneFolderProxy &&
+                folder.GetParent() != null && folder.GetParent() is not SceneFolderProxy && folder.Owner != null && folder.Asset?.AssetFilename != null) {
                 proxyBtn.Pressed += () => {
                     var parent = folder.GetParent();
                     var index = folder.GetIndex();
@@ -94,7 +95,7 @@ public partial class SceneFolderInspectorPlugin : EditorInspectorPlugin, ISerial
         }
 
         if (container.GetNode<Button>("%MakeEditable") is Button editable) {
-            if (obj is SceneFolder scene and not SceneFolderProxy and not SceneFolderEditableInstance) {
+            if (obj is SceneFolder scene and not SceneFolderProxy and not SceneFolderEditableInstance && scene.Owner != null && scene.Asset?.AssetFilename != null) {
                 editable.Pressed += () => {
                     var action = new ConvertSceneToInstanceAction(scene);
                     action.Trigger();
@@ -163,6 +164,15 @@ public partial class SceneFolderInspectorPlugin : EditorInspectorPlugin, ISerial
 
         AddCustomControl(container);
         pluginSerializationFixer.Register((GodotObject)obj, container);
+
+        // the flow container doesn't refresh its height properly, force it to do so
+        var hflow = container.FindChildByTypeRecursive<HFlowContainer>();
+        if (hflow != null) {
+            hflow.SizeFlagsHorizontal = Control.SizeFlags.ShrinkCenter;
+            Task.Delay(5).ContinueWith(_ => {
+                hflow.SetDeferred(Control.PropertyName.SizeFlagsHorizontal, (int)Control.SizeFlags.Fill);
+            });
+        }
     }
 
     private async Task DoRebuild(IRszContainerNode root, RszGodotConversionOptions options)
