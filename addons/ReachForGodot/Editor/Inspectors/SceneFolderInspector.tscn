@@ -12,29 +12,38 @@ theme_override_constants/margin_bottom = 4
 layout_mode = 2
 theme_override_constants/separation = 4
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+[node name="HFlowContainer" type="HFlowContainer" parent="VBoxContainer"]
 layout_mode = 2
-size_flags_horizontal = 0
 
-[node name="Find3DNode" type="Button" parent="VBoxContainer/HBoxContainer"]
+[node name="Find3DNode" type="Button" parent="VBoxContainer/HFlowContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Find me something to look at"
 
-[node name="LoadFoldersBtn" type="Button" parent="VBoxContainer/HBoxContainer"]
+[node name="LoadFoldersBtn" type="Button" parent="VBoxContainer/HFlowContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Toggle subfolders"
 
-[node name="RecalcBounds" type="Button" parent="VBoxContainer/HBoxContainer"]
+[node name="RecalcBounds" type="Button" parent="VBoxContainer/HFlowContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Recalc bounds"
 
-[node name="ConvertSceneToProxy" type="Button" parent="VBoxContainer/HBoxContainer"]
+[node name="ConvertSceneToProxy" type="Button" parent="VBoxContainer/HFlowContainer"]
 unique_name_in_owner = true
 layout_mode = 2
 text = "Add proxy folder"
+
+[node name="MakeEditable" type="Button" parent="VBoxContainer/HFlowContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Make editable"
+
+[node name="RevertMakeEditable" type="Button" parent="VBoxContainer/HFlowContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Restore scene link"
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2

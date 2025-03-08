@@ -21,6 +21,7 @@ public partial class SceneFolder : Node, IRszContainerNode
 
     public bool IsEmpty => GetChildCount() == 0;
     public SceneFolder? ParentFolder => GetParent()?.FindNodeInParents<SceneFolder>();
+    public bool IsIndependentFolder => !string.IsNullOrEmpty(SceneFilePath);
 
     public IEnumerable<SceneFolder> Subfolders => this.FindChildrenByType<SceneFolder>() ?? Array.Empty<SceneFolder>();
     public IEnumerable<SceneFolder> AllSubfolders => Subfolders.SelectMany(f => new [] { f }.Concat(f.AllSubfolders));
@@ -116,6 +117,20 @@ public partial class SceneFolder : Node, IRszContainerNode
         }
 
         return null;
+    }
+
+    public void CopyDataFrom(SceneFolder source)
+    {
+        Game = source.Game;
+        Asset = source.Asset == null ? null : new AssetReference(source.Asset.AssetFilename);
+        Resources = source.Resources?.ToArray();
+        Update = source.Update;
+        Draw = source.Draw;
+        Active = source.Active;
+        Data = source.Data?.ToArray();
+        Tag = source.Tag;
+        OriginalName = source.OriginalName;
+        KnownBounds = source.KnownBounds;
     }
 
     public virtual void RecalculateBounds(bool deepRecalculate)

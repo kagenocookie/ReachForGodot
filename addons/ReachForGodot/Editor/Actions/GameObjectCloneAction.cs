@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Godot;
 
-namespace ReaGE;
+namespace ReaGE.EditorLogic;
 
 [Tool]
 public partial class GameObjectCloneAction : NodeModificationAction
@@ -21,29 +21,19 @@ public partial class GameObjectCloneAction : NodeModificationAction
 
     public override void Do()
     {
-        if (clone == null || IsInstanceValid(clone)) {
+        if (clone == null || !IsInstanceValid(clone)) {
             clone = source.Clone();
         }
 
         source.GetParent().AddUniqueNamedChild(clone);
         source.GetParent().MoveChild(clone, source.GetIndex() + 1);
-        SetChildrenOwner(clone, source.Owner);
+        clone.SetRecursiveOwner(source.Owner);
     }
 
     public override void Undo()
     {
         if (clone != null) {
             source.GetParent().RemoveChild(clone);
-        }
-    }
-
-    private static void SetChildrenOwner(Node node, Node owner)
-    {
-        foreach (var child in node.GetChildren()) {
-            child.Owner = owner;
-            if (string.IsNullOrEmpty(child.SceneFilePath)) {
-                SetChildrenOwner(child, owner);
-            }
         }
     }
 }

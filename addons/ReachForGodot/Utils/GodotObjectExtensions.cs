@@ -242,6 +242,18 @@ public static class GodotObjectExtensions
         return child;
     }
 
+    public static void SetRecursiveOwner(this Node node, Node owner, Node? sourceOwner = null)
+    {
+        node.Owner = owner;
+        foreach (var child in node.GetChildren()) {
+            if (sourceOwner != null ? child.Owner == sourceOwner : string.IsNullOrEmpty(child.SceneFilePath)) {
+                SetRecursiveOwner(child, owner);
+            } else {
+                child.Owner = owner;
+            }
+        }
+    }
+
     /// <summary>
     /// Find a node of a specific type in any parent node.
     /// </summary>

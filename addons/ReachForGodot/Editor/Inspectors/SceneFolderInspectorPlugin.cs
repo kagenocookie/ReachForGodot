@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Godot;
+using ReaGE.EditorLogic;
 
 namespace ReaGE;
 
@@ -87,8 +88,34 @@ public partial class SceneFolderInspectorPlugin : EditorInspectorPlugin, ISerial
                     scene.RecalculateBounds(true);
                     EditorInterface.Singleton.MarkSceneAsUnsaved();
                 };
-            } else if (obj is PrefabNode) {
+            } else {
                 recalcBtn.Visible = false;
+            }
+        }
+
+        if (container.GetNode<Button>("%MakeEditable") is Button editable) {
+            if (obj is SceneFolder scene and not SceneFolderProxy and not SceneFolderEditableInstance) {
+                editable.Pressed += () => {
+                    var action = new ConvertSceneToInstanceAction(scene);
+                    action.Trigger();
+                    EditorInterface.Singleton.EditNode(action.Clone);
+                    EditorInterface.Singleton.MarkSceneAsUnsaved();
+                };
+            } else {
+                editable.Visible = false;
+            }
+        }
+
+        if (container.GetNode<Button>("%RevertMakeEditable") is Button revertEditable) {
+            if (obj is SceneFolderEditableInstance instanceScene) {
+                revertEditable.Pressed += () => {
+                    var action = new RestoreSceneInstanceToLinkAction(instanceScene);
+                    action.Trigger();
+                    EditorInterface.Singleton.EditNode(action.Clone);
+                    EditorInterface.Singleton.MarkSceneAsUnsaved();
+                };
+            } else {
+                revertEditable.Visible = false;
             }
         }
 

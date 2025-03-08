@@ -28,7 +28,7 @@ public partial class SceneFolderProxy : SceneFolder
 
     public override void _EnterTree()
     {
-        RealFolder ??= GetChildOrNull<SceneFolder>(0);
+        if (RealFolder == null) RefreshProxiedNode();
         SetShowScene(_enabled);
     }
 
@@ -99,5 +99,10 @@ public partial class SceneFolderProxy : SceneFolder
             ch.ShowLinkedFolder = load;
             ch.LoadAllChildren(load);
         }
+    }
+
+    public void RefreshProxiedNode()
+    {
+        RealFolder = GetChildOrNull<SceneFolder>(0);
     }
 }
