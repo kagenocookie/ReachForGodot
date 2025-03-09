@@ -27,9 +27,12 @@
   "prb": 9,
   "ies": 2,
   "motlist": 524,
+  "mot": 492,
   "efx": 2818689,
   "rdd": 32021,
   "mcambank": 3,
   "aimapattr": 42,
-  "bhvt": 40
+  "bhvt": 40,
+  "aimap": 41,
+  "gclo": 50
 }

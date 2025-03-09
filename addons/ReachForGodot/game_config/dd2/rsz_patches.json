@@ -17,7 +17,8 @@
     "FieldPatches": [
       {
         "Name": "_QuestID",
-        "OriginalType": "app.QuestDefine.ID"
+        "OriginalType": "app.QuestDefine.ID",
+        "Type": "ukn_error"
       }
     ]
   },
@@ -32,6 +33,10 @@
         "ReplaceName": "MeshGroups",
         "OriginalType": "via.render.CompositeMeshInstanceGroup",
         "Type": "Object"
+      },
+      {
+        "Name": "v13",
+        "Type": "S32"
       }
     ]
   },
@@ -39,20 +44,31 @@
     "FieldPatches": [
       {
         "Name": "v0",
-        "ReplaceName": "Mesh"
+        "ReplaceName": "Mesh",
+        "Type": "ukn_error"
       },
       {
         "Name": "v1",
-        "ReplaceName": "Material"
+        "ReplaceName": "Material",
+        "Type": "ukn_error"
       },
       {
         "Name": "v2",
-        "ReplaceName": "Materials"
+        "ReplaceName": "Materials",
+        "Type": "Object"
       },
       {
         "Name": "v3",
         "ReplaceName": "Transform",
         "OriginalType": "via.render.CompositeMeshTransformController",
+        "Type": "Object"
+      },
+      {
+        "Name": "Transform",
+        "Type": "Object"
+      },
+      {
+        "Name": "Materials",
         "Type": "Object"
       }
     ]
@@ -61,15 +77,18 @@
     "FieldPatches": [
       {
         "Name": "v2",
-        "ReplaceName": "Position"
+        "ReplaceName": "Position",
+        "Type": "ukn_error"
       },
       {
         "Name": "v3",
-        "ReplaceName": "Rotation"
+        "ReplaceName": "Rotation",
+        "Type": "ukn_error"
       },
       {
         "Name": "v4",
-        "ReplaceName": "Scale"
+        "ReplaceName": "Scale",
+        "Type": "ukn_error"
       }
     ]
   },
@@ -81,11 +100,13 @@
       },
       {
         "Name": "v2",
-        "ReplaceName": "Mesh"
+        "ReplaceName": "Mesh",
+        "Type": "Resource"
       },
       {
         "Name": "v3",
-        "ReplaceName": "Material"
+        "ReplaceName": "Material",
+        "Type": "Resource"
       },
       {
         "Name": "v5",
@@ -102,6 +123,70 @@
       {
         "Name": "v46",
         "Type": "S32"
+      },
+      {
+        "Name": "v9",
+        "Type": "S32"
+      },
+      {
+        "Name": "v34",
+        "Type": "S32"
+      },
+      {
+        "Name": "v36",
+        "Type": "S32"
+      },
+      {
+        "Name": "v37",
+        "Type": "S32"
+      },
+      {
+        "Name": "v38",
+        "Type": "S32"
+      },
+      {
+        "Name": "v43",
+        "Type": "S32"
+      },
+      {
+        "Name": "v44",
+        "Type": "S32"
+      },
+      {
+        "Name": "v48",
+        "Type": "S32"
+      },
+      {
+        "Name": "v51",
+        "Type": "S32"
+      },
+      {
+        "Name": "v52",
+        "Type": "S32"
+      },
+      {
+        "Name": "v56",
+        "Type": "S32"
+      },
+      {
+        "Name": "v57",
+        "Type": "S32"
+      },
+      {
+        "Name": "v60",
+        "Type": "S32"
+      },
+      {
+        "Name": "v70",
+        "Type": "S32"
+      },
+      {
+        "Name": "Mesh",
+        "Type": "Resource"
+      },
+      {
+        "Name": "Material",
+        "Type": "Resource"
       }
     ]
   },
@@ -109,11 +194,17 @@
     "FieldPatches": [
       {
         "Name": "v1",
-        "ReplaceName": "MaterialVariable"
+        "ReplaceName": "MaterialVariable",
+        "Type": "ukn_error"
       },
       {
         "Name": "v3",
-        "ReplaceName": "TexturePath"
+        "ReplaceName": "TexturePath",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "v4",
+        "Type": "S32"
       }
     ]
   },
@@ -127,10 +218,6 @@
       {
         "Name": "v1",
         "Type": "UserData"
-      },
-      {
-        "Name": "BoundingAabb",
-        "Type": "AABB"
       }
     ]
   },
@@ -198,6 +285,18 @@
       {
         "Name": "v26",
         "Type": "Object"
+      },
+      {
+        "Name": "v2",
+        "Type": "S32"
+      },
+      {
+        "Name": "v7",
+        "Type": "S32"
+      },
+      {
+        "Name": "v8",
+        "Type": "S32"
       }
     ]
   },
@@ -241,7 +340,7 @@
         "Type": "OBB"
       },
       {
-        "Name": "BoundingAabb",
+        "Name": "v2",
         "Type": "AABB"
       }
     ]
@@ -273,20 +372,16 @@
   "via.physics.AabbShape": {
     "FieldPatches": [
       {
-        "Name": "v1",
-        "Type": "S32"
-      },
-      {
         "Name": "v0",
         "ReplaceName": "BoundingAabb",
         "Type": "AABB"
       },
       {
-        "Name": "v2",
-        "Type": "AABB"
+        "Name": "v1",
+        "Type": "S32"
       },
       {
-        "Name": "BoundingAabb",
+        "Name": "v2",
         "Type": "AABB"
       }
     ]
@@ -308,6 +403,146 @@
       {
         "Name": "v5",
         "Type": "S32"
+      }
+    ]
+  },
+  "via.dynamics.CompositeRigidBodyMeshSet": {
+    "FieldPatches": [
+      {
+        "Name": "v1",
+        "Type": "S32"
+      },
+      {
+        "Name": "v4",
+        "Type": "S32"
+      },
+      {
+        "Name": "v7",
+        "Type": "Object"
+      }
+    ]
+  },
+  "via.dynamics.RigidBodyMeshSet": {
+    "FieldPatches": [
+      {
+        "Name": "v1",
+        "Type": "S32"
+      },
+      {
+        "Name": "v4",
+        "Type": "S32"
+      }
+    ]
+  },
+  "app.PressUserData": {
+    "FieldPatches": [
+      {
+        "Name": "v1",
+        "Type": "Object"
+      }
+    ]
+  },
+  "via.dynamics.RigidBodySet": {
+    "FieldPatches": [
+      {
+        "Name": "v1",
+        "Type": "S32"
+      },
+      {
+        "Name": "v4",
+        "Type": "S32"
+      },
+      {
+        "Name": "v7",
+        "Type": "S32"
+      },
+      {
+        "Name": "v9",
+        "Type": "F32"
+      },
+      {
+        "Name": "v11",
+        "Type": "F32"
+      },
+      {
+        "Name": "v12",
+        "Type": "F32"
+      },
+      {
+        "Name": "v13",
+        "Type": "S32"
+      },
+      {
+        "Name": "v14",
+        "Type": "F32"
+      }
+    ]
+  },
+  "via.physics.MeshShape": {
+    "FieldPatches": [
+      {
+        "Name": "v1",
+        "Type": "S32"
+      },
+      {
+        "Name": "v4",
+        "Type": "S32"
+      },
+      {
+        "Name": "v2",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.DamageUserData": {
+    "FieldPatches": [
+      {
+        "Name": "v1",
+        "Type": "Object"
+      }
+    ]
+  },
+  "via.navigation.map.InteractionShapeOBB": {
+    "FieldPatches": [
+      {
+        "Name": "v1",
+        "Type": "S32"
+      }
+    ]
+  },
+  "via.navigation.AIMapEffector": {
+    "FieldPatches": [
+      {
+        "Name": "v5",
+        "Type": "S32"
+      },
+      {
+        "Name": "v6",
+        "Type": "S32"
+      },
+      {
+        "Name": "v7",
+        "Type": "S32"
+      },
+      {
+        "Name": "v8",
+        "Type": "S32"
+      },
+      {
+        "Name": "v9",
+        "Type": "Object"
+      },
+      {
+        "Name": "v12",
+        "Type": "S32"
+      }
+    ]
+  },
+  "via.physics.CapsuleShape": {
+    "FieldPatches": [
+      {
+        "Name": "v1",
+        "Type": "Capsule"
       }
     ]
   }
