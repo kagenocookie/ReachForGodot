@@ -512,7 +512,12 @@ public class GodotRszImporter
 
         var folder = batch.folder;
         if (folder is SceneFolderEditableInstance editable) {
-            var inst = ResourceLoader.Load<PackedScene>(editable.SceneFilePath).Instantiate<SceneFolder>();
+            if (string.IsNullOrEmpty(editable.Asset?.AssetFilename)) {
+                GD.PrintErr("Can't build editable scene with no source asset: " + editable.Path);
+                return;
+            }
+            var linkedScene = Importer.FindOrImportResource<PackedScene>(editable.Asset.AssetFilename, AssetConfig);
+            var inst = linkedScene!.Instantiate<SceneFolder>();
             folder.GetParent().EmplaceChild(folder, inst);
             batch.folder = folder = inst;
         }

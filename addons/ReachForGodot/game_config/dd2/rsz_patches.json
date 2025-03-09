@@ -17,8 +17,7 @@
     "FieldPatches": [
       {
         "Name": "_QuestID",
-        "OriginalType": "app.QuestDefine.ID",
-        "Type": "ukn_error"
+        "OriginalType": "app.QuestDefine.ID"
       }
     ]
   },
@@ -40,18 +39,15 @@
     "FieldPatches": [
       {
         "Name": "v0",
-        "ReplaceName": "Mesh",
-        "Type": "ukn_error"
+        "ReplaceName": "Mesh"
       },
       {
         "Name": "v1",
-        "ReplaceName": "Material",
-        "Type": "ukn_error"
+        "ReplaceName": "Material"
       },
       {
         "Name": "v2",
-        "ReplaceName": "Materials",
-        "Type": "ukn_error"
+        "ReplaceName": "Materials"
       },
       {
         "Name": "v3",
@@ -65,18 +61,15 @@
     "FieldPatches": [
       {
         "Name": "v2",
-        "ReplaceName": "Position",
-        "Type": "ukn_error"
+        "ReplaceName": "Position"
       },
       {
         "Name": "v3",
-        "ReplaceName": "Rotation",
-        "Type": "ukn_error"
+        "ReplaceName": "Rotation"
       },
       {
         "Name": "v4",
-        "ReplaceName": "Scale",
-        "Type": "ukn_error"
+        "ReplaceName": "Scale"
       }
     ]
   },
@@ -88,13 +81,11 @@
       },
       {
         "Name": "v2",
-        "ReplaceName": "Mesh",
-        "Type": "ukn_error"
+        "ReplaceName": "Mesh"
       },
       {
         "Name": "v3",
-        "ReplaceName": "Material",
-        "Type": "ukn_error"
+        "ReplaceName": "Material"
       },
       {
         "Name": "v5",
@@ -118,13 +109,11 @@
     "FieldPatches": [
       {
         "Name": "v1",
-        "ReplaceName": "MaterialVariable",
-        "Type": "ukn_error"
+        "ReplaceName": "MaterialVariable"
       },
       {
         "Name": "v3",
-        "ReplaceName": "TexturePath",
-        "Type": "ukn_error"
+        "ReplaceName": "TexturePath"
       }
     ]
   },

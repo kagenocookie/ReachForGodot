@@ -340,7 +340,7 @@ public static class PathUtils
         var relativePath = Path.IsPathRooted(sourcePath) ? FullToRelativePath(sourcePath, config) : sourcePath;
         if (relativePath == null) return null;
 
-        relativePath = AppendFileVersion(relativePath, config);
+        relativePath = GetFilepathWithoutVersion(relativePath);
 
         var targetPath = Path.Combine(config.AssetDirectory, relativePath);
 

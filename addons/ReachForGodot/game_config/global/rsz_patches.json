@@ -1,98 +1,106 @@
 {
-    "via.GameObject": {
-        "FieldPatches": [
-            {
-                "Name": "v0",
-                "ReplaceName": "Name"
-            },
-            {
-                "Name": "v1",
-                "ReplaceName": "Tags"
-            }
-        ]
-    },
-    "via.Folder": {
-        "FieldPatches": [
-            {
-                "Name": "v0",
-                "ReplaceName": "Name"
-            },
-            {
-                "Name": "v1",
-                "ReplaceName": "Tag"
-            },
-            {
-                "Name": "v2",
-                "ReplaceName": "Update"
-            },
-            {
-                "Name": "v3",
-                "ReplaceName": "Draw"
-            },
-            {
-                "Name": "v4",
-                "ReplaceName": "Active"
-            },
-            {
-                "Name": "v5",
-                "ReplaceName": "Path"
-            },
-            {
-                "Name": "v6",
-                "ReplaceName": "Data"
-            }
-        ]
-    },
-    "via.Transform": {
-        "FieldPatches": [
-            {
-                "Name": "v0",
-                "ReplaceName": "LocalPosition"
-            },
-            {
-                "Name": "v1",
-                "ReplaceName": "LocalRotation"
-            },
-            {
-                "Name": "v2",
-                "ReplaceName": "LocalScale"
-            },
-            {
-                "Name": "v3",
-                "ReplaceName": "ParentJoint"
-            }
-        ]
-    },
-    "via.physics.FilterInfo": {
-        "FieldPatches": [
-            {
-                "Name": "v0",
-                "Type": "S32"
-            },
-            {
-                "Name": "v1",
-                "Type": "S32"
-            },
-            {
-                "Name": "v4",
-                "Type": "S32"
-            }
-        ]
-    },
-    "via.physics.CapsuleShape": {
-      "FieldPatches": [
-        {
-          "Name": "v1",
-          "Type": "Capsule"
-        }
-      ]
-    },
-    "via.physics.BoxShape": {
-      "FieldPatches": [
-        {
-          "Name": "v1",
-          "Type": "OBB"
-        }
-      ]
-    }
+  "via.GameObject": {
+    "FieldPatches": [
+      {
+        "Name": "v0",
+        "ReplaceName": "Name"
+      },
+      {
+        "Name": "v1",
+        "ReplaceName": "Tags"
+      }
+    ]
+  },
+  "via.Folder": {
+    "FieldPatches": [
+      {
+        "Name": "v0",
+        "ReplaceName": "Name"
+      },
+      {
+        "Name": "v1",
+        "ReplaceName": "Tag"
+      },
+      {
+        "Name": "v2",
+        "ReplaceName": "Update"
+      },
+      {
+        "Name": "v3",
+        "ReplaceName": "Draw"
+      },
+      {
+        "Name": "v4",
+        "ReplaceName": "Active"
+      },
+      {
+        "Name": "v5",
+        "ReplaceName": "Path"
+      },
+      {
+        "Name": "v6",
+        "ReplaceName": "Data"
+      }
+    ]
+  },
+  "via.Transform": {
+    "FieldPatches": [
+      {
+        "Name": "v0",
+        "ReplaceName": "LocalPosition"
+      },
+      {
+        "Name": "v1",
+        "ReplaceName": "LocalRotation"
+      },
+      {
+        "Name": "v2",
+        "ReplaceName": "LocalScale"
+      },
+      {
+        "Name": "v3",
+        "ReplaceName": "ParentJoint"
+      }
+    ]
+  },
+  "via.physics.FilterInfo": {
+    "FieldPatches": [
+      {
+        "Name": "v0",
+        "Type": "S32"
+      },
+      {
+        "Name": "v1",
+        "Type": "S32"
+      },
+      {
+        "Name": "v4",
+        "Type": "S32"
+      }
+    ]
+  },
+  "via.physics.CapsuleShape": {
+    "FieldPatches": [
+      {
+        "Name": "v1",
+        "Type": "Capsule"
+      }
+    ]
+  },
+  "via.physics.BoxShape": {
+    "FieldPatches": [
+      {
+        "Name": "v1",
+        "Type": "OBB"
+      }
+    ]
+  },
+  "via.Prefab": {
+    "FieldPatches": [
+      {
+        "Name": "v1",
+        "ReplaceName": "Path"
+      }
+    ]
+  }
 }

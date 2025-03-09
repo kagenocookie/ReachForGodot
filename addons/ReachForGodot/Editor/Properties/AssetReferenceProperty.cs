@@ -91,9 +91,9 @@ public partial class AssetReferenceProperty : EditorProperty
     private void RefreshUI()
     {
         var updatePathBtn = container.GetNode<Button>("%UpdatePathBtn");
-        var targetRsz = GetEditedObject() as IRszContainerNode;
+        var targetAsset = (GetEditedObject() as IRszContainerNode)?.Asset ?? (GetEditedObject() as REResource)?.Asset;
         var currentResourcePath = CurrentResourcePath;
-        var expectedImportPath = targetRsz?.Asset?.GetImportFilepath(ReachForGodot.GetAssetConfig(Game))?.GetBaseName();
+        var expectedImportPath = targetAsset?.GetImportFilepath(ReachForGodot.GetAssetConfig(Game))?.GetBaseName();
         updatePathBtn.Visible = !string.IsNullOrEmpty(currentResourcePath) && !currentResourcePath.Equals(expectedImportPath, StringComparison.OrdinalIgnoreCase);
     }
 

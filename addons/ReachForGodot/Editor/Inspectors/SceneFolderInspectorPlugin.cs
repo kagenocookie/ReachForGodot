@@ -206,12 +206,27 @@ public partial class SceneFolderInspectorPlugin : EditorInspectorPlugin, ISerial
             if (scn.GetParent() is SceneFolderProxy parentProxy) {
                 root = scn = parentProxy;
             }
+            var sourceIsInstance = false;
+            if (scn is SceneFolderEditableInstance editable) {
+                if (string.IsNullOrEmpty(editable.Asset?.AssetFilename)) {
+                    GD.PrintErr("Can't build editable scene with no source asset: " + editable.Path);
+                    return;
+                }
+                var linkedScene = Importer.FindOrImportResource<PackedScene>(editable.Asset.AssetFilename, conv.AssetConfig);
+                var newScn = linkedScene!.Instantiate<SceneFolder>();
+                editable.GetParent().EmplaceChild(editable, newScn);
+                scn = newScn;
+                sourceIsInstance = true;
+            }
             if (scn is SceneFolderProxy proxy) {
                 var realScene = proxy.Contents;
                 scn = realScene!.Instantiate<SceneFolder>();
                 proxy.UnloadScene();
             }
             task = conv.RegenerateSceneTree(scn);
+            if (sourceIsInstance) {
+                EditorInterface.Singleton.EditNode(scn);
+            }
         } else {
             GD.PrintErr("I have no idea how to import a " + root.GetType());
             return;

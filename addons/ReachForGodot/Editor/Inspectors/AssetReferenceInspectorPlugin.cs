@@ -27,7 +27,6 @@ public partial class AssetReferenceInspectorPlugin : EditorInspectorPlugin, ISer
             var propertyEdit = new AssetReferenceProperty();
             AddPropertyEditor("Asset", propertyEdit);
 
-
             pluginSerializationFixer.Register(asset, propertyEdit);
             return true;
         }

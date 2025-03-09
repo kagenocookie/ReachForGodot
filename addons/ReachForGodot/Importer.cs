@@ -114,13 +114,19 @@ public class Importer
             return null;
         }
 
-        if (!ResourceLoader.Exists(importPath)) {
-            var sourcePath = PathUtils.FindSourceFilePath(chunkRelativeFilepath, config);
-            if (sourcePath == null) return null;
-            return Importer.Import(sourcePath, config, importPath) as T;
+        if (ResourceLoader.Exists(importPath)) {
+            try {
+                var resource = ResourceLoader.Load<T>(importPath);
+                if (resource != null) return resource;
+                GD.PrintErr("Failed to load imported resource, re-importing: " + importPath);
+            } catch (Exception e) {
+                GD.PrintErr("Failed to load imported resource, re-importing: " + importPath, e);
+            }
         }
 
-        return ResourceLoader.Load<T>(importPath);
+        var sourcePath = PathUtils.FindSourceFilePath(chunkRelativeFilepath, config);
+        if (sourcePath == null) return null;
+        return Importer.Import(sourcePath, config, importPath) as T;
     }
 
     public static Resource? Import(string sourceFilePath, AssetConfig config, string? importFilepath = null)
