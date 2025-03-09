@@ -27,6 +27,7 @@ public static class RszTypeConverter
     {
         if (field.RszField.array) {
             if (value == null) return new Godot.Collections.Array();
+            if (field.RszField.type == RszFieldType.Data) return (byte[])value;
 
             var type = value.GetType();
             object[] arr;
@@ -167,9 +168,9 @@ public static class RszTypeConverter
             case RszFieldType.AABB:
                 return ((RszTool.via.AABB)value).ToGodot();
             case RszFieldType.Mat4:
-                return ((RszTool.via.mat4)value).ToProjection();
+                return ((RszTool.via.mat4)value).ToProjection(game);
             case RszFieldType.OBB:
-                return (OrientedBoundingBox)(((RszTool.via.OBB)value));
+                return OrientedBoundingBox.FromRsz(((RszTool.via.OBB)value), game);
             case RszFieldType.Sphere:
                 return ((RszTool.via.Sphere)value).ToVector4();
             case RszFieldType.LineSegment:
@@ -210,7 +211,7 @@ public static class RszTypeConverter
         return new Variant();
     }
 
-    public static object? ToRszStruct(this Variant variant, REField field)
+    public static object? ToRszStruct(this Variant variant, REField field, SupportedGame game)
     {
         if (field.RszField.array) {
             return field.RszField.type switch {
@@ -235,11 +236,11 @@ public static class RszTypeConverter
                 RszFieldType.Uint3 => ConvertArray(variant.AsGodotArray<Vector3I>(), static v => v.ToRsz()),
                 RszFieldType.Uint4 => ConvertArray(variant.AsGodotArray<Vector4I>(), static v => v.ToRsz()),
                 RszFieldType.Bool => ConvertArray(variant.AsGodotArray<bool>(), static v => v),
-                RszFieldType.OBB => ConvertArray(variant.AsGodotArray<OrientedBoundingBox>(), static v => v.ToRsz()),
+                RszFieldType.OBB => ConvertArray(variant.AsGodotArray<OrientedBoundingBox>(), v => v.ToRsz(game)),
                 _ => throw new Exception("Unhandled rsz export array type " + field.RszField.type),
             };
         }
-        return ToRszStructSingle(variant, field);
+        return ToRszStructSingle(variant, field, game);
     }
     private static object[] ConvertArray<T>(T[] sourceArray)
     {
@@ -265,7 +266,7 @@ public static class RszTypeConverter
         }
         return arr;
     }
-    public static object ToRszStructSingle(this Variant variant, REField field)
+    public static object ToRszStructSingle(this Variant variant, REField field, SupportedGame game)
     {
         return field.RszField.type switch {
             RszFieldType.S32 => variant.AsInt32(),
@@ -290,7 +291,7 @@ public static class RszTypeConverter
             RszFieldType.Uint2 => (RszTool.via.Uint2)variant.AsVector2I().ToRszU(),
             RszFieldType.Uint3 => (RszTool.via.Uint3)variant.AsVector3I().ToRszU(),
             RszFieldType.Uint4 => (RszTool.via.Uint4)variant.AsVector4I().ToRszU(),
-            RszFieldType.OBB => variant.As<OrientedBoundingBox>().ToRsz(),
+            RszFieldType.OBB => variant.As<OrientedBoundingBox>().ToRsz(game),
             RszFieldType.AABB => (RszTool.via.AABB)variant.AsAabb().ToRsz(),
             RszFieldType.Guid or RszFieldType.Uri => Guid.TryParse(variant.AsString(), out var guid) ? guid : Guid.Empty,
             RszFieldType.GameObjectRef => variant.As<GameObjectRef>().TargetGuid,
@@ -344,14 +345,24 @@ public static class RszTypeConverter
         minpos = val.Position.ToRsz(),
         maxpos = (val.End - val.Position).ToRsz(),
     };
-    public static Projection ToProjection(this RszTool.via.mat4 mat)
+    public static Projection ToProjection(this RszTool.via.mat4 mat, SupportedGame game)
     {
-        // TODO: is the order game dependent? RE2RT gasstation gimmicks - 0,1,2,3; previously 1,2,3,0 was correct somewhere
+        // the order seems to be game dependent...
+        // RE2RT gasstation gimmicks - 0,1,2,3
+        // DD2 Dng_05/Env_3517 - 1,2,3,0
+        if (game == SupportedGame.ResidentEvil2RT) {
+            return new Projection(
+                new Vector4(mat.m00, mat.m01, mat.m02, mat.m03),
+                new Vector4(mat.m10, mat.m11, mat.m12, mat.m13),
+                new Vector4(mat.m20, mat.m21, mat.m22, mat.m23),
+                new Vector4(mat.m30, mat.m31, mat.m32, mat.m33)
+            );
+        }
         return new Projection(
-            new Vector4(mat.m00, mat.m01, mat.m02, mat.m03),
             new Vector4(mat.m10, mat.m11, mat.m12, mat.m13),
             new Vector4(mat.m20, mat.m21, mat.m22, mat.m23),
-            new Vector4(mat.m30, mat.m31, mat.m32, mat.m33)
+            new Vector4(mat.m30, mat.m31, mat.m32, mat.m33),
+            new Vector4(mat.m00, mat.m01, mat.m02, mat.m03)
         );
     }
     public static System.Numerics.Vector2 ToRsz(this Vector2 val) => new System.Numerics.Vector2(val.X, val.Y);

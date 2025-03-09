@@ -15,6 +15,9 @@ public partial class SceneFolderInspectorPlugin : EditorInspectorPlugin, ISerial
 
     private PackedScene? inspectorScene;
 
+    private static int lastSelectedSceneImport = 0;
+    private static int lastSelectedPrefabImport = 0;
+
     public override bool _CanHandle(GodotObject @object)
     {
         return @object is SceneFolder or PrefabNode;
@@ -143,15 +146,21 @@ public partial class SceneFolderInspectorPlugin : EditorInspectorPlugin, ISerial
             importType.AddItem("Import anything missing", (int)GodotRszImporter.PresetImportModes.ImportTreeChanges);
             importType.AddItem("Discard and reimport structure", (int)GodotRszImporter.PresetImportModes.ReimportStructure);
             importType.AddItem("Fully reimport all resources", (int)GodotRszImporter.PresetImportModes.FullReimport);
+            importType.Selected = lastSelectedPrefabImport;
         } else if (obj is SceneFolder scn) {
             importType.AddItem("Placeholders only", (int)GodotRszImporter.PresetImportModes.PlaceholderImport);
             importType.AddItem("Import just this scene, no subfolders", (int)GodotRszImporter.PresetImportModes.ThisFolderOnly);
             importType.AddItem("Import missing objects", (int)GodotRszImporter.PresetImportModes.ImportMissingItems);
             importType.AddItem("Discard and reimport scene structure", (int)GodotRszImporter.PresetImportModes.ReimportStructure);
             importType.AddItem("Force reimport all resources", (int)GodotRszImporter.PresetImportModes.FullReimport);
+            importType.Selected = lastSelectedSceneImport;
         } else {
             importType.AddItem("Full import", (int)GodotRszImporter.PresetImportModes.ImportTreeChanges);
         }
+        importType.ItemSelected += (index) => {
+            if (obj is SceneFolder) lastSelectedSceneImport = (int)index;
+            if (obj is PrefabNode) lastSelectedPrefabImport = (int)index;
+        };
 
         var fileSources = PathUtils.FindFileSourceFolders(obj.Asset?.AssetFilename, ReachForGodot.GetAssetConfig(obj.Game)).ToArray();
         var sourcesContainer = container.GetNode<Control>("%ImportSourceContainer");

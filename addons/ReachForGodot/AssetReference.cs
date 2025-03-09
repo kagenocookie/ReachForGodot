@@ -51,4 +51,6 @@ public partial class AssetReference : Resource
 
     [return: NotNullIfNotNull(nameof(assref))]
     public static implicit operator string?(AssetReference? assref) => assref?.AssetFilename;
+
+    public override string ToString() => AssetFilename;
 }

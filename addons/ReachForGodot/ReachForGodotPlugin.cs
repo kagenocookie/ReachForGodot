@@ -16,9 +16,13 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
     private const string Setting_Il2cppPath = $"{SettingBase}/paths/{{game}}/il2cpp_dump_file";
     private const string Setting_RszJsonPath = $"{SettingBase}/paths/{{game}}/rsz_json_file";
     private const string Setting_AdditionalPaths = $"{SettingBase}/paths/{{game}}/additional_paths";
+    private const string Setting_ImportMeshMaterials = $"{SettingBase}/general/import_mesh_materials";
+    private const string Setting_ImportMeshMaterials_Note = $"{SettingBase}/general/import_mesh_materials_note";
 
     public static string BlenderPath => EditorInterface.Singleton.GetEditorSettings().GetSetting(Setting_BlenderPath).AsString()
         ?? throw new System.Exception("Blender path not defined in editor settings");
+
+    public static bool IncludeMeshMaterial { get; private set; }
 
     private static string ChunkPathSetting(SupportedGame game) => Setting_GameChunkPath.Replace("{game}", game.ToString());
     private static string Il2cppPathSetting(SupportedGame game) => Setting_Il2cppPath.Replace("{game}", game.ToString());
@@ -122,6 +126,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
 
     private void AddSettings()
     {
+        AddEditorSetting(Setting_ImportMeshMaterials, Variant.Type.Bool, false);
         foreach (var game in ReachForGodot.GameList) {
             AddEditorSetting(ChunkPathSetting(game), Variant.Type.String, string.Empty, PropertyHint.GlobalDir);
             AddEditorSetting(Il2cppPathSetting(game), Variant.Type.String, string.Empty, PropertyHint.GlobalFile, "*.json");
@@ -138,6 +143,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
     private void OnProjectSettingsChanged()
     {
         var settings = EditorInterface.Singleton.GetEditorSettings();
+        IncludeMeshMaterial = settings.GetSetting(Setting_ImportMeshMaterials).AsBool();
         foreach (var game in ReachForGodot.GameList) {
             var pathChunks = settings.GetSetting(ChunkPathSetting(game)).AsString() ?? string.Empty;
             var pathIl2cpp = settings.GetSetting(Il2cppPathSetting(game)).AsString();

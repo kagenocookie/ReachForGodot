@@ -895,6 +895,9 @@ public class GodotRszImporter
             var owner = parentNode?.Owner ?? parentNode;
             Debug.Assert(owner != gameobj);
             gameobj.Owner = owner;
+            if (gameobj is PrefabNode) {
+                owner?.SetEditableInstance(gameobj, true);
+            }
         }
 
         if (importType == RszImportType.Placeholders) {
@@ -953,7 +956,7 @@ public class GodotRszImporter
         componentInfo.ResourceName = classname;
         componentInfo.GameObject = gameObject;
         ApplyObjectValues(componentInfo, instance);
-        var setupTask = componentInfo.Setup(gameObject, instance, Options.meshes);
+        var setupTask = componentInfo.Setup(instance, Options.meshes);
         if (!setupTask.IsCompleted) {
             batch.ComponentTasks.Add(setupTask);
         }

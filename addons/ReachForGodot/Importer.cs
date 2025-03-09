@@ -125,7 +125,9 @@ public class Importer
         }
 
         var sourcePath = PathUtils.FindSourceFilePath(chunkRelativeFilepath, config);
-        if (sourcePath == null) return null;
+        if (sourcePath == null) {
+            return Importer.Import(PathUtils.RelativeToFullPath(chunkRelativeFilepath, config), config, importPath) as T;
+        }
         return Importer.Import(sourcePath, config, importPath) as T;
     }
 
@@ -193,14 +195,19 @@ public class Importer
         var importDir = Path.GetFullPath(outputGlobalized.GetBaseDir());
         // GD.Print($"Importing mesh...\nBlender: {ReachForGodot.BlenderPath}\nFile: {path}\nTarget: {blendPath}\nPython script: {meshImportScriptPath}");
 
+        // "80004002 No such interface supported" from texconv when we have it convert mesh textures in background ¯\_(ツ)_/¯
+        var includeMaterials = ReachForGodotPlugin.IncludeMeshMaterial;
+
         Directory.CreateDirectory(importDir);
         var importScript = MeshImportScript
             .Replace("__FILEPATH__", sourceFilePath)
             .Replace("__FILEDIR__", sourceFilePath.GetBaseDir())
             .Replace("__FILENAME__", sourceFilePath.GetFile())
-            .Replace("__OUTPUT_PATH__", blendPath);
+            .Replace("__OUTPUT_PATH__", blendPath)
+            .Replace("__INCLUDE_MATERIALS__", includeMaterials ? "True" : "False")
+            ;
 
-        return ExecuteBlenderScript(importScript).ContinueWith((t) => {
+        return ExecuteBlenderScript(importScript, !includeMaterials).ContinueWith((t) => {
             if (!t.IsCompletedSuccessfully || !File.Exists(blendPath)) {
                 GD.Print("Unsuccessfully imported mesh " + sourceFilePath);
                 return false;
@@ -232,7 +239,7 @@ public class Importer
             .Replace("__FILEDIR__", sourceFilePath.GetBaseDir())
             .Replace("__FILENAME__", sourceFilePath.GetFile());
 
-        return ExecuteBlenderScript(importScript).ContinueWith((t) => {
+        return ExecuteBlenderScript(importScript, true).ContinueWith((t) => {
             if (t.IsCompletedSuccessfully && File.Exists(convertedFilepath)) {
                 File.Move(convertedFilepath, outputGlobalized, true);
                 QueueFileRescan();
@@ -348,7 +355,7 @@ public class Importer
         return newres;
     }
 
-    private static async Task ExecuteBlenderScript(string script)
+    private static async Task ExecuteBlenderScript(string script, bool background)
     {
         // var tempFn = Path.GetTempFileName();
         // File.WriteAllText(tempFn, importScript);
@@ -356,7 +363,9 @@ public class Importer
         var process = Process.Start(new ProcessStartInfo() {
             UseShellExecute = false,
             FileName = ReachForGodot.BlenderPath,
-            Arguments = $"\"{EmptyBlend}\" --background --python-expr \"{script}\"",
+            Arguments = background
+                ? $"\"{EmptyBlend}\" --background --python-expr \"{script}\""
+                : $"\"{EmptyBlend}\" --python-expr \"{script}\"",
         });
 
         if (cancellationTokenSource == null || cancellationTokenSource.IsCancellationRequested) {

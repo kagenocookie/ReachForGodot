@@ -6,6 +6,7 @@ dir = '__FILEDIR__'
 files = [{'name': '__FILENAME__'}]
 
 prefName = 'RE-Mesh-Editor-main'
+includeMaterials = __INCLUDE_MATERIALS__
 
 lastDragDropOptions = bpy.context.preferences.addons[prefName].preferences.dragDropImportOptions
 lastShowConsole = bpy.context.preferences.addons[prefName].preferences.showConsole
@@ -31,12 +32,12 @@ op = {
 'export_gltfpack_noq' : True,
 'export_format' : 'GLB',
 'export_copyright' : '',
-'export_image_format' : 'NONE',
+'export_image_format' : 'JPEG' if includeMaterials else 'NONE',
 'export_image_add_webp' : False,
 'export_image_webp_fallback' : False,
 'export_texture_dir' : '',
 'export_jpeg_quality' : 75,
-'export_image_quality' : 75,
+'export_image_quality' : 25,
 'export_keep_originals' : False,
 'export_texcoords' : True,
 'export_normals' : True,
@@ -111,9 +112,48 @@ op = {
 'export_loglevel' : -1,
 }
 
+albedoNames = set([
+    'ALBD',
+    'ALBDmap',
+    'BackMap',
+    'BaseMap',
+    'BackMap_1',
+    'BaseAlphaMap',
+    'BaseMetalMap',
+    'BaseMetalMapArray',
+    'BaseShiftMap',
+    'BaseAnisoShiftMap',
+    #'BaseDielectricMapBase',
+    'BaseAlphaMap',
+    'BaseDielectricMap',
+    #Vertex Color
+    #'BaseDielectricMap_B',
+    #'BaseDielectricMap_G',
+    #'BaseDielectricMap_R',
+    'BaseMap',
+    'CloudMap',
+    'CloudMap_1',
+    'FaceBaseMap',
+    'Face_BaseDielectricMap',
+    'Moon_Tex',
+    'Sky_Top_Tex',
+    'BaseColor',
+])
+
 try:
-    bpy.ops.re_mesh.importfile('INVOKE_DEFAULT', filepath=filename, files=files, directory=dir, loadMDFData=False)
+    bpy.ops.re_mesh.importfile('INVOKE_DEFAULT', filepath=filename, files=files, directory=dir, loadMDFData=False, loadMaterials=includeMaterials)
+    for obj in bpy.data.objects:
+        if obj.active_material:
+            tree = obj.active_material.node_tree
+            albedo = next((node for node in tree.nodes if node.name in albedoNames), None)
+            output = next((node for node in tree.nodes if node.name == 'Principled BSDF'), None)
+            if albedo and output:
+                for input in output.inputs:
+                    for link in input.links:
+                        tree.links.remove(link)
+                tree.links.new(albedo.outputs[0], output.inputs[0])
     bpy.ops.export_scene.gltf(**op)
+    bpy.ops.wm.quit_blender()
 except Exception as e:
     print('something failed ... ')
     if hasattr(e, 'message'):

@@ -157,15 +157,6 @@ public class TypeCache
 
         if (data.parser == null) {
             data.parser = LoadRsz(game);
-
-            if (data.fieldOverrides != null) {
-                foreach (var (cn, accessors) in data.fieldOverrides) {
-                    foreach (var acc in accessors) {
-                        var cls = data.parser.GetRSZClass(cn)!;
-                        GenerateObjectCache(cls, game);
-                    }
-                }
-            }
         }
 
         return data.parser.GetRSZClass(classname);
@@ -533,7 +524,7 @@ public class TypeCache
                     cache.rszTypePatches[inst.RszClass.name] = props = new();
                 }
 
-                var entry = props.FieldPatches?.FirstOrDefault(patch => patch.Name == f.name);
+                var entry = props.FieldPatches?.FirstOrDefault(patch => patch.Name == f.name || patch.ReplaceName == f.name);
                 if (entry == null) {
                     entry = new RszFieldPatch() { Name = f.name, Type = f.type };
                     props.FieldPatches = props.FieldPatches == null ? [entry] : props.FieldPatches.Append(entry).ToArray();
@@ -573,6 +564,14 @@ public class TypeCache
             config.rszTypePatches = JsonSerializer.Deserialize<Dictionary<string, RszClassPatch>>(fileStream);
         }
         parser.ReadPatch(paths.RszPatchPath);
+        if (config.fieldOverrides != null) {
+            foreach (var (cn, accessors) in config.fieldOverrides) {
+                foreach (var acc in accessors) {
+                    var cls = parser.GetRSZClass(cn)!;
+                    GenerateObjectCache(cls, game);
+                }
+            }
+        }
         time.Stop();
         GD.Print("Loaded RSZ data in " + time.Elapsed);
         return parser;
@@ -705,46 +704,82 @@ public class REField
     }
 }
 
-public readonly struct REObjectFieldAccessor
+public class REObjectFieldCondition
+{
+    public REObjectFieldConditionFunc func;
+
+    public REObjectFieldCondition(REObjectFieldConditionFunc func)
+    {
+        this.func = func;
+    }
+
+    public static implicit operator REObjectFieldCondition(string name)
+        => new REObjectFieldCondition((fs) => fs.FirstOrDefault(f => f.SerializedName == name));
+    public static implicit operator REObjectFieldCondition(REObjectFieldConditionFunc condition)
+        => new REObjectFieldCondition(condition);
+}
+
+public delegate REField? REObjectFieldConditionFunc(REField[] fields);
+
+public class REObjectFieldAccessor
 {
     public readonly string preferredName;
-    private readonly Func<REField[], REField?> getter;
-    private readonly Dictionary<SupportedGame, REField?> _cache = new(1);
-    public readonly Action<REField>? overrideFunc;
+    private REObjectFieldCondition[] conditions = Array.Empty<REObjectFieldCondition>();
+    private Dictionary<SupportedGame, REField?> _cache = new(1);
+    public Action<REField>? overrideFunc;
 
-    public REObjectFieldAccessor(string preferredName, Func<REField[], REField?> getter, Action<REField>? overrideFunc = null)
+    public REObjectFieldAccessor(string name, Action<REField>? overrideFunc = null)
     {
-        this.preferredName = preferredName;
-        this.getter = getter;
+        preferredName = name;
         this.overrideFunc = overrideFunc;
     }
 
-    public REObjectFieldAccessor(Func<REField[], REField?> getter, Action<REField>? overrideFunc = null)
+    public REObjectFieldAccessor(string name, RszFieldType rszType)
     {
-        this.preferredName = "_____never";
-        this.getter = getter;
-        this.overrideFunc = overrideFunc;
+        preferredName = name;
+        this.overrideFunc = (f) => {
+            f.RszField.type = rszType;
+        };
     }
 
-    public REObjectFieldAccessor(string preferredName, string fallbackName, Action<REField>? overrideFunc = null)
+    public REObjectFieldAccessor(string name, Type godotResourceType)
     {
-        this.preferredName = preferredName;
-        this.getter = (fields) => fields.FirstOrDefault(f => f.SerializedName == fallbackName);
-        this.overrideFunc = overrideFunc;
+        preferredName = name;
+        Debug.Assert(godotResourceType.IsAssignableTo(typeof(REResource)));
+        this.overrideFunc = (f) => f.MarkAsResource(godotResourceType.Name);
     }
 
-    public readonly REField Get(REObject target) => Get(target.Game, target.TypeInfo);
+    public REObjectFieldAccessor WithConditions(params REObjectFieldConditionFunc[] conditions)
+    {
+        this.conditions = conditions.Select(a => new REObjectFieldCondition(a)).ToArray();
+        return this;
+    }
 
-    public readonly bool IsMatch(REObject target, StringName name) => Get(target).SerializedName == name;
+    public REObjectFieldAccessor WithConditions(params REObjectFieldCondition[] conditions)
+    {
+        this.conditions = conditions;
+        return this;
+    }
 
-    public readonly REField Get(SupportedGame game, REObjectTypeCache typecache)
+    public REField Get(REObject target) => Get(target.Game, target.TypeInfo);
+
+    public bool IsMatch(REObject target, StringName name) => Get(target).SerializedName == name;
+
+    public REField Get(SupportedGame game, REObjectTypeCache typecache)
     {
         if (_cache.TryGetValue(game, out var cachedField)) {
             Debug.Assert(cachedField != null);
             return cachedField;
         }
 
-        return _cache[game] = cachedField = getter.Invoke(typecache.Fields)!;
+        foreach (var getter in conditions) {
+            cachedField = getter.func.Invoke(typecache.Fields)!;
+            if (cachedField != null) {
+                return _cache[game] = cachedField;
+            }
+        }
+
+        throw new Exception("Failed to resolve " + typecache.RszClass.name + " field " + preferredName);
     }
 }
 

@@ -98,12 +98,10 @@ public class Exporter
 
         foreach (var go in root.ChildObjects) {
             if (go is PrefabNode pfbGo) {
-                GD.PrintErr("TODO: PFB sourced game object inside SCN");
                 file.PrefabInfoList.Add(new ScnFile.PrefabInfo() {
                     Path = pfbGo.Asset!.AssetFilename,
                     parentId = 0,
                 });
-                continue;
             }
 
             AddGameObject(go, file.RSZ, file, fileOption, -1);
@@ -178,16 +176,16 @@ public class Exporter
         folderInstance.Values[5] = linkedSceneFilepath;
         folderInstance.Values[6] = (folder.Data != null && folder.Data.Length > 0) ? folder.Data : new byte[24];
 
-        foreach (var go in folder.ChildObjects) {
-            if (go is PrefabNode pfbGo) {
-                GD.PrintErr("TODO: PFB sourced game object inside SCN");
-                continue;
+        if (string.IsNullOrEmpty(linkedSceneFilepath)) {
+            foreach (var go in folder.ChildObjects) {
+                if (go is PrefabNode pfbGo) {
+                    GD.PrintErr("TODO: PFB sourced game object inside SCN");
+                    continue;
+                }
+
+                AddGameObject(go, file.RSZ, file, fileOption, folderInstance.ObjectTableIndex);
             }
 
-            AddGameObject(go, file.RSZ, file, fileOption, folderInstance.ObjectTableIndex);
-        }
-
-        if (string.IsNullOrEmpty(linkedSceneFilepath)) {
             foreach (var sub in folder.Subfolders) {
                 AddFolder(sub, file, fileOption, folderInstance.ObjectTableIndex);
             }
@@ -484,7 +482,7 @@ public class Exporter
                         }
                         break;
                     default:
-                        var converted = RszTypeConverter.ToRszStruct(value, field);
+                        var converted = RszTypeConverter.ToRszStruct(value, field, target.Game);
                         values[i++] = converted ?? RszInstance.CreateNormalObject(field.RszField);
                         break;
                 }

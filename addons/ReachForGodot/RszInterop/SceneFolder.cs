@@ -21,7 +21,7 @@ public partial class SceneFolder : Node, IRszContainerNode
 
     public bool IsEmpty => GetChildCount() == 0;
     public SceneFolder? ParentFolder => GetParent()?.FindNodeInParents<SceneFolder>();
-    public bool IsIndependentFolder => !string.IsNullOrEmpty(SceneFilePath);
+    public bool IsIndependentFolder => !string.IsNullOrEmpty(Asset?.AssetFilename);
 
     public IEnumerable<SceneFolder> Subfolders => this.FindChildrenByType<SceneFolder>() ?? Array.Empty<SceneFolder>();
     public IEnumerable<SceneFolder> AllSubfolders => Subfolders.SelectMany(f => new [] { f }.Concat(f.AllSubfolders));

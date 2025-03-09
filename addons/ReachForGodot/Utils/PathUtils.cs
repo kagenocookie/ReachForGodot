@@ -242,7 +242,7 @@ public static class PathUtils
         var overridePath = config.Paths.SourcePathOverride;
 
         if (File.Exists(Path.Combine(config.Paths.ChunkPath, sourceFilePath))) {
-            yield return new LabelledPathSetting(Path.Combine(config.Paths.ChunkPath, sourceFilePath), "Chunks folder");
+            yield return new LabelledPathSetting(config.Paths.ChunkPath, "Chunks folder");
             if (overridePath == config.Paths.ChunkPath) overridePath = null;
         }
 

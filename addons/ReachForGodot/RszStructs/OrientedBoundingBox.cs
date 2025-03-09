@@ -8,12 +8,12 @@ public partial class OrientedBoundingBox : Resource
     [Export] public Projection coord;
     [Export] public Vector3 extent;
 
-    public static implicit operator OrientedBoundingBox(RszTool.via.OBB rszValue) => new OrientedBoundingBox() {
-        coord = rszValue.Coord.ToProjection(),
+    public static OrientedBoundingBox FromRsz(RszTool.via.OBB rszValue, SupportedGame game) => new OrientedBoundingBox() {
+        coord = rszValue.Coord.ToProjection(game),
         extent = rszValue.Extent.ToGodot(),
     };
 
-    public RszTool.via.OBB ToRsz() => new() {
+    public RszTool.via.OBB ToRsz(SupportedGame game) => new() {
         Coord = coord.ToRsz(),
         Extent = extent.ToRsz(),
     };

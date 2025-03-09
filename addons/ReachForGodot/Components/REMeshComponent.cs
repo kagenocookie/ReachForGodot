@@ -9,15 +9,11 @@ using RszTool;
 [GlobalClass, Tool, REComponentClass("via.render.Mesh")]
 public partial class REMeshComponent : REComponent, IVisualREComponent
 {
-    private static readonly REObjectFieldAccessor MeshField = new REObjectFieldAccessor(
-        "Mesh",
-        (fields) => fields.FirstOrDefault(f => f.RszField.type is RszFieldType.String or RszFieldType.Resource),
-        (field) => field.ResourceType = RESupportedFileFormats.Mesh);
+    private static readonly REObjectFieldAccessor MeshField = new REObjectFieldAccessor("Mesh", typeof(MeshResource)).WithConditions(
+        (fields) => fields.FirstOrDefault(f => f.RszField.type is RszFieldType.String or RszFieldType.Resource));
 
-    private static readonly REObjectFieldAccessor MaterialField = new REObjectFieldAccessor(
-        "Material",
-        (fields) => fields.Where(f => f.RszField.type is RszFieldType.String or RszFieldType.Resource).Skip(1).FirstOrDefault(),
-        (field) => field.ResourceType = RESupportedFileFormats.Material);
+    private static readonly REObjectFieldAccessor MaterialField = new REObjectFieldAccessor("Material", typeof(MaterialResource)).WithConditions(
+        (fields) => fields.Where(f => f.RszField.type is RszFieldType.String or RszFieldType.Resource).Skip(1).FirstOrDefault());
 
     private Node3D? meshNode;
     public MeshResource? Resource => TryGetFieldValue(MeshField.Get(this), out var path) ? path.As<MeshResource>() : null;
@@ -72,9 +68,8 @@ public partial class REMeshComponent : REComponent, IVisualREComponent
         return r;
     }
 
-    public override async Task Setup(REGameObject gameObject, RszInstance rsz, RszImportType importType)
+    public override async Task Setup(RszInstance rsz, RszImportType importType)
     {
-        GameObject = gameObject;
         meshNode ??= GetOrFindMeshNode();
         if (Resource == null) {
             meshNode?.QueueFree();

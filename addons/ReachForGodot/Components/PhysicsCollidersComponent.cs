@@ -11,40 +11,41 @@ public partial class PhysicsCollidersComponent : REComponent, IVisualREComponent
 {
     private StaticBody3D? colliderRoot;
     private static readonly StringName CollidersNodeName = "__Colliders";
-    private static readonly REObjectFieldAccessor CollidersList = new REObjectFieldAccessor(
-        list => list.FirstOrDefault(f => f.RszField.array && f.RszField.type is not (RszFieldType.String or RszFieldType.Resource)));
+    private static readonly REObjectFieldAccessor CollidersList = new REObjectFieldAccessor("Colliders").WithConditions(
+        (list) => list.FirstOrDefault(f => f.RszField.array && f.RszField.type is not (RszFieldType.String or RszFieldType.Resource))
+    );
 
     [REObjectFieldTarget("via.physics.Collider")]
-    private static readonly REObjectFieldAccessor ColliderShapeField = new REObjectFieldAccessor(
+    private static readonly REObjectFieldAccessor ColliderShapeField = new REObjectFieldAccessor("Shape", RszFieldType.Object).WithConditions(
+        list => list.FirstOrDefault(f => f.RszField.original_type == "via.physics.Shape"),
         list => list.FirstOrDefault(f => f.RszField.type == RszFieldType.Object));
 
     [REObjectFieldTarget("via.physics.SphereShape")]
-    private static readonly REObjectFieldAccessor SphereShape = new REObjectFieldAccessor(
+    private static readonly REObjectFieldAccessor SphereShape = new REObjectFieldAccessor("Sphere", RszFieldType.Sphere).WithConditions(
         list => list.FirstOrDefault(f => f.RszField.type == RszFieldType.Sphere || f.RszField.type == RszFieldType.Vec4));
 
     [REObjectFieldTarget("via.physics.BoxShape")]
-    private static readonly REObjectFieldAccessor BoxShape = new REObjectFieldAccessor(
-        list => list.FirstOrDefault(f => f.RszField.type == RszFieldType.OBB));
+    private static readonly REObjectFieldAccessor BoxShape = new REObjectFieldAccessor("Box", RszFieldType.OBB).WithConditions(
+        list => list.LastOrDefault(f => f.RszField.type == RszFieldType.OBB),
+        list => list.LastOrDefault(f => !f.RszField.array && f.RszField.size == 80));
 
     [REObjectFieldTarget("via.physics.CapsuleShape")]
-    private static readonly REObjectFieldAccessor CapsuleShape = new REObjectFieldAccessor(
-        list => list.FirstOrDefault(f => f.RszField.type == RszFieldType.Capsule));
+    private static readonly REObjectFieldAccessor CapsuleShape = new REObjectFieldAccessor("Capsule", RszFieldType.Capsule).WithConditions(
+        list => list.FirstOrDefault(f => f.RszField.type == RszFieldType.Capsule),
+        list => list.LastOrDefault(f => f.RszField.type == RszFieldType.Data && f.RszField.size == 32));
 
     [REObjectFieldTarget("via.physics.AabbShape")]
-    private static readonly REObjectFieldAccessor AabbShape = new REObjectFieldAccessor(
-        "Aabb",
-        list => list.Where(f => f.RszField.size == 32 && !f.RszField.array).LastOrDefault(),
-        (f) => f.MarkAsType(RszFieldType.AABB, nameof(Aabb)));
+    private static readonly REObjectFieldAccessor AabbShape = new REObjectFieldAccessor("Aabb", RszFieldType.AABB).WithConditions(
+        list => list.LastOrDefault(f => f.RszField.type == RszFieldType.AABB),
+        list => list.Where(f => f.RszField.size == 32 && !f.RszField.array).LastOrDefault());
 
     [REObjectFieldTarget("via.physics.MeshShape")]
-    private static readonly REObjectFieldAccessor MeshShape = new REObjectFieldAccessor(
-        "Mesh",
-        list => list.FirstOrDefault(f => f.RszField.type is RszFieldType.Resource or RszFieldType.String),
-        mod => mod.MarkAsResource(nameof(REResource)));
+    private static readonly REObjectFieldAccessor MeshShape = new REObjectFieldAccessor("Mesh", typeof(REResource)).WithConditions(
+        list => list.FirstOrDefault(f => f.RszField.type is RszFieldType.Resource or RszFieldType.String));
 
     public StaticBody3D? GetOrFindContainerNode()
     {
-        if (colliderRoot != null && !IsInstanceValid(colliderRoot)) {
+        if (colliderRoot != null && (!IsInstanceValid(colliderRoot) || colliderRoot.GetParent() != GameObject)) {
             colliderRoot = null;
         }
         colliderRoot ??= GameObject.FindChildWhere<StaticBody3D>(child => child is StaticBody3D && child.Name == CollidersNodeName);
@@ -66,23 +67,22 @@ public partial class PhysicsCollidersComponent : REComponent, IVisualREComponent
         }
     }
 
-    public override async Task Setup(REGameObject gameObject, RszInstance rsz, RszImportType importType)
+    public override async Task Setup(RszInstance rsz, RszImportType importType)
     {
-        GameObject = gameObject;
-        colliderRoot ??= GetOrFindContainerNode();
+        colliderRoot = GetOrFindContainerNode();
 
         if (colliderRoot == null) {
             colliderRoot = new StaticBody3D() { Name = CollidersNodeName };
-            await gameObject.AddChildAsync(colliderRoot, gameObject.Owner ?? gameObject);
-            await ReinstantiateCollisions(colliderRoot);
+            await GameObject.AddChildAsync(colliderRoot, GameObject.Owner ?? GameObject);
+            await UpdateColliders();
         } else {
-            await ReinstantiateCollisions(colliderRoot);
+            await UpdateColliders();
         }
     }
 
     public override void PreExport()
     {
-        colliderRoot ??= GetOrFindContainerNode();
+        colliderRoot = GetOrFindContainerNode();
         if (colliderRoot == null) return;
         var colliders = GetField(CollidersList).AsGodotArray<REObject>();
         if (colliders == null) {
@@ -162,17 +162,21 @@ public partial class PhysicsCollidersComponent : REComponent, IVisualREComponent
         }
     }
 
-    public Task ReinstantiateCollisions(Node3D node)
+    private Task UpdateColliders()
     {
-        colliderRoot ??= GetOrFindContainerNode();
+        Debug.Assert(colliderRoot != null);
         var colliders = GetField(CollidersList).AsGodotArray<REObject>();
-        node.ClearChildren();
         int n = 1;
         foreach (var coll in colliders) {
             var shape = coll.GetField(ColliderShapeField.Get(coll)).As<REObject>();
-            var collider = new CollisionShape3D() { Name = "Collider_" + n++ + "_" + shape?.ClassBaseName };
-            node.AddChild(collider);
-            collider.Owner = GameObject.Owner ?? GameObject;
+            var basename = "Collider_" + n++ + "_";
+            var collider = colliderRoot.FindChildWhere<CollisionShape3D>(c => c.Name.ToString().StartsWith(basename));
+            if (collider == null) {
+                collider = new CollisionShape3D() { Name = basename + shape?.ClassBaseName };
+                colliderRoot.AddChild(collider);
+            }
+
+            collider.Owner = GameObject is PrefabNode ? GameObject : GameObject.Owner ?? GameObject;
             if (shape == null) {
                 GD.Print("Missing collider shape " + n + " at " + Path);
                 continue;

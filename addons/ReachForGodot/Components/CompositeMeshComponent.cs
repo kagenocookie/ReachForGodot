@@ -12,7 +12,7 @@ public partial class CompositeMeshComponent : REComponent, IVisualREComponent
     private Node3D? meshNode;
     private int childCount = 0;
 
-    private static readonly REObjectFieldAccessor MeshGroupsField = new REObjectFieldAccessor("MeshGroups", "v15");
+    private static readonly REObjectFieldAccessor MeshGroupsField = new REObjectFieldAccessor("MeshGroups").WithConditions("MeshGroups", "v15");
 
     public Node3D? GetOrFindMeshNode() => meshNode ??= GameObject.FindChildWhere<Node3D>(child => child is not REGameObject && child.Name == "__CompositeMesh");
     private Godot.Collections.Array<REObject>? FindStoredMeshGroups()
@@ -25,7 +25,7 @@ public partial class CompositeMeshComponent : REComponent, IVisualREComponent
         meshNode = null;
     }
 
-    public override async Task Setup(REGameObject gameObject, RszInstance rsz, RszImportType importType)
+    public override async Task Setup(RszInstance rsz, RszImportType importType)
     {
         if (importType == RszImportType.Placeholders || importType == RszImportType.CreateOrReuse && meshNode != null) {
             return;
@@ -35,7 +35,7 @@ public partial class CompositeMeshComponent : REComponent, IVisualREComponent
         if (meshNode != null) {
             meshNode.ClearChildren();
         } else {
-            meshNode = await gameObject.AddChildAsync(new Node3D() { Name = "__CompositeMesh" }, gameObject.Owner ?? gameObject);
+            meshNode = await GameObject.AddChildAsync(new Node3D() { Name = "__CompositeMesh" }, GameObject.Owner ?? GameObject);
         }
         var tasks = new List<Task>();
         var groups = FindStoredMeshGroups();
