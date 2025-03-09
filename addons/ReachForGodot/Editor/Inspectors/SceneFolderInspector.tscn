@@ -35,6 +35,11 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "Add proxy folder"
 
+[node name="CancelSceneProxy" type="Button" parent="VBoxContainer/HFlowContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Remove proxy"
+
 [node name="MakeEditable" type="Button" parent="VBoxContainer/HFlowContainer"]
 unique_name_in_owner = true
 layout_mode = 2
@@ -43,7 +48,7 @@ text = "Make editable"
 [node name="RevertMakeEditable" type="Button" parent="VBoxContainer/HFlowContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Restore scene link"
+text = "Revert to link"
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2

@@ -169,14 +169,14 @@ public class Exporter
             parentId = parentFolderId,
         } });
 
-        var linkedSceneFilepath = folder is SceneFolderProxy proxy && proxy.Asset != null ? proxy.Asset.AssetFilename : string.Empty;
+        var linkedSceneFilepath = folder.IsIndependentFolder && folder.Asset != null ? folder.Asset.AssetFilename : string.Empty;
         folderInstance.Values[0] = folder.OriginalName ?? folder.Name.ToString();
         folderInstance.Values[1] = folder.Tag ?? string.Empty;
         folderInstance.Values[2] = folder.Update ? (byte)1 : (byte)0;
         folderInstance.Values[3] = folder.Draw ? (byte)1 : (byte)0;
         folderInstance.Values[4] = folder.Active ? (byte)1 : (byte)0;
         folderInstance.Values[5] = linkedSceneFilepath;
-        folderInstance.Values[6] = folder.Data ?? new byte[24];
+        folderInstance.Values[6] = (folder.Data != null && folder.Data.Length > 0) ? folder.Data : new byte[24];
 
         foreach (var go in folder.ChildObjects) {
             if (go is PrefabNode pfbGo) {

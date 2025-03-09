@@ -59,6 +59,17 @@ public partial class SceneFolderInspectorPlugin : EditorInspectorPlugin, ISerial
             }
         }
 
+        if (container.GetNode<Button>("%RecalcBounds") is Button recalcBtn) {
+            if (obj is SceneFolder scene) {
+                recalcBtn.Pressed += () => {
+                    scene.RecalculateBounds(true);
+                    EditorInterface.Singleton.MarkSceneAsUnsaved();
+                };
+            } else {
+                recalcBtn.Visible = false;
+            }
+        }
+
         if (container.GetNode<Button>("%ConvertSceneToProxy") is Button proxyBtn) {
             if (obj is SceneFolder folder && folder is not SceneFolderProxy &&
                 folder.GetParent() != null && folder.GetParent() is not SceneFolderProxy && folder.Owner != null && folder.Asset?.AssetFilename != null) {
@@ -77,20 +88,26 @@ public partial class SceneFolderInspectorPlugin : EditorInspectorPlugin, ISerial
                     proxy.Owner = folder.Owner;
                     proxy.Name = folder.Name;
                     proxy.ShowLinkedFolder = true;
+                    EditorInterface.Singleton.EditNode(proxy);
                 };
             } else {
                 proxyBtn.Visible = false;
             }
         }
 
-        if (container.GetNode<Button>("%RecalcBounds") is Button recalcBtn) {
-            if (obj is SceneFolder scene) {
-                recalcBtn.Pressed += () => {
-                    scene.RecalculateBounds(true);
-                    EditorInterface.Singleton.MarkSceneAsUnsaved();
+        if (container.GetNode<Button>("%CancelSceneProxy") is Button deproxyBtn) {
+            if (obj is SceneFolderProxy proxy) {
+                deproxyBtn.Pressed += () => {
+                    proxy.LoadScene();
+                    if (proxy.RealFolder == null) {
+                        GD.PrintErr("Failed to load proxied scene");
+                        return;
+                    }
+                    proxy.GetParent().EmplaceChild(proxy, proxy.RealFolder);
+                    EditorInterface.Singleton.EditNode(proxy.RealFolder);
                 };
             } else {
-                recalcBtn.Visible = false;
+                deproxyBtn.Visible = false;
             }
         }
 

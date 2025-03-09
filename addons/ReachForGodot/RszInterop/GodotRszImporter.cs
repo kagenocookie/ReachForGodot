@@ -224,9 +224,9 @@ public class GodotRszImporter
 
         public readonly List<FolderBatch> folders = new();
         public readonly List<GameObjectBatch> gameObjects = new List<GameObjectBatch>();
-        public readonly HashSet<SceneFolderProxy> finishedFolders = new();
+        public readonly HashSet<SceneFolder> finishedFolders = new();
         public ScnFile.FolderData? scnData;
-        public readonly SceneFolder folder;
+        public SceneFolder folder;
         private readonly string? note;
         private readonly ImportContext ctx;
 
@@ -511,6 +511,11 @@ public class GodotRszImporter
         await ctx.MaybeYield();
 
         var folder = batch.folder;
+        if (folder is SceneFolderEditableInstance editable) {
+            var inst = ResourceLoader.Load<PackedScene>(editable.SceneFilePath).Instantiate<SceneFolder>();
+            folder.GetParent().EmplaceChild(folder, inst);
+            batch.folder = folder = inst;
+        }
         if (folder is SceneFolderProxy proxy) {
             var tempInstance = proxy.Contents!.Instantiate<SceneFolder>();
             if (!batch.finishedFolders.Contains(proxy)) {
@@ -769,7 +774,6 @@ public class GodotRszImporter
                 parent.AddFolder(subfolder);
                 isNew = true;
             }
-            var subProxy = (SceneFolderProxy)subfolder;
 
             subfolder.OriginalName = name;
             if (folder.Children.Any()) {
@@ -778,7 +782,7 @@ public class GodotRszImporter
 
             var skipImport = (Options.folders == RszImportType.Placeholders || !isNew && Options.folders == RszImportType.CreateOrReuse);
             if (!skipImport) {
-                subProxy.UnloadScene();
+                (subfolder as SceneFolderProxy)?.UnloadScene();
                 var newBatch = ctx.CreateFolderBatch(subfolder, folder, scnPath);
                 batch.folders.Add(newBatch);
             }

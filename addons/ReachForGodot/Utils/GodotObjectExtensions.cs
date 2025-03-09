@@ -254,6 +254,22 @@ public static class GodotObjectExtensions
         }
     }
 
+    public static void EmplaceChild(this Node parent, Node previousNode, Node newNode)
+    {
+        var index = previousNode.GetIndex();
+        var owner = previousNode.Owner;
+        newNode.Name = previousNode.Name + "__emplace_temp";
+        if (newNode.GetParent() != null) {
+            newNode.Reparent(parent);
+        } else {
+            parent.AddChild(newNode);
+        }
+        parent.MoveChild(newNode, index);
+        parent.RemoveChild(previousNode);
+        newNode.Name = previousNode.Name;
+        newNode.Owner = owner;
+    }
+
     /// <summary>
     /// Find a node of a specific type in any parent node.
     /// </summary>
