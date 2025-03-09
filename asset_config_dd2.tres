@@ -1,8 +1,0 @@
-[gd_resource type="Resource" script_class="AssetConfig" load_steps=2 format=3 uid="uid://dqc5pyvvkf41g"]
-
-[ext_resource type="Script" uid="uid://beytbdxq62mcp" path="res://addons/ReachForGodot/AssetConfig.cs" id="1_5o161"]
-
-[resource]
-script = ExtResource("1_5o161")
-Game = 1
-AssetDirectory = "dd2/"
