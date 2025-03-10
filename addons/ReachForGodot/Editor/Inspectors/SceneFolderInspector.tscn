@@ -40,15 +40,10 @@ unique_name_in_owner = true
 layout_mode = 2
 text = "Remove proxy"
 
-[node name="MakeEditable" type="Button" parent="VBoxContainer/HFlowContainer"]
+[node name="SaveEditableInstance" type="Button" parent="VBoxContainer/HFlowContainer"]
 unique_name_in_owner = true
 layout_mode = 2
-text = "Make editable"
-
-[node name="RevertMakeEditable" type="Button" parent="VBoxContainer/HFlowContainer"]
-unique_name_in_owner = true
-layout_mode = 2
-text = "Revert to link"
+text = "Save child scene changes"
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer"]
 layout_mode = 2

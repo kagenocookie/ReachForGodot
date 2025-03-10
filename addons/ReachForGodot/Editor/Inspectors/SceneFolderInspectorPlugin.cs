@@ -114,26 +114,25 @@ public partial class SceneFolderInspectorPlugin : EditorInspectorPlugin, ISerial
             }
         }
 
-        if (container.GetNode<Button>("%MakeEditable") is Button editable) {
-            if (obj is SceneFolder scene and not SceneFolderProxy and not SceneFolderEditableInstance && scene.Owner != null && scene.Asset?.AssetFilename != null) {
-                editable.Pressed += () => {
-                    var action = new ConvertSceneToInstanceAction(scene);
-                    action.Trigger();
-                    EditorInterface.Singleton.EditNode(action.Clone);
-                    EditorInterface.Singleton.MarkSceneAsUnsaved();
-                };
-            } else {
-                editable.Visible = false;
-            }
-        }
-
-        if (container.GetNode<Button>("%RevertMakeEditable") is Button revertEditable) {
-            if (obj is SceneFolderEditableInstance instanceScene) {
+        if (container.GetNode<Button>("%SaveEditableInstance") is Button revertEditable) {
+            if (obj is SceneFolder instanceScene and not SceneFolderProxy && instanceScene.Owner != null && instanceScene.Owner.IsEditableInstance(instanceScene)) {
                 revertEditable.Pressed += () => {
-                    var action = new RestoreSceneInstanceToLinkAction(instanceScene);
-                    action.Trigger();
-                    EditorInterface.Singleton.EditNode(action.Clone);
-                    EditorInterface.Singleton.MarkSceneAsUnsaved();
+                    if (string.IsNullOrEmpty(instanceScene.Asset?.AssetFilename)) {
+                        GD.PrintErr("Asset filename field is missing");
+                        return;
+                    }
+
+                    var importPath = instanceScene.Asset.GetImportFilepath(ReachForGodot.GetAssetConfig(instanceScene.Game));
+
+                    var res = ResourceLoader.Exists(importPath) ? ResourceLoader.Load<PackedScene>(importPath) : new PackedScene();
+                    res.Pack(instanceScene);
+                    if (string.IsNullOrEmpty(res.ResourcePath)) {
+                        res.ResourcePath = importPath;
+                    } else {
+                        res.TakeOverPath(importPath);
+                    }
+                    ResourceSaver.Save(res);
+                    GD.Print("Updated scene resource: " + importPath);
                 };
             } else {
                 revertEditable.Visible = false;
@@ -216,21 +215,19 @@ public partial class SceneFolderInspectorPlugin : EditorInspectorPlugin, ISerial
                 root = scn = parentProxy;
             }
             var sourceIsInstance = false;
-            if (scn is SceneFolderEditableInstance editable) {
-                if (string.IsNullOrEmpty(editable.Asset?.AssetFilename)) {
-                    GD.PrintErr("Can't build editable scene with no source asset: " + editable.Path);
-                    return;
-                }
-                var linkedScene = Importer.FindOrImportResource<PackedScene>(editable.Asset.AssetFilename, conv.AssetConfig);
-                var newScn = linkedScene!.Instantiate<SceneFolder>();
-                editable.GetParent().EmplaceChild(editable, newScn);
-                scn = newScn;
-                sourceIsInstance = true;
-            }
             if (scn is SceneFolderProxy proxy) {
                 var realScene = proxy.Contents;
                 scn = realScene!.Instantiate<SceneFolder>();
                 proxy.UnloadScene();
+            } else if (scn.Owner != null) {
+                if (string.IsNullOrEmpty(scn.Asset?.AssetFilename)) {
+                    GD.PrintErr("Can't build editable scene with no source asset: " + scn.Path);
+                    return;
+                }
+
+                var linkedScene = Importer.FindOrImportResource<PackedScene>(scn.Asset.AssetFilename, conv.AssetConfig);
+                var newScn = linkedScene!.Instantiate<SceneFolder>();
+                scn = newScn;
             }
             task = conv.RegenerateSceneTree(scn);
             if (sourceIsInstance) {

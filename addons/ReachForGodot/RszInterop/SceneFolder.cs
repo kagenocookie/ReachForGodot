@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Godot;
 
 [GlobalClass, Tool, Icon("res://addons/ReachForGodot/icons/folder.png")]
-public partial class SceneFolder : Node, IRszContainerNode
+public partial class SceneFolder : Node3D, IRszContainerNode
 {
     [Export] public SupportedGame Game { get; set; }
     [Export] public AssetReference? Asset { get; set; }

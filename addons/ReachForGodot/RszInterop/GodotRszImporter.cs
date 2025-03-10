@@ -511,16 +511,6 @@ public class GodotRszImporter
         await ctx.MaybeYield();
 
         var folder = batch.folder;
-        if (folder is SceneFolderEditableInstance editable) {
-            if (string.IsNullOrEmpty(editable.Asset?.AssetFilename)) {
-                GD.PrintErr("Can't build editable scene with no source asset: " + editable.Path);
-                return;
-            }
-            var linkedScene = Importer.FindOrImportResource<PackedScene>(editable.Asset.AssetFilename, AssetConfig);
-            var inst = linkedScene!.Instantiate<SceneFolder>();
-            folder.GetParent().EmplaceChild(folder, inst);
-            batch.folder = folder = inst;
-        }
         if (folder is SceneFolderProxy proxy) {
             var tempInstance = proxy.Contents!.Instantiate<SceneFolder>();
             if (!batch.finishedFolders.Contains(proxy)) {
