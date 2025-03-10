@@ -52,11 +52,15 @@ public static class RszTypeConverter
     public static Variant FromRszValueSingleValue(REField field, object value, SupportedGame game)
     {
         switch (field.RszField.type) {
-            case RszFieldType.UserData:
             case RszFieldType.Resource:
+                if (value == null || value is string str && string.IsNullOrEmpty(str)) {
+                    return new Variant();
+                }
+                break;
+            case RszFieldType.UserData:
             case RszFieldType.Object:
                 GD.PrintErr("Fields of type " + field.RszField.type + " shouldn't be handled from this method!");
-                break;
+                return new Variant();
 
             case RszFieldType.Sfix:
                 return ((sfix)value).v;

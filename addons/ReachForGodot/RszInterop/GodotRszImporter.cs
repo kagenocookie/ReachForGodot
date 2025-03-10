@@ -244,7 +244,7 @@ public class GodotRszImporter
 
         public int TotalCount => throw new NotImplementedException();
 
-        public (int total, int finished) FolderCount => (folders.Count(f => f.folder.GetParent() == folder), FinishedFolderCount);
+        public (int total, int finished) FolderCount => (folders.Count, FinishedFolderCount);
         public (int total, int finished) ComponentsCount => (0, 0);
         public (int total, int finished) GameObjectCount => (0, 0);
 
@@ -511,23 +511,42 @@ public class GodotRszImporter
         await ctx.MaybeYield();
 
         var folder = batch.folder;
-        if (folder is SceneFolderProxy proxy) {
-            var tempInstance = proxy.Contents!.Instantiate<SceneFolder>();
-            if (!batch.finishedFolders.Contains(proxy)) {
-                await GenerateSceneTree(tempInstance);
+        if (folder.Owner != null && folder.Asset?.IsEmpty == false) {
+            var scene = (folder as SceneFolderProxy)?.Contents
+                ?? (!string.IsNullOrEmpty(folder.SceneFilePath)
+                    ? ResourceLoader.Load<PackedScene>(folder.SceneFilePath)
+                    : Importer.FindOrImportResource<PackedScene>(folder.Asset.AssetFilename, AssetConfig));
+            int nodeCount = -1;
+            var newInstance = scene!.Instantiate<SceneFolder>();
+            if (!batch.finishedFolders.Contains(folder)) {
+                await GenerateSceneTree(newInstance);
                 ctx.UpdateUIStatus();
-                proxy.KnownBounds = tempInstance.KnownBounds;
-                proxy.Contents.Pack(tempInstance);
-                var importPath = proxy.Asset?.GetImportFilepath(AssetConfig);
-                var childFullPath = proxy.Asset?.FindSourceFile(AssetConfig);
-                batch.finishedFolders.Add(proxy);
+                folder.KnownBounds = newInstance.KnownBounds;
+                scene.Pack(newInstance);
+                nodeCount = newInstance.NodeCount;
+                var importPath = folder.Asset?.GetImportFilepath(AssetConfig);
+                var childFullPath = folder.Asset?.FindSourceFile(AssetConfig);
+                batch.finishedFolders.Add(folder);
 
                 if (importPath == null || childFullPath == null) {
-                    GD.PrintErr("Invalid folder source file " + proxy.Asset?.ToString());
+                    GD.PrintErr("Invalid folder source file " + folder.Asset?.ToString());
                     return;
                 }
             }
-            proxy.ShowLinkedFolder = true; // TODO configurable by import type?
+            if (folder is SceneFolderProxy proxy) {
+                proxy.ShowLinkedFolder = true; // TODO configurable by import type?
+            } else {
+                if (nodeCount == -1) {
+                    // not ideal, but I'm not sure this case can even happen
+                    nodeCount = scene!.Instantiate<SceneFolder>().NodeCount;
+                }
+                if (nodeCount > ReachForGodot.SceneFolderProxyThreshold) {
+                    batch.folder = folder.ReplaceWithProxy();
+                    // tempInstance = tempInstance.ReplaceWithProxy();
+                } else {
+                    folder.GetParent().EmplaceChild(folder, newInstance);
+                }
+            }
         }
 
         await batch.AwaitGameObjects(this);
@@ -765,7 +784,7 @@ public class GodotRszImporter
         if (folder.Instance?.GetFieldValue("Path") is string scnPath && !string.IsNullOrWhiteSpace(scnPath)) {
             var isNew = false;
             if (subfolder == null) {
-                subfolder = new SceneFolderProxy() { Name = name, OriginalName = name, Asset = new AssetReference(scnPath), Game = AssetConfig.Game };
+                subfolder = new SceneFolder() { Name = name, OriginalName = name, Asset = new AssetReference(scnPath), Game = AssetConfig.Game };
                 parent.AddFolder(subfolder);
                 isNew = true;
             }

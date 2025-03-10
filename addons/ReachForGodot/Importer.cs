@@ -196,7 +196,7 @@ public class Importer
         // GD.Print($"Importing mesh...\nBlender: {ReachForGodot.BlenderPath}\nFile: {path}\nTarget: {blendPath}\nPython script: {meshImportScriptPath}");
 
         // "80004002 No such interface supported" from texconv when we have it convert mesh textures in background ¯\_(ツ)_/¯
-        var includeMaterials = ReachForGodotPlugin.IncludeMeshMaterial;
+        var includeMaterials = ReachForGodot.IncludeMeshMaterial;
 
         Directory.CreateDirectory(importDir);
         var importScript = MeshImportScript

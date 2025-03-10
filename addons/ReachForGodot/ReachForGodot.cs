@@ -19,6 +19,9 @@ public static class ReachForGodot
         }
     }
 
+    public static bool IncludeMeshMaterial => ReachForGodotPlugin.IncludeMeshMaterial;
+    public static int SceneFolderProxyThreshold => ReachForGodotPlugin.SceneFolderProxyThreshold;
+
     public static LabelledPathSetting? LastExportPath { get; set; }
 
     public static GamePaths? GetPaths(SupportedGame game)

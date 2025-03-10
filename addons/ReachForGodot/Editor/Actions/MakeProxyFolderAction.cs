@@ -94,7 +94,8 @@ public partial class MakeProxyFolderAction : NodeModificationAction
         }
 
         parent.EmplaceChild(realFolder, proxyFolder);
-        proxyFolder.LoadScene();
+        proxyFolder.RefreshProxiedNode();
+        proxyFolder.ShowLinkedFolder = true;
         ActiveInstance = proxyFolder;
     }
 }

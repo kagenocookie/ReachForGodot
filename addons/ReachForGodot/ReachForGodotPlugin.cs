@@ -11,18 +11,21 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
     public static ReachForGodotPlugin Instance => _pluginInstance!;
 
     private const string SettingBase = "reach_for_godot";
+
     private const string Setting_BlenderPath = "filesystem/import/blender/blender_path";
     private const string Setting_GameChunkPath = $"{SettingBase}/paths/{{game}}/game_chunk_path";
     private const string Setting_Il2cppPath = $"{SettingBase}/paths/{{game}}/il2cpp_dump_file";
     private const string Setting_RszJsonPath = $"{SettingBase}/paths/{{game}}/rsz_json_file";
     private const string Setting_AdditionalPaths = $"{SettingBase}/paths/{{game}}/additional_paths";
+
     private const string Setting_ImportMeshMaterials = $"{SettingBase}/general/import_mesh_materials";
-    private const string Setting_ImportMeshMaterials_Note = $"{SettingBase}/general/import_mesh_materials_note";
+    private const string Setting_SceneFolderProxyThreshold = $"{SettingBase}/general/create_scene_proxy_node_threshold";
 
     public static string BlenderPath => EditorInterface.Singleton.GetEditorSettings().GetSetting(Setting_BlenderPath).AsString()
         ?? throw new System.Exception("Blender path not defined in editor settings");
 
     public static bool IncludeMeshMaterial { get; private set; }
+    public static int SceneFolderProxyThreshold { get; private set; }
 
     private static string ChunkPathSetting(SupportedGame game) => Setting_GameChunkPath.Replace("{game}", game.ToString());
     private static string Il2cppPathSetting(SupportedGame game) => Setting_Il2cppPath.Replace("{game}", game.ToString());
@@ -127,6 +130,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
     private void AddSettings()
     {
         AddEditorSetting(Setting_ImportMeshMaterials, Variant.Type.Bool, false);
+        AddEditorSetting(Setting_SceneFolderProxyThreshold, Variant.Type.Int, 500, PropertyHint.Range, "50,5000,or_greater,hide_slider");
         foreach (var game in ReachForGodot.GameList) {
             AddEditorSetting(ChunkPathSetting(game), Variant.Type.String, string.Empty, PropertyHint.GlobalDir);
             AddEditorSetting(Il2cppPathSetting(game), Variant.Type.String, string.Empty, PropertyHint.GlobalFile, "*.json");
@@ -144,6 +148,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
     {
         var settings = EditorInterface.Singleton.GetEditorSettings();
         IncludeMeshMaterial = settings.GetSetting(Setting_ImportMeshMaterials).AsBool();
+        SceneFolderProxyThreshold = settings.GetSetting(Setting_SceneFolderProxyThreshold).AsInt32();
         foreach (var game in ReachForGodot.GameList) {
             var pathChunks = settings.GetSetting(ChunkPathSetting(game)).AsString() ?? string.Empty;
             var pathIl2cpp = settings.GetSetting(Il2cppPathSetting(game)).AsString();

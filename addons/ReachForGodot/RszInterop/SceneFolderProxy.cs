@@ -4,6 +4,7 @@ using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Godot;
+using ReaGE.EditorLogic;
 
 [GlobalClass, Tool, Icon("res://addons/ReachForGodot/icons/folder_link.png")]
 public partial class SceneFolderProxy : SceneFolder
@@ -47,7 +48,9 @@ public partial class SceneFolderProxy : SceneFolder
         if (!show) {
             if (RealFolder != null) {
                 RemoveChild(RealFolder);
-                RealFolder.QueueFree();
+                if (IsInsideTree()) {
+                    RealFolder.QueueFree();
+                }
                 RealFolder = null;
             }
             _contentScene = null;
@@ -90,6 +93,13 @@ public partial class SceneFolderProxy : SceneFolder
                 ShowLinkedFolder = wasShown;
             }
         }
+    }
+
+    public SceneFolder ReplaceWithRealInstance()
+    {
+        var action = new MakeProxyFolderAction(this);
+        action.Do();
+        return action.ActiveInstance!;
     }
 
     public void LoadAllChildren(bool load)

@@ -4,6 +4,7 @@ using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Godot;
+using ReaGE.EditorLogic;
 
 [GlobalClass, Tool, Icon("res://addons/ReachForGodot/icons/folder.png")]
 public partial class SceneFolder : Node3D, IRszContainerNode
@@ -28,6 +29,10 @@ public partial class SceneFolder : Node3D, IRszContainerNode
 
     public string Path => string.IsNullOrEmpty(SceneFilePath) && Owner is SceneFolder ownerScn ? $"{ownerScn.Asset?.AssetFilename}@{Owner.GetPathTo(this)}" : $"{Asset?.AssetFilename}";
 
+    public int NodeCount => CalculateNodeCount();
+
+    private const float CameraAutoRepositionMaxDistanceSquared = 50 * 50;
+
     public void AddFolder(SceneFolder folder)
     {
         Debug.Assert(folder != this);
@@ -43,7 +48,18 @@ public partial class SceneFolder : Node3D, IRszContainerNode
         }
     }
 
-    private const float CameraAutoRepositionMaxDistanceSquared = 50 * 50;
+    protected int CalculateNodeCount()
+    {
+        int count = 0;
+        foreach (var child in ChildObjects) {
+            count += child.FindChildrenByTypeRecursive<Node>().Count();
+        }
+        foreach (var child in Subfolders) {
+            count += child.CalculateNodeCount();
+        }
+        return count;
+    }
+
     public override void _Ready()
     {
         if (Owner == null && GetParent() is SubViewport) {
@@ -164,4 +180,11 @@ public partial class SceneFolder : Node3D, IRszContainerNode
     }
 
     public override string ToString() => Name;
+
+    public SceneFolder ReplaceWithProxy()
+    {
+        var action = new MakeProxyFolderAction(this);
+        action.Do();
+        return action.ActiveInstance!;
+    }
 }

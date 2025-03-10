@@ -260,7 +260,8 @@ public static class GodotObjectExtensions
         var owner = previousNode.Owner;
         newNode.Name = previousNode.Name + "__emplace_temp";
         if (newNode.GetParent() != null) {
-            newNode.Reparent(parent);
+            newNode.Owner = null;
+            newNode.Reparent(parent, false);
         } else {
             parent.AddChild(newNode);
         }
