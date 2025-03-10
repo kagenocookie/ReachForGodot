@@ -244,7 +244,7 @@ public class GodotRszImporter
 
         public int TotalCount => throw new NotImplementedException();
 
-        public (int total, int finished) FolderCount => (folders.Count(f => f.folder.ParentFolder == folder), FinishedFolderCount);
+        public (int total, int finished) FolderCount => (folders.Count(f => f.folder.GetParent() == folder), FinishedFolderCount);
         public (int total, int finished) ComponentsCount => (0, 0);
         public (int total, int finished) GameObjectCount => (0, 0);
 

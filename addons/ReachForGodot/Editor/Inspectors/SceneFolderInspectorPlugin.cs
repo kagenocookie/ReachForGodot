@@ -77,21 +77,7 @@ public partial class SceneFolderInspectorPlugin : EditorInspectorPlugin, ISerial
             if (obj is SceneFolder folder && folder is not SceneFolderProxy &&
                 folder.GetParent() != null && folder.GetParent() is not SceneFolderProxy && folder.Owner != null && folder.Asset?.AssetFilename != null) {
                 proxyBtn.Pressed += () => {
-                    var parent = folder.GetParent();
-                    var index = folder.GetIndex();
-                    var proxy = new SceneFolderProxy() {
-                        Game = folder.Game,
-                        OriginalName = folder.OriginalName,
-                        Asset = new AssetReference(folder.Asset!.AssetFilename),
-                        KnownBounds = folder.KnownBounds,
-                    };
-                    parent.AddChild(proxy);
-                    parent.MoveChild(proxy, index);
-                    folder.Reparent(proxy);
-                    proxy.Owner = folder.Owner;
-                    proxy.Name = folder.Name;
-                    proxy.ShowLinkedFolder = true;
-                    EditorInterface.Singleton.EditNode(proxy);
+                    new MakeProxyFolderAction(folder).TriggerAndSelectNode();
                 };
             } else {
                 proxyBtn.Visible = false;
@@ -101,13 +87,7 @@ public partial class SceneFolderInspectorPlugin : EditorInspectorPlugin, ISerial
         if (container.GetNode<Button>("%CancelSceneProxy") is Button deproxyBtn) {
             if (obj is SceneFolderProxy proxy) {
                 deproxyBtn.Pressed += () => {
-                    proxy.LoadScene();
-                    if (proxy.RealFolder == null) {
-                        GD.PrintErr("Failed to load proxied scene");
-                        return;
-                    }
-                    proxy.GetParent().EmplaceChild(proxy, proxy.RealFolder);
-                    EditorInterface.Singleton.EditNode(proxy.RealFolder);
+                    new MakeProxyFolderAction(proxy).TriggerAndSelectNode();
                 };
             } else {
                 deproxyBtn.Visible = false;

@@ -9,7 +9,12 @@ public partial class GameObjectCloneAction : NodeModificationAction
 {
     private REGameObject source = null!;
     private REGameObject? clone;
+
+    private REGameObject? activeNode;
+
     public REGameObject? Clone => clone;
+
+    public override Node? ActiveNode => activeNode;
 
     private GameObjectCloneAction() {}
 
@@ -17,6 +22,7 @@ public partial class GameObjectCloneAction : NodeModificationAction
     {
         this.source = source;
         base.MergeMode = UndoRedo.MergeMode.Disable;
+        activeNode = source;
     }
 
     public override void Do()
@@ -28,6 +34,7 @@ public partial class GameObjectCloneAction : NodeModificationAction
         source.GetParent().AddUniqueNamedChild(clone);
         source.GetParent().MoveChild(clone, source.GetIndex() + 1);
         clone.SetRecursiveOwner(source.Owner);
+        activeNode = clone;
     }
 
     public override void Undo()
@@ -35,6 +42,7 @@ public partial class GameObjectCloneAction : NodeModificationAction
         if (clone != null) {
             source.GetParent().RemoveChild(clone);
         }
+        activeNode = source;
     }
 }
 #endif

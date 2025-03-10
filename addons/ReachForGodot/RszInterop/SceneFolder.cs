@@ -20,7 +20,6 @@ public partial class SceneFolder : Node3D, IRszContainerNode
     [Export] public Aabb KnownBounds { get; set; }
 
     public bool IsEmpty => GetChildCount() == 0;
-    public SceneFolder? ParentFolder => GetParent()?.FindNodeInParents<SceneFolder>();
     public bool IsIndependentFolder => !string.IsNullOrEmpty(Asset?.AssetFilename);
 
     public IEnumerable<SceneFolder> Subfolders => this.FindChildrenByType<SceneFolder>() ?? Array.Empty<SceneFolder>();
