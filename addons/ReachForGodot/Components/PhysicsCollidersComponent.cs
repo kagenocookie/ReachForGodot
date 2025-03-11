@@ -224,6 +224,6 @@ public partial class PhysicsCollidersComponent : REComponent, IVisualREComponent
     {
         var meshnode = GetOrFindContainerNode();
         if (meshnode == null) return new Aabb();
-        return meshnode.GetNode3DAABB(false);
+        return GameObject.Transform * meshnode.GetNode3DAABB(false);
     }
 }

@@ -462,4 +462,9 @@ public static class GodotObjectExtensions
 
     public static Vector3 ToVector3(this Vector4 vec) => new Vector3(vec.X, vec.Y, vec.Z);
     public static Quaternion ToQuaternion(this Vector4 vec) => new Quaternion(vec.X, vec.Y, vec.Z, vec.W);
+
+    public static void LockNode(this Node node, bool locked)
+    {
+        node.SetMeta("_edit_lock_", true);
+    }
 }

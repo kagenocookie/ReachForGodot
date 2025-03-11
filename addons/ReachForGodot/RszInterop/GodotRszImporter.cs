@@ -295,7 +295,11 @@ public class GodotRszImporter
         var relativeSourceFile = PathUtils.FullToRelativePath(sourceFilePath, AssetConfig)!;
         var name = PathUtils.GetFilenameWithoutExtensionOrVersion(sourceFilePath);
         var scene = new PackedScene();
-        scene.Pack(new TRoot() { Game = AssetConfig.Game, Name = name, Asset = new AssetReference(relativeSourceFile) });
+        var root = new TRoot() { Game = AssetConfig.Game, Name = name, Asset = new AssetReference(relativeSourceFile) };
+        if (root is SceneFolder) {
+            root.LockNode(true);
+        }
+        scene.Pack(root);
         return SaveOrReplaceResource(scene, importFilepath);
     }
 
@@ -785,6 +789,7 @@ public class GodotRszImporter
             var isNew = false;
             if (subfolder == null) {
                 subfolder = new SceneFolder() { Name = name, OriginalName = name, Asset = new AssetReference(scnPath), Game = AssetConfig.Game };
+                subfolder.LockNode(true);
                 parent.AddFolder(subfolder);
                 isNew = true;
             }
@@ -808,6 +813,7 @@ public class GodotRszImporter
                     Name = name,
                     OriginalName = name,
                 };
+                subfolder.LockNode(true);
                 parent.AddFolder(subfolder);
             } else {
                 if (!string.IsNullOrEmpty(subfolder.SceneFilePath)) {

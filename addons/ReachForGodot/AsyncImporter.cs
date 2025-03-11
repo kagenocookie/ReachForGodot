@@ -282,7 +282,7 @@ public partial class AsyncImporter : Window
             while (fs.IsScanning()) {
                 await Task.Delay(25, cancellationTokenSource.Token);
             }
-            // a bit of extra delay to give the user a chance to cancel
+            // a bit of extra delay to give the user a chance to cancel and for the import to hopefully finish
             await Task.Delay(250, cancellationTokenSource.Token);
         }
 

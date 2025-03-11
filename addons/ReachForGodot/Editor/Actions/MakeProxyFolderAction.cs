@@ -91,6 +91,7 @@ public partial class MakeProxyFolderAction : NodeModificationAction
                 Asset = new AssetReference(realFolder.Asset!.AssetFilename),
                 KnownBounds = realFolder.KnownBounds,
             };
+            proxyFolder.LockNode(true);
         }
 
         parent.EmplaceChild(realFolder, proxyFolder);
