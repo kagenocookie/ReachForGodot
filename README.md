@@ -4,7 +4,7 @@ Godot-based visual scene editor for RE Engine games.
 Integrates various open source tools dealing with RE Engine games and packs them into a full game data and content / scene editor inside Godot.
 
 <p align="center">
-  <img src="logo.png" alt="Reach for Godot Engine" />
+  <img src="addons/ReachForGodot/icons/logo.png" alt="Reach for Godot Engine" />
 </p>
 
 ## Supported games

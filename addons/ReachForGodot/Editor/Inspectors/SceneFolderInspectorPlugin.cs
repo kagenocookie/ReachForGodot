@@ -35,33 +35,6 @@ public partial class SceneFolderInspectorPlugin : EditorInspectorPlugin, ISerial
         inspectorScene ??= ResourceLoader.Load<PackedScene>("res://addons/ReachForGodot/Editor/Inspectors/SceneFolderInspector.tscn");
         var container = inspectorScene.Instantiate<Control>();
 
-        if (container.GetNode<Button>("%Find3DNode") is Button btn2) {
-            if (obj is SceneFolder folder) {
-                btn2.Pressed += folder.EditorRepositionCamera;
-            } else {
-                btn2.Visible = false;
-            }
-        }
-        if (container.GetNode<Button>("%LoadFoldersBtn") is Button loadbtn) {
-            if (obj is SceneFolder scene) {
-                loadbtn.Pressed += () => {
-                    bool? targetValue = null;
-                    if (scene is SceneFolderProxy proxy) {
-                        proxy.LoadAllChildren(!proxy.ShowLinkedFolder);
-                    } else {
-                        foreach (var ch in scene.AllSubfolders.OfType<SceneFolderProxy>()) {
-                            if (targetValue == null) {
-                                targetValue = !ch.ShowLinkedFolder;
-                            }
-                            ch.LoadAllChildren(targetValue.Value);
-                        }
-                    }
-                };
-            } else {
-                loadbtn.Visible = false;
-            }
-        }
-
         if (container.GetNode<Button>("%RecalcBounds") is Button recalcBtn) {
             if (obj is SceneFolder scene) {
                 recalcBtn.Pressed += () => {

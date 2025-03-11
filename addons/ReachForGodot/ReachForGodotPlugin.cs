@@ -35,6 +35,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
     private static ReachForGodotPlugin? _pluginInstance;
 
     private EditorInspectorPlugin[] inspectors = null!;
+    private EditorContextMenuPlugin[] contextMenus = null!;
     private EditorNode3DGizmoPlugin[] gizmos = Array.Empty<EditorNode3DGizmoPlugin>();
     private PopupMenu toolMenu = null!;
     private AssetBrowser? browser;
@@ -58,6 +59,9 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
             new GameObjectInspectorPlugin(),
         };
         foreach (var i in inspectors) AddInspectorPlugin(i);
+
+        contextMenus = new EditorContextMenuPlugin[1];
+        AddContextMenuPlugin(EditorContextMenuPlugin.ContextMenuSlot.SceneTree, contextMenus[0] = new SceneFolderContextMenuPlugin());
 
         RefreshToolMenu();
         toolMenu.IdPressed += (id) => {
@@ -122,9 +126,8 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
     {
         RemoveToolMenuItem(toolMenu.Title);
         browser = null;
-        foreach (var insp in inspectors) {
-            RemoveInspectorPlugin(insp);
-        }
+        foreach (var insp in inspectors) RemoveInspectorPlugin(insp);
+        foreach (var menu in contextMenus) RemoveContextMenuPlugin(menu);
     }
 
     private void AddSettings()
