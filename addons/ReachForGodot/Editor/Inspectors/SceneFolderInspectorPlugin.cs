@@ -207,6 +207,7 @@ public partial class SceneFolderInspectorPlugin : EditorInspectorPlugin, ISerial
 
                 var linkedScene = Importer.FindOrImportResource<PackedScene>(scn.Asset.AssetFilename, conv.AssetConfig);
                 var newScn = linkedScene!.Instantiate<SceneFolder>();
+                scn.GetParent().EmplaceChild(scn, newScn);
                 scn = newScn;
             }
             task = conv.RegenerateSceneTree(scn);

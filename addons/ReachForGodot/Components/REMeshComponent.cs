@@ -108,6 +108,7 @@ public partial class REMeshComponent : REComponent, IVisualREComponent
             meshNode = mi;
             mi.Mesh = new SphereMesh() { Radius = 0.5f, Height = 1, RadialSegments = 6, Rings = 6 };
         }
+        meshNode.LockNode(true);
         if (GameObject != null) {
             return GameObject.AddChildAsync(meshNode, GameObject.Owner ?? GameObject);
         }

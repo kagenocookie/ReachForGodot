@@ -73,6 +73,7 @@ public partial class PhysicsCollidersComponent : REComponent, IVisualREComponent
 
         if (colliderRoot == null) {
             colliderRoot = new StaticBody3D() { Name = CollidersNodeName };
+            colliderRoot.LockNode(true);
             await GameObject.AddChildAsync(colliderRoot, GameObject.Owner ?? GameObject);
             await UpdateColliders();
         } else {

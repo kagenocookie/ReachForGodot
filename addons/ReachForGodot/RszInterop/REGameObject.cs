@@ -95,6 +95,12 @@ public partial class REGameObject : Node3D, ISerializationListener, ICloneable
         }
 
         Data.SetField(Data.TypeInfo.Fields[0], OriginalName);
+        if (!HasComponent("via.Transform")) {
+            Components ??= new();
+            var tr = new RETransformComponent() { Game = Game, Classname = "via.Transform", GameObject = this, ResourceName = "via.Transform" };
+            tr.ResetProperties();
+            Components.Insert(0, tr);
+        }
 
         foreach (var comp in Components) {
             comp.PreExport();
@@ -156,7 +162,12 @@ public partial class REGameObject : Node3D, ISerializationListener, ICloneable
 
     public REComponent? GetComponent(string classname)
     {
-        return Components?.FirstOrDefault(x => x is REComponent rec && rec.Classname == classname);
+        return Components?.FirstOrDefault(x => x.Classname == classname);
+    }
+
+    public bool HasComponent(string classname)
+    {
+        return Components?.Any(x => x.Classname == classname) == true;
     }
 
     public override string ToString()
