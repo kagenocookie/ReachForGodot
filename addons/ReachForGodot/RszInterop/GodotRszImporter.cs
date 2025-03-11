@@ -790,6 +790,9 @@ public class GodotRszImporter
             if (subfolder == null) {
                 subfolder = new SceneFolder() { Name = name, OriginalName = name, Asset = new AssetReference(scnPath), Game = AssetConfig.Game };
                 subfolder.LockNode(true);
+                if (parent.GetNodeOrNull(name) != null) {
+                    subfolder.Name = name + "__folder";
+                }
                 parent.AddFolder(subfolder);
                 isNew = true;
             }
@@ -810,7 +813,7 @@ public class GodotRszImporter
                 GD.Print("Creating folder " + name);
                 subfolder = new SceneFolder() {
                     Game = root.Game,
-                    Name = name,
+                    Name = parent.GetNodeOrNull(name) != null ? name + "__folder" : name,
                     OriginalName = name,
                 };
                 subfolder.LockNode(true);
@@ -886,7 +889,9 @@ public class GodotRszImporter
             }
         }
 
+        var isnew = false;
         if (gameobj == null) {
+            isnew = true;
             gameobj = new REGameObject() {
                 Game = AssetConfig.Game,
                 Name = name,
@@ -938,6 +943,9 @@ public class GodotRszImporter
             var childBatch = ctx.CreateGameObjectBatch(gameobj.Path + "/" + childName);
             batch.Children.Add(childBatch);
             PrepareGameObjectBatch(child, importType, childBatch, gameobj, gameobj, index);
+        }
+        if (isnew && dupeDict.Count == 0) {
+            gameobj.SetDisplayFolded(true);
         }
     }
 

@@ -30,7 +30,39 @@ public partial class SceneFolderContextMenuPlugin : EditorContextMenuPlugin
                     }
                 }), Logo);
             }
+
+            var realScene = (scene as SceneFolderProxy)?.RealFolder ?? scene;
+            bool? firstChildSceneEditable = null;
+            if (IsEditableToggleableScene(realScene)) {
+                firstChildSceneEditable = realScene.Owner.IsEditableInstance(realScene);
+            } else {
+                var firstChild = realScene.AllSubfolders.Where(sub => IsEditableToggleableScene(sub)).FirstOrDefault();
+                firstChildSceneEditable = firstChild?.Owner.IsEditableInstance(firstChild);
+            }
+            if (firstChildSceneEditable == true) {
+                AddContextMenuItem("Revert editable child scenes", Callable.From((Godot.Collections.Array nodes) => ToggleScenesEditable(nodes.FirstOrDefault().As<SceneFolder>(), false)), Logo);
+            } else if (firstChildSceneEditable == false) {
+                AddContextMenuItem("Make child scenes editable", Callable.From((Godot.Collections.Array nodes) => ToggleScenesEditable(nodes.FirstOrDefault().As<SceneFolder>(), true)), Logo);
+            }
         }
+    }
+
+    private static void ToggleScenesEditable(SceneFolder scene, bool editable)
+    {
+        if (IsEditableToggleableScene(scene)) {
+            scene.Owner.SetEditableInstance(scene, editable);
+        }
+        foreach (var child in scene.Subfolders) {
+            ToggleScenesEditable(child, editable);
+        }
+    }
+
+    private static bool IsEditableToggleableScene(SceneFolder scene)
+    {
+        if (scene.Owner != null && !string.IsNullOrEmpty(scene.SceneFilePath)) {
+            return true;
+        }
+        return false;
     }
 }
 #endif

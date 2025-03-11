@@ -21,7 +21,7 @@ public class Importer
     private static readonly byte[] MPLY_mesh_bytes = Encoding.ASCII.GetBytes("MPLY");
 
     private static CancellationTokenSource? cancellationTokenSource;
-    private const int blenderTimeoutMs = 15000;
+    private const int blenderTimeoutMs = 30000;
 
     public static REResource? FindImportedResourceAsset(Resource? asset)
     {
@@ -170,8 +170,8 @@ public class Importer
         if (bytes.AsSpan().SequenceEqual(MPLY_mesh_bytes)) {
             return false;
         }
-        // empty occlusion or whatever meshes, we can't really import them since they're empty
-        if (sourceFilePath.Contains("_OCC.mesh.")) {
+        // empty occlusion or whatever meshes, we can't really import them since they're empty and/or non-existent
+        if (sourceFilePath.Contains("occ.mesh.", StringComparison.OrdinalIgnoreCase)) {
             return false;
         }
         return true;

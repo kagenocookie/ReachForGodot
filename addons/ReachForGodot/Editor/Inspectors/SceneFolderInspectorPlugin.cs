@@ -139,6 +139,10 @@ public partial class SceneFolderInspectorPlugin : EditorInspectorPlugin, ISerial
                 config.Paths.SourcePathOverride = null;
             }
         };
+        if (obj.Asset?.IsEmpty != false) {
+            importType.Visible = false;
+            importBtn.Visible = false;
+        }
 
         AddCustomControl(container);
         pluginSerializationFixer.Register((GodotObject)obj, container);
