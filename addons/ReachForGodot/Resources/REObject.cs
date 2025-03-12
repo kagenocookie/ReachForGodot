@@ -57,8 +57,17 @@ public partial class REObject : Resource
             cache = null;
         }
         cache ??= TypeCache.GetData(Game, Classname ?? throw new Exception("Missing REObject classname"));
+        __Data.Clear();
         foreach (var field in cache.Fields) {
-            __Data[field.SerializedName] = RszTypeConverter.FromRszValue(field, RszInstance.CreateNormalObject(field.RszField), Game);
+            if (field.RszField.type == RszFieldType.Object) {
+                var obj = new REObject(Game, field.RszField.original_type);
+                obj.ResetProperties();
+                __Data[field.SerializedName] = obj;
+            } else if (field.RszField.type is RszFieldType.Resource or RszFieldType.UserData) {
+                __Data[field.SerializedName] = new Variant();
+            } else {
+                __Data[field.SerializedName] = RszTypeConverter.FromRszValue(field, RszInstance.CreateNormalObject(field.RszField), Game);
+            }
         }
     }
 
