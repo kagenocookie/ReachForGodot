@@ -8,6 +8,16 @@
       {
         "Name": "v1",
         "ReplaceName": "Tags"
+      },
+      {
+        "Name": "v2",
+        "ReplaceName": "Update",
+        "Type": "Bool"
+      },
+      {
+        "Name": "v3",
+        "ReplaceName": "Draw",
+        "Type": "Bool"
       }
     ]
   },

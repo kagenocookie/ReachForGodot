@@ -8,7 +8,6 @@ using RszTool;
 public partial class REGameObject : Node3D, ISerializationListener, ICloneable
 {
     [Export] public SupportedGame Game { get; set; }
-    [Export] public bool Enabled { get; set; } = true;
     [Export] public string Uuid { get; set; } = "00000000-0000-0000-0000-000000000000";
     [Export] public string? Prefab { get; set; }
     [Export] public string OriginalName { get; set; } = string.Empty;
@@ -20,7 +19,13 @@ public partial class REGameObject : Node3D, ISerializationListener, ICloneable
         set {
             _components = value;
             foreach (var comp in value) {
-                comp.GameObject = this;
+                if (comp != null) {
+                    comp.GameObject = this;
+                    comp.Game = Game;
+                    if (comp.IsEmpty && !string.IsNullOrEmpty(comp.Classname)) {
+                        comp.ResetProperties();
+                    }
+                }
             }
         }
     }
@@ -40,9 +45,19 @@ public partial class REGameObject : Node3D, ISerializationListener, ICloneable
                     ? $"{pfbParent.Path}:/{pfbParent.GetPathTo(this)}"
                     : Owner != null ? Owner.GetPathTo(this) : Name;
 
+    private static readonly REObjectFieldAccessor UpdateField = new REObjectFieldAccessor("Update").WithConditions("v2");
+    private static readonly REObjectFieldAccessor DrawField = new REObjectFieldAccessor("Draw").WithConditions("v3");
+
     public override void _EnterTree()
     {
         Components ??= new();
+        if (Game == SupportedGame.Unknown) {
+            Game = (GetParent() as REGameObject)?.Game ?? (GetParent() as SceneFolder)?.Game ?? SupportedGame.Unknown;
+        }
+        if (Game != SupportedGame.Unknown && Data == null) {
+            Data = new REObject(Game, "via.GameObject");
+            Data.ResetProperties();
+        }
         foreach (var comp in Components) {
             comp.GameObject = this;
         }
@@ -89,15 +104,19 @@ public partial class REGameObject : Node3D, ISerializationListener, ICloneable
         if (Data == null) {
             Data = new REObject(Game, "via.GameObject");
             Data.ResetProperties();
-            Data.SetField(Data.TypeInfo.Fields[2], (byte)1); // one of these should probably be Enabled
-            Data.SetField(Data.TypeInfo.Fields[3], (byte)1);
+            Data.SetField(DrawField, true);
+            Data.SetField(UpdateField, true);
             Data.SetField(Data.TypeInfo.Fields[4], -1f);
+        }
+
+        if (string.IsNullOrEmpty(OriginalName)) {
+            OriginalName = Name;
         }
 
         Data.SetField(Data.TypeInfo.Fields[0], OriginalName);
         if (!HasComponent("via.Transform")) {
             Components ??= new();
-            var tr = new RETransformComponent() { Game = Game, Classname = "via.Transform", GameObject = this, ResourceName = "via.Transform" };
+            var tr = new RETransformComponent(Game, "via.Transform") { GameObject = this, ResourceName = "via.Transform" };
             tr.ResetProperties();
             Components.Insert(0, tr);
         }
@@ -150,7 +169,6 @@ public partial class REGameObject : Node3D, ISerializationListener, ICloneable
             Uuid = Guid.NewGuid().ToString(),
             Data = Data?.Duplicate(true) as REObject,
             Components = new Godot.Collections.Array<REComponent>(),
-            Enabled = Enabled,
             Prefab = Prefab,
         };
         clone.Transform = Transform;

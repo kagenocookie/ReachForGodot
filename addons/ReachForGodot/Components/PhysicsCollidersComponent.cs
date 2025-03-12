@@ -119,7 +119,7 @@ public partial class PhysicsCollidersComponent : REComponent, IVisualREComponent
                         break;
                     case CapsuleShape3D capsule:
                         GetOrAddShape(Game, "via.physics.CapsuleShape", colliders, index, out shape, ref showWarning);
-                        var cap = shape.GetField(MeshShape).As<Capsule>();
+                        var cap = shape.GetField(CapsuleShape).As<Capsule>();
                         cap.r = capsule.Radius;
                         var cappos = child.Position;
                         var up = child.Transform.Basis.Y.Normalized();

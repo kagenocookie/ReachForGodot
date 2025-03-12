@@ -536,11 +536,17 @@ public class TypeCache
             }
         }
         if (changes > 0) {
-            Directory.CreateDirectory(config.Paths.RszPatchPath.GetBaseDir());
-            using var file = File.Create(config.Paths.RszPatchPath);
-            JsonSerializer.Serialize(file, cache.rszTypePatches, jsonOptions);
+            UpdateRszPatches(config);
             GD.Print($"Updating RSZ inferred field type cache with {changes} changes");
         }
+    }
+
+    private static void UpdateRszPatches(AssetConfig config)
+    {
+        var cache = GetCacheRoot(config.Game);
+        Directory.CreateDirectory(config.Paths.RszPatchPath.GetBaseDir());
+        using var file = File.Create(config.Paths.RszPatchPath);
+        JsonSerializer.Serialize(file, cache.rszTypePatches, jsonOptions);
     }
 
     private static RszParser LoadRsz(SupportedGame game)
@@ -660,10 +666,13 @@ public class TypeCache
 
     public static bool TryCreateComponent(SupportedGame game, string classname, REGameObject gameObject, RszInstance instance, out REComponent? componentInfo)
     {
-
         if (perGameFactories.TryGetValue(game, out var factories) &&
             factories.TryGetValue(classname, out var factory)) {
             componentInfo = factory.Invoke(gameObject, instance);
+            if (componentInfo != null) {
+                componentInfo.Game = game;
+                componentInfo.Classname = classname;
+            }
             return true;
         }
 
@@ -792,6 +801,7 @@ public class REObjectTypeCache
     public Godot.Collections.Array<Godot.Collections.Dictionary> PropertyList { get; }
     public RszClass RszClass { get; set; }
     public Dictionary<string, PrefabGameObjectRefProperty> PfbRefs { get; set; }
+    public bool IsEmpty => RszClass.crc == 0;
 
     public REField GetFieldOrFallback(string name, Func<REField, bool> fallbackFilter)
     {

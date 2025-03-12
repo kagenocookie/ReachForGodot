@@ -7,6 +7,14 @@ using RszTool;
 [GlobalClass, Tool, REComponentClass("via.Transform")]
 public partial class RETransformComponent : REComponent
 {
+    public RETransformComponent()
+    {
+    }
+
+    public RETransformComponent(SupportedGame game, string classname) : base(game, classname)
+    {
+    }
+
     public override Task Setup(RszInstance rsz, RszImportType importType)
     {
         ApplyTransform(GameObject, rsz);

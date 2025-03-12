@@ -10,17 +10,23 @@ using RszTool;
 public partial class REObject : Resource
 {
     [Export] public SupportedGame Game { get; set; }
-    private string? _classname;
+    protected string? _classname;
+
     [Export]
     public string? Classname {
         get => _classname;
         set {
-            if (_classname != value && !string.IsNullOrEmpty(_classname) && !string.IsNullOrEmpty(value)) {
-                _classname = value;
-                ResetProperties();
-                return;
+            if (_classname != value && !string.IsNullOrEmpty(value)) {
+                var newCache = TypeCache.GetData(Game, value);
+                this.cache = newCache;
+                if (!newCache.IsEmpty && !string.IsNullOrEmpty(_classname)) {
+                    ResourceName = _classname = value;
+                    ResetProperties();
+                    NotifyPropertyListChanged();
+                    return;
+                }
             }
-            _classname = value;
+            ResourceName = _classname = value;
         }
     }
     public string? ClassBaseName => _classname?.Substring(_classname.LastIndexOf('.') + 1);
@@ -39,7 +45,7 @@ public partial class REObject : Resource
     public REObject(SupportedGame game, string classname)
     {
         Game = game;
-        Classname = classname;
+        _classname = classname;
         ResourceName = classname;
     }
 
@@ -74,7 +80,8 @@ public partial class REObject : Resource
     public void ShallowCopyFrom(REObject source, params string[] fields)
     {
         Game = source.Game;
-        Classname = source.Classname;
+        _classname = source.Classname;
+        __Data.Clear();
         cache = TypeCache.GetData(Game, Classname ?? throw new Exception("Missing REObject classname"));
         foreach (var field in cache.Fields) {
             if (fields != null && fields.Length > 0 && !fields.Contains(field.SerializedName)) {

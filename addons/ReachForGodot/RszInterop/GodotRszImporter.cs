@@ -696,7 +696,7 @@ public class GodotRszImporter
                     if (refval == null && (Guid)instance.Values[field.FieldIndex] != Guid.Empty) {
                         GD.PrintErr($"Couldn't resolve pfb GameObjectRef node path in field {field.SerializedName} for {component.Path}");
                     }
-                    obj.SetField(field, refval ?? new Variant());
+                    obj.SetField(field, refval ?? new GameObjectRef());
                 }
             } else if (field.RszField.type is RszFieldType.Object) {
                 if (!obj.TryGetFieldValue(field, out var child)) continue;
@@ -896,8 +896,6 @@ public class GodotRszImporter
                 Game = AssetConfig.Game,
                 Name = name,
                 OriginalName = name,
-                Enabled = true, // TODO which gameobject field is enabled?
-                // Enabled = gameObj.Instance.GetFieldValue("v2")
             };
         }
         batch.GameObject = gameobj;
@@ -963,20 +961,17 @@ public class GodotRszImporter
             // nothing to do here
         } else if (TypeCache.TryCreateComponent(AssetConfig.Game, classname, gameObject, instance, out componentInfo)) {
             if (componentInfo == null) {
-                componentInfo = new REComponentPlaceholder();
+                componentInfo = new REComponentPlaceholder(AssetConfig.Game, classname);
                 gameObject.AddComponent(componentInfo);
             } else if (gameObject.GetComponent(classname) == null) {
                 // if the component was created but not actually added to the gameobject yet, do so now
                 gameObject.AddComponent(componentInfo);
             }
         } else {
-            componentInfo = new REComponentPlaceholder();
+            componentInfo = new REComponentPlaceholder(AssetConfig.Game, classname);
             gameObject.AddComponent(componentInfo);
         }
 
-        componentInfo.Classname = classname;
-        componentInfo.Game = AssetConfig.Game;
-        componentInfo.ResourceName = classname;
         componentInfo.GameObject = gameObject;
         ApplyObjectValues(componentInfo, instance);
         var setupTask = componentInfo.Setup(instance, Options.meshes);
