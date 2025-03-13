@@ -112,36 +112,35 @@ op = {
 'export_loglevel' : -1,
 }
 
-albedoNames = set([
-    'ALBD',
-    'ALBDmap',
-    'BackMap',
-    'BaseMap',
-    'BackMap_1',
-    'BaseAlphaMap',
-    'BaseMetalMap',
-    'BaseMetalMapArray',
-    'BaseShiftMap',
-    'BaseAnisoShiftMap',
-    #'BaseDielectricMapBase',
-    'BaseAlphaMap',
-    'BaseDielectricMap',
-    #Vertex Color
-    #'BaseDielectricMap_B',
-    #'BaseDielectricMap_G',
-    #'BaseDielectricMap_R',
-    'BaseMap',
-    'CloudMap',
-    'CloudMap_1',
-    'FaceBaseMap',
-    'Face_BaseDielectricMap',
-    'Moon_Tex',
-    'Sky_Top_Tex',
-    'BaseColor',
-])
+def clean_materials_for_export():
+    albedoNames = set([
+        'ALBD',
+        'ALBDmap',
+        'BackMap',
+        'BaseMap',
+        'BackMap_1',
+        'BaseAlphaMap',
+        'BaseMetalMap',
+        'BaseMetalMapArray',
+        'BaseShiftMap',
+        'BaseAnisoShiftMap',
+        #'BaseDielectricMapBase',
+        'BaseAlphaMap',
+        'BaseDielectricMap',
+        #Vertex Color
+        #'BaseDielectricMap_B',
+        #'BaseDielectricMap_G',
+        #'BaseDielectricMap_R',
+        'BaseMap',
+        'CloudMap',
+        'CloudMap_1',
+        'FaceBaseMap',
+        'Face_BaseDielectricMap',
+        'Moon_Tex',
+        'Sky_Top_Tex',
+        'BaseColor',
+    ])
 
-try:
-    bpy.ops.re_mesh.importfile('INVOKE_DEFAULT', filepath=filename, files=files, directory=dir, loadMDFData=False, loadMaterials=includeMaterials)
     for obj in bpy.data.objects:
         if obj.active_material:
             tree = obj.active_material.node_tree
@@ -152,6 +151,10 @@ try:
                     for link in input.links:
                         tree.links.remove(link)
                 tree.links.new(albedo.outputs[0], output.inputs[0])
+
+try:
+    bpy.ops.re_mesh.importfile('INVOKE_DEFAULT', filepath=filename, files=files, directory=dir, loadMDFData=False, loadMaterials=includeMaterials)
+    clean_materials_for_export()
     bpy.ops.export_scene.gltf(**op)
     bpy.ops.wm.quit_blender()
 except Exception as e:

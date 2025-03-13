@@ -63,6 +63,9 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
         contextMenus = new EditorContextMenuPlugin[1];
         AddContextMenuPlugin(EditorContextMenuPlugin.ContextMenuSlot.SceneTree, contextMenus[0] = new SceneFolderContextMenuPlugin());
 
+        gizmos = new EditorNode3DGizmoPlugin[] { new MeshGizmo() };
+        foreach (var gizmo in gizmos) AddNode3DGizmoPlugin(gizmo);
+
         RefreshToolMenu();
         toolMenu.IdPressed += (id) => {
             if (id < 100) {
@@ -128,6 +131,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
         browser = null;
         foreach (var insp in inspectors) RemoveInspectorPlugin(insp);
         foreach (var menu in contextMenus) RemoveContextMenuPlugin(menu);
+        foreach (var gizmo in gizmos) RemoveNode3DGizmoPlugin(gizmo);
     }
 
     private void AddSettings()

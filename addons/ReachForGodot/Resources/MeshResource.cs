@@ -6,6 +6,8 @@ using Godot;
 [GlobalClass, Tool]
 public partial class MeshResource : REResourceProxy
 {
+    public PackedScene? ImportedMesh => ImportedResource as PackedScene;
+
     protected override async Task<Resource?> Import()
     {
         if (Asset?.AssetFilename == null) return null;

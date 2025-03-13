@@ -20,13 +20,15 @@ public partial class REObject : Resource
                 var newCache = TypeCache.GetData(Game, value);
                 this.cache = newCache;
                 if (!newCache.IsEmpty && !string.IsNullOrEmpty(_classname)) {
-                    ResourceName = _classname = value;
+                    _classname = value;
+                    UpdateResourceName();
                     ResetProperties();
                     NotifyPropertyListChanged();
                     return;
                 }
             }
-            ResourceName = _classname = value;
+            _classname = value;
+            UpdateResourceName();
         }
     }
     public string? ClassBaseName => _classname?.Substring(_classname.LastIndexOf('.') + 1);
@@ -46,7 +48,12 @@ public partial class REObject : Resource
     {
         Game = game;
         _classname = classname;
-        ResourceName = classname;
+        UpdateResourceName();
+    }
+
+    private void UpdateResourceName()
+    {
+        ResourceName = ClassBaseName;
     }
 
     public override void _ValidateProperty(Dictionary property)
