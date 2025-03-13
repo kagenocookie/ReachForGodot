@@ -235,7 +235,7 @@ public class Exporter
         }
 
         foreach (var sub in folder.Subfolders) {
-            if (sub is not SceneFolderProxy) {
+            if (sub is not SceneFolderProxy && string.IsNullOrEmpty(sub.SceneFilePath)) {
                 SetupScnGameObjectReferences(sub, root);
             }
         }

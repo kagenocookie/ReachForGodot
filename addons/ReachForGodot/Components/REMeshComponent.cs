@@ -21,6 +21,14 @@ public partial class REMeshComponent : REComponent, IVisualREComponent
     [ExportToolButton("Reinstantiate mesh")]
     private Callable ForceReinstance => Callable.From(FindResourceAndReinit);
 
+    public override void PreExport()
+    {
+        if (meshNode != null && IsInstanceValid(meshNode) && !meshNode.Transform.IsEqualApprox(Transform3D.Identity)) {
+            GD.PrintErr("Detected movement in mesh component - move the parent GameObject instead: " + Path);
+            meshNode.SetIdentity();
+        }
+    }
+
     public Node3D? GetOrFindMeshNode()
     {
         if (meshNode != null && !IsInstanceValid(meshNode)) {
@@ -108,7 +116,6 @@ public partial class REMeshComponent : REComponent, IVisualREComponent
             meshNode = mi;
             mi.Mesh = new SphereMesh() { Radius = 0.5f, Height = 1, RadialSegments = 6, Rings = 6 };
         }
-        meshNode.LockNode(true);
         if (GameObject != null) {
             return GameObject.AddChildAsync(meshNode, GameObject.Owner ?? GameObject);
         }
