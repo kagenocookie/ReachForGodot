@@ -276,12 +276,12 @@ public class GodotRszImporter
 
     public PackedScene? CreateOrReplaceScene(string sourceFilePath, string importFilepath)
     {
-        return SaveOrReplaceSceneResource<SceneFolder>(sourceFilePath, importFilepath);
+        return CreateOrReplaceSceneResource<SceneFolder>(sourceFilePath, importFilepath);
     }
 
     public PackedScene? CreateOrReplacePrefab(string sourceFilePath, string importFilepath)
     {
-        return SaveOrReplaceSceneResource<PrefabNode>(sourceFilePath, importFilepath);
+        return CreateOrReplaceSceneResource<PrefabNode>(sourceFilePath, importFilepath);
     }
 
     public UserdataResource? CreateOrReplaceUserdata(string sourceFilePath, string importFilepath)
@@ -290,14 +290,15 @@ public class GodotRszImporter
         return SaveOrReplaceRszResource(userdata, sourceFilePath, importFilepath);
     }
 
-    private PackedScene? SaveOrReplaceSceneResource<TRoot>(string sourceFilePath, string importFilepath) where TRoot : Node, IRszContainerNode, new()
+    private PackedScene? CreateOrReplaceSceneResource<TRoot>(string sourceFilePath, string importFilepath) where TRoot : Node, IRszContainerNode, new()
     {
         var relativeSourceFile = PathUtils.FullToRelativePath(sourceFilePath, AssetConfig)!;
         var name = PathUtils.GetFilenameWithoutExtensionOrVersion(sourceFilePath);
         var scene = new PackedScene();
         var root = new TRoot() { Game = AssetConfig.Game, Name = name, Asset = new AssetReference(relativeSourceFile) };
-        if (root is SceneFolder) {
+        if (root is SceneFolder scn) {
             root.LockNode(true);
+            scn.OriginalName = name;
         }
         scene.Pack(root);
         return SaveOrReplaceResource(scene, importFilepath);
@@ -516,6 +517,7 @@ public class GodotRszImporter
 
         var folder = batch.folder;
         if (folder.Owner != null && folder.Asset?.IsEmpty == false) {
+            var folderName = folder.OriginalName;
             var scene = (folder as SceneFolderProxy)?.Contents
                 ?? (!string.IsNullOrEmpty(folder.SceneFilePath)
                     ? ResourceLoader.Load<PackedScene>(folder.SceneFilePath)
@@ -537,6 +539,7 @@ public class GodotRszImporter
                     return;
                 }
             }
+            newInstance.OriginalName = folderName;
             if (folder is SceneFolderProxy proxy) {
                 proxy.ShowLinkedFolder = true; // TODO configurable by import type?
             } else {

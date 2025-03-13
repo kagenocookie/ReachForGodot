@@ -143,6 +143,12 @@ public partial class REObject : Resource
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public bool TryGetFieldValue(REObjectFieldAccessor field, out Variant variant)
+    {
+        return __Data.TryGetValue(field.Get(this).SerializedName, out variant);
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public Variant GetField(REField field)
     {
         return __Data.TryGetValue(field.SerializedName, out var variant) ? variant : new Variant();

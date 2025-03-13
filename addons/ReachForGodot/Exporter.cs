@@ -168,7 +168,7 @@ public class Exporter
         } });
 
         var linkedSceneFilepath = folder.IsIndependentFolder && folder.Asset != null ? folder.Asset.AssetFilename : string.Empty;
-        folderInstance.Values[0] = folder.OriginalName ?? folder.Name.ToString();
+        folderInstance.Values[0] = !string.IsNullOrEmpty(folder.OriginalName) ? folder.OriginalName : folder.Name.ToString();
         folderInstance.Values[1] = folder.Tag ?? string.Empty;
         folderInstance.Values[2] = folder.Update ? (byte)1 : (byte)0;
         folderInstance.Values[3] = folder.Draw ? (byte)1 : (byte)0;
