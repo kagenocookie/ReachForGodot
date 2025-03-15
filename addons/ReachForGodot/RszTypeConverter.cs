@@ -27,7 +27,6 @@ public static class RszTypeConverter
     {
         if (field.RszField.array) {
             if (value == null) return new Godot.Collections.Array();
-            if (field.RszField.type == RszFieldType.Data) return (byte[])value;
 
             var type = value.GetType();
             object[] arr;

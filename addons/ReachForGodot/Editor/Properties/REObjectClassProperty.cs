@@ -20,7 +20,7 @@ public partial class REObjectClassProperty : HBoxContainer
     private int arrayIndex = -1;
 
     private Control? classPicker;
-    private string[] classnames = Array.Empty<string>();
+    private List<string> classnames = null!;
 
     public override void _EnterTree()
     {
@@ -122,16 +122,16 @@ public partial class REObjectClassProperty : HBoxContainer
     private void SetupClassSelection(OptionButton button, string baseclass)
     {
         button.Clear();
-        classnames = Target?.AllowedSubclasses.Length > 0 ? Target.AllowedSubclasses : new[] { baseclass };
-        var current = Target?.Classname;
+        classnames = Target?.AllowedSubclasses.Count > 0 ? Target.AllowedSubclasses : TypeCache.GetSubclasses(Game, baseclass);
+        var current = Target?.Classname ?? string.Empty;
         foreach (var cls in classnames) {
             button.AddItem(cls);
             if (cls == current) {
                 button.Selected = button.ItemCount - 1;
             }
         }
-        if (Target != null && Game != SupportedGame.Unknown && !classnames.Contains(Target.Classname)) {
-            GD.Print($"Re-assigning REObject from invalid class {Target.Classname} to {classnames.First()}");
+        if (Target != null && Game != SupportedGame.Unknown && !classnames.Contains(current)) {
+            GD.Print($"Re-assigning REObject from invalid class {current} to {classnames.First()}");
             UpdateTargetClassname(classnames.First());
         }
     }
@@ -187,7 +187,7 @@ public partial class REObjectClassProperty : HBoxContainer
         if (Target == null) {
             return;
         }
-        var cls = classnames[index];
+        var cls = classnames[(int)index];
         if (Target.Classname != cls) {
             GD.Print("Changing classname: " + cls);
             UpdateTargetClassname(cls);

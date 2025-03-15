@@ -149,6 +149,20 @@ public class TypeCache
         return cache;
     }
 
+    public static List<string> GetSubclasses(SupportedGame game, string baseclass)
+    {
+        if (!allCacheData.TryGetValue(game, out var data)) {
+            allCacheData[game] = data = new();
+        }
+
+        var cache = SetupIl2cppData(ReachForGodot.GetAssetConfig(game).Paths);
+        if (cache.subclasses.TryGetValue(baseclass, out var list)) {
+            return list;
+        }
+
+        return cache.subclasses[baseclass] = new List<string>() { baseclass };
+    }
+
     public static RszClass? GetRszClass(SupportedGame game, string classname)
     {
         if (!allCacheData.TryGetValue(game, out var data)) {

@@ -38,8 +38,9 @@ public partial class REObject : Resource
     public bool IsValid => Game != SupportedGame.Unknown && !string.IsNullOrEmpty(Classname) && TypeInfo != null;
     public REObjectTypeCache TypeInfo => cache ??= TypeCache.GetData(Game, Classname ?? throw new Exception("Missing classname at " + ResourcePath));
 
-    private string[] subclasses = System.Array.Empty<string>();
-    public string[] AllowedSubclasses => subclasses;
+    private static readonly List<string> EmptyStringList = new(0);
+    private List<string> subclasses = EmptyStringList;
+    public List<string> AllowedSubclasses => subclasses;
 
     private REObjectTypeCache? cache;
 
@@ -169,11 +170,10 @@ public partial class REObject : Resource
     private void SetBaseClass(string baseclass)
     {
         if (string.IsNullOrEmpty(baseclass)) {
-            subclasses = System.Array.Empty<string>();
+            subclasses = EmptyStringList;
             return;
         }
-        // TODO properly evaluate object subclasses
-        subclasses = new[] { baseclass };
+        subclasses = TypeCache.GetSubclasses(Game, baseclass);
     }
 
     public override Variant _Get(StringName property)
@@ -221,6 +221,8 @@ public partial class REObject : Resource
                         obj.Game = Game;
                     }
                     if (string.IsNullOrEmpty(obj.Classname) && !string.IsNullOrEmpty(field.RszField.original_type)) {
+                        // swap inline new Userdata instances into REObject ones because they don't need paths...
+                        // will this cause issues down the line?
                         if (obj is UserdataResource) {
                             __Data[property] = new REObject(Game, field.RszField.original_type, true);
                         } else {
