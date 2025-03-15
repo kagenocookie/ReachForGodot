@@ -16,19 +16,21 @@ public partial class REObject : Resource
     public string? Classname {
         get => _classname;
         set {
-            if (_classname != value && !string.IsNullOrEmpty(value)) {
-                var newCache = TypeCache.GetData(Game, value);
-                this.cache = newCache;
-                if (!newCache.IsEmpty && !string.IsNullOrEmpty(_classname)) {
-                    _classname = value;
-                    UpdateResourceName();
-                    ResetProperties();
-                    NotifyPropertyListChanged();
-                    return;
+            if (_classname != value) {
+                if (!string.IsNullOrEmpty(value) && Game != SupportedGame.Unknown) {
+                    var newCache = TypeCache.GetData(Game, value);
+                    this.cache = newCache;
+                    if (!newCache.IsEmpty && !string.IsNullOrEmpty(_classname)) {
+                        _classname = value;
+                        UpdateResourceName();
+                        ResetProperties();
+                        NotifyPropertyListChanged();
+                        return;
+                    }
                 }
+                _classname = value;
+                UpdateResourceName();
             }
-            _classname = value;
-            UpdateResourceName();
         }
     }
     public string? ClassBaseName => _classname?.Substring(_classname.LastIndexOf('.') + 1);

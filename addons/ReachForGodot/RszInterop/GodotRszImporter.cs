@@ -299,6 +299,8 @@ public class GodotRszImporter
         if (root is SceneFolder scn) {
             root.LockNode(true);
             scn.OriginalName = name;
+        } else if (root is PrefabNode pfb) {
+            pfb.OriginalName = name;
         }
         scene.Pack(root);
         return SaveOrReplaceResource(scene, importFilepath);
@@ -592,6 +594,8 @@ public class GodotRszImporter
 
         GenerateResources(root, file.ResourceInfoList, AssetConfig);
         var batch = ctx.CreatePrefabBatch(root, root.Asset.AssetFilename);
+
+        TypeCache.StoreInferredRszTypes(file.RSZ, AssetConfig);
 
         if (Options.prefabs == RszImportType.ForceReimport) {
             root.Clear();
