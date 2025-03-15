@@ -140,7 +140,7 @@ public class TypeCache
                     if (field != null) {
                         accessor.overrideFunc.Invoke(field);
                         var prop = cache.PropertyList.First(dict => dict["name"].AsString() == field.SerializedName);
-                        cache.RebuildFieldProperty(field, prop);
+                        cache.UpdateFieldProperty(field, prop);
                     }
                 }
             }
@@ -529,15 +529,29 @@ public class TypeCache
                     entry = new RszFieldPatch() { Name = f.name, Type = f.type };
                     props.FieldPatches = props.FieldPatches == null ? [entry] : props.FieldPatches.Append(entry).ToArray();
                     changes++;
+                    RebuildSingleFieldCache(cache, inst.RszClass.name, f.name, config.Game);
                 } else if (entry.Type != f.type) {
                     entry.Type = f.type;
                     changes++;
+                    RebuildSingleFieldCache(cache, inst.RszClass.name, f.name, config.Game);
                 }
             }
         }
         if (changes > 0) {
             UpdateRszPatches(config);
             GD.Print($"Updating RSZ inferred field type cache with {changes} changes");
+        }
+    }
+
+    private static void RebuildSingleFieldCache(PerGameCache cache, string classname, string field, SupportedGame game)
+    {
+        if (cache.serializationCache?.TryGetValue(classname, out var cls) == true) {
+            var fieldObj = cls.GetFieldByName(field);
+            var prop = cls.PropertyList.First(dict => dict["name"].AsString() == field);
+            Debug.Assert(fieldObj != null);
+            Debug.Assert(prop != null);
+            RszFieldToVariantType(fieldObj.RszField, fieldObj, game);
+            cls.UpdateFieldProperty(fieldObj, prop);
         }
     }
 
@@ -803,6 +817,7 @@ public class REObjectTypeCache
     public Dictionary<string, PrefabGameObjectRefProperty> PfbRefs { get; set; }
     public bool IsEmpty => RszClass.crc == 0;
 
+    public REField? GetFieldByName(string name) => FieldsByName.TryGetValue(name, out var v) ? v : null;
     public REField GetFieldOrFallback(string name, Func<REField, bool> fallbackFilter)
     {
         if (FieldsByName.TryGetValue(name, out var field)) {
@@ -835,11 +850,11 @@ public class REObjectTypeCache
             FieldsByName[f.SerializedName] = f;
             var dict = new Godot.Collections.Dictionary();
             PropertyList.Add(dict);
-            RebuildFieldProperty(f, dict);
+            UpdateFieldProperty(f, dict);
         }
     }
 
-    public void RebuildFieldProperty(REField field, Godot.Collections.Dictionary dict)
+    public void UpdateFieldProperty(REField field, Godot.Collections.Dictionary dict)
     {
         dict["name"] = field.SerializedName;
         dict["type"] = (int)field.VariantType;
