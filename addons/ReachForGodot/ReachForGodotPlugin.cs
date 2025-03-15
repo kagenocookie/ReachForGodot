@@ -52,6 +52,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
         OnProjectSettingsChanged();
 
         inspectors = new EditorInspectorPlugin[] {
+            new REObjectInspectorPlugin(),
             new SceneFolderInspectorPlugin(),
             new AssetReferenceInspectorPlugin(),
             new ResourceInspectorPlugin(),

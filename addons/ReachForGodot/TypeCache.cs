@@ -245,14 +245,14 @@ public class TypeCache
 
     private static void RszFieldToVariantType(RszField srcField, REField refield, SupportedGame game)
     {
-        void ResourceHint(REField field, string resourceName)
+        static void ResourceHint(REField field, string resourceName)
         {
             field.VariantType = Variant.Type.Object;
             field.Hint = PropertyHint.ResourceType;
             field.HintString = resourceName;
         }
 
-        void ArrayHint(REField field, Variant.Type variantType)
+        static void ArrayHint(REField field, Variant.Type variantType)
         {
             field.VariantType = Variant.Type.Array;
             field.Hint = PropertyHint.TypeString;
@@ -702,6 +702,7 @@ public class REField
     public Variant.Type VariantType { get; set; }
     public PropertyHint Hint { get; set; }
     public string? HintString { get; set; }
+    public string? ElementType { get; set; }
     public RESupportedFileFormats ResourceType {
         set => HintString = PathUtils.GetResourceTypeFromFormat(value).Name;
     }
@@ -851,6 +852,24 @@ public class REObjectTypeCache
             var dict = new Godot.Collections.Dictionary();
             PropertyList.Add(dict);
             UpdateFieldProperty(f, dict);
+            if (f.RszField.array) {
+                var sourceType = f.RszField.original_type;
+                if (!string.IsNullOrEmpty(sourceType)) {
+                    // need to decipher field.RszField.original_type into a singular element type
+                    // (can be empty, List`1<...>, ...[], maybe even Dictionary?)
+                    // TODO should this be cached instead of re-computed each time?
+                    if (sourceType.EndsWith("[]")){
+                        f.ElementType = sourceType[..^2];
+                    } else if (sourceType.StartsWith("System.Collections.Generic.List`1<")) {
+                        f.ElementType = sourceType["System.Collections.Generic.List`1<".Length..^1];
+                    } else {
+                        // GD.Print("Unhandled array type " + sourceType);
+                        // specifically via.motion.MotionFsm2Layer seems to get detected as original_type == element type
+                        // may break other non-standard collections
+                        f.ElementType = sourceType;
+                    }
+                }
+            }
         }
     }
 

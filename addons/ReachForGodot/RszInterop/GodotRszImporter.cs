@@ -749,7 +749,11 @@ public class GodotRszImporter
         }
 
         foreach (var instance in file.RSZ!.ObjectList) {
-            root.Classname = instance.RszClass.name;
+            if (!string.IsNullOrEmpty(root.Classname) && root.Classname != instance.RszClass.name) {
+                root.ChangeClassname(instance.RszClass.name);
+            } else {
+                root.Classname = instance.RszClass.name;
+            }
             ApplyObjectValues(root, instance);
             ResourceSaver.Save(root);
             break;

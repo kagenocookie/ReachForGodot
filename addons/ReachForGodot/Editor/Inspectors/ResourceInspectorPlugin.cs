@@ -33,8 +33,12 @@ public partial class ResourceInspectorPlugin : EditorInspectorPlugin, ISerializa
         var reimportButton = new Button() { Text = "Reimport file", SizeFlagsHorizontal = Control.SizeFlags.ShrinkCenter };
         reimportButton.Pressed += () => {
             if (res is UserdataResource ur) {
-                ur.Reimport();
-                emptyLabel.Visible = res.IsEmpty;
+                if (ur.Asset?.IsEmpty == false) {
+                    ur.Reimport();
+                    emptyLabel.Visible = res.IsEmpty;
+                } else {
+                    GD.PrintErr("User file asset source path is unset!");
+                }
             }
         };
         var hbox = new HBoxContainer();
