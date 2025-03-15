@@ -1,14 +1,44 @@
 {
-    "via.render.Mesh": {
-        "FieldPatches": [
-            {
-                "Name": "v20",
-                "ReplaceName": "Mesh"
-            },
-            {
-                "Name": "v21",
-                "ReplaceName": "Material"
-            }
-        ]
-    }
+  "via.render.Mesh": {
+    "FieldPatches": [
+      {
+        "Name": "v20",
+        "ReplaceName": "Mesh",
+        "Type": "Resource"
+      },
+      {
+        "Name": "v21",
+        "ReplaceName": "Material",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "via.gui.GUIPointLight": {
+    "FieldPatches": [
+      {
+        "Name": "v2",
+        "Type": "F32"
+      },
+      {
+        "Name": "v3",
+        "Type": "F32"
+      },
+      {
+        "Name": "v4",
+        "Type": "S32"
+      },
+      {
+        "Name": "v5",
+        "Type": "S32"
+      },
+      {
+        "Name": "v6",
+        "Type": "F32"
+      },
+      {
+        "Name": "v7",
+        "Type": "F32"
+      }
+    ]
+  }
 }

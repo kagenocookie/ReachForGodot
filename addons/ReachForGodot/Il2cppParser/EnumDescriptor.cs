@@ -70,7 +70,13 @@ public sealed class EnumDescriptor<T> : EnumDescriptor where T : struct
     {
         // nasty; maybe add individual enum descriptor types eventually
         if (typeof(T) == typeof(System.Int64)) {
-            converter = static (e) => (T)(object)(long)e.GetUInt64();
+            converter = static (e) => {
+                try {
+                    return (T)(object)(long)e.GetInt64();
+                } catch {
+                    return (T)(object)(long)e.GetUInt64();
+                }
+            };
         } else if (typeof(T) == typeof(System.UInt64)) {
             converter = static (e) => (T)(object)e.GetUInt64();
         } else if (typeof(T) == typeof(System.Int32)) {

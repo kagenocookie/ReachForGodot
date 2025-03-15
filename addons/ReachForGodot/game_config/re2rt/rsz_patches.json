@@ -756,6 +756,14 @@
       {
         "Name": "v4",
         "Type": "F32"
+      },
+      {
+        "Name": "Update",
+        "Type": "Bool"
+      },
+      {
+        "Name": "Draw",
+        "Type": "Bool"
       }
     ]
   },
