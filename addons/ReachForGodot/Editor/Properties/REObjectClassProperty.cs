@@ -142,7 +142,7 @@ public partial class REObjectClassProperty : HBoxContainer
             return;
         }
         var game = Game;
-        if (TypeCache.GetRszClass(game, classname) == null) return;
+        if (!TypeCache.ClassExists(game, classname)) return;
 
         Type? specificType = null;
         if (Target != null && (specificType == null || specificType == Target.GetType())) {

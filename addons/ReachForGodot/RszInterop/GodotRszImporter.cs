@@ -625,7 +625,7 @@ public class GodotRszImporter
         var fieldRefs = file.GameObjectRefInfoList.Where(rr => rr.Data.objectId == idx && rr.Data.arrayIndex == arrayIndex);
         if (!fieldRefs.Any()) return null;
 
-        var cache = TypeCache.GetData(AssetConfig.Game, obj.Classname!);
+        var cache = TypeCache.GetClassInfo(AssetConfig.Game, obj.Classname!);
         var propInfoDict = cache.PfbRefs;
         if (!propInfoDict.TryGetValue(field.SerializedName, out var propInfo)) {
             var refValues = file.GameObjectRefInfoList.Where(rr => rr.Data.objectId == idx && rr.Data.arrayIndex == 0).OrderBy(b => b.Data.propertyId);
@@ -643,7 +643,7 @@ public class GodotRszImporter
                     }
                     GD.PrintErr("Auto-detected GameObjectRef property " + refField.SerializedName + " as propertyId " + propId + ". It may be wrong, but hopefully not.");
                 }
-                TypeCache.UpdateTypecacheEntry(AssetConfig.Game, obj.Classname!, propInfoDict);
+                TypeCache.UpdatePfbGameObjectRefCache(AssetConfig.Game, obj.Classname!, propInfoDict);
                 Debug.Assert(propInfo != null);
             } else {
                 // if any refs from this object do not have a known property Id; this way we only print error if we actually found an unmapped ref

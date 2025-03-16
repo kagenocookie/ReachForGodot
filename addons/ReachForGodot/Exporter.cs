@@ -311,7 +311,7 @@ public class Exporter
                             continue;
                         }
 
-                        propInfoDict ??= TypeCache.GetData(root.Game, data.Classname!).PfbRefs;
+                        propInfoDict ??= TypeCache.GetClassInfo(root.Game, data.Classname!).PfbRefs;
                         if (!propInfoDict.TryGetValue(field.SerializedName, out var propInfo)) {
                             GD.PrintErr("Found undeclared GameObjectRef property " + field.SerializedName);
                             continue;

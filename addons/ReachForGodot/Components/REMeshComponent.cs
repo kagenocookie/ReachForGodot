@@ -9,10 +9,10 @@ using RszTool;
 [GlobalClass, Tool, REComponentClass("via.render.Mesh")]
 public partial class REMeshComponent : REComponent, IVisualREComponent
 {
-    private static readonly REObjectFieldAccessor MeshField = new REObjectFieldAccessor("Mesh", typeof(MeshResource)).WithConditions(
+    private static readonly REFieldAccessor MeshField = new REFieldAccessor("Mesh", typeof(MeshResource)).WithConditions(
         (fields) => fields.FirstOrDefault(f => f.RszField.type is RszFieldType.String or RszFieldType.Resource));
 
-    private static readonly REObjectFieldAccessor MaterialField = new REObjectFieldAccessor("Material", typeof(MaterialResource)).WithConditions(
+    private static readonly REFieldAccessor MaterialField = new REFieldAccessor("Material", typeof(MaterialResource)).WithConditions(
         (fields) => fields.Where(f => f.RszField.type is RszFieldType.String or RszFieldType.Resource).Skip(1).FirstOrDefault());
 
     private Node3D? meshNode;

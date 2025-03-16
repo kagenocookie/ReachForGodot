@@ -11,38 +11,38 @@ public partial class PhysicsCollidersComponent : REComponent, IVisualREComponent
 {
     private StaticBody3D? colliderRoot;
     private static readonly StringName CollidersNodeName = "__Colliders";
-    private static readonly REObjectFieldAccessor CollidersList = new REObjectFieldAccessor("Colliders").WithConditions(
+    private static readonly REFieldAccessor CollidersList = new REFieldAccessor("Colliders").WithConditions(
         (list) => list.FirstOrDefault(f => f.RszField.array && f.RszField.type is not (RszFieldType.String or RszFieldType.Resource))
     );
 
     [REObjectFieldTarget("via.physics.Collider")]
-    private static readonly REObjectFieldAccessor ColliderShapeField = new REObjectFieldAccessor("Shape", RszFieldType.Object).WithConditions(
+    private static readonly REFieldAccessor ColliderShapeField = new REFieldAccessor("Shape", RszFieldType.Object).WithConditions(
         list => list.FirstOrDefault(f => f.RszField.original_type == "via.physics.Shape"),
         list => list.FirstOrDefault(f => f.RszField.type == RszFieldType.Object),
         list => list[2].RszField.type == RszFieldType.S32 ? list[2] : null,
-        ((REObjectFieldCondition)"v2").func);
+        ((REFieldCondition)"v2").func);
 
     [REObjectFieldTarget("via.physics.SphereShape")]
-    private static readonly REObjectFieldAccessor SphereShape = new REObjectFieldAccessor("Sphere", RszFieldType.Sphere).WithConditions(
+    private static readonly REFieldAccessor SphereShape = new REFieldAccessor("Sphere", RszFieldType.Sphere).WithConditions(
         list => list.FirstOrDefault(f => f.RszField.type == RszFieldType.Sphere || f.RszField.type == RszFieldType.Vec4));
 
     [REObjectFieldTarget("via.physics.BoxShape")]
-    private static readonly REObjectFieldAccessor BoxShape = new REObjectFieldAccessor("Box", RszFieldType.OBB).WithConditions(
+    private static readonly REFieldAccessor BoxShape = new REFieldAccessor("Box", RszFieldType.OBB).WithConditions(
         list => list.LastOrDefault(f => f.RszField.type == RszFieldType.OBB),
         list => list.LastOrDefault(f => !f.RszField.array && f.RszField.size == 80));
 
     [REObjectFieldTarget("via.physics.CapsuleShape")]
-    private static readonly REObjectFieldAccessor CapsuleShape = new REObjectFieldAccessor("Capsule", RszFieldType.Capsule).WithConditions(
+    private static readonly REFieldAccessor CapsuleShape = new REFieldAccessor("Capsule", RszFieldType.Capsule).WithConditions(
         list => list.FirstOrDefault(f => f.RszField.type == RszFieldType.Capsule),
         list => list.LastOrDefault(f => f.RszField.type == RszFieldType.Data && f.RszField.size == 32));
 
     [REObjectFieldTarget("via.physics.AabbShape")]
-    private static readonly REObjectFieldAccessor AabbShape = new REObjectFieldAccessor("Aabb", RszFieldType.AABB).WithConditions(
+    private static readonly REFieldAccessor AabbShape = new REFieldAccessor("Aabb", RszFieldType.AABB).WithConditions(
         list => list.LastOrDefault(f => f.RszField.type == RszFieldType.AABB),
         list => list.Where(f => f.RszField.size == 32 && !f.RszField.array).LastOrDefault());
 
     [REObjectFieldTarget("via.physics.MeshShape")]
-    private static readonly REObjectFieldAccessor MeshShape = new REObjectFieldAccessor("Mesh", typeof(REResource)).WithConditions(
+    private static readonly REFieldAccessor MeshShape = new REFieldAccessor("Mesh", typeof(REResource)).WithConditions(
         list => list.FirstOrDefault(f => f.RszField.type is RszFieldType.Resource or RszFieldType.String));
 
     public StaticBody3D? GetOrFindContainerNode()

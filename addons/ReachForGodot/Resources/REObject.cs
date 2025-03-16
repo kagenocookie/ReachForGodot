@@ -36,13 +36,13 @@ public partial class REObject : Resource
 
     public bool IsEmpty => __Data.Count == 0;
     public bool IsValid => Game != SupportedGame.Unknown && !string.IsNullOrEmpty(Classname) && TypeInfo != null;
-    public REObjectTypeCache TypeInfo => cache ??= TypeCache.GetData(Game, Classname ?? throw new Exception("Missing classname at " + ResourcePath));
+    public ClassInfo TypeInfo => cache ??= TypeCache.GetClassInfo(Game, Classname ?? throw new Exception("Missing classname at " + ResourcePath));
 
     private static readonly List<string> EmptyStringList = new(0);
     private List<string> subclasses = EmptyStringList;
     public List<string> AllowedSubclasses => subclasses;
 
-    private REObjectTypeCache? cache;
+    private ClassInfo? cache;
 
     public REObject()
     {
@@ -96,7 +96,7 @@ public partial class REObject : Resource
         if (cache != null && cache.RszClass.name != Classname) {
             cache = null;
         }
-        cache ??= TypeCache.GetData(Game, Classname ?? throw new Exception("Missing REObject classname"));
+        cache ??= TypeCache.GetClassInfo(Game, Classname ?? throw new Exception("Missing REObject classname"));
         __Data.Clear();
         foreach (var field in cache.Fields) {
             if (field.RszField.type == RszFieldType.Object) {
@@ -117,7 +117,7 @@ public partial class REObject : Resource
         Game = source.Game;
         _classname = source.Classname;
         __Data.Clear();
-        cache = TypeCache.GetData(Game, Classname ?? throw new Exception("Missing REObject classname"));
+        cache = TypeCache.GetClassInfo(Game, Classname ?? throw new Exception("Missing REObject classname"));
         foreach (var field in cache.Fields) {
             if (fields != null && fields.Length > 0 && !fields.Contains(field.SerializedName)) {
                 continue;
@@ -142,7 +142,7 @@ public partial class REObject : Resource
 
         if (cache == null) {
             // note, ideally we would prefer to avoid doing any of this during save, but godot calls it either way and we have no way of knowing which one it is
-            cache = TypeCache.GetData(Game, Classname);
+            cache = TypeCache.GetClassInfo(Game, Classname);
             foreach (var (key, value) in __Data) {
                 if (value.VariantType == Variant.Type.Object) {
                     if (cache.FieldsByName.TryGetValue(key, out var field) && field.RszField.type is RszFieldType.Object or RszFieldType.UserData) {
@@ -195,7 +195,7 @@ public partial class REObject : Resource
             return false;
         }
 
-        cache ??= TypeCache.GetData(Game, Classname);
+        cache ??= TypeCache.GetClassInfo(Game, Classname);
         if (cache.FieldsByName.TryGetValue(property, out var field)) {
             __Data[property] = value;
             if (field.RszField.array) {
@@ -243,7 +243,7 @@ public partial class REObject : Resource
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public bool TryGetFieldValue(REObjectFieldAccessor field, out Variant variant)
+    public bool TryGetFieldValue(REFieldAccessor field, out Variant variant)
     {
         return __Data.TryGetValue(field.Get(this).SerializedName, out variant);
     }
@@ -255,7 +255,7 @@ public partial class REObject : Resource
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public Variant GetField(REObjectFieldAccessor field)
+    public Variant GetField(REFieldAccessor field)
     {
         return __Data.TryGetValue(field.Get(this).SerializedName, out var variant) ? variant : new Variant();
     }
@@ -267,7 +267,7 @@ public partial class REObject : Resource
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public void SetField(REObjectFieldAccessor field, Variant value)
+    public void SetField(REFieldAccessor field, Variant value)
     {
         __Data[field.Get(this).SerializedName] = value;
     }

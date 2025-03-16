@@ -10,9 +10,11 @@ public partial class RE2EnemyContextController : REComponent
     public RE2EnemyContextController() { }
     public RE2EnemyContextController(SupportedGame game, string classname) : base(game, classname) {}
 
-    private static readonly REObjectFieldAccessor InitialKind = new REObjectFieldAccessor("InitialKind").WithConditions("InitialKind");
+    private static readonly REFieldAccessor InitialKind = new REFieldAccessor("InitialKind").WithConditions("InitialKind");
 
     private const string NodeName = "__EnemyPreview";
+
+    public KindID ID => TryGetFieldValue(InitialKind, out var val) ? (KindID)val.AsInt32() : KindID.Invalid;
 
     public enum KindID : int
 	{
@@ -48,8 +50,8 @@ public partial class RE2EnemyContextController : REComponent
 
     public string? GetMeshFilepath()
     {
-        if (TryGetFieldValue(InitialKind, out var val)) {
-            var id = (KindID)val.AsInt32();
+        var id = ID;
+        if (id != KindID.Invalid) {
             var config = ReachForGodot.GetAssetConfig(Game);
             var resolved = PathUtils.FindSourceFilePath($"SectionRoot/Character/Enemy/{id}/Body/Body00/{id}_body00.mesh", config)
                         ?? PathUtils.FindSourceFilePath($"SectionRoot/Character/Enemy/{id}/{id}/{id}.mesh", config);
@@ -80,4 +82,9 @@ public partial class RE2EnemyContextController : REComponent
         await GameObject.AddChildAsync(inst, GameObject.Owner ?? GameObject);
     }
 
+    protected override void UpdateResourceName()
+    {
+        var id = ID;
+        ResourceName = id == KindID.Invalid ? ClassBaseName : ClassBaseName + ": " + ID;
+    }
 }

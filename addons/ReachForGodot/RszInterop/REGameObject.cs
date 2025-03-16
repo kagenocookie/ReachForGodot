@@ -45,8 +45,8 @@ public partial class REGameObject : Node3D, ISerializationListener, ICloneable
                     ? $"{pfbParent.Path}:/{pfbParent.GetPathTo(this)}"
                     : Owner != null ? Owner.GetPathTo(this) : Name;
 
-    private static readonly REObjectFieldAccessor UpdateField = new REObjectFieldAccessor("Update").WithConditions("v2");
-    private static readonly REObjectFieldAccessor DrawField = new REObjectFieldAccessor("Draw").WithConditions("v3");
+    private static readonly REFieldAccessor UpdateField = new REFieldAccessor("Update").WithConditions("v2");
+    private static readonly REFieldAccessor DrawField = new REFieldAccessor("Draw").WithConditions("v3");
 
     public override void _EnterTree()
     {
