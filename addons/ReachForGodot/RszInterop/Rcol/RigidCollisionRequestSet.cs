@@ -4,7 +4,7 @@ using System;
 using Godot;
 
 [GlobalClass, Tool]
-public partial class RigidCollisionRequestSet : Node3D
+public partial class RigidCollisionRequestSet : Node
 {
     [Export] public uint ID { get; set; }
     [Export] public string? OriginalName { get; set; }

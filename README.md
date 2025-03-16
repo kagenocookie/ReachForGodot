@@ -60,6 +60,7 @@ If you've ever worked with a game engine before, the basic UI should be more or 
 - pfb files: import and export through integrated RszTool (tested with DD2 player pfb)
 - scn files: import and export through integrated RszTool (export tested with some RE2 RT levels)
 - user files: import and export through integrated RszTool
+- rcol files: import and export through integrated RszTool
 - other resource files: imported as placeholders
 
 Mapping of engine objects:
@@ -77,9 +78,9 @@ Mapping of engine objects:
         - "Clone GameObject": creates a clone of this gameobject, including fixing all child nodes and their references
 - `via.Component` => Components array inside `GameObject`
     - all components have their full data editable
-    - specific components (potentially game specific ones eventually as well) can have additional logic, listed in the next section
+    - specific components can have additional logic, listed in the next section
 
-Specific components support:
+General components support:
 - `via.Transform`: transforms are transformed to Godot equivalents on the game object node
     - you can move the GameObject nodes directly and the transforms will get updated on export
     - all other Node transforms will be ignored and not transferred over to the game
@@ -87,6 +88,9 @@ Specific components support:
     - meshes can be swapped around by changing the mesh field within the component's data
 - `via.render.CompositeMesh`: composite meshes are mapped into several MultiMeshInstance3D nodes
 - `via.physics.Colliders`: Basic shape colliders get converted to godot equivalents and can be moved around in 3D. Mesh colliders can only be swapped from the component data with no actual visualization or editing support yet.
+
+Specific (RE2 RT):
+- `app.ropeway.EnemyContextController`: shows the `InitialKind` enemy as a preview mesh
 
 ## Scene editing
 - import the scene file you wish to edit; best to start with whichever the root scene equivalent is for the game, e.g. `appdata/maincontents.scn.20` for DD2
