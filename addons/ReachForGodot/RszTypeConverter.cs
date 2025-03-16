@@ -26,21 +26,20 @@ public static class RszTypeConverter
     private static Variant FromRszValueUnsafe(REField field, object value, SupportedGame game)
     {
         if (field.RszField.array) {
-            if (value == null) return new Godot.Collections.Array();
+            var newArray = new Godot.Collections.Array();
+            if (value == null) return newArray;
 
             var type = value.GetType();
-            object[] arr;
             if (type.IsArray) {
-                arr = (object[])value;
+                foreach (var item in (object[])value) {
+                    newArray.Add(FromRszValueSingleValue(field, item, game));
+                }
             } else if (type.IsGenericType && type.GetGenericTypeDefinition() == baseList) {
-                arr = ((IList<object>)value).ToArray();
+                foreach (var item in ((IList<object>)value)) {
+                    newArray.Add(FromRszValueSingleValue(field, item, game));
+                }
             } else {
                 GD.Print("Unhandled array type " + type.FullName);
-                arr = Array.Empty<object>();
-            }
-            var newArray = new Godot.Collections.Array();
-            foreach (var v in arr) {
-                newArray.Add(FromRszValueSingleValue(field, v, game));
             }
             return newArray;
         }
@@ -324,9 +323,9 @@ public static class RszTypeConverter
             RszFieldType.Frustum => variant.As<Frustum>().ToRsz(),
             RszFieldType.KeyFrame => variant.As<KeyFrame>().ToRsz(),
             RszFieldType.Sfix => new RszTool.via.sfix() { v = variant.AsInt32() },
-            RszFieldType.Sfix2 => new RszTool.via.Sfix2() { x = new() { v = variant.AsVector2I().X }, y = new() { v = variant.AsVector2I().Y } },
-            RszFieldType.Sfix3 => new RszTool.via.Sfix3() { x = new() { v = variant.AsVector3I().X }, y = new() { v = variant.AsVector3I().Y }, z = new() { v = variant.AsVector3I().Z } },
-            RszFieldType.Sfix4 => new RszTool.via.Sfix4() { x = new() { v = variant.AsVector4I().X }, y = new() { v = variant.AsVector4I().Y }, z = new() { v = variant.AsVector4I().Z }, w = new() { v = variant.AsVector4I().W } },
+            RszFieldType.Sfix2 => variant.AsVector2I().ToSfix(),
+            RszFieldType.Sfix3 => variant.AsVector3I().ToSfix(),
+            RszFieldType.Sfix4 => variant.AsVector4I().ToSfix(),
             RszFieldType.String => variant.AsString(),
             RszFieldType.RuntimeType => variant.AsString(),
             _ => throw new Exception("No defined conversion to RSZ type " + field.RszField.type),
@@ -340,6 +339,9 @@ public static class RszTypeConverter
     public static Vector4 ToVector4(this RszTool.via.Sphere val) => new Vector4(val.pos.X, val.pos.Y, val.Pos.Z, val.R);
     public static Vector4 ToVector4(this Vector3 val) => new Vector4(val.X, val.Y, val.Z, 0);
     public static Vector4 ToVector4(this Quaternion val) => new Vector4(val.X, val.Y, val.Z, val.W);
+    public static RszTool.via.Sfix2 ToSfix(this Vector2I vec) => new() { x = new sfix() { v = vec.X }, y = new sfix() { v = vec.Y } };
+    public static RszTool.via.Sfix3 ToSfix(this Vector3I vec) => new() { x = new sfix() { v = vec.X }, y = new sfix() { v = vec.Y }, z = new sfix() { v = vec.Z } };
+    public static RszTool.via.Sfix4 ToSfix(this Vector4I vec) => new() { x = new sfix() { v = vec.X }, y = new sfix() { v = vec.Y }, z = new sfix() { v = vec.Z }, w = new sfix() { v = vec.W } };
     public static RszTool.via.Sphere ToSphere(this Vector4 val) => new RszTool.via.Sphere { pos = val.ToVector3().ToRsz(), r = val.W };
     public static RszTool.via.Rect ToRect(this Vector4 val) => new RszTool.via.Rect { t = val.X, r = val.Y, b = val.Z, l = val.W  };
     public static Quaternion ToGodot(this System.Numerics.Quaternion val) => new Quaternion(val.X, val.Y, val.Z, val.W);
