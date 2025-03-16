@@ -63,6 +63,7 @@ public static class PathUtils
         if (extension.SequenceEqual("pfb")) return RESupportedFileFormats.Prefab;
         if (extension.SequenceEqual("user")) return RESupportedFileFormats.Userdata;
         if (extension.SequenceEqual("mdf2")) return RESupportedFileFormats.Material;
+        if (extension.SequenceEqual("rcol")) return RESupportedFileFormats.Rcol;
         return RESupportedFileFormats.Unknown;
     }
 
@@ -73,6 +74,7 @@ public static class PathUtils
         RESupportedFileFormats.Scene => "scn",
         RESupportedFileFormats.Prefab => "pfb",
         RESupportedFileFormats.Userdata => "user",
+        RESupportedFileFormats.Rcol => "rcol",
         _ => null,
     };
 
@@ -83,6 +85,7 @@ public static class PathUtils
         RESupportedFileFormats.Scene => typeof(PackedScene),
         RESupportedFileFormats.Prefab => typeof(PackedScene),
         RESupportedFileFormats.Userdata => typeof(UserdataResource),
+        RESupportedFileFormats.Rcol => typeof(RcolResource),
         _ => typeof(REResource),
     };
 
@@ -172,6 +175,9 @@ public static class PathUtils
         return ProjectSettings.LocalizePath(path);
     }
 
+    /// <summary>
+    /// Gets the path that a resource's asset file will get imported to. This is the mesh/texture/audio/other linked resource, and not the main resource file.
+    /// </summary>
     public static string? GetAssetImportPath(string? fullSourcePath, RESupportedFileFormats format, AssetConfig config)
     {
         if (fullSourcePath == null) return null;
@@ -349,6 +355,8 @@ public static class PathUtils
                 return targetPath + (resource ? ".tres" : ".glb");
             case RESupportedFileFormats.Texture:
                 return targetPath + (resource ? ".tres" : ".dds");
+            case RESupportedFileFormats.Rcol:
+                return targetPath + (resource ? ".tres" : ".tscn");
             case RESupportedFileFormats.Scene:
             case RESupportedFileFormats.Prefab:
                 return targetPath + ".tscn";

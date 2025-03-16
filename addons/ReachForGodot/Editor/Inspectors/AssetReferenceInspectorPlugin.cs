@@ -13,7 +13,7 @@ public partial class AssetReferenceInspectorPlugin : EditorInspectorPlugin, ISer
 
     public override bool _CanHandle(GodotObject @object)
     {
-        return @object is REResource or IRszContainerNode;
+        return @object is REResource or IAssetPointer;
     }
 
     private PackedScene? inspectorScene;
@@ -26,7 +26,6 @@ public partial class AssetReferenceInspectorPlugin : EditorInspectorPlugin, ISer
         if (type == Variant.Type.Object && name == "Asset" && @object.Get(name).As<AssetReference>() is AssetReference asset) {
             var propertyEdit = new AssetReferenceProperty();
             AddPropertyEditor("Asset", propertyEdit);
-
             pluginSerializationFixer.Register(asset, propertyEdit);
             return true;
         }

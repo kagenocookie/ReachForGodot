@@ -3,11 +3,11 @@ namespace ReaGE;
 using Godot;
 
 [GlobalClass, Tool]
-public partial class UserdataResource : REResource, IRszContainerNode
+public partial class UserdataResource : REResource, IRszContainer
 {
     [Export] public REResource[]? Resources { get; set; }
 
-    string IRszContainerNode.Path => PathUtils.ImportPathToRelativePath(ResourcePath, ReachForGodot.GetAssetConfig(Game)) ?? ResourcePath;
+    string IRszContainer.Path => PathUtils.ImportPathToRelativePath(ResourcePath, ReachForGodot.GetAssetConfig(Game)) ?? ResourcePath;
 
     public void Reimport()
     {

@@ -73,6 +73,10 @@ public class Il2cppCache
                     if (item.parent == null) break;
                     if (!subclasses.TryGetValue(item.parent, out var list)) {
                         subclasses[item.parent] = list = new();
+                        if (!item.IsAbstract) {
+                            // non-abstract base types should also be saved as instantiable
+                            list.Add(item.parent);
+                        }
                     }
 
                     list.Add(name);

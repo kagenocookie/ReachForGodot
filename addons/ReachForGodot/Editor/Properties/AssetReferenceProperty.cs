@@ -18,7 +18,10 @@ public partial class AssetReferenceProperty : EditorProperty
 
     private AssetReference? GetAsset() => GetEditedObject().Get(GetEditedProperty()).As<AssetReference>();
     private string? CurrentResourcePath => GetEditedObject() is Resource res ? res.ResourcePath.GetBaseName() : GetEditedObject() is Node node && !string.IsNullOrEmpty(node.SceneFilePath) ? node.SceneFilePath.GetBaseName() : null;
-    private SupportedGame Game => (GetEditedObject() as IRszContainerNode)?.Game ?? (GetEditedObject() as REResource)?.Game ?? SupportedGame.Unknown;
+    private SupportedGame Game =>
+        (GetEditedObject() as IAssetPointer)?.Game
+        ?? (GetEditedObject() as REResource)?.Game
+        ?? SupportedGame.Unknown;
 
     public override void _EnterTree()
     {
@@ -91,7 +94,7 @@ public partial class AssetReferenceProperty : EditorProperty
     private void RefreshUI()
     {
         var updatePathBtn = container.GetNode<Button>("%UpdatePathBtn");
-        var targetAsset = (GetEditedObject() as IRszContainerNode)?.Asset ?? (GetEditedObject() as REResource)?.Asset;
+        var targetAsset = (GetEditedObject() as IAssetPointer)?.Asset;
         var currentResourcePath = CurrentResourcePath;
         var expectedImportPath = targetAsset?.GetImportFilepath(ReachForGodot.GetAssetConfig(Game))?.GetBaseName();
         updatePathBtn.Visible = !string.IsNullOrEmpty(currentResourcePath) && !currentResourcePath.Equals(expectedImportPath, StringComparison.OrdinalIgnoreCase);

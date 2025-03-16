@@ -101,7 +101,7 @@ public class Importer
     /// <summary>
     /// Fetch an existing resource, or if it doesn't exist yet, create a placeholder resource for it.
     /// </summary>
-    public static T? FindOrImportResource<T>(string chunkRelativeFilepath, AssetConfig config) where T : Resource
+    public static T? FindOrImportResource<T>(string? chunkRelativeFilepath, AssetConfig config) where T : Resource
     {
         if (string.IsNullOrEmpty(chunkRelativeFilepath)) {
             GD.PrintErr("Empty import path for resource " + typeof(T) + ": " + chunkRelativeFilepath);
@@ -148,6 +148,8 @@ public class Importer
                 return ImportPrefab(sourceFilePath, outputFilePath, config);
             case RESupportedFileFormats.Userdata:
                 return ImportUserdata(sourceFilePath, outputFilePath, config);
+            case RESupportedFileFormats.Rcol:
+                return ImportRcol(sourceFilePath, outputFilePath, config);
             case RESupportedFileFormats.Material:
                 return ImportMaterial(sourceFilePath, outputFilePath, config);
             default:
@@ -284,11 +286,22 @@ public class Importer
         return conv.CreateOrReplaceUserdata(resolvedPath, outputFilePath);
     }
 
+    public static RcolResource? ImportRcol(string? sourceFilePath, string outputFilePath, AssetConfig config)
+    {
+        var resolvedPath = PathUtils.FindSourceFilePath(sourceFilePath, config);
+        if (resolvedPath == null) {
+            GD.PrintErr("Rcol file not found: " + sourceFilePath);
+            return null;
+        }
+        var conv = new GodotRszImporter(config, GodotRszImporter.placeholderImport);
+        return conv.CreateOrReplaceRcol(resolvedPath, outputFilePath);
+    }
+
     public static MaterialResource? ImportMaterial(string? sourceFilePath, string? outputFilePath, AssetConfig config)
     {
         var resolvedPath = PathUtils.FindSourceFilePath(sourceFilePath, config);
         if (resolvedPath == null) {
-            GD.PrintErr("Userdata file not found: " + sourceFilePath);
+            GD.PrintErr("Material file not found: " + sourceFilePath);
             return null;
         }
         var importPath = ProjectSettings.LocalizePath(outputFilePath);
@@ -390,6 +403,7 @@ public enum RESupportedFileFormats
     Prefab,
     Userdata,
     Material,
+    Rcol,
 }
 
 public record struct REFileFormat(RESupportedFileFormats format, int version)

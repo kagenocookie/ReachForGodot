@@ -24,7 +24,10 @@
     <Company>shadowcookie</Company>
     <!-- Don't include unit tests in release builds. -->
     <DefaultItemExcludes>
-      $(DefaultItemExcludes);addons/ReachForGodot/RszTool/RszTool.App/**/*;addons/ReachForGodot/RszTool/RszTool.Test/**/*;
+      $(DefaultItemExcludes);
+      addons/ReachForGodot/RszTool/RszTool.App/**/*;
+      addons/ReachForGodot/RszTool/RszTool.Test/**/*;
+      addons/ReachForGodot/RszTool/RszTool/obj/**/*;
     </DefaultItemExcludes>
     <DefaultItemExcludes Condition="'$(Configuration)' == 'ExportRelease'">
       $(DefaultItemExcludes);test/**/*;

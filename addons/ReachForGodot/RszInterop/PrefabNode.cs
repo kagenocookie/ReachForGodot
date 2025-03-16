@@ -4,7 +4,7 @@ using System.Diagnostics;
 using Godot;
 
 [GlobalClass, Tool, Icon("res://addons/ReachForGodot/icons/prefab.png")]
-public partial class PrefabNode : REGameObject, IRszContainerNode
+public partial class PrefabNode : REGameObject, IRszContainer
 {
     [Export] public AssetReference? Asset { get; set; }
     [Export] public REResource[]? Resources { get; set; }

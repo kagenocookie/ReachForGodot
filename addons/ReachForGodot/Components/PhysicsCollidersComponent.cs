@@ -192,28 +192,16 @@ public partial class PhysicsCollidersComponent : REComponent, IVisualREComponent
                     // collider.Shape = new ConvexPolygonShape3D();
                     break;
                 case "via.physics.SphereShape":
-                    var sphere = shape.GetField(SphereShape).AsVector4();
-                    collider.Shape = new SphereShape3D() { Radius = sphere.W };
-                    collider.Position = sphere.ToVector3();
+                    RigidCollisionShape3D.ApplyShape(collider, RcolFile.ShapeType.Sphere, shape.GetField(SphereShape));
                     break;
                 case "via.physics.BoxShape":
-                    var obb = shape.GetField(BoxShape).As<OrientedBoundingBox>();
-                    // TODO: sometime the obb extents are all == 0. should we use the BoundingAabb for size instead?
-                    obb.extent.X = Mathf.Max(0.001f, Mathf.Abs(obb.extent.X));
-                    obb.extent.Y = Mathf.Max(0.001f, Mathf.Abs(obb.extent.Y));
-                    obb.extent.Z = Mathf.Max(0.001f, Mathf.Abs(obb.extent.Z));
-                    collider.Shape = new BoxShape3D() { Size = obb.extent };
-                    collider.Transform = (Transform3D)obb.coord;
+                    RigidCollisionShape3D.ApplyShape(collider, RcolFile.ShapeType.Box, shape.GetField(BoxShape));
                     break;
                 case "via.physics.CapsuleShape":
-                    var capsule = shape.GetField(BoxShape).As<Capsule>();
-                    collider.Shape = new CapsuleShape3D() { Height = capsule.p0.DistanceTo(capsule.p1), Radius = capsule.r };
-                    collider.Position = (capsule.p0 + capsule.p1) / 2;
+                    RigidCollisionShape3D.ApplyShape(collider, RcolFile.ShapeType.Capsule, shape.GetField(CapsuleShape));
                     break;
                 case "via.physics.AabbShape":
-                    var aabb = shape.GetField(AabbShape).As<Aabb>();
-                    collider.Shape = new BoxShape3D() { Size = aabb.Size };
-                    collider.Position = aabb.Position;
+                    RigidCollisionShape3D.ApplyShape(collider, RcolFile.ShapeType.Aabb, shape.GetField(AabbShape));
                     break;
                 default:
                     GD.Print("Unhandled collider shape " + shape.Classname);

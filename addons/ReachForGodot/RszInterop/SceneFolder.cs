@@ -7,7 +7,7 @@ using Godot;
 using ReaGE.EditorLogic;
 
 [GlobalClass, Tool, Icon("res://addons/ReachForGodot/icons/folder.png")]
-public partial class SceneFolder : Node3D, IRszContainerNode
+public partial class SceneFolder : Node3D, IRszContainer
 {
     [Export] public SupportedGame Game { get; set; }
     [Export] public AssetReference? Asset { get; set; }

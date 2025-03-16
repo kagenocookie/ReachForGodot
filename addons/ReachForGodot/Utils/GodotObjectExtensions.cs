@@ -229,12 +229,12 @@ public static class GodotObjectExtensions
         if (currentSeparatorPos != -1 && int.TryParse(basename.AsSpan()[(currentSeparatorPos + separator.Length)..], out _)) {
             basename = basename.Substr(0, currentSeparatorPos);
         }
-        if (parent.FindChild(basename) != null) {
+        if (parent.FindChild(basename, false) != null) {
             var index = 1;
             string nextname;
             do {
                 nextname = basename + separator + (index++);
-            } while (parent.FindChild(nextname) != null);
+            } while (parent.FindChild(nextname, false) != null);
             child.Name = nextname;
         }
         parent.AddChild(child);

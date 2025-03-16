@@ -26,7 +26,7 @@ public class Exporter
         return PathUtils.AppendFileVersion(assetPath, config);
     }
 
-    public static bool Export(IRszContainerNode resource, string exportBasepath)
+    public static bool Export(IAssetPointer resource, string exportBasepath)
     {
         var outputPath = ResolveExportPath(exportBasepath, resource.Asset!.AssetFilename, resource.Game);
         if (string.IsNullOrEmpty(outputPath)) {
@@ -39,6 +39,8 @@ public class Exporter
             switch (reres.ResourceType) {
                 case RESupportedFileFormats.Userdata:
                     return ExportUserdata((UserdataResource)reres, outputPath);
+                case RESupportedFileFormats.Rcol:
+                    return ExportRcol(((RcolResource)reres).Instantiate(), outputPath);
                 default:
                     GD.PrintErr("Currently unsupported export for resource type " + reres.ResourceType);
                     break;
@@ -47,6 +49,8 @@ public class Exporter
             return ExportPrefab(pfb, outputPath);
         } else if (resource is SceneFolder scn) {
             return ExportScene(scn, outputPath);
+        } else if (resource is RcolRootNode rcol) {
+            return ExportRcol(rcol, outputPath);
         } else {
             GD.PrintErr("Currently unsupported export for file type " + resource.GetType());
         }
@@ -77,6 +81,87 @@ public class Exporter
         }
 
         return success;
+    }
+
+    private static bool ExportRcol(RcolRootNode? rcolRoot, string outputFile)
+    {
+        if (rcolRoot == null) return false;
+
+        Directory.CreateDirectory(outputFile.GetBaseDir());
+        AssetConfig config = ReachForGodot.GetAssetConfig(rcolRoot.Game);
+        var fileOption = TypeCache.CreateRszFileOptions(config);
+
+        using var file = new RcolFile(fileOption, new FileHandler(outputFile));
+        file.RSZ.ClearInstances();
+
+        var groupsNode = rcolRoot.FindChild("Groups");
+        if (groupsNode == null) {
+            GD.PrintErr("Rcol has no groups");
+            return false;
+        }
+
+        var groupsDict = new Dictionary<RigidCollisionGroup, int>();
+        int groupIndex = 0;
+        foreach (var child in groupsNode.FindChildrenByType<RigidCollisionGroup>()) {
+            var group = new RcolFile.RcolGroup();
+            group.Info.guid = child.Guid;
+            group.Info.name = child.Name;
+            group.Info.MaskBits = child.CollisionMask;
+            file.GroupInfoList.Add(group);
+
+            foreach (var shape in child.FindChildrenByType<RigidCollisionShape3D>()) {
+                var outShape = new RcolFile.RcolShape();
+                group.Shapes.Add(outShape);
+                outShape.Guid = shape.Guid;
+                outShape.Name = shape.OriginalName;
+                outShape.PrimaryJointNameStr = shape.PrimaryJointNameStr;
+                outShape.SecondaryJointNameStr = shape.SecondaryJointNameStr;
+                outShape.LayerIndex = shape.LayerIndex;
+                outShape.SkipIdBits = shape.SkipIdBits;
+                outShape.IgnoreTagBits = shape.IgnoreTagBits;
+                outShape.Attribute = shape.Attribute;
+                if (shape.Data != null) {
+                    var instanceId = Exporter.ConstructObjectInstances(shape.Data, file.RSZ, fileOption, file, false);
+                    outShape.UserData = file.RSZ.InstanceList[instanceId];
+                    file.RSZ.AddToObjectTable(outShape.UserData);
+                    outShape.userDataIndex = outShape.UserData.ObjectTableIndex;
+                } else {
+                    outShape.userDataIndex = -1;
+                }
+                outShape.shapeType = shape.RcolShapeType;
+                var fieldType = RigidCollisionShape3D.GetShapeFieldType(shape.RcolShapeType);
+                // TODO convert shape
+            }
+            groupsDict[child] = groupIndex++;
+        }
+
+        foreach (var sourceSet in rcolRoot.FindChildrenByType<RigidCollisionRequestSet>()) {
+            var set = new RcolFile.RequestSet();
+            set.id = sourceSet.ID;
+            set.name = sourceSet.OriginalName ?? string.Empty;
+            set.keyName = sourceSet.KeyName ?? string.Empty;
+            if (sourceSet.Group != null) {
+                set.groupIndex = groupsDict[sourceSet.Group];
+            } else {
+                set.groupIndex = -1;
+            }
+            if (sourceSet.Data != null) {
+                var instanceId = Exporter.ConstructObjectInstances(sourceSet.Data, file.RSZ, fileOption, file, false);
+                set.Userdata = file.RSZ.InstanceList[instanceId];
+                file.RSZ.AddToObjectTable(set.Userdata);
+                set.requestSetUserdataIndex = set.Userdata.ObjectTableIndex;
+            } else {
+                set.requestSetUserdataIndex = -1;
+            }
+        }
+
+        var success = file.Save();
+
+        if (!success && File.Exists(outputFile) && new FileInfo(outputFile).Length == 0) {
+            File.Delete(outputFile);
+        }
+
+        return false;
     }
 
     private static bool ExportScene(SceneFolder root, string outputFile)

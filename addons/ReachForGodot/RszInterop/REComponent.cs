@@ -32,10 +32,10 @@ public abstract partial class REComponent : REObject, ISerializationListener
         return clone;
     }
 
-    public IRszContainerNode? GetContainer() => GameObject == null ? null
-        : GameObject is IRszContainerNode rsz ? rsz
-        : GameObject.Owner is IRszContainerNode owner ? owner
-        : GameObject.FindNodeInParents<IRszContainerNode>();
+    public IRszContainer? GetContainer() => GameObject == null ? null
+        : GameObject is IRszContainer rsz ? rsz
+        : GameObject.Owner is IRszContainer owner ? owner
+        : GameObject.FindNodeInParents<IRszContainer>();
 
     public override string ToString() => (GameObject != null ? GameObject.ToString() + ":" : "") + (Classname ?? nameof(REComponent));
 

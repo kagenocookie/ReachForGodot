@@ -20,17 +20,17 @@ public partial class SceneFolderInspectorPlugin : EditorInspectorPlugin, ISerial
 
     public override bool _CanHandle(GodotObject @object)
     {
-        return @object is SceneFolder or PrefabNode;
+        return @object is SceneFolder or PrefabNode or RcolRootNode;
     }
 
     public override void _ParseBegin(GodotObject @object)
     {
-        if (@object is IRszContainerNode rsz) {
+        if (@object is IAssetPointer rsz) {
             CreateUI(rsz);
         }
     }
 
-    private void CreateUI(IRszContainerNode obj)
+    private void CreateUI(IAssetPointer obj)
     {
         inspectorScene ??= ResourceLoader.Load<PackedScene>("res://addons/ReachForGodot/Editor/Inspectors/SceneFolderInspector.tscn");
         var container = inspectorScene.Instantiate<Control>();
@@ -157,7 +157,7 @@ public partial class SceneFolderInspectorPlugin : EditorInspectorPlugin, ISerial
         }
     }
 
-    private async Task DoRebuild(IRszContainerNode root, RszGodotConversionOptions options)
+    private async Task DoRebuild(IAssetPointer root, RszGodotConversionOptions options)
     {
         var sw = new Stopwatch();
         sw.Start();
@@ -167,6 +167,10 @@ public partial class SceneFolderInspectorPlugin : EditorInspectorPlugin, ISerial
         Task task;
         if (root is PrefabNode pfb) {
             task = conv.RegeneratePrefabTree(pfb);
+        } else if (root is RcolRootNode rcol) {
+            var resource = rcol.Resource ?? throw new Exception("Failed to resolve rcol resource");
+            conv.GenerateRcol(resource);
+            task = Task.CompletedTask;
         } else if (root is SceneFolder scn) {
             if (scn.GetParent() is SceneFolderProxy parentProxy) {
                 root = scn = parentProxy;

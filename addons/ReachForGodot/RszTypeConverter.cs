@@ -32,11 +32,11 @@ public static class RszTypeConverter
             var type = value.GetType();
             if (type.IsArray) {
                 foreach (var item in (object[])value) {
-                    newArray.Add(FromRszValueSingleValue(field, item, game));
+                    newArray.Add(FromRszValueSingleValue(field.RszField.type, item, game));
                 }
             } else if (type.IsGenericType && type.GetGenericTypeDefinition() == baseList) {
                 foreach (var item in ((IList<object>)value)) {
-                    newArray.Add(FromRszValueSingleValue(field, item, game));
+                    newArray.Add(FromRszValueSingleValue(field.RszField.type, item, game));
                 }
             } else {
                 GD.Print("Unhandled array type " + type.FullName);
@@ -44,12 +44,12 @@ public static class RszTypeConverter
             return newArray;
         }
 
-        return FromRszValueSingleValue(field, value, game);
+        return FromRszValueSingleValue(field.RszField.type, value, game);
     }
 
-    public static Variant FromRszValueSingleValue(REField field, object value, SupportedGame game)
+    public static Variant FromRszValueSingleValue(RszFieldType type, object value, SupportedGame game)
     {
-        switch (field.RszField.type) {
+        switch (type) {
             case RszFieldType.Resource:
                 if (value == null || value is string str && string.IsNullOrEmpty(str)) {
                     return new Variant();
@@ -57,7 +57,7 @@ public static class RszTypeConverter
                 break;
             case RszFieldType.UserData:
             case RszFieldType.Object:
-                GD.PrintErr("Fields of type " + field.RszField.type + " shouldn't be handled from this method!");
+                GD.PrintErr("Fields of type " + type + " shouldn't be handled from this method!");
                 return new Variant();
 
             case RszFieldType.Sfix:
@@ -209,7 +209,7 @@ public static class RszTypeConverter
                 return (Line)((RszTool.via.Line)value);
         }
 
-        GD.PrintErr("Unhandled conversion for rsz type " + field.RszField.type + " with value type " + value.GetType().FullName);
+        GD.PrintErr("Unhandled conversion for rsz type " + type + " with value type " + value.GetType().FullName);
         return new Variant();
     }
 

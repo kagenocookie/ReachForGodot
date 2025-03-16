@@ -289,8 +289,13 @@ public class GodotRszImporter
         UserdataResource userdata = new UserdataResource() { ResourceType = RESupportedFileFormats.Userdata };
         return SaveOrReplaceRszResource(userdata, sourceFilePath, importFilepath);
     }
+    public RcolResource? CreateOrReplaceRcol(string sourceFilePath, string importFilepath)
+    {
+        var resource = new RcolResource() { ResourceType = RESupportedFileFormats.Rcol };
+        return SaveOrReplaceRszResource(resource, sourceFilePath, importFilepath);
+    }
 
-    private PackedScene? CreateOrReplaceSceneResource<TRoot>(string sourceFilePath, string importFilepath) where TRoot : Node, IRszContainerNode, new()
+    private PackedScene? CreateOrReplaceSceneResource<TRoot>(string sourceFilePath, string importFilepath) where TRoot : Node, IRszContainer, new()
     {
         var relativeSourceFile = PathUtils.FullToRelativePath(sourceFilePath, AssetConfig)!;
         var name = PathUtils.GetFilenameWithoutExtensionOrVersion(sourceFilePath);
@@ -306,7 +311,7 @@ public class GodotRszImporter
         return SaveOrReplaceResource(scene, importFilepath);
     }
 
-    private PackedScene? UpdateSceneResource<TRoot>(TRoot root) where TRoot : Node, IRszContainerNode, new()
+    private PackedScene? UpdateSceneResource<TRoot>(TRoot root) where TRoot : Node, IRszContainer, new()
     {
         var relativeSourceFile = root.Asset!.AssetFilename;
         var importFilepath = PathUtils.GetLocalizedImportPath(relativeSourceFile, AssetConfig) ?? throw new Exception("Couldn't resolve import path for resource " + relativeSourceFile);
@@ -315,7 +320,19 @@ public class GodotRszImporter
         return SaveOrReplaceResource(scene, importFilepath);
     }
 
-    private TRes? SaveOrReplaceRszResource<TRes>(TRes newResource, string sourceFilePath, string importFilepath) where TRes : Resource, IRszContainerNode
+    private void UpdateProxyPackedScene<TRoot>(TRoot resource, Node rootNode) where TRoot : REResourceProxy, IRszContainer, new()
+    {
+        var relativeSourceFile = resource.Asset!.AssetFilename;
+        var resourceImportPath = PathUtils.GetLocalizedImportPath(relativeSourceFile, AssetConfig) ?? throw new Exception("Couldn't resolve import path for resource " + relativeSourceFile);
+        var assetImportPath = PathUtils.GetAssetImportPath(relativeSourceFile, resource.ResourceType, AssetConfig) ?? throw new Exception("Couldn't resolve import path for resource " + relativeSourceFile);
+        var scene = ResourceLoader.Exists(assetImportPath) ? ResourceLoader.Load<PackedScene>(assetImportPath) : new PackedScene();
+        scene.Pack(rootNode);
+        resource.ImportedResource = scene;
+        SaveOrReplaceResource(scene, assetImportPath);
+        SaveOrReplaceResource(resource, resourceImportPath);
+    }
+
+    private TRes? SaveOrReplaceRszResource<TRes>(TRes newResource, string sourceFilePath, string importFilepath) where TRes : Resource, IRszContainer
     {
         if (!File.Exists(sourceFilePath)) {
             GD.PrintErr("Invalid resource source file, does not exist: " + sourceFilePath);
@@ -760,7 +777,97 @@ public class GodotRszImporter
         }
     }
 
-    private void GenerateResources(IRszContainerNode root, List<ResourceInfo> resourceInfos, AssetConfig config)
+    public void GenerateRcol(RcolResource root)
+    {
+        var fullpath = PathUtils.FindSourceFilePath(root.Asset!.AssetFilename, AssetConfig);
+        if (fullpath == null) return;
+
+        GD.Print("Opening rcol file " + fullpath);
+        using var file = new RcolFile(fileOption, new FileHandler(fullpath));
+        try {
+            file.Read();
+        } catch (Exception e) {
+            GD.PrintErr("Failed to parse file " + fullpath, e);
+            return;
+        }
+
+        if (Options.userdata == RszImportType.ForceReimport) {
+            root.Clear();
+        }
+
+        var rcolRoot = root.RcolScene?.Instantiate<RcolRootNode>() ?? new RcolRootNode();
+        rcolRoot.Asset = new AssetReference(root.Asset.AssetFilename);
+        rcolRoot.Name = PathUtils.GetFilenameWithoutExtensionOrVersion(root.Asset.AssetFilename);
+        rcolRoot.Game = AssetConfig.Game;
+
+        var groupsNode = rcolRoot.FindChild("Groups");
+        if (groupsNode == null) {
+            rcolRoot.AddChild(groupsNode = new Node3D() { Name = "Groups" });
+            groupsNode.Owner = rcolRoot;
+        }
+
+        var groupsDict = new Dictionary<Guid, RigidCollisionGroup>();
+        foreach (var child in groupsNode.FindChildrenByType<RigidCollisionGroup>()) {
+            groupsDict[child.Guid] = child;
+        }
+
+        var setsDict = new Dictionary<uint, RigidCollisionRequestSet>();
+        foreach (var child in rcolRoot.FindChildrenByType<RigidCollisionRequestSet>()) {
+            setsDict[child.ID] = child;
+        }
+
+        foreach (var srcGroup in file.GroupInfoList) {
+            if (!groupsDict.TryGetValue(srcGroup.Info.guid, out var group)) {
+                groupsNode.AddChild(groupsDict[srcGroup.Info.guid] = group = new RigidCollisionGroup());
+                group.Owner = rcolRoot;
+                group.Guid = srcGroup.Info.guid;
+                group.Name = !string.IsNullOrEmpty(srcGroup.Info.name) ? srcGroup.Info.name : (group.Name ?? srcGroup.Info.guid.ToString());
+                group.CollisionMask = srcGroup.Info.MaskBits;
+                group.CollisionLayer = (uint)(1 << srcGroup.Info.layerIndex);
+            }
+
+            group.ClearChildren();
+            foreach (var srcShape in srcGroup.Shapes) {
+                var shapeNode = new RigidCollisionShape3D();
+                shapeNode.Guid = srcShape.Guid;
+                shapeNode.Name = !string.IsNullOrEmpty(srcShape.Name) ? srcShape.Name : shapeNode.Uuid!;
+                shapeNode.OriginalName = srcShape.Name;
+                shapeNode.PrimaryJointNameStr = srcShape.PrimaryJointNameStr;
+                shapeNode.SecondaryJointNameStr = srcShape.SecondaryJointNameStr;
+                shapeNode.LayerIndex = srcShape.LayerIndex;
+                shapeNode.SkipIdBits = srcShape.SkipIdBits;
+                shapeNode.IgnoreTagBits = srcShape.IgnoreTagBits;
+                shapeNode.Attribute = srcShape.Attribute;
+                shapeNode.Data = srcShape.UserData == null ? null : CreateOrGetObject(srcShape.UserData);
+                if (srcShape.shape != null) {
+                    var fieldType = RigidCollisionShape3D.GetShapeFieldType(srcShape.shapeType);
+                    RigidCollisionShape3D.ApplyShape(shapeNode, srcShape.shapeType, RszTypeConverter.FromRszValueSingleValue(fieldType, srcShape.shape, AssetConfig.Game));
+                }
+                group.AddUniqueNamedChild(shapeNode);
+            }
+        }
+
+        foreach (var set in file.RequestSetInfoList) {
+            if (!setsDict.TryGetValue(set.id, out var requestSet)) {
+                setsDict[set.id] = requestSet = new RigidCollisionRequestSet();
+                requestSet.Name = !string.IsNullOrEmpty(set.name) ? set.name : ("Set_" + set.id.ToString());
+                rcolRoot.AddUniqueNamedChild(requestSet);
+                requestSet.ID = set.id;
+                requestSet.OriginalName = set.name;
+                requestSet.KeyName = set.keyName;
+            }
+            if (set.Group != null && groupsDict.TryGetValue(set.Group.Info.guid, out var group)) {
+                requestSet.Group = group;
+            }
+            if (set.Userdata != null) {
+                requestSet.Data = CreateOrGetObject(set.Userdata);
+            }
+        }
+
+        UpdateProxyPackedScene(root, rcolRoot);
+    }
+
+    private void GenerateResources(IRszContainer root, List<ResourceInfo> resourceInfos, AssetConfig config)
     {
         var resources = new List<REResource>(resourceInfos.Count);
         foreach (var res in resourceInfos) {
@@ -1067,7 +1174,7 @@ public class GodotRszImporter
                     return new Variant();
                 }
             default:
-                return RszTypeConverter.FromRszValueSingleValue(field, value, AssetConfig.Game);
+                return RszTypeConverter.FromRszValueSingleValue(field.RszField.type, value, AssetConfig.Game);
         }
     }
 
