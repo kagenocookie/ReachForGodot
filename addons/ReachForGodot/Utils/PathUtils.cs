@@ -64,6 +64,9 @@ public static class PathUtils
         if (extension.SequenceEqual("user")) return RESupportedFileFormats.Userdata;
         if (extension.SequenceEqual("mdf2")) return RESupportedFileFormats.Material;
         if (extension.SequenceEqual("rcol")) return RESupportedFileFormats.Rcol;
+        if (extension.SequenceEqual("uvar")) return RESupportedFileFormats.Uvar;
+        if (extension.SequenceEqual("motlist")) return RESupportedFileFormats.MotionList;
+        if (extension.SequenceEqual("motbank")) return RESupportedFileFormats.MotionBank;
         return RESupportedFileFormats.Unknown;
     }
 
@@ -75,6 +78,9 @@ public static class PathUtils
         RESupportedFileFormats.Prefab => "pfb",
         RESupportedFileFormats.Userdata => "user",
         RESupportedFileFormats.Rcol => "rcol",
+        RESupportedFileFormats.Uvar => "uvar",
+        RESupportedFileFormats.MotionList => "motlist",
+        RESupportedFileFormats.MotionBank => "motbank",
         _ => null,
     };
 
@@ -86,6 +92,9 @@ public static class PathUtils
         RESupportedFileFormats.Prefab => typeof(PackedScene),
         RESupportedFileFormats.Userdata => typeof(UserdataResource),
         RESupportedFileFormats.Rcol => typeof(RcolResource),
+        RESupportedFileFormats.Uvar => typeof(UvarResource),
+        RESupportedFileFormats.MotionList => typeof(MotionListResource),
+        RESupportedFileFormats.MotionBank => typeof(MotionBankResource),
         _ => typeof(REResource),
     };
 

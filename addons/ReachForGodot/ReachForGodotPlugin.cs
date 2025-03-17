@@ -112,14 +112,14 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
 
     private void UpgradeMaterialResources()
     {
-        foreach (var (file, current) in FindUpgradeableResources("*.mdf2.*", (current) => current is MaterialResource)) {
+        foreach (var (file, current) in FindUpgradeableResources("*.mdf2.*", (current) => current is not MaterialResource)) {
             Importer.ImportMaterial(current.Asset!.AssetFilename, file, ReachForGodot.GetAssetConfig(current.Game));
         }
     }
 
     private void UpgradeRcolResources()
     {
-        foreach (var (file, current) in FindUpgradeableResources("*.rcol.tres", (current) => current is RcolResource)) {
+        foreach (var (file, current) in FindUpgradeableResources("*.rcol.tres", (current) => current is not RcolResource)) {
             Importer.ImportRcol(current.Asset!.AssetFilename, file, ReachForGodot.GetAssetConfig(current.Game));
         }
     }

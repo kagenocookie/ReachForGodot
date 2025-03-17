@@ -152,6 +152,12 @@ public class Importer
                 return ImportRcol(sourceFilePath, outputFilePath, config);
             case RESupportedFileFormats.Material:
                 return ImportMaterial(sourceFilePath, outputFilePath, config);
+            case RESupportedFileFormats.Uvar:
+                return ImportResource<UvarResource>(sourceFilePath, outputFilePath, config);
+            case RESupportedFileFormats.MotionList:
+                return ImportResource<MotionListResource>(sourceFilePath, outputFilePath, config);
+            case RESupportedFileFormats.MotionBank:
+                return ImportResource<MotionBankResource>(sourceFilePath, outputFilePath, config);
             default:
                 return ImportResource<REResource>(sourceFilePath, outputFilePath, config);
         }
@@ -404,6 +410,9 @@ public enum RESupportedFileFormats
     Userdata,
     Material,
     Rcol,
+    Uvar,
+    MotionList,
+    MotionBank,
 }
 
 public record struct REFileFormat(RESupportedFileFormats format, int version)
