@@ -74,6 +74,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
                 OpenAssetImporterWindow(game);
             }
             if (id == 100) UpgradeMaterialResources();
+            if (id == 101) UpgradeRcolResources();
         };
     }
 
@@ -88,6 +89,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
         }
 
         // toolMenu.AddItem("Upgrade all material resources", 100);
+        // toolMenu.AddItem("Upgrade all Rcol resources", 101);
     }
 
     public void OpenAssetImporterWindow(SupportedGame game)
@@ -110,18 +112,32 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
 
     private void UpgradeMaterialResources()
     {
-        var list = Directory.EnumerateFiles(ProjectSettings.GlobalizePath("res://"), "*.mdf2.*", SearchOption.AllDirectories);
+        foreach (var (file, current) in FindUpgradeableResources("*.mdf2.*", (current) => current is MaterialResource)) {
+            Importer.ImportMaterial(current.Asset!.AssetFilename, file, ReachForGodot.GetAssetConfig(current.Game));
+        }
+    }
+
+    private void UpgradeRcolResources()
+    {
+        foreach (var (file, current) in FindUpgradeableResources("*.rcol.tres", (current) => current is RcolResource)) {
+            Importer.ImportRcol(current.Asset!.AssetFilename, file, ReachForGodot.GetAssetConfig(current.Game));
+        }
+    }
+
+    private IEnumerable<(string file, REResource current)> FindUpgradeableResources(string searchPattern, Func<REResource, bool> upgradeCondition)
+    {
+        var list = Directory.EnumerateFiles(ProjectSettings.GlobalizePath("res://"), searchPattern, SearchOption.AllDirectories);
         foreach (var file in list) {
             if (file.Contains(".godot")) continue;
 
             var localized = ProjectSettings.LocalizePath(file);
             var current = ResourceLoader.Load<REResource>(localized);
-            if (current?.Asset == null || current is MaterialResource) {
+            if (current?.Asset == null || !upgradeCondition(current)) {
                 continue;
             }
 
             GD.Print(localized);
-            Importer.ImportMaterial(current.Asset.AssetFilename, file, ReachForGodot.GetAssetConfig(current.Game));
+            yield return (file, current);
         }
         GD.Print("You may need to reopen any scenes referencing the upgraded resources");
     }

@@ -283,7 +283,7 @@ public class Importer
             return null;
         }
         var conv = new GodotRszImporter(config, GodotRszImporter.placeholderImport);
-        return conv.CreateOrReplaceUserdata(resolvedPath, outputFilePath);
+        return conv.CreateOrReplaceUserdata(resolvedPath, ProjectSettings.LocalizePath(outputFilePath));
     }
 
     public static RcolResource? ImportRcol(string? sourceFilePath, string outputFilePath, AssetConfig config)
@@ -294,7 +294,7 @@ public class Importer
             return null;
         }
         var conv = new GodotRszImporter(config, GodotRszImporter.placeholderImport);
-        return conv.CreateOrReplaceRcol(resolvedPath, outputFilePath);
+        return conv.CreateOrReplaceRcol(resolvedPath, ProjectSettings.LocalizePath(outputFilePath));
     }
 
     public static MaterialResource? ImportMaterial(string? sourceFilePath, string? outputFilePath, AssetConfig config)

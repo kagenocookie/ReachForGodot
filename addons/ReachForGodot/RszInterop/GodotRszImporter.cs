@@ -819,6 +819,7 @@ public class GodotRszImporter
         foreach (var srcGroup in file.GroupInfoList) {
             if (!groupsDict.TryGetValue(srcGroup.Info.guid, out var group)) {
                 groupsNode.AddChild(groupsDict[srcGroup.Info.guid] = group = new RigidCollisionGroup());
+                group.SetDisplayFolded(true);
                 group.Owner = rcolRoot;
                 group.Guid = srcGroup.Info.guid;
                 group.Name = !string.IsNullOrEmpty(srcGroup.Info.name) ? srcGroup.Info.name : (group.Name ?? srcGroup.Info.guid.ToString());
