@@ -1033,7 +1033,7 @@ public class GodotRszImporter
 
         if (gameobj.GetParent() == null && parentNode != null && parentNode != gameobj) {
             parentNode.AddUniqueNamedChild(gameobj);
-            var owner = parentNode?.Owner ?? parentNode;
+            var owner = gameobj.FindNodeInParents<Node>(p => p is IRszContainer rsz && rsz.Asset?.IsEmpty == false);
             Debug.Assert(owner != gameobj);
             gameobj.Owner = owner;
             if (gameobj is PrefabNode) {
