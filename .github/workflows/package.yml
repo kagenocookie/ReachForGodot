@@ -1,0 +1,38 @@
+name: Package mod
+
+on:
+  push:
+    branches: [ "master" ]
+    tags:
+      - v0.*
+      - v1.*
+
+jobs:
+  release:
+    runs-on: windows-latest
+    permissions:
+      contents: write
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: recursive
+        fetch-depth: 0
+        persist-credentials: false
+
+    - name: Prepare files
+      run: |
+       rm addons/ReachForGodot/RszTool/RszTool.* -r
+       rm addons/ReachForGodot/RszTool/Docs -r
+       rm addons/ReachForGodot/RszTool/.git -force
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4.4.3
+      with:
+        name: ReachForGodot
+        path: "addons/"
+
+    - name: Upload files to release
+      uses: softprops/action-gh-release@v2
+      if: startsWith(github.ref, 'refs/tags/')
+      with:
+        files: "*.zip"
