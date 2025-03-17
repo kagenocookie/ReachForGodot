@@ -222,7 +222,7 @@ public static partial class TypeCache
                 FieldIndex = cls.IndexOfField(srcField.name)
             };
             fields[i] = refield;
-            RszFieldToVariantType(srcField, refield, cache);
+            RszFieldToGodotProperty(srcField, refield, cache);
         }
         return fields;
     }
@@ -252,7 +252,7 @@ public static partial class TypeCache
         }
     }
 
-    private static void RszFieldToVariantType(RszField srcField, REField refield, GameClassCache cache)
+    private static void RszFieldToGodotProperty(RszField srcField, REField refield, GameClassCache cache)
     {
         static void ResourceHint(REField field, string resourceName)
         {
@@ -522,7 +522,7 @@ public static partial class TypeCache
             var prop = cls.PropertyList.First(dict => dict["name"].AsString() == field);
             Debug.Assert(fieldObj != null);
             Debug.Assert(prop != null);
-            RszFieldToVariantType(fieldObj.RszField, fieldObj, cache);
+            RszFieldToGodotProperty(fieldObj.RszField, fieldObj, cache);
             cls.UpdateFieldProperty(fieldObj, prop);
         }
     }

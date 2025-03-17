@@ -822,10 +822,13 @@ public class GodotRszImporter
                 group.SetDisplayFolded(true);
                 group.Owner = rcolRoot;
                 group.Guid = srcGroup.Info.guid;
-                group.Name = !string.IsNullOrEmpty(srcGroup.Info.name) ? srcGroup.Info.name : (group.Name ?? srcGroup.Info.guid.ToString());
-                group.CollisionMask = srcGroup.Info.MaskBits;
-                group.CollisionLayer = (uint)(1 << srcGroup.Info.layerIndex);
             }
+
+            group.Name = !string.IsNullOrEmpty(srcGroup.Info.name) ? srcGroup.Info.name : (group.Name ?? srcGroup.Info.guid.ToString());
+            group.CollisionMask = srcGroup.Info.MaskBits;
+            group.CollisionLayer = (uint)(1 << srcGroup.Info.layerIndex);
+            group.MaskGuids = srcGroup.Info.MaskGuids.Select(c => c.ToString()).ToArray();
+            group.LayerGuid = srcGroup.Info.layerGuid;
 
             group.ClearChildren();
             foreach (var srcShape in srcGroup.Shapes) {
@@ -840,6 +843,7 @@ public class GodotRszImporter
                 shapeNode.IgnoreTagBits = srcShape.IgnoreTagBits;
                 shapeNode.Attribute = srcShape.Attribute;
                 shapeNode.Data = srcShape.UserData == null ? null : CreateOrGetObject(srcShape.UserData);
+                shapeNode.RcolShapeType = srcShape.shapeType;
                 if (srcShape.shape != null) {
                     var fieldType = RigidCollisionShape3D.GetShapeFieldType(srcShape.shapeType);
                     RigidCollisionShape3D.ApplyShape(shapeNode, srcShape.shapeType, RszTypeConverter.FromRszValueSingleValue(fieldType, srcShape.shape, AssetConfig.Game));

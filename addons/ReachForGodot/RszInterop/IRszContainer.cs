@@ -9,7 +9,9 @@ public interface IAssetPointer
     public AssetReference? Asset { get; set; }
 }
 
-public interface IRszContainer : IAssetPointer
+public interface IExportableAsset : IAssetPointer { }
+
+public interface IRszContainer : IExportableAsset
 {
     public REResource[]? Resources { get; set; }
     /// <summary>

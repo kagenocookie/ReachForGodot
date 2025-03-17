@@ -13,7 +13,7 @@ public partial class AssetReferenceInspectorPlugin : EditorInspectorPlugin, ISer
 
     public override bool _CanHandle(GodotObject @object)
     {
-        return @object is REResource or IAssetPointer;
+        return @object is IAssetPointer;
     }
 
     private PackedScene? inspectorScene;

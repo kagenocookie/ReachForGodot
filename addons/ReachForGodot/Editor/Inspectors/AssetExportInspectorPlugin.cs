@@ -15,18 +15,18 @@ public partial class AssetExportInspectorPlugin : EditorInspectorPlugin, ISerial
 
     public override bool _CanHandle(GodotObject @object)
     {
-        return @object is IRszContainer or RcolRootNode;
+        return @object is IExportableAsset;
     }
 
     public override void _ParseBegin(GodotObject @object)
     {
-        if (@object is IAssetPointer res) {
+        if (@object is IExportableAsset res) {
             CreateUI(res);
         }
         base._ParseBegin(@object);
     }
 
-    private void CreateUI(IAssetPointer res)
+    private void CreateUI(IExportableAsset res)
     {
         inspectorScene ??= ResourceLoader.Load<PackedScene>("res://addons/ReachForGodot/Editor/Inspectors/AssetExportInspectorPlugin.tscn");
         var container = inspectorScene.Instantiate<Control>();

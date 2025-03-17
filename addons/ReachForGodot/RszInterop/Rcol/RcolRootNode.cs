@@ -4,7 +4,7 @@ using System;
 using Godot;
 
 [GlobalClass, Tool]
-public partial class RcolRootNode : Node, IAssetPointer
+public partial class RcolRootNode : Node, IExportableAsset
 {
     [Export] public SupportedGame Game { get; set; }
     [Export] public AssetReference? Asset { get; set; }

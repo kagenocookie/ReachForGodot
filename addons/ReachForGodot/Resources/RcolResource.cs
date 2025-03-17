@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Godot;
 
 [GlobalClass, Tool]
-public partial class RcolResource : REResourceProxy, IRszContainer
+public partial class RcolResource : REResourceProxy, IRszContainer, IExportableAsset
 {
     REResource[]? IRszContainer.Resources { get => Array.Empty<REResource>(); set {} }
 

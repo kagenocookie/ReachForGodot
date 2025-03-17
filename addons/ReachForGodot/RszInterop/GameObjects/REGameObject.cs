@@ -13,8 +13,8 @@ public partial class REGameObject : Node3D, ISerializationListener, ICloneable
     [Export] public string OriginalName { get; set; } = string.Empty;
     [Export] public REObject? Data { get; set; }
     private Godot.Collections.Array<REComponent> _components = null!;
-    [Export] public Godot.Collections.Array<REComponent> Components
-    {
+    [Export]
+    public Godot.Collections.Array<REComponent> Components {
         get => _components;
         set {
             _components = value;
@@ -34,8 +34,8 @@ public partial class REGameObject : Node3D, ISerializationListener, ICloneable
     public SceneFolder? ParentFolder => this.FindNodeInParents<SceneFolder>();
 
     public IEnumerable<REGameObject> Children => this.FindChildrenByType<REGameObject>();
-    public IEnumerable<REGameObject> AllChildren => this.FindChildrenByType<REGameObject>().SelectMany(c => new [] { c }.Concat(c.AllChildren));
-    public IEnumerable<REGameObject> AllChildrenIncludingSelf => new [] { this }.Concat(AllChildren);
+    public IEnumerable<REGameObject> AllChildren => this.FindChildrenByType<REGameObject>().SelectMany(c => new[] { c }.Concat(c.AllChildren));
+    public IEnumerable<REGameObject> AllChildrenIncludingSelf => new[] { this }.Concat(AllChildren);
 
     public string Path => this is PrefabNode pfb
             ? pfb.Asset?.AssetFilename ?? SceneFilePath

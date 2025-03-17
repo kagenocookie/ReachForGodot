@@ -20,7 +20,7 @@ public partial class SceneFolderInspectorPlugin : EditorInspectorPlugin, ISerial
 
     public override bool _CanHandle(GodotObject @object)
     {
-        return @object is SceneFolder or PrefabNode or RcolRootNode;
+        return @object is Node and IAssetPointer;
     }
 
     public override void _ParseBegin(GodotObject @object)

@@ -57,6 +57,37 @@ public partial class RigidCollisionShape3D : CollisionShape3D
         }
     }
 
+    public static object? Shape3DToRszShape(Shape3D godotShape, Node3D node, RszTool.RcolFile.ShapeType shapeType, SupportedGame game)
+    {
+        switch (shapeType) {
+            case RcolFile.ShapeType.Aabb:
+                var box = (BoxShape3D)godotShape;
+                return new Aabb(node.Position, box.Size).ToRsz();
+            case RcolFile.ShapeType.Box:
+                var obb = new RszTool.via.OBB();
+                var box2 = (BoxShape3D)godotShape;
+                obb.Extent = box2.Size.ToRsz();
+                obb.Coord = new Projection(node.Transform).ToRsz(game);
+                return obb;
+            case RcolFile.ShapeType.Sphere:
+            case RcolFile.ShapeType.ContinuousSphere:
+                var sphere = (SphereShape3D)godotShape;
+                return new RszTool.via.Sphere() { pos = node.Position.ToRsz(), R = sphere.Radius };
+            case RcolFile.ShapeType.Capsule:
+            case RcolFile.ShapeType.ContinuousCapsule:
+                var capsule = (CapsuleShape3D)godotShape;
+                var cap = new RszTool.via.Capsule() { r = capsule.Radius };
+                var cappos = node.Position;
+                var up = node.Transform.Basis.Y.Normalized();
+                cap.p0 = (cappos - up * 0.5f * capsule.Height).ToRsz();
+                cap.p1 = (cappos + up * 0.5f * capsule.Height).ToRsz();
+                return cap;
+            default:
+                GD.PrintErr("Unsupported collider type " + shapeType);
+                return null;
+        }
+    }
+
     public static RszFieldType GetShapeFieldType(RcolFile.ShapeType shapeType)
     {
         return shapeType switch {

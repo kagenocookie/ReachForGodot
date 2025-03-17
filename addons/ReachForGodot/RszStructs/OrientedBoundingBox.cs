@@ -14,7 +14,7 @@ public partial class OrientedBoundingBox : Resource
     };
 
     public RszTool.via.OBB ToRsz(SupportedGame game) => new() {
-        Coord = coord.ToRsz(),
+        Coord = coord.ToRsz(game),
         Extent = extent.ToRsz(),
     };
 }

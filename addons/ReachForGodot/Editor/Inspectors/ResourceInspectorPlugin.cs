@@ -13,7 +13,7 @@ public partial class ResourceInspectorPlugin : EditorInspectorPlugin, ISerializa
 
     public override bool _CanHandle(GodotObject @object)
     {
-        return @object is UserdataResource or RcolRootNode;
+        return @object is UserdataResource or RcolResource;
     }
 
     public override void _ParseBegin(GodotObject @object)

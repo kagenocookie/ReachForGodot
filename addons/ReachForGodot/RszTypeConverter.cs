@@ -215,8 +215,14 @@ public static class RszTypeConverter
 
     public static object? ToRszStruct(this Variant variant, REField field, SupportedGame game)
     {
-        if (field.RszField.array) {
-            return field.RszField.type switch {
+        return ToRszStruct(variant, field.RszField.type, field.RszField.array, game);
+    }
+
+    public static object? ToRszStruct(this Variant variant, RszFieldType valueType, bool array, SupportedGame game)
+    {
+
+        if (array) {
+            return valueType switch {
                 RszFieldType.S16 => ConvertArray(variant.AsGodotArray<uint>(), static v => v),
                 RszFieldType.U16 => ConvertArray(variant.AsGodotArray<uint>(), static v => v),
                 RszFieldType.S32 => ConvertArray(variant.AsInt32Array()),
@@ -239,10 +245,10 @@ public static class RszTypeConverter
                 RszFieldType.Uint4 => ConvertArray(variant.AsGodotArray<Vector4I>(), static v => v.ToRsz()),
                 RszFieldType.Bool => ConvertArray(variant.AsGodotArray<bool>(), static v => v),
                 RszFieldType.OBB => ConvertArray(variant.AsGodotArray<OrientedBoundingBox>(), v => v.ToRsz(game)),
-                _ => throw new Exception("Unhandled rsz export array type " + field.RszField.type),
+                _ => throw new Exception("Unhandled rsz export array type " + valueType),
             };
         }
-        return ToRszStructSingle(variant, field, game);
+        return ToRszStructSingle(variant, valueType, game);
     }
     private static object[] ConvertArray<T>(T[] sourceArray)
     {
@@ -268,9 +274,9 @@ public static class RszTypeConverter
         }
         return arr;
     }
-    public static object ToRszStructSingle(this Variant variant, REField field, SupportedGame game)
+    public static object ToRszStructSingle(this Variant variant, RszFieldType valueType, SupportedGame game)
     {
-        return field.RszField.type switch {
+        return valueType switch {
             RszFieldType.S32 => variant.AsInt32(),
             RszFieldType.U32 => variant.AsUInt32(),
             RszFieldType.S64 => variant.AsInt64(),
@@ -283,7 +289,7 @@ public static class RszTypeConverter
             RszFieldType.S16 => variant.AsInt16(),
             RszFieldType.U16 => variant.AsUInt16(),
             RszFieldType.Data => variant.AsByteArray(),
-            RszFieldType.Mat4 => variant.AsProjection().ToRsz(),
+            RszFieldType.Mat4 => variant.AsProjection().ToRsz(game),
             RszFieldType.Vec2 or RszFieldType.Float2 or RszFieldType.Point => variant.AsVector2().ToRsz(),
             RszFieldType.Vec3 or RszFieldType.Float3 or RszFieldType.Position => variant.AsVector3().ToRsz(),
             RszFieldType.Vec4 or RszFieldType.Float4 => variant.AsVector4().ToRsz(),
@@ -328,7 +334,7 @@ public static class RszTypeConverter
             RszFieldType.Sfix4 => variant.AsVector4I().ToSfix(),
             RszFieldType.String => variant.AsString(),
             RszFieldType.RuntimeType => variant.AsString(),
-            _ => throw new Exception("No defined conversion to RSZ type " + field.RszField.type),
+            _ => throw new Exception("No defined conversion to RSZ type " + valueType),
         };
     }
 
@@ -383,25 +389,45 @@ public static class RszTypeConverter
     public static RszTool.via.Uint2 ToRszU(this Vector2I val) => new RszTool.via.Uint2 { x = (uint)val.X, y = (uint)val.Y };
     public static RszTool.via.Uint3 ToRszU(this Vector3I val) => new RszTool.via.Uint3 { x = (uint)val.X, y = (uint)val.Y, z = (uint)val.Z };
     public static RszTool.via.Uint4 ToRszU(this Vector4I val) => new RszTool.via.Uint4 { x = (uint)val.X, y = (uint)val.Y, z = (uint)val.Z, w = (uint)val.W };
-    public static RszTool.via.mat4 ToRsz(this Projection val)
+    public static RszTool.via.mat4 ToRsz(this Projection val, SupportedGame game)
     {
+        if (game == SupportedGame.ResidentEvil2RT) {
+            return new mat4() {
+                m00 = val.X.X,
+                m01 = val.X.Y,
+                m02 = val.X.Z,
+                m03 = val.X.W,
+                m10 = val.Y.X,
+                m11 = val.Y.Y,
+                m12 = val.Y.Z,
+                m13 = val.Y.W,
+                m20 = val.Z.X,
+                m21 = val.Z.Y,
+                m22 = val.Z.Z,
+                m23 = val.Z.W,
+                m30 = val.W.X,
+                m31 = val.W.Y,
+                m32 = val.W.Z,
+                m33 = val.W.W,
+            };
+        }
         return new mat4() {
-            m00 = val.X.X,
-            m01 = val.X.Y,
-            m02 = val.X.Z,
-            m03 = val.X.W,
-            m10 = val.Y.X,
-            m11 = val.Y.Y,
-            m12 = val.Y.Z,
-            m13 = val.Y.W,
-            m20 = val.Z.X,
-            m21 = val.Z.Y,
-            m22 = val.Z.Z,
-            m23 = val.Z.W,
-            m30 = val.W.X,
-            m31 = val.W.Y,
-            m32 = val.W.Z,
-            m33 = val.W.W,
+            m00 = val.W.X,
+            m01 = val.W.Y,
+            m02 = val.W.Z,
+            m03 = val.W.W,
+            m10 = val.X.X,
+            m11 = val.X.Y,
+            m12 = val.X.Z,
+            m13 = val.X.W,
+            m20 = val.Y.X,
+            m21 = val.Y.Y,
+            m22 = val.Y.Z,
+            m23 = val.Y.W,
+            m30 = val.Z.X,
+            m31 = val.Z.Y,
+            m32 = val.Z.Z,
+            m33 = val.Z.W,
         };
     }
 }

@@ -26,7 +26,7 @@ public class Exporter
         return PathUtils.AppendFileVersion(assetPath, config);
     }
 
-    public static bool Export(IAssetPointer resource, string exportBasepath)
+    public static bool Export(IExportableAsset resource, string exportBasepath)
     {
         var outputPath = ResolveExportPath(exportBasepath, resource.Asset!.AssetFilename, resource.Game);
         if (string.IsNullOrEmpty(outputPath)) {
@@ -52,7 +52,7 @@ public class Exporter
         } else if (resource is RcolRootNode rcol) {
             return ExportRcol(rcol, outputPath);
         } else {
-            GD.PrintErr("Currently unsupported export for file type " + resource.GetType());
+            GD.PrintErr("Currently unsupported export for object type " + resource.GetType());
         }
 
         return false;
@@ -107,6 +107,8 @@ public class Exporter
             group.Info.guid = child.Guid;
             group.Info.name = child.Name;
             group.Info.MaskBits = child.CollisionMask;
+            group.Info.MaskGuids = child.MaskGuids?.Select(c => Guid.Parse(c)).ToArray() ?? Array.Empty<Guid>();
+            group.Info.LayerGuid = child.LayerGuid;
             file.GroupInfoList.Add(group);
 
             foreach (var shape in child.FindChildrenByType<RigidCollisionShape3D>()) {
@@ -128,9 +130,14 @@ public class Exporter
                 } else {
                     outShape.userDataIndex = -1;
                 }
+
+                // from what I can tell, there's one of these, empty, for every single shape
+                // might be game specific?
+                var userdata = Exporter.ConstructObjectInstances(new REObject(rcolRoot.Game, "via.physics.RequestSetColliderUserData", true), file.RSZ, fileOption, file, false);
+                file.RSZ.AddToObjectTable(file.RSZ.InstanceList[userdata]);
+
                 outShape.shapeType = shape.RcolShapeType;
-                var fieldType = RigidCollisionShape3D.GetShapeFieldType(shape.RcolShapeType);
-                // TODO convert shape
+                outShape.shape = RigidCollisionShape3D.Shape3DToRszShape(shape.Shape, shape, shape.RcolShapeType, rcolRoot.Game);
             }
             groupsDict[child] = groupIndex++;
         }
@@ -150,9 +157,11 @@ public class Exporter
                 set.Userdata = file.RSZ.InstanceList[instanceId];
                 file.RSZ.AddToObjectTable(set.Userdata);
                 set.requestSetUserdataIndex = set.Userdata.ObjectTableIndex;
+                set.groupUserdataIndexStart = (uint)set.requestSetUserdataIndex + 1;
             } else {
                 set.requestSetUserdataIndex = -1;
             }
+            file.RequestSetInfoList.Add(set);
         }
 
         var success = file.Save();
@@ -161,7 +170,7 @@ public class Exporter
             File.Delete(outputFile);
         }
 
-        return false;
+        return success;
     }
 
     private static bool ExportScene(SceneFolder root, string outputFile)
