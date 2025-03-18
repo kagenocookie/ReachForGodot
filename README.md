@@ -60,6 +60,9 @@ The addon integrates [RE Mesh Editor](https://github.com/NSACloud/RE-Mesh-Editor
 - Restart the editor (menu: Project > Reload Current Project)
 - Configure the blender path in Godot's Editor Settings (filesystem/import/blender/blender_path)
 - Configure the game paths in Editor Settings > `Reach for Godot/Paths/{game name}`
+    - **Game chunk path** and **Rsz Json file** are required for most functionality
+    - **File list** and **il2cpp Dump file** are only needed for new games that don't have cached data in the repository yet
+    - **Additional paths** is a list of secondary additional filepaths for exporting to and importing from of assets, like a custom mod folder or the game's natives path
 
 ## Usage
 Start by going into the top menu: Project > Tools > RE ENGINE > Import assets and pick a file. Something like the appdata/contents.scn.20 (DD2) might be a good start since it's basically the root scene for the world. Once you have a scene file imported, you can import any further child scenes and referenced resources from the inspector there.

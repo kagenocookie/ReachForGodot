@@ -208,6 +208,26 @@ public static class PathUtils
         return $"{filename}.{version}";
     }
 
+    public static void ExtractFileVersionsFromList(SupportedGame game, string listFilepath)
+    {
+        if (!File.Exists(listFilepath)) {
+            GD.PrintErr("List file '" + listFilepath + "' not found");
+            return;
+        }
+        var config = ReachForGodot.GetAssetConfig(game);
+        using var file = new StreamReader(File.OpenRead(listFilepath));
+        while (!file.EndOfStream) {
+            var line = file.ReadLine();
+            if (string.IsNullOrEmpty(line)) continue;
+
+            var versionStr = line.GetExtension();
+            var ext = line.GetBaseName()?.GetExtension();
+            if (!string.IsNullOrEmpty(ext) && !TryFindFileExtensionVersion(config, ext, out _) && int.TryParse(versionStr, out var version)) {
+                UpdateFileExtension(config, ext, version);
+            }
+        }
+    }
+
     /// <summary>
     /// Search through all known file paths for the game to find the full path to a file.<br/>
     /// Search priority: Override > Chunk path > Additional paths

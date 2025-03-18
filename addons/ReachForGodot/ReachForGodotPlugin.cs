@@ -16,6 +16,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
     private const string Setting_GameChunkPath = $"{SettingBase}/paths/{{game}}/game_chunk_path";
     private const string Setting_Il2cppPath = $"{SettingBase}/paths/{{game}}/il2cpp_dump_file";
     private const string Setting_RszJsonPath = $"{SettingBase}/paths/{{game}}/rsz_json_file";
+    private const string Setting_FilelistPath = $"{SettingBase}/paths/{{game}}/file_list";
     private const string Setting_AdditionalPaths = $"{SettingBase}/paths/{{game}}/additional_paths";
 
     private const string Setting_ImportMeshMaterials = $"{SettingBase}/general/import_mesh_materials";
@@ -30,6 +31,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
     private static string Il2cppPathSetting(SupportedGame game) => Setting_Il2cppPath.Replace("{game}", game.ToString());
     private static string RszPathSetting(SupportedGame game) => Setting_RszJsonPath.Replace("{game}", game.ToString());
     private static string AdditionalPathSetting(SupportedGame game) => Setting_AdditionalPaths.Replace("{game}", game.ToString());
+    private static string FilelistPathSetting(SupportedGame game) => Setting_FilelistPath.Replace("{game}", game.ToString());
 
     private static ReachForGodotPlugin? _pluginInstance;
 
@@ -74,6 +76,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
             }
             if (id == 100) UpgradeMaterialResources();
             if (id == 101) UpgradeRcolResources();
+            if (id == 200) ExtractFileVersions();
         };
     }
 
@@ -89,6 +92,8 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
 
         // toolMenu.AddItem("Upgrade all material resources", 100);
         // toolMenu.AddItem("Upgrade all Rcol resources", 101);
+
+        toolMenu.AddItem("Extract file format versions from file lists", 200);
     }
 
     public void OpenAssetImporterWindow(SupportedGame game)
@@ -141,6 +146,17 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
         GD.Print("You may need to reopen any scenes referencing the upgraded resources");
     }
 
+    private void ExtractFileVersions()
+    {
+        foreach (var game in ReachForGodot.GameList) {
+            var filelist = EditorInterface.Singleton.GetEditorSettings().GetSetting(FilelistPathSetting(game)).AsString();
+            if (!string.IsNullOrEmpty(filelist)) {
+                GD.Print($"Extracting extensions for {game} from {filelist} ...");
+                PathUtils.ExtractFileVersionsFromList(game, filelist);
+            }
+        }
+    }
+
     public override void _ExitTree()
     {
         RemoveToolMenuItem(toolMenu.Title);
@@ -158,6 +174,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
             AddEditorSetting(ChunkPathSetting(game), Variant.Type.String, string.Empty, PropertyHint.GlobalDir);
             AddEditorSetting(Il2cppPathSetting(game), Variant.Type.String, string.Empty, PropertyHint.GlobalFile, "*.json");
             AddEditorSetting(RszPathSetting(game), Variant.Type.String, string.Empty, PropertyHint.GlobalFile, "*.json");
+            AddEditorSetting(FilelistPathSetting(game), Variant.Type.String, string.Empty, PropertyHint.GlobalFile);
             AddEditorSetting(AdditionalPathSetting(game), Variant.Type.PackedStringArray, string.Empty, PropertyHint.GlobalDir);
         }
     }
@@ -176,6 +193,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
             var pathChunks = settings.GetSetting(ChunkPathSetting(game)).AsString() ?? string.Empty;
             var pathIl2cpp = settings.GetSetting(Il2cppPathSetting(game)).AsString();
             var pathRsz = settings.GetSetting(RszPathSetting(game)).AsString();
+            var pathFilelist = settings.GetSetting(FilelistPathSetting(game)).AsString();
             var additional = settings.GetSetting(AdditionalPathSetting(game)).AsStringArray()
                 .Select(path => {
                     var parts = path.Split('|');
@@ -188,7 +206,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
                 ReachForGodot.SetConfiguration(game, null, null);
             } else {
                 pathChunks = PathUtils.NormalizeSourceFolderPath(pathChunks);
-                ReachForGodot.SetConfiguration(game, null, new GamePaths(game, pathChunks, pathIl2cpp, pathRsz, additional));
+                ReachForGodot.SetConfiguration(game, null, new GamePaths(game, pathChunks, pathIl2cpp, pathRsz, pathFilelist, additional));
             }
         }
         RefreshToolMenu();
