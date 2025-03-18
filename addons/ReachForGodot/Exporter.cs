@@ -268,7 +268,9 @@ public class Exporter
         folderInstance.Values[3] = folder.Draw ? (byte)1 : (byte)0;
         folderInstance.Values[4] = folder.Active ? (byte)1 : (byte)0;
         folderInstance.Values[5] = linkedSceneFilepath;
-        folderInstance.Values[6] = (folder.Data != null && folder.Data.Length > 0) ? folder.Data : new byte[24];
+        if (folderInstance.Values.Length > 6) {
+            folderInstance.Values[6] = (folder.Data != null && folder.Data.Length > 0) ? folder.Data : new byte[24];
+        }
 
         if (string.IsNullOrEmpty(linkedSceneFilepath)) {
             foreach (var go in folder.ChildObjects) {
