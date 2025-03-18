@@ -1,11 +1,13 @@
 # Reach for Godot Engine (ReaGE)
+<p align="center">
+  <img src="addons/ReachForGodot/icons/logo.png" alt="Reach for Godot Engine" />
+</p>
+
 Godot-based visual scene editor for RE Engine games.
 
 Integrates various open source tools dealing with RE Engine games and packs them into a full game data and content / scene editor inside Godot.
 
-<p align="center">
-  <img src="addons/ReachForGodot/icons/logo.png" alt="Reach for Godot Engine" />
-</p>
+![scene example](https://private-user-images.githubusercontent.com/45361488/423860509-43eb41b8-a809-4bce-a5ff-e79f47bac774.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NDIyOTIxMTgsIm5iZiI6MTc0MjI5MTgxOCwicGF0aCI6Ii80NTM2MTQ4OC80MjM4NjA1MDktNDNlYjQxYjgtYTgwOS00YmNlLWE1ZmYtZTc5ZjQ3YmFjNzc0LnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNTAzMTglMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjUwMzE4VDA5NTY1OFomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPTU1MzM2MzdjZDk3MTRmZTM0ODY1MGFlZjQzM2VlMjQ4MGU4NDdjYmI4ZjRiNTM1ZWU0NTMxZDc1NzMzMDgzNzQmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0In0.HQHs6EU3LuwMv4_KS5CezAtnLSV1MMwdlOBa1bfBMvU)
 
 ## Supported games
 Should work for any RE engine game (mostly based on RszTool's support), but I can only test what I own
@@ -32,29 +34,9 @@ For the open world games: The scene structure is a mess thanks to how it's struc
 
 *** Partial support: some user files work fine; most pfbs or scn, probably due to rsz data issues, don't
 
-## Prerequisites
-- Godot 4.4+ w/ .NET
-- Blender
-- [RE Mesh Editor](https://github.com/NSACloud/RE-Mesh-Editor) - used for mesh and texture import / export
-- Extract all relevant chunk files you wish to edit somewhere - [guide](https://github.com/Modding-Haven/REEngine-Modding-Documentation/wiki/Extracting-Game-Files)
-- Download the latest RSZ json for the game you're trying to edit, place it wherever
-- The addon stores its own cache of relevant il2cpp json data (`addons/ReachForGodot/game_settings/{game}/il2cpp_cache.json`), but for games that don't have those in the repository or if the game gets updated, the il2cpp dump json for the game you're trying to edit is required to (re-)generate the cache file.
-
-## Setup
-- Create a fresh godot project anywhere
-- Clone or download the `addons/ReachForGodot` folder into it (the file should stay in the same relative folder; the other files in this project are not needed)
-- Next, you need to Build the project with the hammer icon in the top right; if it's not available, go under menu: Project > Tools > C# > Create C# solution
-- Enable the ReachForGodot plugin in Project settings>Plugins
-- Restart the editor (menu: Project > Reload Current Project)
-- Configure the blender path in Godot's editor settings (filesystem/import/blender/blender_path)
-- Configure the game paths in Editor Settings > `Reach for Godot/Paths/{game name}`
-
-## Usage
-Start by going into the top menu: Project > Tools > RE ENGINE > Import assets and pick a file. Something like the appdata/contents.scn.20 (DD2) might be a good start since it's basically the root scene for the world. Once you have a scene file imported, you can import any further child scenes and referenced resources from the inspector there.
-
-If you've ever worked with a game engine before, the basic UI should be more or less familiar - scene node tree on the left, inspector with all the data for a selected node on the right (for the default layout at least). The addon provides some additional tools in the inspector and node context menu for dealing with RE Engine files and file formats.
-
 ## Current features
+The addon integrates [RE Mesh Editor](https://github.com/NSACloud/RE-Mesh-Editor) for meshes/textures and a [custom fork](https://github.com/kagenocookie/RszTool) of RszTool for reading structured data.
+
 - mesh: automatic import through RE Mesh editor into .glb files (MPLY / composite meshes: currently unsupported); default untextured but can be enabled through editor settings (not recommended because texture conversions need blender in the foreground)
 - tex: can be imported through RE Mesh editor; not useable directly in Godot yet due to lacking DDS support but the files otherwise convert fine
 - pfb files [info](https://github.com/kagenocookie/ReachForGodot/wiki/Prefabs)
@@ -63,7 +45,28 @@ If you've ever worked with a game engine before, the basic UI should be more or 
 - user files
 - other resource files are imported as placeholders so they can be drag-dropped into resource fields but have no actual logic or data to them
 
-Mapping of engine objects:
+## Prerequisites
+- Godot 4.4+ w/ .NET
+- Blender and [RE Mesh Editor](https://github.com/NSACloud/RE-Mesh-Editor) - used for mesh and texture import / export; data editing will still work without it, but no meshes will be generated.
+- Extract all relevant chunk files you wish to edit somewhere - [guide](https://github.com/Modding-Haven/REEngine-Modding-Documentation/wiki/Extracting-Game-Files)
+- Download the latest RSZ json for the game you're trying to edit, place it wherever
+- The addon stores its own cache of relevant il2cpp json data (`addons/ReachForGodot/game_settings/{game}/il2cpp_cache.json`), but for games that don't have those in the repository or if the game gets updated, the il2cpp dump json for the game you're trying to edit is required to (re-)generate the cache file.
+
+## Setup
+- Create a fresh godot project anywhere
+- Clone or download the `addons/ReachForGodot` folder into it (the file should stay in the same relative folder; the other files in this project are not needed)
+- Next, you need to Build the project with the hammer icon in the top right; if it's not available, go under menu: Project > Tools > C# > Create C# solution
+- Enable the ReachForGodot plugin in Project Settings > Plugins
+- Restart the editor (menu: Project > Reload Current Project)
+- Configure the blender path in Godot's Editor Settings (filesystem/import/blender/blender_path)
+- Configure the game paths in Editor Settings > `Reach for Godot/Paths/{game name}`
+
+## Usage
+Start by going into the top menu: Project > Tools > RE ENGINE > Import assets and pick a file. Something like the appdata/contents.scn.20 (DD2) might be a good start since it's basically the root scene for the world. Once you have a scene file imported, you can import any further child scenes and referenced resources from the inspector there.
+
+If you've ever worked with a game engine before, the basic UI should be more or less familiar - scene node tree on the left, inspector with all the data for a selected node on the right (for the default layout at least). The addon provides some additional tools in the inspector and node context menu for dealing with RE Engine files and file formats.
+
+### Mapping of engine objects
 - <img src="addons/ReachForGodot/icons/folder.png" alt="isolated" width="16"/> `via.Folder` (scn file) => Node (`SceneFolder` or `SceneFolderProxy`)
 - <img src="addons/ReachForGodot/icons/gear.png" alt="isolated" width="16"/> `via.GameObject` => Node3D (`GameObject` or `PrefabNode`)
     - Inspector button additions:
@@ -90,8 +93,9 @@ General components support:
 - enums
     - flag enums (autodetect flag enums maybe)
     - support manually overriding enum settings (IsFlags, custom entries)
-- support serializing objects to JSON - Content Editor integration
-- unpacker integration - automatically extract files from paks as needed instead of requiring everything to be pre-extracted
+- support editing of as many file formats as possible
+- support serializing objects to JSON - for Content Editor integration and for upgrading changes in case of game updates
+- unpacker integration and packed file browser - automatically extract files from paks as needed instead of requiring everything to be pre-extracted
 - game specific tooling to make navigation between scenes easier (mainly looking at DD2 / open world assets)
 - look into potential GUI support
 
