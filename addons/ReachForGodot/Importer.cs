@@ -23,6 +23,8 @@ public class Importer
     private static CancellationTokenSource? cancellationTokenSource;
     private const int blenderTimeoutMs = 30000;
 
+    private static bool _hasShownNoBlenderWarning = false;
+
     public static REResource? FindImportedResourceAsset(Resource? asset)
     {
         if (asset == null) return null;
@@ -376,12 +378,18 @@ public class Importer
 
     private static async Task ExecuteBlenderScript(string script, bool background)
     {
-        // var tempFn = Path.GetTempFileName();
-        // File.WriteAllText(tempFn, importScript);
+        var blenderPath = ReachForGodot.BlenderPath;
+        if (string.IsNullOrEmpty(blenderPath)) {
+            if (!_hasShownNoBlenderWarning) {
+                GD.PrintErr("Blender is not configured. Meshes and textures will not import.");
+                _hasShownNoBlenderWarning = true;
+            }
+            return;
+        }
 
         var process = Process.Start(new ProcessStartInfo() {
             UseShellExecute = false,
-            FileName = ReachForGodot.BlenderPath,
+            FileName = blenderPath,
             Arguments = background
                 ? $"\"{EmptyBlend}\" --background --python-expr \"{script}\""
                 : $"\"{EmptyBlend}\" --python-expr \"{script}\"",

@@ -21,8 +21,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
     private const string Setting_ImportMeshMaterials = $"{SettingBase}/general/import_mesh_materials";
     private const string Setting_SceneFolderProxyThreshold = $"{SettingBase}/general/create_scene_proxy_node_threshold";
 
-    public static string BlenderPath => EditorInterface.Singleton.GetEditorSettings().GetSetting(Setting_BlenderPath).AsString()
-        ?? throw new System.Exception("Blender path not defined in editor settings");
+    public static string? BlenderPath => EditorInterface.Singleton.GetEditorSettings().GetSetting(Setting_BlenderPath).AsString();
 
     public static bool IncludeMeshMaterial { get; private set; }
     public static int SceneFolderProxyThreshold { get; private set; }

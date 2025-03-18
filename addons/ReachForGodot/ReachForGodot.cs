@@ -9,7 +9,7 @@ public static class ReachForGodot
 
     private static readonly Dictionary<SupportedGame, (AssetConfig? config, GamePaths? paths)> assetConfigData = new();
 
-    public static string BlenderPath {
+    public static string? BlenderPath {
         get {
 #if TOOLS
             return ReachForGodotPlugin.BlenderPath;
