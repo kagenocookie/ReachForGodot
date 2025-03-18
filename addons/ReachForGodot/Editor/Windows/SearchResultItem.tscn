@@ -1,0 +1,65 @@
+[gd_scene load_steps=7 format=3 uid="uid://dqivj48puahw7"]
+
+[ext_resource type="Script" uid="uid://3j4lws64jwce" path="res://addons/ReachForGodot/Editor/Windows/SearchResultItem.cs" id="1_t73kt"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_at7kw"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_t73kt"]
+bg_color = Color(0.47909, 0.669147, 0.805637, 0.321569)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_jfeum"]
+bg_color = Color(0.478431, 0.670588, 0.803922, 0.564706)
+
+[sub_resource type="Gradient" id="Gradient_t73kt"]
+offsets = PackedFloat32Array(0.158451)
+colors = PackedColorArray(1, 1, 1, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_jfeum"]
+gradient = SubResource("Gradient_t73kt")
+width = 1
+
+[node name="PanelContainer" type="PanelContainer" node_paths=PackedStringArray("label", "context", "icon")]
+custom_minimum_size = Vector2(0, 24)
+offset_right = 594.0
+offset_bottom = 24.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_at7kw")
+script = ExtResource("1_t73kt")
+hoverStyleBox = SubResource("StyleBoxFlat_t73kt")
+pressedStyleBox = SubResource("StyleBoxFlat_jfeum")
+label = NodePath("HBoxContainer/RichTextLabel")
+context = NodePath("HBoxContainer/ExtraContext")
+icon = NodePath("HBoxContainer/MarginContainer/Icon")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer"]
+custom_minimum_size = Vector2(24, 0)
+layout_mode = 2
+theme_override_constants/margin_left = 2
+theme_override_constants/margin_top = 2
+theme_override_constants/margin_right = 2
+theme_override_constants/margin_bottom = 2
+
+[node name="Icon" type="TextureRect" parent="HBoxContainer/MarginContainer"]
+layout_mode = 2
+texture = SubResource("GradientTexture1D_jfeum")
+expand_mode = 1
+
+[node name="RichTextLabel" type="RichTextLabel" parent="HBoxContainer"]
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+mouse_filter = 1
+text = "Something"
+fit_content = true
+autowrap_mode = 0
+vertical_alignment = 1
+
+[node name="ExtraContext" type="RichTextLabel" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 1
+theme_override_colors/default_color = Color(0.581033, 0.581033, 0.581033, 1)
+text = "mainContents/scene/something.scn"
+vertical_alignment = 1

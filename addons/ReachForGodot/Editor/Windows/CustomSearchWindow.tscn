@@ -1,0 +1,80 @@
+[gd_scene load_steps=3 format=3 uid="uid://c2ekqsw88kr2o"]
+
+[ext_resource type="Script" uid="uid://b88mdvesfwtvw" path="res://addons/ReachForGodot/Editor/Windows/CustomSearchWindow.cs" id="1_apjd3"]
+[ext_resource type="PackedScene" uid="uid://dqivj48puahw7" path="res://addons/ReachForGodot/Editor/Windows/SearchResultItem.tscn" id="2_35gta"]
+
+[node name="CustomSearchWindow" type="Window" node_paths=PackedStringArray("lineEdit", "filterTypeBtn", "resultsContainer")]
+title = "GameObject search"
+initial_position = 4
+size = Vector2i(1000, 500)
+popup_window = true
+script = ExtResource("1_apjd3")
+lineEdit = NodePath("Panel/MarginContainer/VBoxContainer/Filter/LineEdit")
+filterTypeBtn = NodePath("Panel/MarginContainer/VBoxContainer/Settings/OptionButton")
+resultsContainer = NodePath("Panel/MarginContainer/VBoxContainer/ScrollContainer/SearchResults")
+searchResultItemTemplate = ExtResource("2_35gta")
+metadata/_custom_type_script = "uid://b88mdvesfwtvw"
+
+[node name="Panel" type="Panel" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel/MarginContainer"]
+layout_mode = 2
+
+[node name="Settings" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="OptionButton" type="OptionButton" parent="Panel/MarginContainer/VBoxContainer/Settings"]
+layout_mode = 2
+selected = 0
+item_count = 1
+popup/item_0/text = "Filter type"
+popup/item_0/id = 0
+
+[node name="Filter" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Panel/MarginContainer/VBoxContainer/Filter"]
+layout_mode = 2
+text = "Query:"
+
+[node name="LineEdit" type="LineEdit" parent="Panel/MarginContainer/VBoxContainer/Filter"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="ColorRect" type="ColorRect" parent="Panel/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 2)
+layout_mode = 2
+color = Color(0.707967, 0.707967, 0.707967, 1)
+
+[node name="ScrollContainer" type="ScrollContainer" parent="Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="SearchResults" type="VBoxContainer" parent="Panel/MarginContainer/VBoxContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="PanelContainer" parent="Panel/MarginContainer/VBoxContainer/ScrollContainer/SearchResults" instance=ExtResource("2_35gta")]
+layout_mode = 2
+
+[connection signal="close_requested" from="." to="." method="HandleCloseRequested"]
+[connection signal="visibility_changed" from="." to="." method="OnVisibilityChanged"]
+[connection signal="text_changed" from="Panel/MarginContainer/VBoxContainer/Filter/LineEdit" to="." method="OnFilterUpdated"]

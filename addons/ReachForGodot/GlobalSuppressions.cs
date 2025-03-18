@@ -9,3 +9,4 @@ using System.Diagnostics.CodeAnalysis;
 // [assembly: SuppressMessage("Naming", "CA1708:Identifiers should differ by more than case", Justification = "<Pending>", Scope = "namespaceanddescendants", Target = "~N:RszTool.via")]
 [assembly: SuppressMessage("Naming", "CA1708:Identifiers should differ by more than case", Justification = "<Pending>", Scope = "namespaceanddescendants", Target = "~N:RszTool")]
 [assembly: SuppressMessage("Naming", "CA1720:Identifier contains type name", Justification = "<Pending>", Scope = "namespaceanddescendants", Target = "~N:RszTool")]
+[assembly: SuppressMessage("Naming", "CA1720:Identifier contains type name", Justification = "<Pending>", Scope = "namespaceanddescendants", Target = "~N:ReaGE")]

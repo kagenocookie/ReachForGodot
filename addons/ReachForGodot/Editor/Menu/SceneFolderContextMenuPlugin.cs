@@ -15,8 +15,11 @@ public partial class SceneFolderContextMenuPlugin : EditorContextMenuPlugin
         var targetNode = EditorInterface.Singleton.GetEditedSceneRoot().GetNode(paths[0]);
         if (targetNode is SceneFolder scene) {
             HandleSceneFolder(scene);
+            HandleGameObjectContainer(scene);
         } else if (targetNode is RigidCollisionRequestSet set) {
             HandleRcolRequestSet(set);
+        } else if (targetNode is REGameObject) {
+            HandleGameObjectContainer(targetNode);
         }
     }
 
@@ -51,6 +54,13 @@ public partial class SceneFolderContextMenuPlugin : EditorContextMenuPlugin
             AddContextMenuItem("Revert editable child scenes", Callable.From((Godot.Collections.Array nodes) => ToggleScenesEditable(nodes.FirstOrDefault().As<SceneFolder>(), false)), Logo);
         } else if (firstChildSceneEditable == false) {
             AddContextMenuItem("Make child scenes editable", Callable.From((Godot.Collections.Array nodes) => ToggleScenesEditable(nodes.FirstOrDefault().As<SceneFolder>(), true)), Logo);
+        }
+    }
+
+    private void HandleGameObjectContainer(Node container)
+    {
+        if (container is REGameObject or SceneFolder) {
+            AddContextMenuItem("Find objects", Callable.From((Godot.Collections.Array _) => CustomSearchWindow.ShowGameObjectSearch(container)), Logo);
         }
     }
 
