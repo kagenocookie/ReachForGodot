@@ -104,29 +104,19 @@ public partial class PhysicsCollidersComponent : REComponent, IVisualREComponent
                     case BoxShape3D box:
                         if (child.IsInsideTree() ? child.GlobalTransform.Basis.IsEqualApprox(Basis.Identity) : child.Name.ToString().Contains("AabbShape")) {
                             GetOrAddShape(Game, "via.physics.AabbShape", colliders, index, out shape, ref showWarning);
-                            var aabb = shape.GetField(AabbShape).As<Aabb>();
-                            aabb.Size = box.Size;
-                            aabb.Position = child.Position;
+                            RequestSetCollisionShape3D.UpdateSerializedShape(shape, AabbShape, child.Shape, child, RcolFile.ShapeType.Aabb);
                         } else {
                             GetOrAddShape(Game, "via.physics.BoxShape", colliders, index, out shape, ref showWarning);
-                            var obb = shape.GetField(BoxShape).As<OrientedBoundingBox>();
-                            obb.extent = box.Size;
-                            obb.coord = new Projection(child.Transform);
+                            RequestSetCollisionShape3D.UpdateSerializedShape(shape, BoxShape, child.Shape, child, RcolFile.ShapeType.Box);
                         }
                         break;
                     case SphereShape3D sphere:
                         GetOrAddShape(Game, "via.physics.SphereShape", colliders, index, out shape, ref showWarning);
-                        var pos = child.Position;
-                        shape.SetField(SphereShape, new Vector4(pos.X, pos.Y, pos.Z, sphere.Radius));
+                        RequestSetCollisionShape3D.UpdateSerializedShape(shape, SphereShape, child.Shape, child, RcolFile.ShapeType.Sphere);
                         break;
                     case CapsuleShape3D capsule:
                         GetOrAddShape(Game, "via.physics.CapsuleShape", colliders, index, out shape, ref showWarning);
-                        var cap = shape.GetField(CapsuleShape).As<Capsule>();
-                        cap.r = capsule.Radius;
-                        var cappos = child.Position;
-                        var up = child.Transform.Basis.Y.Normalized();
-                        cap.p0 = cappos - up * 0.5f * capsule.Height;
-                        cap.p1 = cappos + up * 0.5f * capsule.Height;
+                        RequestSetCollisionShape3D.UpdateSerializedShape(shape, CapsuleShape, child.Shape, child, RcolFile.ShapeType.Capsule);
                         break;
                     case null:
                         break;

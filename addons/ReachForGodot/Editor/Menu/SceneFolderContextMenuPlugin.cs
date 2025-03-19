@@ -18,6 +18,8 @@ public partial class SceneFolderContextMenuPlugin : EditorContextMenuPlugin
             HandleGameObjectContainer(scene);
         } else if (targetNode is RequestSetCollider set) {
             HandleRcolRequestSet(set);
+        } else if (targetNode is RequestSetCollisionGroup group) {
+            HandleRcolRequestColliderGroup(group);
         } else if (targetNode is REGameObject) {
             HandleGameObjectContainer(targetNode);
         }
@@ -90,6 +92,16 @@ public partial class SceneFolderContextMenuPlugin : EditorContextMenuPlugin
         AddContextMenuItem("Show exclusively this", Callable.From((Godot.Collections.Array _) => {
             root.HideGroupsExcept(set.Group);
             EditorInterface.Singleton.EditNode(set.Group);
+        }), Logo);
+    }
+
+    private void HandleRcolRequestColliderGroup(RequestSetCollisionGroup group)
+    {
+        var root = group.FindNodeInParents<RcolRootNode>();
+        if (root == null) return;
+
+        AddContextMenuItem("Show exclusively this", Callable.From((Godot.Collections.Array _) => {
+            root.HideGroupsExcept(group);
         }), Logo);
     }
 }

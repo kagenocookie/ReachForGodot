@@ -46,8 +46,10 @@ public partial class RequestSetCollisionShape3D : CollisionShape3D
             case RszTool.RcolFile.ShapeType.Capsule:
             case RszTool.RcolFile.ShapeType.ContinuousCapsule:
                 var capsule = shape.As<Capsule>();
-                collider.Shape = new CapsuleShape3D() { Height = capsule.p0.DistanceTo(capsule.p1), Radius = capsule.r };
+                // RE format capsule: p0 and p1 are placed at the cylinder center, whereas godot places it at the far end of the capsule, which is why we need to add the radius
+                collider.Shape = new CapsuleShape3D() { Height = capsule.p0.DistanceTo(capsule.p1) + capsule.r * 2, Radius = capsule.r };
                 collider.Position = (capsule.p0 + capsule.p1) / 2;
+                collider.Rotation = (capsule.p1 - capsule.p0).DirectionToQuaternion(Vector3.Up).GetEuler();
                 break;
             case RszTool.RcolFile.ShapeType.Aabb:
                 var aabb = shape.As<Aabb>();
@@ -77,14 +79,51 @@ public partial class RequestSetCollisionShape3D : CollisionShape3D
             case RcolFile.ShapeType.ContinuousCapsule:
                 var capsule = (CapsuleShape3D)godotShape;
                 var cap = new RszTool.via.Capsule() { r = capsule.Radius };
-                var cappos = node.Position;
+                var center = node.Position;
                 var up = node.Transform.Basis.Y.Normalized();
-                cap.p0 = (cappos - up * 0.5f * capsule.Height).ToRsz();
-                cap.p1 = (cappos + up * 0.5f * capsule.Height).ToRsz();
+                cap.p0 = (center - up * (0.5f * capsule.Height - capsule.Radius)).ToRsz();
+                cap.p1 = (center + up * (0.5f * capsule.Height - capsule.Radius)).ToRsz();
                 return cap;
             default:
                 GD.PrintErr("Unsupported collider type " + shapeType);
                 return null;
+        }
+    }
+
+    public static void UpdateSerializedShape(REObject obj, REFieldAccessor accessor, Shape3D godotShape, Node3D node, RszTool.RcolFile.ShapeType shapeType)
+    {
+        switch (shapeType) {
+            case RcolFile.ShapeType.Aabb:
+                var box = (BoxShape3D)godotShape;
+                obj.SetField(accessor, new Aabb(node.Position, box.Size));
+                break;
+            case RcolFile.ShapeType.Box:
+                var obb = obj.GetField(accessor).As<OrientedBoundingBox>();
+                var box2 = (BoxShape3D)godotShape;
+                obb.extent = box2.Size;
+                obb.coord = new Projection(node.Transform);
+                obj.SetField(accessor, obb);
+                break;
+            case RcolFile.ShapeType.Sphere:
+            case RcolFile.ShapeType.ContinuousSphere:
+                var sphere = (SphereShape3D)godotShape;
+                var pos = node.Position;
+                obj.SetField(accessor, new Vector4(pos.X, pos.Y, pos.Z, sphere.Radius));
+                break;
+            case RcolFile.ShapeType.Capsule:
+            case RcolFile.ShapeType.ContinuousCapsule:
+                var capsule = (CapsuleShape3D)godotShape;
+                var cap = obj.GetField(accessor).As<Capsule>();
+                cap.r = capsule.Radius;
+                var cappos = node.Position;
+                var up = node.Transform.Basis.Y.Normalized();
+                cap.p0 = cappos - up * (0.5f * capsule.Height - capsule.Radius);
+                cap.p1 = cappos + up * (0.5f * capsule.Height - capsule.Radius);
+                obj.SetField(accessor, cap);
+                break;
+            default:
+                GD.PrintErr("Unsupported collider type " + shapeType);
+                break;
         }
     }
 
