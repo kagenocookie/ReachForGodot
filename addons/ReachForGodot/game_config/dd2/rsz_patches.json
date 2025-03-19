@@ -1099,6 +1099,10 @@
       {
         "Name": "v0",
         "Type": "S32"
+      },
+      {
+        "Name": "v1",
+        "Type": "Object"
       }
     ]
   },

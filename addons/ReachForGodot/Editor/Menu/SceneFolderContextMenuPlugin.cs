@@ -16,7 +16,7 @@ public partial class SceneFolderContextMenuPlugin : EditorContextMenuPlugin
         if (targetNode is SceneFolder scene) {
             HandleSceneFolder(scene);
             HandleGameObjectContainer(scene);
-        } else if (targetNode is RigidCollisionRequestSet set) {
+        } else if (targetNode is RequestSetCollider set) {
             HandleRcolRequestSet(set);
         } else if (targetNode is REGameObject) {
             HandleGameObjectContainer(targetNode);
@@ -82,7 +82,7 @@ public partial class SceneFolderContextMenuPlugin : EditorContextMenuPlugin
         return false;
     }
 
-    private void HandleRcolRequestSet(RigidCollisionRequestSet set)
+    private void HandleRcolRequestSet(RequestSetCollider set)
     {
         var root = set.GetParentOrNull<RcolRootNode>();
         if (root == null) return;

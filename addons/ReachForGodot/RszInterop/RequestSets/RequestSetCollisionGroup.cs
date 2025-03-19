@@ -4,7 +4,7 @@ using System;
 using Godot;
 
 [GlobalClass, Tool]
-public partial class RigidCollisionGroup : AnimatableBody3D
+public partial class RequestSetCollisionGroup : AnimatableBody3D
 {
     [Export] private string? uuidString;
     [Export] private string? layerGuid;

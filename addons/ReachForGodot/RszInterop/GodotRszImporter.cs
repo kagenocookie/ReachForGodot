@@ -812,19 +812,19 @@ public class GodotRszImporter
             groupsNode.Owner = root;
         }
 
-        var groupsDict = new Dictionary<Guid, RigidCollisionGroup>();
-        foreach (var child in groupsNode.FindChildrenByType<RigidCollisionGroup>()) {
+        var groupsDict = new Dictionary<Guid, RequestSetCollisionGroup>();
+        foreach (var child in groupsNode.FindChildrenByType<RequestSetCollisionGroup>()) {
             groupsDict[child.Guid] = child;
         }
 
-        var setsDict = new Dictionary<uint, RigidCollisionRequestSet>();
-        foreach (var child in root.FindChildrenByType<RigidCollisionRequestSet>()) {
+        var setsDict = new Dictionary<uint, RequestSetCollider>();
+        foreach (var child in root.FindChildrenByType<RequestSetCollider>()) {
             setsDict[child.ID] = child;
         }
 
         foreach (var srcGroup in file.GroupInfoList) {
             if (!groupsDict.TryGetValue(srcGroup.Info.guid, out var group)) {
-                groupsNode.AddChild(groupsDict[srcGroup.Info.guid] = group = new RigidCollisionGroup());
+                groupsNode.AddChild(groupsDict[srcGroup.Info.guid] = group = new RequestSetCollisionGroup());
                 group.SetDisplayFolded(true);
                 group.Owner = root;
                 group.Guid = srcGroup.Info.guid;
@@ -838,7 +838,7 @@ public class GodotRszImporter
 
             group.ClearChildren();
             foreach (var srcShape in srcGroup.Shapes) {
-                var shapeNode = new RigidCollisionShape3D();
+                var shapeNode = new RequestSetCollisionShape3D();
                 shapeNode.Guid = srcShape.Guid;
                 shapeNode.Name = !string.IsNullOrEmpty(srcShape.Name) ? srcShape.Name : shapeNode.Uuid!;
                 shapeNode.OriginalName = srcShape.Name;
@@ -851,8 +851,8 @@ public class GodotRszImporter
                 shapeNode.Data = srcShape.UserData == null ? null : CreateOrGetObject(srcShape.UserData);
                 shapeNode.RcolShapeType = srcShape.shapeType;
                 if (srcShape.shape != null) {
-                    var fieldType = RigidCollisionShape3D.GetShapeFieldType(srcShape.shapeType);
-                    RigidCollisionShape3D.ApplyShape(shapeNode, srcShape.shapeType, RszTypeConverter.FromRszValueSingleValue(fieldType, srcShape.shape, AssetConfig.Game));
+                    var fieldType = RequestSetCollisionShape3D.GetShapeFieldType(srcShape.shapeType);
+                    RequestSetCollisionShape3D.ApplyShape(shapeNode, srcShape.shapeType, RszTypeConverter.FromRszValueSingleValue(fieldType, srcShape.shape, AssetConfig.Game));
                 }
                 group.AddUniqueNamedChild(shapeNode);
             }
@@ -860,7 +860,7 @@ public class GodotRszImporter
 
         foreach (var set in file.RequestSetInfoList) {
             if (!setsDict.TryGetValue(set.id, out var requestSet)) {
-                setsDict[set.id] = requestSet = new RigidCollisionRequestSet();
+                setsDict[set.id] = requestSet = new RequestSetCollider();
                 requestSet.Name = !string.IsNullOrEmpty(set.name) ? set.name : ("Set_" + set.id.ToString());
                 root.AddUniqueNamedChild(requestSet);
                 requestSet.ID = set.id;

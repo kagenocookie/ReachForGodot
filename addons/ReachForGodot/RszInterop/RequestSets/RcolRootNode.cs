@@ -11,14 +11,14 @@ public partial class RcolRootNode : Node, IExportableAsset
 
     public RcolResource? Resource => Importer.FindOrImportResource<RcolResource>(Asset, ReachForGodot.GetAssetConfig(Game));
 
-    public IEnumerable<RigidCollisionGroup> Groups => this.FindChild("Groups", false).FindChildrenByType<RigidCollisionGroup>();
-    public IEnumerable<RigidCollisionRequestSet> Sets => this.FindChildrenByType<RigidCollisionRequestSet>();
+    public IEnumerable<RequestSetCollisionGroup> Groups => this.FindChild("Groups", false).FindChildrenByType<RequestSetCollisionGroup>();
+    public IEnumerable<RequestSetCollider> Sets => this.FindChildrenByType<RequestSetCollider>();
 
-    public void HideGroupsExcept(RigidCollisionRequestSet set)
+    public void HideGroupsExcept(RequestSetCollider set)
     {
         HideGroupsExcept(set.Group);
     }
-    public void HideGroupsExcept(RigidCollisionGroup? showGroup)
+    public void HideGroupsExcept(RequestSetCollisionGroup? showGroup)
     {
         foreach (var group in Groups) {
             group.Visible = group == showGroup;

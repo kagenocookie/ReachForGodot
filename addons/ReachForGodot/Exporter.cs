@@ -100,9 +100,9 @@ public class Exporter
             return false;
         }
 
-        var groupsDict = new Dictionary<RigidCollisionGroup, int>();
+        var groupsDict = new Dictionary<RequestSetCollisionGroup, int>();
         int groupIndex = 0;
-        foreach (var child in groupsNode.FindChildrenByType<RigidCollisionGroup>()) {
+        foreach (var child in groupsNode.FindChildrenByType<RequestSetCollisionGroup>()) {
             var group = new RcolFile.RcolGroup();
             group.Info.guid = child.Guid;
             group.Info.name = child.Name;
@@ -111,7 +111,7 @@ public class Exporter
             group.Info.LayerGuid = child.LayerGuid;
             file.GroupInfoList.Add(group);
 
-            foreach (var shape in child.FindChildrenByType<RigidCollisionShape3D>()) {
+            foreach (var shape in child.FindChildrenByType<RequestSetCollisionShape3D>()) {
                 var outShape = new RcolFile.RcolShape();
                 group.Shapes.Add(outShape);
                 outShape.Guid = shape.Guid;
@@ -137,12 +137,12 @@ public class Exporter
                 file.RSZ.AddToObjectTable(file.RSZ.InstanceList[userdata]);
 
                 outShape.shapeType = shape.RcolShapeType;
-                outShape.shape = RigidCollisionShape3D.Shape3DToRszShape(shape.Shape, shape, shape.RcolShapeType, rcolRoot.Game);
+                outShape.shape = RequestSetCollisionShape3D.Shape3DToRszShape(shape.Shape, shape, shape.RcolShapeType, rcolRoot.Game);
             }
             groupsDict[child] = groupIndex++;
         }
 
-        foreach (var sourceSet in rcolRoot.FindChildrenByType<RigidCollisionRequestSet>()) {
+        foreach (var sourceSet in rcolRoot.FindChildrenByType<RequestSetCollider>()) {
             var set = new RcolFile.RequestSet();
             set.id = sourceSet.ID;
             set.name = sourceSet.OriginalName ?? string.Empty;

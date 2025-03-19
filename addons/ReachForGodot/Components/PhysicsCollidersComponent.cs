@@ -192,16 +192,16 @@ public partial class PhysicsCollidersComponent : REComponent, IVisualREComponent
                     // collider.Shape = new ConvexPolygonShape3D();
                     break;
                 case "via.physics.SphereShape":
-                    RigidCollisionShape3D.ApplyShape(collider, RcolFile.ShapeType.Sphere, shape.GetField(SphereShape));
+                    RequestSetCollisionShape3D.ApplyShape(collider, RcolFile.ShapeType.Sphere, shape.GetField(SphereShape));
                     break;
                 case "via.physics.BoxShape":
-                    RigidCollisionShape3D.ApplyShape(collider, RcolFile.ShapeType.Box, shape.GetField(BoxShape));
+                    RequestSetCollisionShape3D.ApplyShape(collider, RcolFile.ShapeType.Box, shape.GetField(BoxShape));
                     break;
                 case "via.physics.CapsuleShape":
-                    RigidCollisionShape3D.ApplyShape(collider, RcolFile.ShapeType.Capsule, shape.GetField(CapsuleShape));
+                    RequestSetCollisionShape3D.ApplyShape(collider, RcolFile.ShapeType.Capsule, shape.GetField(CapsuleShape));
                     break;
                 case "via.physics.AabbShape":
-                    RigidCollisionShape3D.ApplyShape(collider, RcolFile.ShapeType.Aabb, shape.GetField(AabbShape));
+                    RequestSetCollisionShape3D.ApplyShape(collider, RcolFile.ShapeType.Aabb, shape.GetField(AabbShape));
                     break;
                 default:
                     GD.Print("Unhandled collider shape " + shape.Classname);

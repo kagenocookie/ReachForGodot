@@ -5,7 +5,7 @@ using Godot;
 using RszTool;
 
 [GlobalClass, Tool]
-public partial class RigidCollisionShape3D : CollisionShape3D
+public partial class RequestSetCollisionShape3D : CollisionShape3D
 {
     [Export] public RszTool.RcolFile.ShapeType RcolShapeType { get; set; }
     [Export] public string? Uuid { get; private set; }
