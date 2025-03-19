@@ -168,8 +168,7 @@ public partial class SceneFolderInspectorPlugin : EditorInspectorPlugin, ISerial
         if (root is PrefabNode pfb) {
             task = conv.RegeneratePrefabTree(pfb);
         } else if (root is RcolRootNode rcol) {
-            var resource = rcol.Resource ?? throw new Exception("Failed to resolve rcol resource");
-            conv.GenerateRcol(resource);
+            conv.GenerateRcol(rcol);
             task = Task.CompletedTask;
         } else if (root is SceneFolder scn) {
             if (scn.GetParent() is SceneFolderProxy parentProxy) {

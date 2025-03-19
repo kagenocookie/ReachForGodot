@@ -289,11 +289,11 @@ public static class GodotObjectExtensions
             ?? throw new ArgumentException($"Node {node.GetPath()} does not have a required parent of type {typeof(T)}");
     }
 
-    public static IEnumerable<T> FindChildrenByType<T>(this Node node) where T : class
+    public static IEnumerable<T> FindChildrenByType<T>(this Node? node) where T : class
     {
-        var count = node.GetChildCount();
+        var count = node?.GetChildCount() ?? 0;
         for (int i = 0; i < count; ++i) {
-            var child = node.GetChild(i);
+            var child = node!.GetChild(i);
             if (child is T target)
                 yield return target;
         }

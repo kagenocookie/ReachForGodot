@@ -777,9 +777,24 @@ public class GodotRszImporter
         }
     }
 
-    public void GenerateRcol(RcolResource root)
+    public void GenerateRcol(RcolResource resource)
     {
-        var fullpath = PathUtils.FindSourceFilePath(root.Asset!.AssetFilename, AssetConfig);
+        if (Options.userdata == RszImportType.ForceReimport) {
+            resource.Clear();
+        }
+
+        var root = resource.RcolScene?.Instantiate<RcolRootNode>() ?? new RcolRootNode();
+        root.Asset = new AssetReference(resource.Asset!.AssetFilename);
+        root.Name = PathUtils.GetFilenameWithoutExtensionOrVersion(resource.Asset.AssetFilename);
+        root.Game = AssetConfig.Game;
+
+        GenerateRcol(root);
+        UpdateProxyPackedScene(resource, root);
+    }
+
+    public void GenerateRcol(RcolRootNode root)
+    {
+        var fullpath = PathUtils.FindSourceFilePath(root.Asset?.AssetFilename, AssetConfig);
         if (fullpath == null) return;
 
         GD.Print("Opening rcol file " + fullpath);
@@ -791,19 +806,10 @@ public class GodotRszImporter
             return;
         }
 
-        if (Options.userdata == RszImportType.ForceReimport) {
-            root.Clear();
-        }
-
-        var rcolRoot = root.RcolScene?.Instantiate<RcolRootNode>() ?? new RcolRootNode();
-        rcolRoot.Asset = new AssetReference(root.Asset.AssetFilename);
-        rcolRoot.Name = PathUtils.GetFilenameWithoutExtensionOrVersion(root.Asset.AssetFilename);
-        rcolRoot.Game = AssetConfig.Game;
-
-        var groupsNode = rcolRoot.FindChild("Groups");
+        var groupsNode = root.FindChild("Groups");
         if (groupsNode == null) {
-            rcolRoot.AddChild(groupsNode = new Node3D() { Name = "Groups" });
-            groupsNode.Owner = rcolRoot;
+            root.AddChild(groupsNode = new Node3D() { Name = "Groups" });
+            groupsNode.Owner = root;
         }
 
         var groupsDict = new Dictionary<Guid, RigidCollisionGroup>();
@@ -812,7 +818,7 @@ public class GodotRszImporter
         }
 
         var setsDict = new Dictionary<uint, RigidCollisionRequestSet>();
-        foreach (var child in rcolRoot.FindChildrenByType<RigidCollisionRequestSet>()) {
+        foreach (var child in root.FindChildrenByType<RigidCollisionRequestSet>()) {
             setsDict[child.ID] = child;
         }
 
@@ -820,7 +826,7 @@ public class GodotRszImporter
             if (!groupsDict.TryGetValue(srcGroup.Info.guid, out var group)) {
                 groupsNode.AddChild(groupsDict[srcGroup.Info.guid] = group = new RigidCollisionGroup());
                 group.SetDisplayFolded(true);
-                group.Owner = rcolRoot;
+                group.Owner = root;
                 group.Guid = srcGroup.Info.guid;
             }
 
@@ -856,7 +862,7 @@ public class GodotRszImporter
             if (!setsDict.TryGetValue(set.id, out var requestSet)) {
                 setsDict[set.id] = requestSet = new RigidCollisionRequestSet();
                 requestSet.Name = !string.IsNullOrEmpty(set.name) ? set.name : ("Set_" + set.id.ToString());
-                rcolRoot.AddUniqueNamedChild(requestSet);
+                root.AddUniqueNamedChild(requestSet);
                 requestSet.ID = set.id;
                 requestSet.OriginalName = set.name;
                 requestSet.KeyName = set.keyName;
@@ -868,8 +874,6 @@ public class GodotRszImporter
                 requestSet.Data = CreateOrGetObject(set.Userdata);
             }
         }
-
-        UpdateProxyPackedScene(root, rcolRoot);
     }
 
     private void GenerateResources(IRszContainer root, List<ResourceInfo> resourceInfos, AssetConfig config)
