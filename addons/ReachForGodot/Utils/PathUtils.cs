@@ -370,6 +370,17 @@ public static class PathUtils
         return PathUtils.GetFilepathWithoutVersion(relativePath);
     }
 
+    public static AssetConfig? GuessAssetConfigFromImportPath(string importPath)
+    {
+        foreach (var cfg in ReachForGodot.AssetConfigs) {
+            if (importPath.StartsWith("res://" + cfg.AssetDirectory)) {
+                return cfg;
+            }
+        }
+
+        return null;
+    }
+
     private static string? FullOrRelativePathToImportPath(string sourcePath, RESupportedFileFormats fmt, AssetConfig config, bool resource)
     {
         var relativePath = Path.IsPathRooted(sourcePath) ? FullToRelativePath(sourcePath, config) : sourcePath;

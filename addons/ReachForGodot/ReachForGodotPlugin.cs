@@ -38,6 +38,9 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
     private EditorInspectorPlugin[] inspectors = null!;
     private EditorContextMenuPlugin[] contextMenus = null!;
     private EditorNode3DGizmoPlugin[] gizmos = Array.Empty<EditorNode3DGizmoPlugin>();
+    private EditorSceneFormatImporter[] sceneImporters = Array.Empty<EditorSceneFormatImporter>();
+    private EditorImportPlugin[] importers = Array.Empty<EditorImportPlugin>();
+
     private PopupMenu toolMenu = null!;
     private AssetBrowser? browser;
 
@@ -67,6 +70,12 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
 
         gizmos = new EditorNode3DGizmoPlugin[] { new MeshGizmo() };
         foreach (var gizmo in gizmos) AddNode3DGizmoPlugin(gizmo);
+
+        // sceneImporters = new EditorSceneFormatImporter[] { };
+        foreach (var i in sceneImporters) AddSceneFormatImporterPlugin(i);
+
+        // importers = new EditorImportPlugin[] { };
+        foreach (var i in importers) AddImportPlugin(i);
 
         RefreshToolMenu();
         toolMenu.IdPressed += (id) => {
@@ -164,6 +173,8 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
         foreach (var insp in inspectors) RemoveInspectorPlugin(insp);
         foreach (var menu in contextMenus) RemoveContextMenuPlugin(menu);
         foreach (var gizmo in gizmos) RemoveNode3DGizmoPlugin(gizmo);
+        foreach (var importer in sceneImporters) RemoveSceneFormatImporterPlugin(importer);
+        foreach (var importer in importers) RemoveImportPlugin(importer);
     }
 
     private void AddSettings()

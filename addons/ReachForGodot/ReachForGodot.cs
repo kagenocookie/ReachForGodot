@@ -8,6 +8,8 @@ public static class ReachForGodot
     public static readonly string[] GameNames = Enum.GetNames<SupportedGame>().Where(n => n != SupportedGame.Unknown.ToString()).ToArray();
 
     private static readonly Dictionary<SupportedGame, (AssetConfig? config, GamePaths? paths)> assetConfigData = new();
+    public static IEnumerable<AssetConfig> AssetConfigs => GetAllAssetConfigs();
+    private static bool didFullConfigScan = false;
 
     public static string? BlenderPath {
         get {
@@ -46,17 +48,10 @@ public static class ReachForGodot
         if (ResourceLoader.Exists(defaultResourcePath)) {
             data.config = ResourceLoader.Load<AssetConfig>(defaultResourcePath);
         } else {
-            var da = DirAccess.Open("res://");
-            string file;
-            da.ListDirBegin();
-            while ((file = da.GetNext()) != string.Empty) {
-                if (ResourceLoader.Exists(file, nameof(AssetConfig))) {
-                    var cfg = ResourceLoader.Load<Resource>(file) as AssetConfig;
-                    if (cfg != null && cfg.Game == game) {
-                        da.ListDirEnd();
-                        data.config = cfg;
-                        break;
-                    }
+            foreach (var cfg in FindAllAssetConfigs()) {
+                if (cfg.Game == game) {
+                    data.config = cfg;
+                    break;
                 }
             }
         }
@@ -71,6 +66,38 @@ public static class ReachForGodot
         }
 
         return data.config;
+    }
+
+    private static IEnumerable<AssetConfig> GetAllAssetConfigs()
+    {
+        if (!didFullConfigScan) {
+            didFullConfigScan = true;
+            foreach (var newcfg in FindAllAssetConfigs()) {
+                if (!assetConfigData.TryGetValue(newcfg.Game, out var existing)) {
+                    existing = (newcfg, null);
+                } else {
+                    existing = (newcfg, existing.paths);
+                }
+                assetConfigData[newcfg.Game] = existing;
+            }
+        }
+        return assetConfigData.Values.Where(ac => ac.config != null).Select(ac => ac.config!);
+    }
+
+    private static IEnumerable<AssetConfig> FindAllAssetConfigs()
+    {
+        using var da = DirAccess.Open("res://");
+        string file;
+        da.ListDirBegin();
+        while ((file = da.GetNext()) != string.Empty) {
+            if (ResourceLoader.Exists(file, nameof(AssetConfig))) {
+                var cfg = ResourceLoader.Load<Resource>(file) as AssetConfig;
+                if (cfg != null && cfg.Game != SupportedGame.Unknown) {
+                    yield return cfg;
+                }
+            }
+        }
+        da.ListDirEnd();
     }
 
 #if TOOLS
