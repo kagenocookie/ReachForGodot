@@ -72,6 +72,13 @@ public partial class CustomSearchWindow : Window
         QueueFree();
     }
 
+    public override void _Input(InputEvent @event)
+    {
+        if (@event is InputEventKey key && key.Keycode == Key.Escape) {
+            HandleCloseRequested();
+        }
+    }
+
     public static void ShowNameSearch(Node source)
     {
         var wnd = ResourceLoader.Load<PackedScene>(SceneFilepath).Instantiate<CustomSearchWindow>();
@@ -82,7 +89,7 @@ public partial class CustomSearchWindow : Window
     {
         var wnd = ResourceLoader.Load<PackedScene>(SceneFilepath).Instantiate<CustomSearchWindow>();
         wnd.SearchRoot = source;
-        wnd.Type = SearchType.GameObjectName;
+        wnd.Type = source is REGameObject or SceneFolder ? SearchType.GameObjectName : SearchType.NodeName;
         EditorInterface.Singleton.PopupDialogCentered(wnd);
     }
 

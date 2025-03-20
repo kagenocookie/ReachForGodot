@@ -90,6 +90,17 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
         };
     }
 
+    public override void _ShortcutInput(InputEvent @event)
+    {
+        base._ShortcutInput(@event);
+        if (@event is InputEventKey keyEvent && keyEvent.GetModifiersMask() == KeyModifierMask.MaskCtrl && keyEvent.Keycode == Key.Period) {
+            var edited = EditorInterface.Singleton.GetEditedSceneRoot();
+            if (edited != null) {
+                CustomSearchWindow.ShowGameObjectSearch(edited);
+            }
+        }
+    }
+
     private void RefreshToolMenu()
     {
         toolMenu.Clear();
