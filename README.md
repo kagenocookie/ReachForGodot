@@ -7,7 +7,7 @@ Godot-based visual scene editor for RE Engine games.
 
 Integrates various open source tools dealing with RE Engine games and packs them into a full game data and content / scene editor inside Godot.
 
-![scene example](docs/images/scene.jpg)
+![scene example](.gdignore/docs/images/scene.jpg)
 
 ## Supported games
 Should work for any RE engine game (mostly based on RszTool's support), but I can only test what I own
@@ -53,10 +53,19 @@ The addon integrates [RE Mesh Editor](https://github.com/NSACloud/RE-Mesh-Editor
 - The addon stores its own cache of relevant il2cpp json data (`addons/ReachForGodot/game_settings/{game}/il2cpp_cache.json`), but for games that don't have those in the repository or if the game gets updated, the il2cpp dump json for the game you're trying to edit is required to (re-)generate the cache file.
 
 ## Setup
+<details>
+<summary>Setup example images</summary>
+
+![editor settings](.gdignore/docs/images/editor_settings.png)
+![project settings](.gdignore/docs/images/project_settings.png)
+![tools menu](.gdignore/docs/images/tools_menu.png)
+
+</details>
+
 - Create a fresh godot project anywhere
 - Clone or download the `addons/ReachForGodot` folder into it (the file should stay in the same relative folder; the other files in this project are not needed)
 - Next, you need to Build the project with the hammer icon in the top right; if it's not available, go under menu: Project > Tools > C# > Create C# solution
-    - you may need to modify the default .csproj file for it to compile, adding to PropertyGroup (or just copying the whole csproj from here):
+    - you may need to modify the default .csproj file for it to compile, adding to PropertyGroup (or just copying the whole csproj contents from here):
         ```xml
         <Nullable>enable</Nullable>
 	    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
