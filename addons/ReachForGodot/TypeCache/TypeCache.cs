@@ -144,28 +144,38 @@ public static partial class TypeCache
     public static void StoreInferredRszTypes(RSZFile rsz, AssetConfig config)
     {
         var handled = new HashSet<RszClass>();
+        foreach (var inst in rsz.InstanceList) {
+            handled.Add(inst.RszClass);
+        }
+
+        if (handled.Count > 0) {
+            StoreInferredRszTypes(handled, config);
+        }
+    }
+
+    public static void StoreInferredRszTypes(IEnumerable<RszClass> classlist, AssetConfig config)
+    {
         var cache = GetCacheRoot(config.Game);
         int changes = 0;
-        foreach (var inst in rsz.InstanceList) {
-            if (!handled.Add(inst.RszClass)) continue;
+        foreach (var cls in classlist) {
 
-            foreach (var f in inst.RszClass.fields) {
+            foreach (var f in cls.fields) {
                 if (!f.IsTypeInferred) continue;
                 if (f.type <= RszFieldType.Undefined) {
                     continue;
                 }
-                var props = cache.FindOrCreateClassPatch(inst.RszClass.name);
+                var props = cache.FindOrCreateClassPatch(cls.name);
 
                 var entry = props.FieldPatches?.FirstOrDefault(patch => patch.Name == f.name || patch.ReplaceName == f.name);
                 if (entry == null) {
                     entry = new RszFieldPatch() { Name = f.name, Type = f.type };
                     props.FieldPatches = props.FieldPatches == null ? [entry] : props.FieldPatches.Append(entry).ToArray();
                     changes++;
-                    RebuildSingleFieldCache(cache, inst.RszClass.name, f.name);
+                    RebuildSingleFieldCache(cache, cls.name, f.name);
                 } else if (entry.Type != f.type) {
                     entry.Type = f.type;
                     changes++;
-                    RebuildSingleFieldCache(cache, inst.RszClass.name, f.name);
+                    RebuildSingleFieldCache(cache, cls.name, f.name);
                 }
             }
         }

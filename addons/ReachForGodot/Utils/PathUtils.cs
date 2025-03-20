@@ -144,6 +144,11 @@ public static class PathUtils
                 };
         }
 
+        var ext = GetFileExtensionFromFormat(format) ?? relativePath.GetExtension();
+        if (TryFindFileExtensionVersion(config, ext, out var version)) {
+            return version;
+        }
+
         if (relativePath.StartsWith('@')) {
             // IDK what these @'s are, but so far I've only found them for sounds at the root folder
             // seems to be safe to ignore, though we may need to handle them when putting the files back
@@ -151,11 +156,6 @@ public static class PathUtils
         }
 
         var fullpath = RelativeToFullPath(relativePath, config);
-        var ext = GetFileExtensionFromFormat(format) ?? relativePath.GetExtension();
-        if (TryFindFileExtensionVersion(config, ext, out var version)) {
-            return version;
-        }
-
         var dir = fullpath.GetBaseDir();
         if (!Directory.Exists(dir)) {
             // TODO: this is where we try to retool it out of the pak files
@@ -221,6 +221,35 @@ public static class PathUtils
             var ext = line.GetBaseName()?.GetExtension();
             if (!string.IsNullOrEmpty(ext) && !TryFindFileExtensionVersion(config, ext, out _) && int.TryParse(versionStr, out var version)) {
                 UpdateFileExtension(config, ext, version);
+            }
+        }
+    }
+
+    public static IEnumerable<string> GetFilesByExtensionFromListFile(string? listFilepath, string importPath, string extension)
+    {
+        if (!File.Exists(listFilepath)) {
+            GD.PrintErr("List file '" + listFilepath + "' not found");
+            yield break;
+        }
+
+        importPath = importPath.Replace('\\', '/');
+        if (importPath.EndsWith('/')) {
+            importPath = importPath[..^1];
+        }
+        if (importPath.EndsWith("/natives/x64", StringComparison.OrdinalIgnoreCase)) {
+            importPath = importPath.Substring(0, importPath.IndexOf("/natives/x64", StringComparison.OrdinalIgnoreCase));
+        }
+        if (importPath.EndsWith("/natives/stm", StringComparison.OrdinalIgnoreCase)) {
+            importPath = importPath.Substring(0, importPath.IndexOf("/natives/stm", StringComparison.OrdinalIgnoreCase));
+        }
+
+        using var file = new StreamReader(File.OpenRead(listFilepath));
+        while (!file.EndOfStream) {
+            var line = file.ReadLine();
+            if (string.IsNullOrEmpty(line)) continue;
+
+            if (line.EndsWith(extension)) {
+                yield return Path.Combine(importPath, line);
             }
         }
     }

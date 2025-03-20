@@ -46,7 +46,7 @@ The addon integrates [RE Mesh Editor](https://github.com/NSACloud/RE-Mesh-Editor
 - other resource files are imported as placeholders so they can be drag-dropped into resource fields but have no actual logic or data to them
 
 ## Prerequisites
-- Godot 4.4+ w/ .NET
+- Godot 4.4+ w/ .NET 8.0
 - Blender and [RE Mesh Editor](https://github.com/NSACloud/RE-Mesh-Editor) - used for mesh and texture import / export; data editing will still work without it, but no meshes will be generated.
 - Extract all relevant chunk files you wish to edit somewhere - [guide](https://github.com/Modding-Haven/REEngine-Modding-Documentation/wiki/Extracting-Game-Files)
 - Download the latest RSZ json for the game you're trying to edit, place it wherever

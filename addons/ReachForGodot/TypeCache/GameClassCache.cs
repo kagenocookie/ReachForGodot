@@ -74,7 +74,6 @@ public static partial class TypeCache
                 return null!;
             }
 
-            GD.Print("Loading RSZ data...");
             var time = new Stopwatch();
             time.Start();
             var parser = RszParser.GetInstance(jsonPath);
@@ -94,7 +93,6 @@ public static partial class TypeCache
 
         private Il2cppCache LoadIl2cppData(GamePaths paths)
         {
-            GD.Print("Loading il2cpp data...");
             var time = new Stopwatch();
             time.Start();
             il2CppCache = new Il2cppCache();

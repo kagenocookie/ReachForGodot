@@ -1,4 +1,5 @@
 using Godot;
+using RszTool;
 using GC = Godot.Collections;
 
 #if TOOLS
@@ -153,6 +154,75 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
             yield return (file, current);
         }
         GD.Print("You may need to reopen any scenes referencing the upgraded resources");
+    }
+
+    internal void FetchInferrableRszData(AssetConfig config)
+    {
+        var scnVersion = PathUtils.GuessFileVersion(string.Empty, RESupportedFileFormats.Scene, config);
+        var pfbVersion = PathUtils.GuessFileVersion(string.Empty, RESupportedFileFormats.Prefab, config);
+        var fileOption = TypeCache.CreateRszFileOptions(config);
+        var sourcePath = config.Paths.ChunkPath;
+
+        var scnTotal = PathUtils.GetFilesByExtensionFromListFile(config.Paths.FilelistPath, sourcePath, $".scn.{scnVersion}").Count();
+        var pfbTotal = PathUtils.GetFilesByExtensionFromListFile(config.Paths.FilelistPath, sourcePath, $".pfb.{pfbVersion}").Count();
+        int count = 0;
+        var failed = 0;
+        foreach (var scn in PathUtils.GetFilesByExtensionFromListFile(config.Paths.FilelistPath, sourcePath, $".scn.{scnVersion}")) {
+            if (!File.Exists(scn)) {
+                failed++;
+                GD.PrintErr("File not found: " + scn);
+                continue;
+            }
+            using var file = new ScnFile(fileOption, new FileHandler(scn));
+            var success = false;
+            while (!success) {
+                try {
+                    file.Read();
+                    success = true;
+                } catch (RszRetryOpenException) {
+                    // retry time
+                } catch (Exception) {
+                    GD.PrintErr("Failed to read scn file " + scn);
+                    failed++;
+                    break;
+                }
+            }
+            if (++count % 100 == 0) {
+                GD.Print($"Handled {count}/{scnTotal} scn files...");
+            }
+        }
+
+        GD.Print($"Finished {scnTotal} scn files, {failed} failures");
+
+        count = 0;
+        failed = 0;
+        foreach (var pfb in PathUtils.GetFilesByExtensionFromListFile(config.Paths.FilelistPath, sourcePath, $".pfb.{pfbVersion}")) {
+            if (!File.Exists(pfb)) {
+                failed++;
+                GD.PrintErr("File not found: " + pfb);
+                continue;
+            }
+            using var file = new PfbFile(fileOption, new FileHandler(pfb));
+            var success = false;
+            while (!success) {
+                try {
+                    file.Read();
+                    success = true;
+                } catch (RszRetryOpenException) {
+                    // retry time
+                } catch (Exception) {
+                    GD.PrintErr("Failed to read pfb file " + pfb);
+                    failed++;
+                    break;
+                }
+            }
+            if (++count % 100 == 0) {
+                GD.Print($"Handled {count}/{pfbTotal} pfb files...");
+            }
+        }
+
+        GD.Print($"Finished {pfbTotal} pfb files, {failed} failures");
+        TypeCache.StoreInferredRszTypes(fileOption.RszParser.ClassDict.Values, config);
     }
 
     private void ExtractFileVersions()

@@ -4,7 +4,7 @@
     <EnableDynamicLoading>true</EnableDynamicLoading>
     <LangVersion>12.0</LangVersion>
     <Nullable>enable</Nullable>
-    <RootNamespace>RGE</RootNamespace>
+    <RootNamespace>ReaGE</RootNamespace>
     <!-- Required for some nuget packages to work -->
     <!-- godotengine/godot/issues/42271#issuecomment-751423827 -->
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>

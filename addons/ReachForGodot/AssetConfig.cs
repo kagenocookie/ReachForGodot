@@ -35,6 +35,9 @@ public partial class AssetConfig : Resource
     [ExportToolButton("Import assets...")]
     private Callable ImportBtn => Callable.From(() => ReachForGodotPlugin.Instance.OpenAssetImporterWindow(this));
 
+    [ExportToolButton("DEV: Load all RSZ data")]
+    private Callable InferRszData => Callable.From(() => ReachForGodotPlugin.Instance.FetchInferrableRszData(this));
+
     private void InvokeCallback(Callable callable)
     {
         callable.Call();
