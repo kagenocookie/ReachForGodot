@@ -18,6 +18,7 @@ jobs:
         submodules: recursive
         fetch-depth: 0
         persist-credentials: false
+        lfs: true
 
     - name: Prepare files
       run: |

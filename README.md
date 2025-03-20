@@ -56,6 +56,11 @@ The addon integrates [RE Mesh Editor](https://github.com/NSACloud/RE-Mesh-Editor
 - Create a fresh godot project anywhere
 - Clone or download the `addons/ReachForGodot` folder into it (the file should stay in the same relative folder; the other files in this project are not needed)
 - Next, you need to Build the project with the hammer icon in the top right; if it's not available, go under menu: Project > Tools > C# > Create C# solution
+    - you may need to modify the default .csproj file for it to compile, adding to PropertyGroup (or just copying the whole csproj from here):
+        ```xml
+        <Nullable>enable</Nullable>
+	    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        ```
 - Enable the ReachForGodot plugin in Project Settings > Plugins
 - Restart the editor (menu: Project > Reload Current Project)
 - Configure the blender path in Godot's Editor Settings (filesystem/import/blender/blender_path)
