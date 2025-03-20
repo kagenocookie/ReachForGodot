@@ -1,8 +1,5 @@
 namespace ReaGE;
 
-using System;
-using Godot;
-
 public interface IAssetPointer
 {
     public SupportedGame Game { get; set; }

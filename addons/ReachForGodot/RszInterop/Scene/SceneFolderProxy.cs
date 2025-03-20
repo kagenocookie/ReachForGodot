@@ -1,10 +1,7 @@
-namespace ReaGE;
-
-using System;
-using System.Diagnostics;
-using System.Threading.Tasks;
 using Godot;
 using ReaGE.EditorLogic;
+
+namespace ReaGE;
 
 [GlobalClass, Tool, Icon("res://addons/ReachForGodot/icons/folder_link.png")]
 public partial class SceneFolderProxy : SceneFolder

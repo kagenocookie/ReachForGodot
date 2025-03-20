@@ -1,6 +1,4 @@
 #if TOOLS
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using Godot;
 
 namespace ReaGE;

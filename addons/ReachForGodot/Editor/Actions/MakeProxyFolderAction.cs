@@ -1,5 +1,4 @@
 #if TOOLS
-using System.Threading.Tasks;
 using Godot;
 
 namespace ReaGE.EditorLogic;
@@ -70,9 +69,11 @@ public partial class MakeProxyFolderAction : NodeModificationAction
             }
             realFolder = proxyFolder.RealFolder;
         }
+        var data = proxyFolder.Data;
         proxyFolder.GetParent().EmplaceChild(proxyFolder, realFolder);
         proxyFolder.ShowLinkedFolder = false;
         ActiveInstance = realFolder;
+        realFolder.Data = data;
     }
 
     private void ConvertRealToProxy()
@@ -94,10 +95,12 @@ public partial class MakeProxyFolderAction : NodeModificationAction
             proxyFolder.LockNode(true);
         }
 
+        var data = realFolder.Data;
         parent.EmplaceChild(realFolder, proxyFolder);
         proxyFolder.RefreshProxiedNode();
         proxyFolder.ShowLinkedFolder = true;
         ActiveInstance = proxyFolder;
+        proxyFolder.Data = data;
     }
 }
 #endif

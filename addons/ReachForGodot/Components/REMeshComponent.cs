@@ -2,8 +2,6 @@ namespace ReaGE;
 
 using System.Threading.Tasks;
 using Godot;
-using Godot.Collections;
-using JetBrains.Annotations;
 using RszTool;
 
 [GlobalClass, Tool, REComponentClass("via.render.Mesh")]

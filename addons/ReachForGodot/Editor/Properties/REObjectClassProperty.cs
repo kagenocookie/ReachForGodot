@@ -1,7 +1,6 @@
 namespace ReaGE;
 
 using System;
-using System.Text.RegularExpressions;
 using Godot;
 
 [Tool, GlobalClass]
