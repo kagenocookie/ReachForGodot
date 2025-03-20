@@ -7,7 +7,7 @@ Godot-based visual scene editor for RE Engine games.
 
 Integrates various open source tools dealing with RE Engine games and packs them into a full game data and content / scene editor inside Godot.
 
-![scene example](https://private-user-images.githubusercontent.com/45361488/423860509-43eb41b8-a809-4bce-a5ff-e79f47bac774.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3NDIyOTIxMTgsIm5iZiI6MTc0MjI5MTgxOCwicGF0aCI6Ii80NTM2MTQ4OC80MjM4NjA1MDktNDNlYjQxYjgtYTgwOS00YmNlLWE1ZmYtZTc5ZjQ3YmFjNzc0LnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNTAzMTglMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjUwMzE4VDA5NTY1OFomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPTU1MzM2MzdjZDk3MTRmZTM0ODY1MGFlZjQzM2VlMjQ4MGU4NDdjYmI4ZjRiNTM1ZWU0NTMxZDc1NzMzMDgzNzQmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0In0.HQHs6EU3LuwMv4_KS5CezAtnLSV1MMwdlOBa1bfBMvU)
+![scene example](docs/images/scene.jpg)
 
 ## Supported games
 Should work for any RE engine game (mostly based on RszTool's support), but I can only test what I own
