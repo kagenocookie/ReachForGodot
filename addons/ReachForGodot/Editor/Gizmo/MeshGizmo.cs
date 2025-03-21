@@ -12,7 +12,7 @@ public partial class MeshGizmo : EditorNode3DGizmoPlugin
 
     public override EditorNode3DGizmo _CreateGizmo(Node3D forNode3D)
     {
-        if (forNode3D is not REGameObject gameObject) {
+        if (forNode3D is not GameObject gameObject) {
             return default!;
         }
 
@@ -45,7 +45,7 @@ public partial class MeshGizmo : EditorNode3DGizmoPlugin
 
     public override void _Redraw(EditorNode3DGizmo gizmo)
     {
-        if (gizmo.GetNode3D() is not REGameObject gameObject) {
+        if (gizmo.GetNode3D() is not GameObject gameObject) {
             return;
         }
 
@@ -72,7 +72,7 @@ public partial class MeshGizmo : EditorNode3DGizmoPlugin
 
     public override bool _HasGizmo(Node3D forNode3D)
     {
-        if (forNode3D is REGameObject gameObject) {
+        if (forNode3D is GameObject gameObject) {
             var gizmoComps = gameObject.Components?.OfType<IGizmoMeshProvider>().FirstOrDefault();
             return gizmoComps != null;
         }

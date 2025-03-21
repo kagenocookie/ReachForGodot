@@ -23,18 +23,18 @@ public partial class GameObjectInspectorPlugin : EditorInspectorPlugin, ISeriali
 
     public override bool _CanHandle(GodotObject @object)
     {
-        return @object is REGameObject;
+        return @object is GameObject;
     }
 
     public override void _ParseBegin(GodotObject @object)
     {
-        if (@object is REGameObject gameobj) {
+        if (@object is GameObject gameobj) {
             AddButtons(gameobj);
         }
         base._ParseBegin(@object);
     }
 
-    private void AddButtons(REGameObject gameobj)
+    private void AddButtons(GameObject gameobj)
     {
         if (gameobj.Owner == null) return;
 
@@ -55,7 +55,7 @@ public partial class GameObjectInspectorPlugin : EditorInspectorPlugin, ISeriali
         pluginSerializationFixer.Register(gameobj, container);
     }
 
-    private void DoClone(REGameObject source)
+    private void DoClone(GameObject source)
     {
         var clone = source.Clone();
         source.GetParent().AddUniqueNamedChild(clone);
@@ -75,7 +75,7 @@ public partial class GameObjectInspectorPlugin : EditorInspectorPlugin, ISeriali
 
     public override bool _ParseProperty(GodotObject @object, Variant.Type type, string name, PropertyHint hintType, string hintString, PropertyUsageFlags usageFlags, bool wide)
     {
-        if (@object is REGameObject target) {
+        if (@object is GameObject target) {
             // if (name == nameof(REGameObject.Components)) {
             //     CreateComponentsUI(target);
             //     return true;
@@ -84,7 +84,7 @@ public partial class GameObjectInspectorPlugin : EditorInspectorPlugin, ISeriali
         return base._ParseProperty(@object, type, name, hintType, hintString, usageFlags, wide);
     }
 
-    private void CreateComponentsUI(REGameObject target)
+    private void CreateComponentsUI(GameObject target)
     {
         inspectorScene ??= ResourceLoader.Load<PackedScene>("res://addons/ReachForGodot/Editor/Inspectors/GameObjectInspectorPlugin.tscn");
         var root = inspectorScene.Instantiate<Control>();

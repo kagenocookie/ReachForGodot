@@ -49,7 +49,7 @@ public class GodotRszImporter
         public readonly Dictionary<string, Resource?> resolvedResources = new();
         public readonly Dictionary<RszInstance, REObject> importedObjects = new();
         public readonly Dictionary<REObject, RszInstance> objectSourceInstances = new();
-        public readonly Dictionary<Guid, REGameObject> gameObjects = new();
+        public readonly Dictionary<Guid, GameObject> gameObjects = new();
         public readonly List<PrefabNode> pendingPrefabs = new();
         public readonly Dictionary<SceneFolder, FolderBatch> sceneBatches = new();
 
@@ -163,7 +163,7 @@ public class GodotRszImporter
 
     private sealed class GameObjectBatch : IBatchContext
     {
-        public REGameObject GameObject = null!;
+        public GameObject GameObject = null!;
         public List<Task> ComponentTasks = new();
         public List<GameObjectBatch> Children = new();
 
@@ -211,7 +211,7 @@ public class GodotRszImporter
         }
     }
 
-    private sealed record PrefabQueueParams(PackedScene prefab, IGameObjectData data, RszImportType importType, Node? parentNode, REGameObject? parent = null, int dedupeIndex = 0);
+    private sealed record PrefabQueueParams(PackedScene prefab, IGameObjectData data, RszImportType importType, Node? parentNode, GameObject? parent = null, int dedupeIndex = 0);
 
     private sealed class FolderBatch : IBatchContext
     {
@@ -452,7 +452,7 @@ public class GodotRszImporter
         }
     }
 
-    private void ReconstructScnGameObjectRefs(REObject obj, REComponent component, REGameObject gameobj, SceneFolder root)
+    private void ReconstructScnGameObjectRefs(REObject obj, REComponent component, GameObject gameobj, SceneFolder root)
     {
         foreach (var field in obj.TypeInfo.Fields) {
             if (field.RszField.type == RszFieldType.GameObjectRef && obj.TryGetFieldValue(field, out var value)) {
@@ -628,7 +628,7 @@ public class GodotRszImporter
         }
     }
 
-    private GameObjectRef? ResolveGameObjectRef(PfbFile file, REField field, REObject obj, RszInstance instance, REComponent component, REGameObject root, int arrayIndex)
+    private GameObjectRef? ResolveGameObjectRef(PfbFile file, REField field, REObject obj, RszInstance instance, REComponent component, GameObject root, int arrayIndex)
     {
         // god help me...
         Debug.Assert(instance != null);
@@ -693,7 +693,7 @@ public class GodotRszImporter
         return new GameObjectRef(targetGameobj.Uuid, component.GameObject.GetPathTo(targetGameobj));
     }
 
-    private void ReconstructPfbGameObjectRefs(PfbFile file, REObject obj, REComponent component, REGameObject root, int arrayIndex = 0)
+    private void ReconstructPfbGameObjectRefs(PfbFile file, REObject obj, REComponent component, GameObject root, int arrayIndex = 0)
     {
         RszInstance? instance = null;
         foreach (var field in obj.TypeInfo.Fields) {
@@ -967,15 +967,15 @@ public class GodotRszImporter
         PrepareGameObjectBatch(data, importType, batch, parentNode, parentGO, index);
     }
 
-    private void PrepareGameObjectBatch(IGameObjectData data, RszImportType importType, GameObjectBatch batch, Node? parentNode, REGameObject? parent = null, int dedupeIndex = 0)
+    private void PrepareGameObjectBatch(IGameObjectData data, RszImportType importType, GameObjectBatch batch, Node? parentNode, GameObject? parent = null, int dedupeIndex = 0)
     {
         var name = data.Name ?? "UnnamedGameObject";
 
         Debug.Assert(data.Instance != null);
 
-        REGameObject? gameobj = batch.GameObject;
+        GameObject? gameobj = batch.GameObject;
         if (gameobj == null && parentNode != null) {
-            if (parentNode is REGameObject obj) {
+            if (parentNode is GameObject obj) {
                 gameobj = obj.GetChild(name, dedupeIndex);
             } else if (parentNode is SceneFolder scn) {
                 gameobj = scn.GetGameObject(name, dedupeIndex);
@@ -1014,7 +1014,7 @@ public class GodotRszImporter
         var isnew = false;
         if (gameobj == null) {
             isnew = true;
-            gameobj = new REGameObject() {
+            gameobj = new GameObject() {
                 Game = AssetConfig.Game,
                 Name = name,
                 OriginalName = name,

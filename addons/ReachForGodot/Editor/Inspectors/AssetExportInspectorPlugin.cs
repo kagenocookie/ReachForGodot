@@ -19,7 +19,7 @@ public partial class AssetExportInspectorPlugin : EditorInspectorPlugin, ISerial
 
     public override void _ParseBegin(GodotObject @object)
     {
-        if (@object is IExportableAsset res) {
+        if (@object is IExportableAsset res && res.Asset?.IsEmpty == false) {
             CreateUI(res);
         }
         base._ParseBegin(@object);

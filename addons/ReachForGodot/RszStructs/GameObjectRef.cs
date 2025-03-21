@@ -18,7 +18,7 @@ public partial class GameObjectRef : Resource
             if (value != null && value != _path) {
                 var sourceNode = EditorInterface.Singleton.GetSelection().GetSelectedNodes().FirstOrDefault();
                 if (sourceNode != null) {
-                    guid = sourceNode?.GetNodeOrNull<REGameObject>(value)?.Uuid ?? Guid.Empty.ToString();
+                    guid = sourceNode?.GetNodeOrNull<GameObject>(value)?.Uuid ?? Guid.Empty.ToString();
                 }
             }
 #endif
@@ -58,23 +58,23 @@ public partial class GameObjectRef : Resource
     {
         if (property["name"].AsStringName() == PropertyName.Path) {
             property["hint"] = (int)PropertyHint.NodePathValidTypes;
-            property["hint_string"] = nameof(REGameObject);
+            property["hint_string"] = nameof(GameObject);
         }
         base._ValidateProperty(property);
     }
 
-    public REGameObject? Resolve(REGameObject sourceGameObject)
+    public GameObject? Resolve(GameObject sourceGameObject)
     {
         if (Path?.IsEmpty != false) return null;
 
-        return sourceGameObject.GetNodeOrNull<REGameObject>(Path);
+        return sourceGameObject.GetNodeOrNull<GameObject>(Path);
     }
 
-    public Guid ResolveGuid(REGameObject sourceGameObject)
+    public Guid ResolveGuid(GameObject sourceGameObject)
     {
         if (Path?.IsEmpty != false) return TargetGuid;
 
-        return sourceGameObject.GetNodeOrNull<REGameObject>(Path)?.ObjectGuid ?? TargetGuid;
+        return sourceGameObject.GetNodeOrNull<GameObject>(Path)?.ObjectGuid ?? TargetGuid;
     }
 
     public override string ToString()

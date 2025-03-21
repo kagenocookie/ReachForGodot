@@ -3,7 +3,7 @@ namespace ReaGE;
 using Godot;
 
 [GlobalClass, Tool, Icon("res://addons/ReachForGodot/icons/gear.png")]
-public partial class REGameObject : Node3D, ISerializationListener, ICloneable
+public partial class GameObject : Node3D, ISerializationListener, ICloneable
 {
     [Export] public SupportedGame Game { get; set; }
     [Export] public string Uuid { get; set; } = "00000000-0000-0000-0000-000000000000";
@@ -31,9 +31,9 @@ public partial class REGameObject : Node3D, ISerializationListener, ICloneable
     public Guid ObjectGuid => System.Guid.TryParse(Uuid, out var guid) ? guid : Guid.Empty;
     public SceneFolder? ParentFolder => this.FindNodeInParents<SceneFolder>();
 
-    public IEnumerable<REGameObject> Children => this.FindChildrenByType<REGameObject>();
-    public IEnumerable<REGameObject> AllChildren => this.FindChildrenByType<REGameObject>().SelectMany(c => new[] { c }.Concat(c.AllChildren));
-    public IEnumerable<REGameObject> AllChildrenIncludingSelf => new[] { this }.Concat(AllChildren);
+    public IEnumerable<GameObject> Children => this.FindChildrenByType<GameObject>();
+    public IEnumerable<GameObject> AllChildren => this.FindChildrenByType<GameObject>().SelectMany(c => new[] { c }.Concat(c.AllChildren));
+    public IEnumerable<GameObject> AllChildrenIncludingSelf => new[] { this }.Concat(AllChildren);
 
     public string Path => this is PrefabNode pfb
             ? pfb.Asset?.AssetFilename ?? SceneFilePath
@@ -50,7 +50,7 @@ public partial class REGameObject : Node3D, ISerializationListener, ICloneable
     {
         Components ??= new();
         if (Game == SupportedGame.Unknown) {
-            Game = (GetParent() as REGameObject)?.Game ?? (GetParent() as SceneFolder)?.Game ?? SupportedGame.Unknown;
+            Game = (GetParent() as GameObject)?.Game ?? (GetParent() as SceneFolder)?.Game ?? SupportedGame.Unknown;
         }
         if (Game != SupportedGame.Unknown && Data == null) {
             Data = new REObject(Game, "via.GameObject");
@@ -67,7 +67,7 @@ public partial class REGameObject : Node3D, ISerializationListener, ICloneable
         Components?.Clear();
     }
 
-    public int GetChildDeduplicationIndex(string name, REGameObject? relativeTo)
+    public int GetChildDeduplicationIndex(string name, GameObject? relativeTo)
     {
         int i = 0;
         foreach (var child in Children) {
@@ -81,7 +81,7 @@ public partial class REGameObject : Node3D, ISerializationListener, ICloneable
         return i;
     }
 
-    public REGameObject? GetChild(string name, int deduplicationIndex)
+    public GameObject? GetChild(string name, int deduplicationIndex)
     {
         var dupesFound = 0;
         foreach (var child in Children) {
@@ -135,13 +135,13 @@ public partial class REGameObject : Node3D, ISerializationListener, ICloneable
     }
 
     object ICloneable.Clone() => this.Clone();
-    public REGameObject Clone()
+    public GameObject Clone()
     {
         var clone = RecursiveClone();
         return clone;
     }
 
-    private REGameObject RecursiveClone()
+    private GameObject RecursiveClone()
     {
         // If it looks stupid that we're doing this manually instead of calling Duplicate(), that's because it is.
         // The issue is that Godot's Duplicate somehow modifies the original node's data to point to the clone.
@@ -158,9 +158,9 @@ public partial class REGameObject : Node3D, ISerializationListener, ICloneable
         return clone;
     }
 
-    private REGameObject CloneSelf()
+    private GameObject CloneSelf()
     {
-        var clone = new REGameObject() {
+        var clone = new GameObject() {
             Name = Name,
             Game = Game,
             OriginalName = OriginalName,
@@ -188,7 +188,7 @@ public partial class REGameObject : Node3D, ISerializationListener, ICloneable
 
     public override string ToString()
     {
-        if (GetParent() is REGameObject parent) {
+        if (GetParent() is GameObject parent) {
             var dedupId = parent.GetChildDeduplicationIndex(OriginalName, this);
             if (dedupId > 0) return $"{OriginalName} #{dedupId}";
         }

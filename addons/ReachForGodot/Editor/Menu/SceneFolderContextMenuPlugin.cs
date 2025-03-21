@@ -19,7 +19,7 @@ public partial class SceneFolderContextMenuPlugin : EditorContextMenuPlugin
             HandleRcolRequestSet(set);
         } else if (targetNode is RequestSetCollisionGroup group) {
             HandleRcolRequestColliderGroup(group);
-        } else if (targetNode is REGameObject) {
+        } else if (targetNode is GameObject) {
             HandleGameObjectContainer(targetNode);
         }
     }
@@ -60,7 +60,7 @@ public partial class SceneFolderContextMenuPlugin : EditorContextMenuPlugin
 
     private void HandleGameObjectContainer(Node container)
     {
-        if (container is REGameObject or SceneFolder) {
+        if (container is GameObject or SceneFolder) {
             AddContextMenuItem("Find objects", Callable.From((Godot.Collections.Array _) => CustomSearchWindow.ShowGameObjectSearch(container)), Logo);
         }
     }

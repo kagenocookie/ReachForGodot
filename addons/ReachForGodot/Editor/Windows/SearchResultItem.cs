@@ -21,7 +21,7 @@ public partial class SearchResultItem : PanelContainer
 
         // ideally we'd just use EditorResourcePreview but it's not accessible outside of c++ ¯\_(ツ)_/¯
         icon.Visible = target != null;
-        if (target is REGameObject) {
+        if (target is GameObject) {
             icon.Texture = ResourceLoader.Load<Texture2D>("res://addons/ReachForGodot/icons/gear.png");
         } else if (target is SceneFolder) {
             icon.Texture = ResourceLoader.Load<Texture2D>("res://addons/ReachForGodot/icons/folder.png");

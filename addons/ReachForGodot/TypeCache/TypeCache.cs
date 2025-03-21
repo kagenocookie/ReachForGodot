@@ -28,7 +28,7 @@ public static partial class TypeCache
         DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull
     };
 
-    private static readonly Dictionary<SupportedGame, Dictionary<string, Func<REGameObject, RszInstance, REComponent?>>> componentFactories = new();
+    private static readonly Dictionary<SupportedGame, Dictionary<string, Func<GameObject, RszInstance, REComponent?>>> componentFactories = new();
 
     public static void InitComponents(Assembly assembly)
     {
@@ -65,7 +65,7 @@ public static partial class TypeCache
         }
     }
 
-    public static void DefineComponentFactory(string componentType, Func<REGameObject, RszInstance, REComponent?> factory, params SupportedGame[] supportedGames)
+    public static void DefineComponentFactory(string componentType, Func<GameObject, RszInstance, REComponent?> factory, params SupportedGame[] supportedGames)
     {
         if (supportedGames.Length == 0) {
             supportedGames = ReachForGodot.GameList;
@@ -80,7 +80,7 @@ public static partial class TypeCache
         }
     }
 
-    public static bool TryCreateComponent(SupportedGame game, string classname, REGameObject gameObject, RszInstance instance, out REComponent? componentInfo)
+    public static bool TryCreateComponent(SupportedGame game, string classname, GameObject gameObject, RszInstance instance, out REComponent? componentInfo)
     {
         if (componentFactories.TryGetValue(game, out var factories) &&
             factories.TryGetValue(classname, out var factory)) {

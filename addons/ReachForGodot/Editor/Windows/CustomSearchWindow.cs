@@ -89,7 +89,7 @@ public partial class CustomSearchWindow : Window
     {
         var wnd = ResourceLoader.Load<PackedScene>(SceneFilepath).Instantiate<CustomSearchWindow>();
         wnd.SearchRoot = source;
-        wnd.Type = source is REGameObject or SceneFolder ? SearchType.GameObjectName : SearchType.NodeName;
+        wnd.Type = source is GameObject or SceneFolder ? SearchType.GameObjectName : SearchType.NodeName;
         EditorInterface.Singleton.PopupDialogCentered(wnd);
     }
 
@@ -180,7 +180,7 @@ public partial class CustomSearchWindow : Window
 
     private static bool SearchByGuid(CustomSearchWindow self, Node node, out string? summary)
     {
-        if (node is REGameObject obj && obj.Uuid == self.SearchedQuery) {
+        if (node is GameObject obj && obj.Uuid == self.SearchedQuery) {
             summary = obj.ToString();
             return true;
         }
@@ -191,7 +191,7 @@ public partial class CustomSearchWindow : Window
 
     private static bool SearchGameObjectsByName(CustomSearchWindow self, Node node, out string? summary)
     {
-        if (node is REGameObject obj && obj.OriginalName.Contains(self.SearchedQuery!, StringComparison.OrdinalIgnoreCase)) {
+        if (node is GameObject obj && obj.OriginalName.Contains(self.SearchedQuery!, StringComparison.OrdinalIgnoreCase)) {
             summary = node.Name;
             return true;
         }
@@ -222,7 +222,7 @@ public partial class CustomSearchWindow : Window
                 EditorInterface.Singleton.EditNode(node);
                 HandleCloseRequested();
             };
-            if (node is REGameObject obj) context = obj.Path;
+            if (node is GameObject obj) context = obj.Path;
             if (node is SceneFolder scn) context = scn.Path;
         } else if (target is Resource res) {
             summary ??= res.ResourceName;

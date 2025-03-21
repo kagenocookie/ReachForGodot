@@ -6,18 +6,18 @@ namespace ReaGE.EditorLogic;
 [Tool]
 public partial class GameObjectCloneAction : NodeModificationAction
 {
-    private REGameObject source = null!;
-    private REGameObject? clone;
+    private GameObject source = null!;
+    private GameObject? clone;
 
-    private REGameObject? activeNode;
+    private GameObject? activeNode;
 
-    public REGameObject? Clone => clone;
+    public GameObject? Clone => clone;
 
     public override Node? ActiveNode => activeNode;
 
     private GameObjectCloneAction() {}
 
-    public GameObjectCloneAction(REGameObject source)
+    public GameObjectCloneAction(GameObject source)
     {
         this.source = source;
         base.MergeMode = UndoRedo.MergeMode.Disable;

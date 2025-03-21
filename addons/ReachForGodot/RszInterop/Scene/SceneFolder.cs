@@ -23,7 +23,7 @@ public partial class SceneFolder : Node3D, IRszContainer
 
     public IEnumerable<SceneFolder> Subfolders => this.FindChildrenByType<SceneFolder>() ?? Array.Empty<SceneFolder>();
     public IEnumerable<SceneFolder> AllSubfolders => Subfolders.SelectMany(f => new [] { f }.Concat(f.AllSubfolders));
-    public IEnumerable<REGameObject> ChildObjects => this.FindChildrenByType<REGameObject>();
+    public IEnumerable<GameObject> ChildObjects => this.FindChildrenByType<GameObject>();
 
     public string Path => string.IsNullOrEmpty(SceneFilePath) && Owner is SceneFolder ownerScn ? $"{ownerScn.Asset?.AssetFilename}@{Owner.GetPathTo(this)}" : $"{Asset?.AssetFilename}";
 
@@ -116,10 +116,10 @@ public partial class SceneFolder : Node3D, IRszContainer
         return this.FindChildWhere<SceneFolder>(c => string.IsNullOrEmpty(c.OriginalName) ? c.Name == name : c.OriginalName == name);
     }
 
-    public REGameObject? GetGameObject(string name, int deduplicationIndex)
+    public GameObject? GetGameObject(string name, int deduplicationIndex)
     {
         var dupesFound = 0;
-        foreach (var child in this.FindChildrenByType<REGameObject>()) {
+        foreach (var child in this.FindChildrenByType<GameObject>()) {
             if (child.OriginalName == name) {
                 if (dupesFound >= deduplicationIndex) {
                     return child;
@@ -150,7 +150,7 @@ public partial class SceneFolder : Node3D, IRszContainer
     {
         Aabb bounds = new Aabb();
 
-        foreach (var go in this.FindChildrenByType<REGameObject>()) {
+        foreach (var go in this.FindChildrenByType<GameObject>()) {
             var childBounds = go.CalculateBounds();
             if (!childBounds.Size.IsZeroApprox()) {
                 bounds = bounds.Position.IsZeroApprox() && bounds.Size.IsZeroApprox() ? childBounds : bounds.Merge(childBounds);

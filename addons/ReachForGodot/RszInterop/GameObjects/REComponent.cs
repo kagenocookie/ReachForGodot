@@ -10,7 +10,7 @@ public abstract partial class REComponent : REObject, ISerializationListener
     [ExportToolButton("Trigger pre-export action")]
     private Callable TriggerPreExport => Callable.From(PreExport);
 
-    public REGameObject GameObject { get; set; } = null!;
+    public GameObject GameObject { get; set; } = null!;
     public string Path => (GameObject?.Path) + ":" + Classname;
 
     public REComponent() { }
@@ -25,7 +25,7 @@ public abstract partial class REComponent : REObject, ISerializationListener
     {
     }
 
-    public REComponent Clone(REGameObject gameObject)
+    public REComponent Clone(GameObject gameObject)
     {
         var clone = (REComponent)Duplicate(true);
         clone.GameObject = gameObject;

@@ -14,7 +14,7 @@ public partial class CompositeMeshComponent : REComponent, IVisualREComponent
 
     private static readonly REFieldAccessor MeshGroupsField = new REFieldAccessor("MeshGroups").WithConditions("MeshGroups", "v15");
 
-    public Node3D? GetOrFindMeshNode() => meshNode ??= GameObject.FindChildWhere<Node3D>(child => child is not REGameObject && child.Name == "__CompositeMesh");
+    public Node3D? GetOrFindMeshNode() => meshNode ??= GameObject.FindChildWhere<Node3D>(child => child is not ReaGE.GameObject && child.Name == "__CompositeMesh");
     private Godot.Collections.Array<REObject>? FindStoredMeshGroups()
         => TryGetFieldValue(MeshGroupsField.Get(this), out var groups) ? groups.AsGodotArray<REObject>() : null;
 

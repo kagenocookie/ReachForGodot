@@ -283,7 +283,7 @@ public class Exporter
         }
     }
 
-    private static int AddGameObject(REGameObject obj, RSZFile rsz, BaseRszFile container, RszFileOption fileOption, int parentObjectId)
+    private static int AddGameObject(GameObject obj, RSZFile rsz, BaseRszFile container, RszFileOption fileOption, int parentObjectId)
     {
         var instanceId = ConstructObjectInstances(obj.Data!, rsz, fileOption, container);
         var instance = rsz.InstanceList[instanceId];
@@ -308,7 +308,7 @@ public class Exporter
         return instanceId;
     }
 
-    private static void SetupPfbGameObjectReferences(PfbFile pfb, REGameObject gameobj, PrefabNode root)
+    private static void SetupPfbGameObjectReferences(PfbFile pfb, GameObject gameobj, PrefabNode root)
     {
         foreach (var comp in gameobj.Components) {
             RecurseSetupPfbGameObjectReferences(pfb, comp, comp, root);
@@ -332,7 +332,7 @@ public class Exporter
         }
     }
 
-    private static void SetupGameObjectReferenceGuids(REGameObject gameobj, Node root)
+    private static void SetupGameObjectReferenceGuids(GameObject gameobj, Node root)
     {
         foreach (var comp in gameobj.Components) {
             RecurseSetupGameObjectReferenceGuids(comp, comp, root);
@@ -468,7 +468,7 @@ public class Exporter
         });
     }
 
-    private static void AddScnGameObject(int objectId, ScnFile file, REGameObject gameObject, int parentId)
+    private static void AddScnGameObject(int objectId, ScnFile file, GameObject gameObject, int parentId)
     {
         var pfbIndex = -1;
         if (gameObject is PrefabNode pfbNode && pfbNode.Asset?.IsEmpty == false) {
