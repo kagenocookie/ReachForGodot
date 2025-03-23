@@ -2,6 +2,7 @@ using System.Diagnostics;
 using System.Text;
 using System.Threading.Tasks;
 using Godot;
+using RszTool;
 
 namespace ReaGE;
 
@@ -160,7 +161,7 @@ public class Importer
             case RESupportedFileFormats.MotionBank:
                 return ImportResource<MotionBankResource>(sourceFilePath, outputFilePath, config);
             case RESupportedFileFormats.CollisionFilter:
-                return ImportResource<CollisionFilterResource>(sourceFilePath, outputFilePath, config);
+                return ImportCollisionFilter(sourceFilePath, outputFilePath, config);
             default:
                 return ImportResource<REResource>(sourceFilePath, outputFilePath, config);
         }
@@ -273,6 +274,28 @@ public class Importer
         return conv.CreateOrReplaceScene(resolvedPath, outputFilePath);
     }
 
+    public static CollisionFilterResource? ImportCollisionFilter(string? sourceFilePath, string outputFilePath, AssetConfig config)
+    {
+        var resolvedPath = PathUtils.FindSourceFilePath(sourceFilePath, config);
+        if (resolvedPath == null) {
+            GD.PrintErr("Scene file not found: " + sourceFilePath);
+            return null;
+        }
+        var cfil = CreateResource<CollisionFilterResource>(sourceFilePath, outputFilePath, config);
+        if (cfil == null) return null;
+        try {
+            using var handler = new FileHandler(resolvedPath);
+            var file = new CfilFile();
+            file.Read(handler);
+            cfil.Uuid = file.myGuid.ToString();
+            cfil.CollisionGuids = file.Guids?.Select(g => g.ToString()).ToArray();
+        } catch (Exception e) {
+            GD.PrintErr($"Failed to read cfil file {resolvedPath}", e);
+        }
+        TrySaveResource(cfil, sourceFilePath);
+        return cfil;
+    }
+
     public static PackedScene? ImportPrefab(string? sourceFilePath, string outputFilePath, AssetConfig config)
     {
         var resolvedPath = PathUtils.FindSourceFilePath(sourceFilePath, config);
@@ -303,7 +326,25 @@ public class Importer
         // fs.CallDeferred(EditorFileSystem.MethodName.ReimportFiles, new Godot.Collections.Array<string>(new[] { file }));
     }
 
-    public static T? ImportResource<T>(string? sourceFilePath, string? outputFilePath, AssetConfig config)
+    private static T? ImportResource<T>(string? sourceFilePath, string? outputFilePath, AssetConfig config)
+        where T : REResource, new()
+    {
+        var newres = CreateResource<T>(sourceFilePath, outputFilePath, config);
+        if (newres == null) return null;
+
+        TrySaveResource(newres, sourceFilePath);
+        return newres;
+    }
+
+    private static void TrySaveResource(Resource res, string? filepath)
+    {
+        var status = ResourceSaver.Save(res);
+        if (status != Error.Ok) {
+            GD.PrintErr($"Failed to save new imported resource ({status}): {filepath}");
+        }
+    }
+
+    private static T? CreateResource<T>(string? sourceFilePath, string? outputFilePath, AssetConfig config)
         where T : REResource, new()
     {
         if (string.IsNullOrEmpty(sourceFilePath) || string.IsNullOrEmpty(outputFilePath)) return null;
@@ -331,14 +372,11 @@ public class Importer
             Game = config.Game,
             ResourceName = PathUtils.GetFilepathWithoutVersion(relativePath).GetFile(),
         };
+
         if (ResourceLoader.Exists(importPath)) {
             newres.TakeOverPath(importPath);
         } else {
             newres.ResourcePath = importPath;
-        }
-        var status = ResourceSaver.Save(newres);
-        if (status != Error.Ok) {
-            GD.PrintErr($"Failed to save new imported resource ({status}): {importPath}");
         }
         return newres;
     }
