@@ -528,8 +528,13 @@ public class GodotRszImporter
                 ?? (!string.IsNullOrEmpty(folder.SceneFilePath)
                     ? ResourceLoader.Load<PackedScene>(folder.SceneFilePath)
                     : Importer.FindOrImportResource<PackedScene>(folder.Asset.AssetFilename, AssetConfig));
+            if (scene == null) {
+                // apparently not every scene is shipped (specifically, RE2 Location/RPD/Level_199)
+                // keep these as placeholders in whatever scenes contain them
+                return;
+            }
             int nodeCount = -1;
-            var newInstance = scene!.Instantiate<SceneFolder>();
+            var newInstance = scene.Instantiate<SceneFolder>();
             if (!batch.finishedFolders.Contains(folder)) {
                 await GenerateSceneTree(newInstance);
                 ctx.UpdateUIStatus();
