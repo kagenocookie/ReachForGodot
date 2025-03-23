@@ -329,7 +329,7 @@ public class Importer
             Asset = new AssetReference(relativePath),
             ResourceType = format,
             Game = config.Game,
-            ResourceName = relativePath.GetFile(),
+            ResourceName = PathUtils.GetFilepathWithoutVersion(relativePath).GetFile(),
         };
         if (ResourceLoader.Exists(importPath)) {
             newres.TakeOverPath(importPath);
