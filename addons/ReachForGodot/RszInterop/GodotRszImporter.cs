@@ -1041,7 +1041,6 @@ public class GodotRszImporter
         }
 
         if (importType == RszImportType.Placeholders) {
-            gameobj.Name = name;
             gameobj.Components = new();
             if (data.Components.FirstOrDefault(t => t.RszClass.name == "via.Transform") is RszInstance transform) {
                 RETransformComponent.ApplyTransform(gameobj, transform);

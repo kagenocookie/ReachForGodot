@@ -75,7 +75,8 @@ public partial class PhysicsCollidersComponent : REComponent, IVisualREComponent
         if (colliderRoot == null) {
             colliderRoot = new StaticBody3D() { Name = CollidersNodeName };
             colliderRoot.LockNode(true);
-            await GameObject.AddChildAsync(colliderRoot, GameObject.Owner ?? GameObject);
+            var owner = GameObject is PrefabNode pfbn && pfbn.Asset?.IsEmpty == false ? GameObject : (GameObject.Owner ?? GameObject);
+            await GameObject.AddChildAsync(colliderRoot, owner);
             await UpdateColliders();
         } else {
             await UpdateColliders();
@@ -168,7 +169,7 @@ public partial class PhysicsCollidersComponent : REComponent, IVisualREComponent
                 colliderRoot.AddChild(collider);
             }
 
-            collider.Owner = GameObject is PrefabNode ? GameObject : GameObject.Owner ?? GameObject;
+            collider.Owner = colliderRoot.Owner;
             if (shape == null) {
                 GD.Print("Missing collider shape " + n + " at " + Path);
                 continue;
