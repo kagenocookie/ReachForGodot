@@ -14,13 +14,15 @@ public partial class AssetExportInspectorPlugin : EditorInspectorPlugin, ISerial
 
     public override bool _CanHandle(GodotObject @object)
     {
-        return @object is IExportableAsset;
+        return @object is IExportableAsset || (@object as Node)?.Owner is IExportableAsset;
     }
 
     public override void _ParseBegin(GodotObject @object)
     {
         if (@object is IExportableAsset res && res.Asset?.IsEmpty == false) {
             CreateUI(res);
+        } else if (@object is Node rszNode && rszNode.FindRszOwner() is IRszContainer parentRes) {
+            CreateUI(parentRes);
         }
         base._ParseBegin(@object);
     }
