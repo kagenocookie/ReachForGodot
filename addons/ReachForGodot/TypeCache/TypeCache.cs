@@ -32,6 +32,13 @@ public static partial class TypeCache
 
     private static readonly Dictionary<SupportedGame, Dictionary<string, Func<GameObject, RszInstance, REComponent?>>> componentFactories = new();
 
+    private static readonly Dictionary<Type, string> componentTypeToClassname = new();
+
+    public static string? GetClassnameForComponentType(Type componentType)
+    {
+        return componentTypeToClassname.GetValueOrDefault(componentType);
+    }
+
     public static void InitComponents(Assembly assembly)
     {
         foreach (var type in assembly.GetTypes()) {
@@ -45,6 +52,7 @@ public static partial class TypeCache
                     continue;
                 }
 
+                componentTypeToClassname[type] = attr.Classname;
                 DefineComponentFactory(attr.Classname, (obj, instance) => {
                     var node = (REComponent)Activator.CreateInstance(type)!;
                     return node;
@@ -62,6 +70,7 @@ public static partial class TypeCache
                     continue;
                 }
 
+                componentTypeToClassname[type] = classAttr.Classname;
                 TypeCache.HandleFieldOverrideAttributes(type, classAttr.Classname, classAttr.SupportedGames);
             }
         }
@@ -123,7 +132,7 @@ public static partial class TypeCache
 
     public static bool ClassExists(SupportedGame game, string classname)
     {
-        return GetCacheRoot(game).Parser.GetRSZClass(classname) == null;
+        return GetCacheRoot(game).Parser.GetRSZClass(classname) != null;
     }
 
     public static List<string> GetSubclasses(SupportedGame game, string baseclass)

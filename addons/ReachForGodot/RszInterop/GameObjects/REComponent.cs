@@ -2,6 +2,7 @@ namespace ReaGE;
 
 using System.Threading.Tasks;
 using Godot;
+using Godot.Collections;
 using RszTool;
 
 [GlobalClass, Tool]
@@ -32,11 +33,6 @@ public abstract partial class REComponent : REObject, ISerializationListener
         return clone;
     }
 
-    public IRszContainer? GetContainer() => GameObject == null ? null
-        : GameObject is IRszContainer rsz ? rsz
-        : GameObject.Owner is IRszContainer owner ? owner
-        : GameObject.FindNodeInParents<IRszContainer>();
-
     public override string ToString() => (GameObject != null ? GameObject.ToString() + ":" : "") + (Classname ?? nameof(REComponent));
 
     public void OnBeforeSerialize()
@@ -48,10 +44,23 @@ public abstract partial class REComponent : REObject, ISerializationListener
     {
     }
 
+    public override Array<Dictionary> _GetPropertyList()
+    {
+        if (string.IsNullOrWhiteSpace(_classname) && GetType() != typeof(REComponentPlaceholder)) {
+            _classname = TypeCache.GetClassnameForComponentType(GetType());
+            if (_classname != null && Game != SupportedGame.Unknown) {
+                ResetProperties();
+            }
+        }
+
+        return base._GetPropertyList();
+    }
+
     protected void EnsureResourceInContainer(REResource resource)
     {
-        if (GetContainer()?.EnsureContainsResource(resource) == true) {
-            GD.Print($"Resource {resource.ResourceName} registered in owner {GetContainer()?.Path ?? Path}");
+        var container = GameObject.FindRszOwner();
+        if (container?.EnsureContainsResource(resource) == true) {
+            GD.Print($"Resource {resource.ResourceName} registered in owner {container?.Path ?? Path}");
         }
     }
 }

@@ -35,7 +35,7 @@ public partial class CompositeMeshComponent : REComponent, IVisualREComponent
         if (meshNode != null) {
             meshNode.ClearChildren();
         } else {
-            meshNode = await GameObject.AddChildAsync(new Node3D() { Name = "__CompositeMesh" }, GameObject.Owner ?? GameObject);
+            meshNode = await GameObject.AddChildAsync(new Node3D() { Name = "__CompositeMesh" }, GameObject.FindRszOwnerNode());
             meshNode.LockNode(true);
         }
         var tasks = new List<Task>();

@@ -48,7 +48,7 @@ public partial class EnemyContextController : REComponent
         if (inst == null) return;
 
         inst.Name = NodeName;
-        await GameObject.AddChildAsync(inst, GameObject.Owner ?? GameObject);
+        await GameObject.AddChildAsync(inst, GameObject.FindRszOwnerNode());
     }
 
     protected override void UpdateResourceName()

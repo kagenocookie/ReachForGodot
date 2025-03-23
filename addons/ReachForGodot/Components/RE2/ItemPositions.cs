@@ -74,6 +74,6 @@ public partial class ItemPositions : REComponent
         if (inst == null) return;
 
         inst.Name = NodeName;
-        await GameObject.AddChildAsync(inst, GameObject.Owner ?? GameObject);
+        await GameObject.AddChildAsync(inst, GameObject.FindRszOwnerNode());
 	}
 }

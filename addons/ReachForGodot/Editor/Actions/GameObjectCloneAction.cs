@@ -7,6 +7,7 @@ namespace ReaGE.EditorLogic;
 public partial class GameObjectCloneAction : NodeModificationAction
 {
     private GameObject source = null!;
+    private Node owner = null!;
     private GameObject? clone;
 
     private GameObject? activeNode;
@@ -20,6 +21,7 @@ public partial class GameObjectCloneAction : NodeModificationAction
     public GameObjectCloneAction(GameObject source)
     {
         this.source = source;
+        owner = EditorInterface.Singleton.GetEditedSceneRoot();
         base.MergeMode = UndoRedo.MergeMode.Disable;
         activeNode = source;
     }
@@ -32,7 +34,7 @@ public partial class GameObjectCloneAction : NodeModificationAction
 
         source.GetParent().AddUniqueNamedChild(clone);
         source.GetParent().MoveChild(clone, source.GetIndex() + 1);
-        clone.SetRecursiveOwner(source.Owner);
+        clone.SetRecursiveOwner(owner);
         activeNode = clone;
     }
 

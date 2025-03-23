@@ -136,7 +136,7 @@ public partial class REObject : Resource
 
     public override Array<Dictionary> _GetPropertyList()
     {
-        if (string.IsNullOrWhiteSpace(Classname)) {
+        if (string.IsNullOrWhiteSpace(Classname) || Game == SupportedGame.Unknown) {
             return base._GetPropertyList();
         }
 
@@ -221,12 +221,12 @@ public partial class REObject : Resource
                         obj.Game = Game;
                     }
                     if (string.IsNullOrEmpty(obj.Classname) && !string.IsNullOrEmpty(field.RszField.original_type)) {
-                        // swap inline new Userdata instances into REObject ones because they don't need paths...
-                        // will this cause issues down the line?
-                        if (obj is UserdataResource) {
-                            __Data[property] = new REObject(Game, field.RszField.original_type, true);
-                        } else {
-                            obj.ChangeClassname(field.RszField.original_type);
+                            // swap inline new Userdata instances into REObject ones because they don't need paths...
+                            // will this cause issues down the line?
+                            if (obj is UserdataResource) {
+                                __Data[property] = new REObject(Game, field.RszField.original_type, true);
+                            } else {
+                                obj.ChangeClassname(field.RszField.original_type);
                         }
                     }
                 }

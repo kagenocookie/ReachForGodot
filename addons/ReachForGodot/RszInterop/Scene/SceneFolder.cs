@@ -35,7 +35,7 @@ public partial class SceneFolder : Node3D, IRszContainer
     {
         Debug.Assert(folder != this);
         AddChild(folder);
-        folder.Owner = folder.FindNodeInParents<SceneFolder>(sf => sf.Asset?.IsEmpty == false) ?? Owner ?? this;
+        folder.Owner = this.FindRszOwnerNode();
     }
 
     public void RemoveFolder(SceneFolder folder)

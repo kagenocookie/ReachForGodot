@@ -3,7 +3,7 @@ using Godot;
 
 namespace ReaGE;
 
-public static  class FileSystemUtils
+public static class FileSystemUtils
 {
     public static void ShowFileInExplorer(string? file)
     {
