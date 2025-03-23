@@ -34,8 +34,14 @@ jobs:
         name: ReachForGodot
         path: "output/"
 
+    - name: ZIP files for release
+      if: startsWith(github.ref, 'refs/tags/')
+      run: |
+        cd output/
+        7z a ReachForGodot.zip *
+
     - name: Upload files to release
       uses: softprops/action-gh-release@v2
       if: startsWith(github.ref, 'refs/tags/')
       with:
-        files: "*.zip"
+        files: "output/*.zip"
