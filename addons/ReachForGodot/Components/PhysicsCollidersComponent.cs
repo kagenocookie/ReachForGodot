@@ -21,6 +21,10 @@ public partial class PhysicsCollidersComponent : REComponent, IVisualREComponent
         list => list[2].RszField.type == RszFieldType.S32 ? list[2] : null,
         ((REFieldCondition)"v2").func);
 
+    [REObjectFieldTarget("via.physics.Collider")]
+    private static readonly REFieldAccessor CollisionFilterField = new REFieldAccessor("CollisionFilter", typeof(CollisionFilterResource)).WithConditions(
+        list => list.FirstOrDefault(f => f.RszField.type is RszFieldType.Resource or RszFieldType.String));
+
     [REObjectFieldTarget("via.physics.SphereShape")]
     private static readonly REFieldAccessor SphereShape = new REFieldAccessor("Sphere", RszFieldType.Sphere).WithConditions(
         list => list.FirstOrDefault(f => f.RszField.type == RszFieldType.Sphere || f.RszField.type == RszFieldType.Vec4));

@@ -5,10 +5,10 @@ using Godot;
 using RszTool;
 
 [GlobalClass, Tool, REComponentClass("app.ropeway.EnemyContextController", SupportedGame.ResidentEvil2RT)]
-public partial class RE2EnemyContextController : REComponent
+public partial class EnemyContextController : REComponent
 {
-    public RE2EnemyContextController() { }
-    public RE2EnemyContextController(SupportedGame game, string classname) : base(game, classname) {}
+    public EnemyContextController() { }
+    public EnemyContextController(SupportedGame game, string classname) : base(game, classname) {}
 
     private static readonly REFieldAccessor InitialKind = new REFieldAccessor("InitialKind").WithConditions("InitialKind");
 

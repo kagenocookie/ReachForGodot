@@ -17,4 +17,8 @@ public static partial class Debug
         throw new ApplicationException($"Assertion failed: {msg} [{conditionString}]");
 #endif
     }
+
+    public static void Break()
+    {
+    }
 }

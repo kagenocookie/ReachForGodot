@@ -5,7 +5,7 @@ using Godot;
 using RszTool;
 
 [GlobalClass, Tool, REComponentClass("app.ropeway.item.ItemPositions", SupportedGame.ResidentEvil2RT)]
-public partial class RE2_ItemPositions : REComponent
+public partial class ItemPositions : REComponent
 {
 	private static readonly REFieldAccessor ItemIdField = new REFieldAccessor("InitializeItemId");
 	private static readonly REFieldAccessor WeaponIdField = new REFieldAccessor("InitializeWeaponId");

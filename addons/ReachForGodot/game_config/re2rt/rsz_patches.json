@@ -220,6 +220,10 @@
       {
         "Name": "v4",
         "Type": "Object"
+      },
+      {
+        "Name": "v5",
+        "Type": "Resource"
       }
     ]
   },
