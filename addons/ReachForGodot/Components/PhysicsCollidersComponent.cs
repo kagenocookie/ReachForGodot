@@ -10,7 +10,7 @@ public partial class PhysicsCollidersComponent : REComponent, IVisualREComponent
 {
     private StaticBody3D? colliderRoot;
     private static readonly StringName CollidersNodeName = "__Colliders";
-    private static readonly REFieldAccessor CollidersList = new REFieldAccessor("Colliders").WithConditions(
+    private static readonly REFieldAccessor CollidersList = new REFieldAccessor("Colliders", RszFieldType.Object).WithConditions(
         (list) => list.FirstOrDefault(f => f.RszField.array && f.RszField.type is not (RszFieldType.String or RszFieldType.Resource))
     );
 
@@ -48,6 +48,9 @@ public partial class PhysicsCollidersComponent : REComponent, IVisualREComponent
     private static readonly REFieldAccessor MeshShape = new REFieldAccessor("Mesh", typeof(REResource)).WithConditions(
         list => list.FirstOrDefault(f => f.RszField.type is RszFieldType.Resource or RszFieldType.String));
 
+    [ExportToolButton("Generate collider nodes")]
+    private Callable GenerateColliderNodesBtn => Callable.From(() => { _ = GenerateColliderNodes(); });
+
     public StaticBody3D? GetOrFindContainerNode()
     {
         if (colliderRoot != null && (!IsInstanceValid(colliderRoot) || colliderRoot.GetParent() != GameObject)) {
@@ -74,17 +77,19 @@ public partial class PhysicsCollidersComponent : REComponent, IVisualREComponent
 
     public override async Task Setup(RszInstance rsz, RszImportType importType)
     {
-        colliderRoot = GetOrFindContainerNode();
+        await GenerateColliderNodes();
+    }
 
+    private async Task GenerateColliderNodes()
+    {
+        colliderRoot = GetOrFindContainerNode();
         if (colliderRoot == null) {
             colliderRoot = new StaticBody3D() { Name = CollidersNodeName };
             colliderRoot.LockNode(true);
             var owner = GameObject.FindRszOwnerNode();
             await GameObject.AddChildAsync(colliderRoot, owner);
-            await UpdateColliders();
-        } else {
-            await UpdateColliders();
         }
+        await UpdateColliders();
     }
 
     public override void PreExport()

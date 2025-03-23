@@ -337,12 +337,12 @@ public static partial class TypeCache
                 case RszFieldType.Object:
                     refield.VariantType = Variant.Type.Array;
                     refield.Hint = PropertyHint.TypeString;
-                    refield.HintString = $"{(int)Variant.Type.Object}/{(int)PropertyHint.ResourceType}:{nameof(UserdataResource)}";
+                    refield.HintString = $"{(int)Variant.Type.Object}/{(int)PropertyHint.ResourceType}:{nameof(REObject)}";
                     return;
                 case RszFieldType.UserData:
                     refield.VariantType = Variant.Type.Array;
                     refield.Hint = PropertyHint.TypeString;
-                    refield.HintString = $"{(int)Variant.Type.Object}/{(int)PropertyHint.ResourceType}:{nameof(REObject)}";
+                    refield.HintString = $"{(int)Variant.Type.Object}/{(int)PropertyHint.ResourceType}:{nameof(UserdataResource)}";
                     return;
                 case RszFieldType.Resource:
                     refield.VariantType = Variant.Type.Array;
@@ -362,8 +362,10 @@ public static partial class TypeCache
 
         switch (srcField.type) {
             case RszFieldType.Object:
-            case RszFieldType.UserData:
                 ResourceHint(refield, nameof(REObject));
+                break;
+            case RszFieldType.UserData:
+                ResourceHint(refield, nameof(UserdataResource));
                 break;
             case RszFieldType.S8:
             case RszFieldType.S16:

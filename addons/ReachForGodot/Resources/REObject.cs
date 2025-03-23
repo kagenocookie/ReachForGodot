@@ -199,19 +199,17 @@ public partial class REObject : Resource
         if (cache.FieldsByName.TryGetValue(property, out var field)) {
             __Data[property] = value;
             if (field.RszField.array) {
-                if (field.ElementType != null) {
-                    var array = value.AsGodotArray<REObject>();
-                    foreach (var item in array) {
-                        if (item == null) continue;
-                        if (item.Game == SupportedGame.Unknown) {
-                            item.Game = Game;
-                        }
-                        if (string.IsNullOrEmpty(item.Classname)) {
-                            if (item is UserdataResource) {
-                                array[array.IndexOf(item)] = new REObject(Game, field.ElementType, true);
-                            } else {
-                                item.ChangeClassname(field.ElementType);
-                            }
+                var array = value.AsGodotArray<REObject>();
+                foreach (var item in array) {
+                    if (item == null) continue;
+                    if (item.Game == SupportedGame.Unknown) {
+                        item.Game = Game;
+                    }
+                    if (field.ElementType != null && string.IsNullOrEmpty(item.Classname)) {
+                        if (item is UserdataResource) {
+                            array[array.IndexOf(item)] = new REObject(Game, field.ElementType, true);
+                        } else {
+                            item.ChangeClassname(field.ElementType);
                         }
                     }
                 }
@@ -220,14 +218,9 @@ public partial class REObject : Resource
                     if (obj.Game == SupportedGame.Unknown) {
                         obj.Game = Game;
                     }
-                    if (string.IsNullOrEmpty(obj.Classname) && !string.IsNullOrEmpty(field.RszField.original_type)) {
-                            // swap inline new Userdata instances into REObject ones because they don't need paths...
-                            // will this cause issues down the line?
-                            if (obj is UserdataResource) {
-                                __Data[property] = new REObject(Game, field.RszField.original_type, true);
-                            } else {
-                                obj.ChangeClassname(field.RszField.original_type);
-                        }
+                    if (string.IsNullOrEmpty(obj.Classname) && !string.IsNullOrEmpty(field.RszField.original_type) && obj is not UserdataResource) {
+                        obj.ChangeClassname(field.RszField.original_type);
+                        __Data[property] = new REObject(Game, field.RszField.original_type, true);
                     }
                 }
             }
