@@ -12,10 +12,10 @@ public class Importer
     private static readonly string EmptyBlend = ProjectSettings.GlobalizePath("res://addons/ReachForGodot/.gdignore/empty.blend");
 
     private static string? _meshScript;
-    private static string MeshImportScript => _meshScript ??= File.ReadAllText(Path.Combine(System.Environment.CurrentDirectory, meshImportScriptPath));
+    private static string MeshImportScript => _meshScript ??= File.ReadAllText(Path.Combine(ProjectSettings.GlobalizePath("res://"), meshImportScriptPath));
 
     private static string? _texScript;
-    private static string TexImportScript => _texScript ??= File.ReadAllText(Path.Combine(System.Environment.CurrentDirectory, texImportScriptPath));
+    private static string TexImportScript => _texScript ??= File.ReadAllText(Path.Combine(ProjectSettings.GlobalizePath("res://"), texImportScriptPath));
 
     private static readonly byte[] MPLY_mesh_bytes = Encoding.ASCII.GetBytes("MPLY");
 
@@ -148,9 +148,9 @@ public class Importer
             case RESupportedFileFormats.Prefab:
                 return ImportPrefab(sourceFilePath, outputFilePath, config);
             case RESupportedFileFormats.Userdata:
-                return ImportUserdata(sourceFilePath, outputFilePath, config);
+                return ImportResource<UserdataResource>(sourceFilePath, outputFilePath, config);
             case RESupportedFileFormats.Rcol:
-                return ImportRcol(sourceFilePath, outputFilePath, config);
+                return ImportResource<RcolResource>(sourceFilePath, outputFilePath, config);
             case RESupportedFileFormats.Material:
                 return ImportMaterial(sourceFilePath, outputFilePath, config);
             case RESupportedFileFormats.Uvar:
@@ -282,50 +282,9 @@ public class Importer
         return conv.CreateOrReplacePrefab(resolvedPath, outputFilePath);
     }
 
-    public static UserdataResource? ImportUserdata(string? sourceFilePath, string outputFilePath, AssetConfig config)
-    {
-        var resolvedPath = PathUtils.FindSourceFilePath(sourceFilePath, config);
-        if (resolvedPath == null) {
-            GD.PrintErr("Userdata file not found: " + sourceFilePath);
-            return null;
-        }
-        var conv = new GodotRszImporter(config, GodotRszImporter.placeholderImport);
-        return conv.CreateOrReplaceUserdata(resolvedPath, ProjectSettings.LocalizePath(outputFilePath));
-    }
-
-    public static RcolResource? ImportRcol(string? sourceFilePath, string outputFilePath, AssetConfig config)
-    {
-        var resolvedPath = PathUtils.FindSourceFilePath(sourceFilePath, config);
-        if (resolvedPath == null) {
-            GD.PrintErr("Rcol file not found: " + sourceFilePath);
-            return null;
-        }
-        var conv = new GodotRszImporter(config, GodotRszImporter.placeholderImport);
-        return conv.CreateOrReplaceRcol(resolvedPath, ProjectSettings.LocalizePath(outputFilePath));
-    }
-
     public static MaterialResource? ImportMaterial(string? sourceFilePath, string? outputFilePath, AssetConfig config)
     {
-        var resolvedPath = PathUtils.FindSourceFilePath(sourceFilePath, config);
-        if (resolvedPath == null) {
-            GD.PrintErr("Material file not found: " + sourceFilePath);
-            return null;
-        }
-        var importPath = ProjectSettings.LocalizePath(outputFilePath);
-
-        var mat = new MaterialResource() {
-            Game = config.Game,
-            ResourceType = RESupportedFileFormats.Material,
-            ResourceName = PathUtils.GetFilepathWithoutVersion(resolvedPath).GetFile(),
-            Asset = new AssetReference(PathUtils.FullToRelativePath(resolvedPath, config) ?? resolvedPath),
-        };
-        if (ResourceLoader.Exists(importPath)) {
-            mat.TakeOverPath(importPath);
-        } else {
-            mat.ResourcePath = importPath;
-        }
-        ResourceSaver.Save(mat);
-        return mat;
+        return ImportResource<MaterialResource>(sourceFilePath, outputFilePath, config);
     }
 
     public static void QueueFileRescan()
@@ -342,10 +301,10 @@ public class Importer
         // fs.CallDeferred(EditorFileSystem.MethodName.ReimportFiles, new Godot.Collections.Array<string>(new[] { file }));
     }
 
-    private static T? ImportResource<T>(string? sourceFilePath, string outputFilePath, AssetConfig config)
+    public static T? ImportResource<T>(string? sourceFilePath, string? outputFilePath, AssetConfig config)
         where T : REResource, new()
     {
-        if (string.IsNullOrEmpty(sourceFilePath)) return null;
+        if (string.IsNullOrEmpty(sourceFilePath) || string.IsNullOrEmpty(outputFilePath)) return null;
         var resolvedPath = PathUtils.FindSourceFilePath(sourceFilePath, config);
 
         RESupportedFileFormats format;
@@ -363,15 +322,24 @@ public class Importer
             relativePath = sourceFilePath;
         }
 
+        var importPath = ProjectSettings.LocalizePath(outputFilePath);
+
         Directory.CreateDirectory(outputFilePath.GetBaseDir());
         var newres = new T() {
             Asset = new AssetReference(relativePath),
             ResourceType = format,
             Game = config.Game,
             ResourceName = relativePath.GetFile(),
-            ResourcePath = ProjectSettings.LocalizePath(outputFilePath),
         };
-        ResourceSaver.Save(newres);
+        if (ResourceLoader.Exists(importPath)) {
+            newres.TakeOverPath(importPath);
+        } else {
+            newres.ResourcePath = importPath;
+        }
+        var status = ResourceSaver.Save(newres);
+        if (status != Error.Ok) {
+            GD.PrintErr($"Failed to save new imported resource ({status}): {importPath}");
+        }
         return newres;
     }
 

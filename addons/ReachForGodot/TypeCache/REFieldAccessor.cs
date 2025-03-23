@@ -14,6 +14,7 @@ public class REFieldAccessor
     public REFieldAccessor(string name, Action<REField>? overrideFunc = null)
     {
         preferredName = name;
+        conditions = [name];
         this.overrideFunc = overrideFunc;
     }
 

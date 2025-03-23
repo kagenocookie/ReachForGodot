@@ -56,9 +56,7 @@ public partial class GameObject : Node3D, ISerializationListener, ICloneable
             Data = new REObject(Game, "via.GameObject");
             Data.ResetProperties();
         }
-        foreach (var comp in Components) {
-            comp.GameObject = this;
-        }
+        UpdateComponentGameObjects();
     }
 
     public void Clear()
@@ -181,6 +179,23 @@ public partial class GameObject : Node3D, ISerializationListener, ICloneable
         return Components?.FirstOrDefault(x => x.Classname == classname);
     }
 
+    public TComponent? GetComponent<TComponent>() where TComponent : REComponent
+    {
+        return Components?.OfType<TComponent>().FirstOrDefault();
+    }
+
+    public REComponent? GetComponentInChildren(string classname)
+    {
+        return Components?.FirstOrDefault(x => x.Classname == classname)
+            ?? AllChildren.Select(ch => ch.GetComponent(classname)).FirstOrDefault(c => c != null);
+    }
+
+    public TComponent? GetComponentInChildren<TComponent>() where TComponent : REComponent
+    {
+        return GetComponent<TComponent>()
+            ?? AllChildren.Select(ch => ch.GetComponent<TComponent>()).FirstOrDefault(c => c != null);
+    }
+
     public bool HasComponent(string classname)
     {
         return Components?.Any(x => x.Classname == classname) == true;
@@ -202,9 +217,7 @@ public partial class GameObject : Node3D, ISerializationListener, ICloneable
 
     public void OnAfterDeserialize()
     {
-        foreach (var comp in Components) {
-            comp.GameObject = this;
-        }
+        UpdateComponentGameObjects();
     }
 
     public Aabb CalculateBounds()
@@ -213,8 +226,8 @@ public partial class GameObject : Node3D, ISerializationListener, ICloneable
         Vector3 origin = new Vector3(float.MaxValue, float.MaxValue, float.MaxValue);
 
         Components ??= new();
-        var visuals = Components.OfType<IVisualREComponent>();
-        foreach (var vis in visuals) {
+        UpdateComponentGameObjects();
+        foreach (var vis in Components.OfType<IVisualREComponent>()) {
             var compBounds = vis.GetBounds();
             if (compBounds.Size.IsZeroApprox()) {
                 origin = compBounds.Position;
@@ -240,5 +253,12 @@ public partial class GameObject : Node3D, ISerializationListener, ICloneable
         }
 
         return bounds;
+    }
+
+    private void UpdateComponentGameObjects()
+    {
+        foreach (var comp in Components) {
+            comp.GameObject = this;
+        }
     }
 }

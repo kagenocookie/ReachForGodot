@@ -279,17 +279,6 @@ public class GodotRszImporter
         return CreateOrReplaceSceneResource<PrefabNode>(sourceFilePath, importFilepath);
     }
 
-    public UserdataResource? CreateOrReplaceUserdata(string sourceFilePath, string importFilepath)
-    {
-        UserdataResource userdata = new UserdataResource() { ResourceType = RESupportedFileFormats.Userdata };
-        return SaveOrReplaceRszResource(userdata, sourceFilePath, importFilepath);
-    }
-    public RcolResource? CreateOrReplaceRcol(string sourceFilePath, string importFilepath)
-    {
-        var resource = new RcolResource() { ResourceType = RESupportedFileFormats.Rcol };
-        return SaveOrReplaceRszResource(resource, sourceFilePath, importFilepath);
-    }
-
     private PackedScene? CreateOrReplaceSceneResource<TRoot>(string sourceFilePath, string importFilepath) where TRoot : Node, IRszContainer, new()
     {
         var relativeSourceFile = PathUtils.FullToRelativePath(sourceFilePath, AssetConfig)!;
@@ -354,7 +343,10 @@ public class GodotRszImporter
             newResource.ResourcePath = importFilepath;
         }
         GD.Print(" Saving resource " + importFilepath);
-        ResourceSaver.Save(newResource);
+        var status = ResourceSaver.Save(newResource);
+        if (status != Error.Ok) {
+            GD.PrintErr($"Failed to save resource {importFilepath}:\n{status}");
+        }
         ctx.resolvedResources[importFilepath] = newResource;
         Importer.QueueFileRescan();
         return newResource;
@@ -613,6 +605,7 @@ public class GodotRszImporter
             root.Clear();
         }
 
+        root.Prefab = root.Asset.AssetFilename;
         var rootGOs = file.GameObjectDatas!.OrderBy(o => o.Instance!.Index);
         Debug.Assert(rootGOs.Count() <= 1, "WTF Capcom?? Guess we doing multiple PFB roots now");
         foreach (var gameObj in rootGOs) {
@@ -962,8 +955,11 @@ public class GodotRszImporter
     {
         Debug.Assert(batch.prefabData != null);
         var (prefab, data, importType, parentNode, parentGO, index) = batch.prefabData;
-        var pfbInstance = prefab.Instantiate<PrefabNode>(PackedScene.GenEditState.Instance);
-        await GenerateLinkedPrefabTree(pfbInstance);
+        var importFilepath = PathUtils.GetLocalizedImportPath(prefab.ResourcePath, AssetConfig)!;
+        if (!ctx.resolvedResources.TryGetValue(prefab.ResourcePath, out var pfb)) {
+            var pfbInstance = prefab.Instantiate<PrefabNode>(PackedScene.GenEditState.Instance);
+            await GenerateLinkedPrefabTree(pfbInstance);
+        }
         PrepareGameObjectBatch(data, importType, batch, parentNode, parentGO, index);
     }
 
@@ -985,28 +981,25 @@ public class GodotRszImporter
             batch.GameObject = gameobj!;
         }
 
+        string? prefabPath = null;
+
         if (data is ScnFile.GameObjectData scnData) {
             // note: some PFB files aren't shipped with the game, hence the CheckResourceExists check
             // presumably they are only used directly within scn files and not instantiated during runtime
-            if (!string.IsNullOrEmpty(scnData.Prefab?.Path) && Importer.CheckResourceExists(scnData.Prefab.Path, AssetConfig)) {
-                if (ctx.resolvedResources.TryGetValue(PathUtils.GetLocalizedImportPath(scnData.Prefab.Path, AssetConfig)!, out var pfb) && pfb is PackedScene resolvedPfb) {
-                    // TODO: if we already matched a gameobj earlier, delete it first? and/or verify if it's already an instance of the right pfb file
-                    gameobj = resolvedPfb.Instantiate<PrefabNode>(PackedScene.GenEditState.Instance);
-                } else if (Importer.FindOrImportResource<PackedScene>(scnData.Prefab.Path, AssetConfig) is PackedScene packedPfb) {
-                    var pfbInstance = packedPfb.Instantiate<PrefabNode>(PackedScene.GenEditState.Instance);
-                    gameobj = pfbInstance;
-
+            prefabPath = scnData.Prefab?.Path;
+            if (!string.IsNullOrEmpty(prefabPath) && Importer.CheckResourceExists(prefabPath, AssetConfig)) {
+                var importFilepath = PathUtils.GetLocalizedImportPath(prefabPath, AssetConfig)!;
+                if (!ctx.resolvedResources.ContainsKey(importFilepath) && Importer.FindOrImportResource<PackedScene>(prefabPath, AssetConfig) is PackedScene packedPfb) {
                     if (importType == RszImportType.Placeholders) {
-                        gameobj.Name = name;
+                        var pfbInstance = packedPfb.Instantiate<PrefabNode>(PackedScene.GenEditState.Instance);
+                        pfbInstance.Name = name;
                         if (data.Components.FirstOrDefault(t => t.RszClass.name == "via.Transform") is RszInstance transform) {
-                            RETransformComponent.ApplyTransform(gameobj, transform);
+                            RETransformComponent.ApplyTransform(pfbInstance, transform);
                         }
                         return;
                     }
                     batch.prefabData = new PrefabQueueParams(packedPfb, data, importType, parentNode, parent, dedupeIndex);
                     return;
-                } else {
-                    GD.Print("Prefab source file not found: " + scnData.Prefab.Path);
                 }
             }
         }
@@ -1014,11 +1007,18 @@ public class GodotRszImporter
         var isnew = false;
         if (gameobj == null) {
             isnew = true;
-            gameobj = new GameObject() {
+            gameobj = string.IsNullOrEmpty(prefabPath) ? new GameObject() {
                 Game = AssetConfig.Game,
                 Name = name,
                 OriginalName = name,
+            } : new PrefabNode() {
+                Game = AssetConfig.Game,
+                Name = name,
+                Prefab = prefabPath,
+                OriginalName = name,
             };
+        } else {
+            gameobj.OriginalName = name;
         }
         batch.GameObject = gameobj;
 

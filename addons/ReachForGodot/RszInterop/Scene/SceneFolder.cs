@@ -60,7 +60,7 @@ public partial class SceneFolder : Node3D, IRszContainer
 
     public override void _Ready()
     {
-        if (Owner == null && GetParent() is SubViewport) {
+        if (Owner == null && GetParent() is SubViewport && Game is SupportedGame.DragonsDogma2) {
             CallDeferred(MethodName.EditorTryRepositionCamera);
         }
     }

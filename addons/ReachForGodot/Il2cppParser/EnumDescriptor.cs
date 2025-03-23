@@ -1,5 +1,6 @@
 namespace ReaGE;
 
+using System.Numerics;
 using System.Text.Json;
 using REFDumpFormatter;
 
@@ -40,7 +41,7 @@ public abstract class EnumDescriptor
     protected abstract void AddValue(string name, JsonElement elem);
 }
 
-public sealed class EnumDescriptor<T> : EnumDescriptor where T : struct
+public sealed class EnumDescriptor<T> : EnumDescriptor where T : struct, IBinaryInteger<T>
 {
     public readonly Dictionary<T, string> ValueToLabels = new();
 

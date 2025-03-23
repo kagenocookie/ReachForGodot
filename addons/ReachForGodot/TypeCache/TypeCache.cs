@@ -1,9 +1,11 @@
 namespace ReaGE;
 
 using System;
+using System.Numerics;
 using System.Reflection;
 using System.Text.Json;
 using Godot;
+using ReaGE.Components.RE2;
 using RszTool;
 
 public static partial class TypeCache
@@ -535,6 +537,16 @@ public static partial class TypeCache
             RszFieldToGodotProperty(fieldObj.RszField, fieldObj, cache);
             cls.UpdateFieldProperty(fieldObj, prop);
         }
+    }
+
+    public static string GetEnumLabel<T>(SupportedGame game, string clasname, T id) where T : struct, IBinaryInteger<T>
+    {
+        var cache = GetCacheRoot(game);
+        var desc = GetEnumDescriptor(cache, clasname) as EnumDescriptor<T>;
+        if (desc != null && desc.ValueToLabels.TryGetValue(id, out var label)) {
+            return label;
+        }
+        return id.ToString() ?? string.Empty;
     }
 }
 

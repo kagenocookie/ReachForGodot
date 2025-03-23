@@ -1,4 +1,4 @@
-namespace ReaGE.Components;
+namespace ReaGE.Components.RE2;
 
 using System.Threading.Tasks;
 using Godot;
@@ -14,47 +14,16 @@ public partial class RE2EnemyContextController : REComponent
 
     private const string NodeName = "__EnemyPreview";
 
-    public KindID ID => TryGetFieldValue(InitialKind, out var val) ? (KindID)val.AsInt32() : KindID.Invalid;
-
-    public enum KindID : int
-	{
-		em0000 = 0,
-		em0100 = 1,
-		em0200 = 2,
-		em3000 = 3,
-		em4000 = 4,
-		em4100 = 5,
-		em4400 = 6,
-		em5000 = 7,
-		em6000 = 8,
-		em6100 = 9,
-		em6200 = 10,
-		em6300 = 11,
-		em7000 = 12,
-		em7100 = 13,
-		em7110 = 14,
-		em7200 = 15,
-		em7300 = 16,
-		em7400 = 17,
-		em9000 = 18,
-		em8000 = 19,
-		em8100 = 20,
-		em8200 = 21,
-		em8300 = 22,
-		em8400 = 23,
-		em8500 = 24,
-		em9999 = 25,
-		MAX = 26,
-		Invalid = -1,
-	}
+    private int ID => TryGetFieldValue(InitialKind, out var val) ? val.AsInt32() : -1;
 
     public string? GetMeshFilepath()
     {
         var id = ID;
-        if (id != KindID.Invalid) {
+        if (id > 0) {
+            var label = TypeCache.GetEnumLabel(Game, "app.ropeway.EnemyDefine.KindID", id);
             var config = ReachForGodot.GetAssetConfig(Game);
-            var resolved = PathUtils.FindSourceFilePath($"SectionRoot/Character/Enemy/{id}/Body/Body00/{id}_body00.mesh", config)
-                        ?? PathUtils.FindSourceFilePath($"SectionRoot/Character/Enemy/{id}/{id}/{id}.mesh", config);
+            var resolved = PathUtils.FindSourceFilePath($"SectionRoot/Character/Enemy/{label}/Body/Body00/{label}_body00.mesh", config)
+                        ?? PathUtils.FindSourceFilePath($"SectionRoot/Character/Enemy/{label}/{label}/{label}.mesh", config);
             return resolved;
         }
         return null;

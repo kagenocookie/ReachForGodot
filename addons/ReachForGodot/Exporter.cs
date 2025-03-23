@@ -269,11 +269,6 @@ public class Exporter
 
         if (string.IsNullOrEmpty(linkedSceneFilepath)) {
             foreach (var go in folder.ChildObjects) {
-                if (go is PrefabNode pfbGo) {
-                    GD.PrintErr("TODO: PFB sourced game object inside SCN");
-                    continue;
-                }
-
                 AddGameObject(go, file.RSZ, file, fileOption, folderInstance.ObjectTableIndex);
             }
 

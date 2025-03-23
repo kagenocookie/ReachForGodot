@@ -145,7 +145,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
     private void UpgradeRcolResources()
     {
         foreach (var (file, current) in FindUpgradeableResources("*.rcol.tres", (current) => current is not RcolResource)) {
-            Importer.ImportRcol(current.Asset!.AssetFilename, file, ReachForGodot.GetAssetConfig(current.Game));
+            Importer.ImportResource<RcolResource>(current.Asset!.AssetFilename, file, ReachForGodot.GetAssetConfig(current.Game));
         }
     }
 
