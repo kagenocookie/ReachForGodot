@@ -54,6 +54,6 @@ public partial class RE2EnemyContextController : REComponent
     protected override void UpdateResourceName()
     {
         var id = ID;
-        ResourceName = id == KindID.Invalid ? ClassBaseName : ClassBaseName + ": " + ID;
+        ResourceName = id <= 0 ? ClassBaseName : ClassBaseName + ": " + id;
     }
 }

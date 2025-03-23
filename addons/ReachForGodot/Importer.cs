@@ -159,6 +159,8 @@ public class Importer
                 return ImportResource<MotionListResource>(sourceFilePath, outputFilePath, config);
             case RESupportedFileFormats.MotionBank:
                 return ImportResource<MotionBankResource>(sourceFilePath, outputFilePath, config);
+            case RESupportedFileFormats.CollisionFilter:
+                return ImportResource<CollisionFilterResource>(sourceFilePath, outputFilePath, config);
             default:
                 return ImportResource<REResource>(sourceFilePath, outputFilePath, config);
         }
@@ -180,7 +182,7 @@ public class Importer
             return false;
         }
         // empty occlusion or whatever meshes, we can't really import them since they're empty and/or non-existent
-        if (sourceFilePath.Contains("occ.mesh.", StringComparison.OrdinalIgnoreCase)) {
+        if (sourceFilePath.Contains("occ.mesh.", StringComparison.OrdinalIgnoreCase) || sourceFilePath.Contains("occl.mesh.", StringComparison.OrdinalIgnoreCase)) {
             return false;
         }
         return true;
@@ -307,18 +309,16 @@ public class Importer
         if (string.IsNullOrEmpty(sourceFilePath) || string.IsNullOrEmpty(outputFilePath)) return null;
         var resolvedPath = PathUtils.FindSourceFilePath(sourceFilePath, config);
 
-        RESupportedFileFormats format;
         if (resolvedPath == null) {
             GD.PrintErr("Resource file not found: " + sourceFilePath);
-            format = RESupportedFileFormats.Unknown;
         } else {
             sourceFilePath = resolvedPath;
-            format = PathUtils.GetFileFormat(sourceFilePath).format;
         }
+        var format = PathUtils.GetFileFormat(sourceFilePath).format;
 
         var relativePath = PathUtils.FullToRelativePath(sourceFilePath, config);
         if (relativePath == null) {
-            GD.PrintErr("Could not determine proper relative path for file " + sourceFilePath);
+            GD.PrintErr("Could not guarantee correct relative path for file " + sourceFilePath);
             relativePath = sourceFilePath;
         }
 
@@ -388,6 +388,7 @@ public enum RESupportedFileFormats
     Uvar,
     MotionList,
     MotionBank,
+    CollisionFilter,
 }
 
 public record struct REFileFormat(RESupportedFileFormats format, int version)

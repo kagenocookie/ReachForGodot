@@ -84,8 +84,9 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
                 var game = (SupportedGame)id;
                 OpenAssetImporterWindow(game);
             }
-            if (id == 100) UpgradeMaterialResources();
-            if (id == 101) UpgradeRcolResources();
+            // if (id == 100) UpgradeResources<MaterialResource>("mdf2");
+            // if (id == 101) UpgradeResources<RcolResource>("rcol");
+            // if (id == 102) UpgradeResources<CollisionFilterResource>("cfil");
             if (id == 200) ExtractFileVersions();
         };
     }
@@ -113,6 +114,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
 
         // toolMenu.AddItem("Upgrade all material resources", 100);
         // toolMenu.AddItem("Upgrade all Rcol resources", 101);
+        // toolMenu.AddItem("Upgrade all CFIL resources", 102);
 
         toolMenu.AddItem("Extract file format versions from file lists", 200);
     }
@@ -135,17 +137,10 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
         browser.CallDeferred(AssetBrowser.MethodName.ShowFilePicker);
     }
 
-    private void UpgradeMaterialResources()
+    private void UpgradeResources<TResource>(string extension) where TResource : REResource, new()
     {
-        foreach (var (file, current) in FindUpgradeableResources("*.mdf2.*", (current) => current is not MaterialResource)) {
-            Importer.ImportMaterial(current.Asset!.AssetFilename, file, ReachForGodot.GetAssetConfig(current.Game));
-        }
-    }
-
-    private void UpgradeRcolResources()
-    {
-        foreach (var (file, current) in FindUpgradeableResources("*.rcol.tres", (current) => current is not RcolResource)) {
-            Importer.ImportResource<RcolResource>(current.Asset!.AssetFilename, file, ReachForGodot.GetAssetConfig(current.Game));
+        foreach (var (file, current) in FindUpgradeableResources($"*.{extension}.tres", (current) => current is not TResource || current.ResourceType == RESupportedFileFormats.Unknown)) {
+            Importer.ImportResource<TResource>(current.Asset!.AssetFilename, file, ReachForGodot.GetAssetConfig(current.Game));
         }
     }
 

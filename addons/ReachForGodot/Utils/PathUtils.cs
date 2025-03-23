@@ -64,6 +64,7 @@ public static class PathUtils
         if (extension.SequenceEqual("uvar")) return RESupportedFileFormats.Uvar;
         if (extension.SequenceEqual("motlist")) return RESupportedFileFormats.MotionList;
         if (extension.SequenceEqual("motbank")) return RESupportedFileFormats.MotionBank;
+        if (extension.SequenceEqual("cfil")) return RESupportedFileFormats.CollisionFilter;
         return RESupportedFileFormats.Unknown;
     }
 
@@ -78,6 +79,7 @@ public static class PathUtils
         RESupportedFileFormats.Uvar => "uvar",
         RESupportedFileFormats.MotionList => "motlist",
         RESupportedFileFormats.MotionBank => "motbank",
+        RESupportedFileFormats.CollisionFilter => "cfil",
         _ => null,
     };
 
@@ -92,6 +94,7 @@ public static class PathUtils
         RESupportedFileFormats.Uvar => typeof(UvarResource),
         RESupportedFileFormats.MotionList => typeof(MotionListResource),
         RESupportedFileFormats.MotionBank => typeof(MotionBankResource),
+        RESupportedFileFormats.CollisionFilter => typeof(CollisionFilterResource),
         _ => typeof(REResource),
     };
 
