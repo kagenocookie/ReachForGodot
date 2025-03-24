@@ -130,11 +130,15 @@ public partial class SceneFolderInspectorPlugin : EditorInspectorPlugin, ISerial
         var importBtn = container.GetNode<Button>("%ImportButton");
         importBtn.Pressed += async () => {
             var source = sourceOption.Selected == -1 ? fileSources.FirstOrDefault() : fileSources[sourceOption.Selected];
-            if (source == null) {
-                GD.PrintErr("Could not determine file source path. Verify it is present in the chunk or additional folders");
-                return;
-            }
             var config = ReachForGodot.GetAssetConfig(obj.Game);
+            if (source == null) {
+                if (!FileUnpacker.TryExtractFile(obj.Asset!.AssetFilename, config)) {
+                    GD.PrintErr("Could not determine file source path. Verify it is present in the chunk or additional folders");
+                    return;
+                }
+                source = null;
+            }
+
             config.Paths.SourcePathOverride = source;
             try {
                 var options = ((GodotRszImporter.PresetImportModes)importType.GetSelectedId()).ToOptions();

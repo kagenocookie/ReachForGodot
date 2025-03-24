@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Godot;
 
 namespace ReaGE;
@@ -23,6 +24,7 @@ public static class ReachForGodot
 
     public static bool IncludeMeshMaterial => ReachForGodotPlugin.IncludeMeshMaterial;
     public static int SceneFolderProxyThreshold => ReachForGodotPlugin.SceneFolderProxyThreshold;
+    public static string? UnpackerExeFilepath => ReachForGodotPlugin.UnpackerExeFilepath;
 
     public static LabelledPathSetting? LastExportPath { get; set; }
 
@@ -126,5 +128,6 @@ public record LabelledPathSetting(string path, string? label = null)
 {
     public string DisplayLabel => label ?? path;
 
-    public static implicit operator string(LabelledPathSetting setting) => setting.path;
+    [return: NotNullIfNotNull(nameof(setting))]
+    public static implicit operator string?(LabelledPathSetting? setting) => setting?.path;
 }

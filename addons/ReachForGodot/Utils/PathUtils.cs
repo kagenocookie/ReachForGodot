@@ -47,7 +47,7 @@ public static class PathUtils
     public static string GetFilenameWithoutExtensionOrVersion(string filename)
     {
         var versionDot = filename.LastIndexOf('.');
-        if (versionDot == -1 && int.TryParse(filename.AsSpan()[(versionDot+1)..], out _)) return filename.GetFile().GetBaseName();
+        if (versionDot == -1 && int.TryParse(filename.AsSpan()[(versionDot + 1)..], out _)) return filename.GetFile().GetBaseName();
 
         return filename.GetFile().GetBaseName().GetBaseName();
     }
@@ -128,24 +128,6 @@ public static class PathUtils
         if (format == RESupportedFileFormats.Unknown) {
             format = GetFileFormat(relativePath).format;
         }
-        switch (format) {
-            case RESupportedFileFormats.Scene:
-                return config.Game switch {
-                    SupportedGame.ResidentEvil7 => 18,
-                    SupportedGame.ResidentEvil2 => 19,
-                    SupportedGame.DevilMayCry5 => 19,
-                    SupportedGame.MonsterHunterWilds => 21,
-                    _ => 20,
-                };
-            case RESupportedFileFormats.Prefab:
-                return config.Game switch {
-                    SupportedGame.ResidentEvil7 => 16,
-                    SupportedGame.ResidentEvil2 => 16,
-                    SupportedGame.DevilMayCry5 => 16,
-                    SupportedGame.MonsterHunterWilds => 18,
-                    _ => 17,
-                };
-        }
 
         var ext = GetFileExtensionFromFormat(format) ?? relativePath.GetExtension();
         if (TryFindFileExtensionVersion(config.Paths, ext, out var version)) {
@@ -158,18 +140,14 @@ public static class PathUtils
             relativePath = relativePath.Substring(1);
         }
 
-        var fullpath = RelativeToFullPath(relativePath, config);
-        var dir = fullpath.GetBaseDir();
-        if (!Directory.Exists(dir)) {
-            // TODO: this is where we try to retool it out of the pak files
-            GD.PrintErr("Asset not found: " + fullpath);
-            return -1;
-        }
-
-        var first = Directory.EnumerateFiles(dir, $"*.{ext}.*").FirstOrDefault();
-        if (first != null && int.TryParse(first.GetExtension(), out version)) {
-            UpdateFileExtension(config.Paths, ext, version);
-            return version;
+        // see if there's any files at all with the same file ext in whatever dir the file in question is located in
+        var dir = RelativeToFullPath(relativePath, config).GetBaseDir();
+        if (Directory.Exists(dir)) {
+            var first = Directory.EnumerateFiles(dir, $"*.{ext}.*").FirstOrDefault();
+            if (first != null && int.TryParse(first.GetExtension(), out version)) {
+                UpdateFileExtension(config.Paths, ext, version);
+                return version;
+            }
         }
 
         GD.PrintErr("Could not determine file version for file: " + relativePath);
@@ -214,7 +192,7 @@ public static class PathUtils
             GD.PrintErr("List file '" + listFilepath + "' not found");
             return;
         }
-        var paths = ReachForGodot.GetPaths(game) ?? new GamePaths(game, "", null, null, listFilepath, Array.Empty<LabelledPathSetting>());
+        var paths = ReachForGodot.GetPaths(game) ?? new GamePaths(game) { FilelistPath = listFilepath };
         using var file = new StreamReader(File.OpenRead(listFilepath));
         while (!file.EndOfStream) {
             var line = file.ReadLine();
@@ -228,6 +206,21 @@ public static class PathUtils
         }
     }
 
+    public static string GetFilepathWithoutNativesFolder(string path)
+    {
+        path = path.Replace('\\', '/');
+        if (path.EndsWith('/')) {
+            path = path[..^1];
+        }
+        if (path.EndsWith("/natives/x64", StringComparison.OrdinalIgnoreCase)) {
+            path = path.Substring(0, path.IndexOf("/natives/x64", StringComparison.OrdinalIgnoreCase));
+        }
+        if (path.EndsWith("/natives/stm", StringComparison.OrdinalIgnoreCase)) {
+            path = path.Substring(0, path.IndexOf("/natives/stm", StringComparison.OrdinalIgnoreCase));
+        }
+        return path;
+    }
+
     public static IEnumerable<string> GetFilesByExtensionFromListFile(string? listFilepath, string importPath, string extension)
     {
         if (!File.Exists(listFilepath)) {
@@ -235,16 +228,7 @@ public static class PathUtils
             yield break;
         }
 
-        importPath = importPath.Replace('\\', '/');
-        if (importPath.EndsWith('/')) {
-            importPath = importPath[..^1];
-        }
-        if (importPath.EndsWith("/natives/x64", StringComparison.OrdinalIgnoreCase)) {
-            importPath = importPath.Substring(0, importPath.IndexOf("/natives/x64", StringComparison.OrdinalIgnoreCase));
-        }
-        if (importPath.EndsWith("/natives/stm", StringComparison.OrdinalIgnoreCase)) {
-            importPath = importPath.Substring(0, importPath.IndexOf("/natives/stm", StringComparison.OrdinalIgnoreCase));
-        }
+        importPath = GetFilepathWithoutNativesFolder(importPath);
 
         using var file = new StreamReader(File.OpenRead(listFilepath));
         while (!file.EndOfStream) {
@@ -260,6 +244,7 @@ public static class PathUtils
     /// <summary>
     /// Search through all known file paths for the game to find the full path to a file.<br/>
     /// Search priority: Override > Chunk path > Additional paths
+    /// If file is not found, attempts to extract from PAK files if configured.
     /// </summary>
     /// <returns>The resolved path, or null if the file was not found.</returns>
     public static string? FindSourceFilePath(string? sourceFilePath, AssetConfig config)
@@ -283,6 +268,10 @@ public static class PathUtils
             if (File.Exists(Path.Combine(extra, sourceFilePath))) {
                 return Path.Combine(extra, sourceFilePath);
             }
+        }
+
+        if (FileUnpacker.TryExtractFile(sourceFilePath, config) && File.Exists(Path.Combine(config.Paths.ChunkPath, sourceFilePath))) {
+            return Path.Combine(config.Paths.ChunkPath, sourceFilePath);
         }
 
         return null;
