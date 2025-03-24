@@ -1,0 +1,29 @@
+[gd_scene load_steps=3 format=3 uid="uid://dbilkhmaxclu2"]
+
+[ext_resource type="Script" uid="uid://dwgb4d28rnqie" path="res://addons/CustomFileBrowser/CustomFileDialog.cs" id="1_jbar6"]
+[ext_resource type="PackedScene" uid="uid://d1la5j3gkcqcf" path="res://addons/CustomFileBrowser/FilePickerPanel.tscn" id="2_8r2h3"]
+
+[node name="CustomFileDialog" type="ConfirmationDialog" node_paths=PackedStringArray("FilePanel")]
+title = "Select a file"
+initial_position = 4
+size = Vector2i(800, 305)
+visible = true
+script = ExtResource("1_jbar6")
+FilePanel = NodePath("MarginContainer/Panel/FilePickerPanel")
+metadata/_custom_type_script = "uid://dwgb4d28rnqie"
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+offset_left = 8.0
+offset_top = 8.0
+offset_right = 792.0
+offset_bottom = 256.0
+
+[node name="Panel" type="Panel" parent="MarginContainer"]
+layout_mode = 2
+
+[node name="FilePickerPanel" parent="MarginContainer/Panel" instance=ExtResource("2_8r2h3")]
+layout_mode = 1
+
+[connection signal="confirmed" from="." to="." method="OnConfirm"]
+[connection signal="FileSelected" from="MarginContainer/Panel/FilePickerPanel" to="." method="OnFileSelected"]
+[connection signal="FilesSelected" from="MarginContainer/Panel/FilePickerPanel" to="." method="OnFilesSelected"]

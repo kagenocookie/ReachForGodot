@@ -218,6 +218,12 @@ public static class PathUtils
         if (path.EndsWith("/natives/stm", StringComparison.OrdinalIgnoreCase)) {
             path = path.Substring(0, path.IndexOf("/natives/stm", StringComparison.OrdinalIgnoreCase));
         }
+        if (path.StartsWith("natives/x64/", StringComparison.OrdinalIgnoreCase)) {
+            path = path.Substring("natives/x64/".Length);
+        }
+        if (path.StartsWith("natives/stm/", StringComparison.OrdinalIgnoreCase)) {
+            path = path.Substring("natives/stm/".Length);
+        }
         return path;
     }
 

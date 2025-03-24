@@ -44,6 +44,7 @@ The addon integrates [RE Mesh Editor](https://github.com/NSACloud/RE-Mesh-Editor
 - rcol files (not yet fully tested)  [info](https://github.com/kagenocookie/ReachForGodot/wiki/RCOL)
 - user files
 - other resource files are imported as placeholders so they can be drag-dropped into resource fields but have no actual logic or data to them
+- can explore list file structure using a GUI and extract specific files
 
 ## Prerequisites
 - Godot 4.4+ w/ .NET 8.0
@@ -123,7 +124,7 @@ General components support:
     - support manually overriding enum settings (IsFlags, custom entries)
 - support editing of as many file formats as possible
 - support serializing objects to JSON - for Content Editor integration and for upgrading changes in case of game updates
-- packed file browser - so you don't need to pre-extract anything
+- improvements to the packed file browser
 - game specific tooling to make navigation between scenes easier (mainly looking at DD2 / open world assets)
 - look into potential GUI support
 

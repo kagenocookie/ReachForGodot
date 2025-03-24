@@ -1,0 +1,120 @@
+[gd_scene load_steps=6 format=3 uid="uid://d1la5j3gkcqcf"]
+
+[ext_resource type="Script" uid="uid://b7gl7ebvq2jnc" path="res://addons/CustomFileBrowser/FilePickerPanel.cs" id="1_n3w5j"]
+[ext_resource type="Script" uid="uid://va46q8at6sls" path="res://addons/CustomFileBrowser/FilePickerColumnSlider.cs" id="2_ghbal"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ghbal"]
+bg_color = Color(0.6, 0.6, 0.6, 0)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_hq4r7"]
+bg_color = Color(0.31331, 0.656531, 0.727439, 0.294118)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_87xmx"]
+bg_color = Color(0.52549, 0.847059, 0.905882, 0.458824)
+
+[node name="FilePickerPanel" type="Control" node_paths=PackedStringArray("ColumnHeader", "ItemContainer", "PathEdit")]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_n3w5j")
+ColumnHeader = NodePath("VBoxContainer/Panel/MarginContainer/VBoxContainer/ColumnHeaders")
+ItemContainer = NodePath("VBoxContainer/Panel/MarginContainer/VBoxContainer/ScrollContainer/ItemContainer")
+PathEdit = NodePath("VBoxContainer/HBoxContainer/LineEdit")
+DefaultStyleBox = SubResource("StyleBoxFlat_ghbal")
+HoveredStyleBox = SubResource("StyleBoxFlat_hq4r7")
+SelectedStyleBox = SubResource("StyleBoxFlat_87xmx")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+
+[node name="BtnUp" type="Button" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Up"
+
+[node name="Label" type="Label" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Path"
+
+[node name="LineEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="Panel" type="Panel" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 4
+theme_override_constants/margin_top = 4
+theme_override_constants/margin_right = 4
+theme_override_constants/margin_bottom = 4
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/Panel/MarginContainer"]
+layout_mode = 2
+
+[node name="ColumnHeaders" type="HBoxContainer" parent="VBoxContainer/Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="Name" type="Label" parent="VBoxContainer/Panel/MarginContainer/VBoxContainer/ColumnHeaders"]
+custom_minimum_size = Vector2(360, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+text = "Name"
+
+[node name="ColSlider" type="ColorRect" parent="VBoxContainer/Panel/MarginContainer/VBoxContainer/ColumnHeaders"]
+custom_minimum_size = Vector2(2, 0)
+layout_mode = 2
+mouse_default_cursor_shape = 10
+color = Color(0.775063, 0.775063, 0.775063, 1)
+script = ExtResource("2_ghbal")
+metadata/_custom_type_script = "uid://va46q8at6sls"
+
+[node name="Type" type="Label" parent="VBoxContainer/Panel/MarginContainer/VBoxContainer/ColumnHeaders"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+size_flags_horizontal = 0
+text = "Type"
+
+[node name="ColSlider2" type="ColorRect" parent="VBoxContainer/Panel/MarginContainer/VBoxContainer/ColumnHeaders"]
+custom_minimum_size = Vector2(2, 0)
+layout_mode = 2
+mouse_default_cursor_shape = 10
+color = Color(0.775063, 0.775063, 0.775063, 1)
+script = ExtResource("2_ghbal")
+metadata/_custom_type_script = "uid://va46q8at6sls"
+
+[node name="Comment" type="Label" parent="VBoxContainer/Panel/MarginContainer/VBoxContainer/ColumnHeaders"]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Comment"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/Panel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ItemContainer" type="VBoxContainer" parent="VBoxContainer/Panel/MarginContainer/VBoxContainer/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/BtnUp" to="." method="MoveToParentFolder"]
+[connection signal="child_entered_tree" from="VBoxContainer/Panel/MarginContainer/VBoxContainer/ColumnHeaders" to="." method="OnColumnAdded"]
+[connection signal="child_exiting_tree" from="VBoxContainer/Panel/MarginContainer/VBoxContainer/ColumnHeaders" to="." method="OnColumnRemoved"]
+[connection signal="child_order_changed" from="VBoxContainer/Panel/MarginContainer/VBoxContainer/ColumnHeaders" to="." method="OnColumnsChanged"]

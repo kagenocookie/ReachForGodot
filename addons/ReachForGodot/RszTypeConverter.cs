@@ -361,21 +361,48 @@ public static class RszTypeConverter
         // the order seems to be game dependent...
         // RE2RT gasstation gimmicks - 0,1,2,3
         // DD2 Dng_05/Env_3517 - 1,2,3,0
-        if (game == SupportedGame.ResidentEvil2RT) {
-            return new Projection(
-                new Vector4(mat.m00, mat.m01, mat.m02, mat.m03),
-                new Vector4(mat.m10, mat.m11, mat.m12, mat.m13),
-                new Vector4(mat.m20, mat.m21, mat.m22, mat.m23),
-                new Vector4(mat.m30, mat.m31, mat.m32, mat.m33)
-            );
+        if (game is SupportedGame.DragonsDogma2) {
+            return ToProjection1230(mat);
         }
-        return new Projection(
-            new Vector4(mat.m10, mat.m11, mat.m12, mat.m13),
-            new Vector4(mat.m20, mat.m21, mat.m22, mat.m23),
-            new Vector4(mat.m30, mat.m31, mat.m32, mat.m33),
-            new Vector4(mat.m00, mat.m01, mat.m02, mat.m03)
-        );
+        if (game is SupportedGame.ResidentEvil2RT or SupportedGame.ResidentEvil4) {
+            return ToProjection0123(mat);
+        }
+        // EvaluateProjectionVectorOrder(mat);
+
+        return ToProjection0123(mat);
     }
+
+    private static void EvaluateProjectionVectorOrder(mat4 mat)
+    {
+        int i = 0;
+        foreach (var mapper in projectionMappers) {
+            try {
+                var proj = mapper(mat);
+                var transform = (Transform3D)proj;
+                var inverse = transform.Basis.Inverse();
+                i++;
+            } catch (Exception) {
+                GD.Print($"Projection method {i++} failed");
+            }
+        }
+    }
+
+    private static Projection ToProjection0123(this RszTool.via.mat4 mat) => new Projection(
+        new Vector4(mat.m00, mat.m01, mat.m02, mat.m03),
+        new Vector4(mat.m10, mat.m11, mat.m12, mat.m13),
+        new Vector4(mat.m20, mat.m21, mat.m22, mat.m23),
+        new Vector4(mat.m30, mat.m31, mat.m32, mat.m33)
+    );
+    private static Projection ToProjection1230(this RszTool.via.mat4 mat) => new Projection(
+        new Vector4(mat.m10, mat.m11, mat.m12, mat.m13),
+        new Vector4(mat.m20, mat.m21, mat.m22, mat.m23),
+        new Vector4(mat.m30, mat.m31, mat.m32, mat.m33),
+        new Vector4(mat.m00, mat.m01, mat.m02, mat.m03)
+    );
+    private static Func<RszTool.via.mat4, Projection>[] projectionMappers = [
+        ToProjection0123,
+        ToProjection1230,
+    ];
     public static System.Numerics.Vector2 ToRsz(this Vector2 val) => new System.Numerics.Vector2(val.X, val.Y);
     public static RszTool.via.Range ToRszRange(this Vector2 val) => new RszTool.via.Range { r = val.X, s = val.Y };
     public static RszTool.via.RangeI ToRszRange(this Vector2I val) => new RszTool.via.RangeI { r = val.X, s = val.Y };
@@ -391,24 +418,24 @@ public static class RszTypeConverter
     public static RszTool.via.Uint4 ToRszU(this Vector4I val) => new RszTool.via.Uint4 { x = (uint)val.X, y = (uint)val.Y, z = (uint)val.Z, w = (uint)val.W };
     public static RszTool.via.mat4 ToRsz(this Projection val, SupportedGame game)
     {
-        if (game == SupportedGame.ResidentEvil2RT) {
+        if (game is SupportedGame.DragonsDogma2) {
             return new mat4() {
-                m00 = val.X.X,
-                m01 = val.X.Y,
-                m02 = val.X.Z,
-                m03 = val.X.W,
-                m10 = val.Y.X,
-                m11 = val.Y.Y,
-                m12 = val.Y.Z,
-                m13 = val.Y.W,
-                m20 = val.Z.X,
-                m21 = val.Z.Y,
-                m22 = val.Z.Z,
-                m23 = val.Z.W,
-                m30 = val.W.X,
-                m31 = val.W.Y,
-                m32 = val.W.Z,
-                m33 = val.W.W,
+                m00 = val.W.X,
+                m01 = val.W.Y,
+                m02 = val.W.Z,
+                m03 = val.W.W,
+                m10 = val.X.X,
+                m11 = val.X.Y,
+                m12 = val.X.Z,
+                m13 = val.X.W,
+                m20 = val.Y.X,
+                m21 = val.Y.Y,
+                m22 = val.Y.Z,
+                m23 = val.Y.W,
+                m30 = val.Z.X,
+                m31 = val.Z.Y,
+                m32 = val.Z.Z,
+                m33 = val.Z.W,
             };
         }
         return new mat4() {
