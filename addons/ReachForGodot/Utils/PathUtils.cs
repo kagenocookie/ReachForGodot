@@ -98,11 +98,11 @@ public static class PathUtils
         _ => typeof(REResource),
     };
 
-    private static bool TryFindFileExtensionVersion(AssetConfig config, string extension, out int version)
+    private static bool TryFindFileExtensionVersion(GamePaths config, string extension, out int version)
     {
         if (!extensionVersions.TryGetValue(config.Game, out var versions)) {
-            if (File.Exists(config.Paths.ExtensionVersionsCacheFilepath)) {
-                using var fs = File.OpenRead(config.Paths.ExtensionVersionsCacheFilepath);
+            if (File.Exists(config.ExtensionVersionsCacheFilepath)) {
+                using var fs = File.OpenRead(config.ExtensionVersionsCacheFilepath);
                 versions = JsonSerializer.Deserialize<Dictionary<string, int>>(fs, TypeCache.jsonOptions);
             }
             extensionVersions[config.Game] = versions ??= new Dictionary<string, int>();
@@ -111,13 +111,13 @@ public static class PathUtils
         return versions.TryGetValue(extension, out version);
     }
 
-    private static void UpdateFileExtension(AssetConfig config, string extension, int version)
+    private static void UpdateFileExtension(GamePaths config, string extension, int version)
     {
         if (!extensionVersions.TryGetValue(config.Game, out var versions)) {
             extensionVersions[config.Game] = versions = new Dictionary<string, int>();
         }
         versions[extension] = version;
-        var path = config.Paths.ExtensionVersionsCacheFilepath;
+        var path = config.ExtensionVersionsCacheFilepath;
         Directory.CreateDirectory(path.GetBaseDir());
         using var fs = File.Create(path);
         JsonSerializer.Serialize(fs, versions, TypeCache.jsonOptions);
@@ -148,7 +148,7 @@ public static class PathUtils
         }
 
         var ext = GetFileExtensionFromFormat(format) ?? relativePath.GetExtension();
-        if (TryFindFileExtensionVersion(config, ext, out var version)) {
+        if (TryFindFileExtensionVersion(config.Paths, ext, out var version)) {
             return version;
         }
 
@@ -168,7 +168,7 @@ public static class PathUtils
 
         var first = Directory.EnumerateFiles(dir, $"*.{ext}.*").FirstOrDefault();
         if (first != null && int.TryParse(first.GetExtension(), out version)) {
-            UpdateFileExtension(config, ext, version);
+            UpdateFileExtension(config.Paths, ext, version);
             return version;
         }
 
@@ -214,7 +214,7 @@ public static class PathUtils
             GD.PrintErr("List file '" + listFilepath + "' not found");
             return;
         }
-        var config = ReachForGodot.GetAssetConfig(game);
+        var paths = ReachForGodot.GetPaths(game) ?? new GamePaths(game, "", null, null, listFilepath, Array.Empty<LabelledPathSetting>());
         using var file = new StreamReader(File.OpenRead(listFilepath));
         while (!file.EndOfStream) {
             var line = file.ReadLine();
@@ -222,8 +222,8 @@ public static class PathUtils
 
             var versionStr = line.GetExtension();
             var ext = line.GetBaseName()?.GetExtension();
-            if (!string.IsNullOrEmpty(ext) && !TryFindFileExtensionVersion(config, ext, out _) && int.TryParse(versionStr, out var version)) {
-                UpdateFileExtension(config, ext, version);
+            if (!string.IsNullOrEmpty(ext) && !TryFindFileExtensionVersion(paths, ext, out _) && int.TryParse(versionStr, out var version)) {
+                UpdateFileExtension(paths, ext, version);
             }
         }
     }
