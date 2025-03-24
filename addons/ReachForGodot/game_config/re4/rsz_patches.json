@@ -2,24 +2,16 @@
   "via.GameObject": {
     "FieldPatches": [
       {
+        "Name": "v4",
+        "Type": "F32"
+      },
+      {
         "Name": "Update",
         "Type": "Bool"
       },
       {
         "Name": "Draw",
         "Type": "Bool"
-      },
-      {
-        "Name": "v4",
-        "Type": "F32"
-      }
-    ]
-  },
-  "via.render.MaterialParam": {
-    "FieldPatches": [
-      {
-        "Name": "v4",
-        "Type": "S32"
       }
     ]
   },
@@ -27,6 +19,14 @@
     "FieldPatches": [
       {
         "Name": "v0",
+        "Type": "S32"
+      },
+      {
+        "Name": "v10",
+        "Type": "S32"
+      },
+      {
+        "Name": "v45",
         "Type": "S32"
       },
       {
@@ -50,10 +50,6 @@
         "Type": "S32"
       },
       {
-        "Name": "v10",
-        "Type": "S32"
-      },
-      {
         "Name": "v34",
         "Type": "S32"
       },
@@ -70,16 +66,8 @@
         "Type": "S32"
       },
       {
-        "Name": "v40",
-        "Type": "Object"
-      },
-      {
         "Name": "v43",
         "Type": "S32"
-      },
-      {
-        "Name": "v45",
-        "Type": "Object"
       },
       {
         "Name": "v47",
@@ -108,6 +96,278 @@
       {
         "Name": "v65",
         "Type": "S32"
+      },
+      {
+        "Name": "v40",
+        "Type": "Object"
+      }
+    ]
+  },
+  "via.physics.Colliders": {
+    "FieldPatches": [
+      {
+        "Name": "v5",
+        "Type": "Object"
+      },
+      {
+        "Name": "v2",
+        "Type": "S32"
+      }
+    ]
+  },
+  "chainsaw.collision.GimmickSensorUserData": {
+    "FieldPatches": [
+      {
+        "Name": "v1",
+        "Type": "Object"
+      }
+    ]
+  },
+  "chainsaw.collision.GimmickDamageUserData": {
+    "FieldPatches": [
+      {
+        "Name": "v1",
+        "Type": "Object"
+      }
+    ]
+  },
+  "chainsaw.collision.AttackUserData": {
+    "FieldPatches": [
+      {
+        "Name": "v1",
+        "Type": "Object"
+      }
+    ]
+  },
+  "chainsaw.collision.DamageUserData": {
+    "FieldPatches": [
+      {
+        "Name": "v1",
+        "Type": "Object"
+      }
+    ]
+  },
+  "via.motion.Motion": {
+    "FieldPatches": [
+      {
+        "Name": "v17",
+        "Type": "Object"
+      },
+      {
+        "Name": "v1",
+        "Type": "S32"
+      },
+      {
+        "Name": "v2",
+        "Type": "F32"
+      },
+      {
+        "Name": "v6",
+        "Type": "S32"
+      },
+      {
+        "Name": "v8",
+        "Type": "S32"
+      },
+      {
+        "Name": "v15",
+        "Type": "S32"
+      },
+      {
+        "Name": "v21",
+        "Type": "S32"
+      },
+      {
+        "Name": "v22",
+        "Type": "S32"
+      },
+      {
+        "Name": "v25",
+        "Type": "S32"
+      },
+      {
+        "Name": "v26",
+        "Type": "S32"
+      },
+      {
+        "Name": "v27",
+        "Type": "S32"
+      },
+      {
+        "Name": "v28",
+        "Type": "S32"
+      }
+    ]
+  },
+  "via.navigation.AIMapEffector": {
+    "FieldPatches": [
+      {
+        "Name": "v3",
+        "Type": "Object"
+      },
+      {
+        "Name": "v9",
+        "Type": "Object"
+      },
+      {
+        "Name": "v5",
+        "Type": "S32"
+      },
+      {
+        "Name": "v6",
+        "Type": "S32"
+      },
+      {
+        "Name": "v7",
+        "Type": "S32"
+      },
+      {
+        "Name": "v8",
+        "Type": "S32"
+      },
+      {
+        "Name": "v12",
+        "Type": "S32"
+      }
+    ]
+  },
+  "via.physics.FilterInfo": {
+    "FieldPatches": [
+      {
+        "Name": "v1",
+        "Type": "S32"
+      },
+      {
+        "Name": "v0",
+        "Type": "S32"
+      },
+      {
+        "Name": "v2",
+        "Type": "S32"
+      },
+      {
+        "Name": "v3",
+        "Type": "S32"
+      },
+      {
+        "Name": "v4",
+        "Type": "S32"
+      }
+    ]
+  },
+  "via.geometry.GeometryBrush": {
+    "FieldPatches": [
+      {
+        "Name": "v0",
+        "Type": "S32"
+      },
+      {
+        "Name": "v14",
+        "Type": "S32"
+      },
+      {
+        "Name": "v1",
+        "Type": "Object"
+      },
+      {
+        "Name": "v2",
+        "Type": "S32"
+      },
+      {
+        "Name": "v3",
+        "Type": "F32"
+      },
+      {
+        "Name": "v4",
+        "Type": "F32"
+      },
+      {
+        "Name": "v5",
+        "Type": "F32"
+      },
+      {
+        "Name": "v8",
+        "Type": "F32"
+      },
+      {
+        "Name": "v9",
+        "Type": "Object"
+      },
+      {
+        "Name": "v10",
+        "Type": "S32"
+      },
+      {
+        "Name": "v11",
+        "Type": "F32"
+      },
+      {
+        "Name": "v12",
+        "Type": "F32"
+      },
+      {
+        "Name": "v13",
+        "Type": "F32"
+      },
+      {
+        "Name": "v15",
+        "Type": "F32"
+      },
+      {
+        "Name": "v16",
+        "Type": "F32"
+      },
+      {
+        "Name": "v17",
+        "Type": "Object"
+      },
+      {
+        "Name": "v19",
+        "Type": "F32"
+      },
+      {
+        "Name": "v20",
+        "Type": "S32"
+      },
+      {
+        "Name": "v21",
+        "Type": "S32"
+      },
+      {
+        "Name": "v27",
+        "Type": "Object"
+      },
+      {
+        "Name": "v31",
+        "Type": "F32"
+      },
+      {
+        "Name": "v32",
+        "Type": "F32"
+      },
+      {
+        "Name": "v35",
+        "Type": "S32"
+      },
+      {
+        "Name": "v36",
+        "Type": "F32"
+      }
+    ]
+  },
+  "via.geometry.Face": {
+    "FieldPatches": [
+      {
+        "Name": "v0",
+        "Type": "S32"
+      },
+      {
+        "Name": "v6",
+        "Type": "S32"
+      },
+      {
+        "Name": "v12",
+        "Type": "S32"
       }
     ]
   },
@@ -127,30 +387,6 @@
       }
     ]
   },
-  "via.physics.FilterInfo": {
-    "FieldPatches": [
-      {
-        "Name": "v0",
-        "Type": "S32"
-      },
-      {
-        "Name": "v1",
-        "Type": "S32"
-      },
-      {
-        "Name": "v2",
-        "Type": "S32"
-      },
-      {
-        "Name": "v3",
-        "Type": "S32"
-      },
-      {
-        "Name": "v4",
-        "Type": "S32"
-      }
-    ]
-  },
   "via.physics.Collider": {
     "FieldPatches": [
       {
@@ -164,13 +400,37 @@
       {
         "Name": "v5",
         "Type": "Resource"
+      },
+      {
+        "Name": "v2",
+        "Type": "Object"
       }
     ]
   },
-  "via.physics.Colliders": {
+  "via.physics.CapsuleShape": {
     "FieldPatches": [
       {
-        "Name": "v2",
+        "Name": "v0",
+        "Type": "S32"
+      },
+      {
+        "Name": "v1",
+        "Type": "Capsule"
+      }
+    ]
+  },
+  "via.physics.SphereShape": {
+    "FieldPatches": [
+      {
+        "Name": "v0",
+        "Type": "S32"
+      }
+    ]
+  },
+  "via.physics.BoxShape": {
+    "FieldPatches": [
+      {
+        "Name": "v0",
         "Type": "S32"
       }
     ]
@@ -187,114 +447,62 @@
       }
     ]
   },
-  "via.render.VolumeDecal": {
+  "via.landscape.Foliage": {
     "FieldPatches": [
       {
         "Name": "v0",
-        "Type": "Object"
-      },
-      {
-        "Name": "v11",
-        "Type": "Object"
-      },
-      {
-        "Name": "v12",
         "Type": "S32"
       },
       {
-        "Name": "v20",
+        "Name": "v13",
+        "Type": "S32"
+      },
+      {
+        "Name": "v14",
+        "Type": "Object"
+      },
+      {
+        "Name": "v16",
+        "Type": "S32"
+      },
+      {
+        "Name": "v17",
         "Type": "S32"
       },
       {
         "Name": "v21",
-        "Type": "F32"
-      },
-      {
-        "Name": "v22",
         "Type": "S32"
-      },
+      }
+    ]
+  },
+  "via.render.CompositeMeshInstanceGroup": {
+    "FieldPatches": [
       {
-        "Name": "v23",
-        "Type": "F32"
-      },
-      {
-        "Name": "v25",
-        "Type": "S32"
-      },
-      {
-        "Name": "v26",
-        "Type": "Object"
-      },
-      {
-        "Name": "v27",
-        "Type": "F32"
-      },
-      {
-        "Name": "v34",
-        "Type": "F32"
-      },
-      {
-        "Name": "v36",
-        "Type": "F32"
-      },
-      {
-        "Name": "v37",
-        "Type": "F32"
-      },
-      {
-        "Name": "v38",
-        "Type": "F32"
-      },
-      {
-        "Name": "v39",
-        "Type": "F32"
-      },
-      {
-        "Name": "v40",
-        "Type": "F32"
-      },
-      {
-        "Name": "v41",
-        "Type": "S32"
-      },
-      {
-        "Name": "v42",
-        "Type": "S32"
-      },
-      {
-        "Name": "v43",
-        "Type": "S32"
-      },
-      {
-        "Name": "v46",
-        "Type": "S32"
-      },
-      {
-        "Name": "v48",
+        "Name": "v2",
         "Type": "Object"
       }
     ]
   },
-  "via.physics.BoxShape": {
+  "via.render.CompositeMesh": {
     "FieldPatches": [
       {
         "Name": "v0",
         "Type": "S32"
+      },
+      {
+        "Name": "v13",
+        "Type": "S32"
+      },
+      {
+        "Name": "v15",
+        "Type": "Object"
       }
     ]
   },
-  "chainsaw.collision.GimmickDamageUserData": {
+  "via.dynamics.StaticCompoundRigidBody": {
     "FieldPatches": [
       {
         "Name": "v1",
-        "Type": "Object"
-      }
-    ]
-  },
-  "via.physics.SphereShape": {
-    "FieldPatches": [
-      {
-        "Name": "v0",
         "Type": "S32"
       }
     ]
@@ -331,148 +539,36 @@
       }
     ]
   },
-  "chainsaw.collision.DamageUserData": {
-    "FieldPatches": [
-      {
-        "Name": "v1",
-        "Type": "Object"
-      }
-    ]
-  },
-  "via.AnimationCurve": {
-    "FieldPatches": [
-      {
-        "Name": "v1",
-        "Type": "F32"
-      },
-      {
-        "Name": "v2",
-        "Type": "F32"
-      },
-      {
-        "Name": "v3",
-        "Type": "S32"
-      },
-      {
-        "Name": "v4",
-        "Type": "F32"
-      },
-      {
-        "Name": "v5",
-        "Type": "S32"
-      },
-      {
-        "Name": "v6",
-        "Type": "S32"
-      }
-    ]
-  },
-  "via.dynamics.GpuCloth": {
+  "via.physics.AabbShape": {
     "FieldPatches": [
       {
         "Name": "v0",
         "Type": "S32"
-      },
+      }
+    ]
+  },
+  "chainsaw.collision.GrassZoneSensorUserData": {
+    "FieldPatches": [
       {
-        "Name": "v12",
-        "Type": "F32"
-      },
-      {
-        "Name": "v13",
-        "Type": "S32"
-      },
-      {
-        "Name": "v15",
-        "Type": "F32"
-      },
-      {
-        "Name": "v17",
-        "Type": "S32"
-      },
-      {
-        "Name": "v22",
-        "Type": "S32"
-      },
-      {
-        "Name": "v24",
-        "Type": "S32"
-      },
-      {
-        "Name": "v26",
-        "Type": "S32"
-      },
-      {
-        "Name": "v34",
-        "Type": "S32"
-      },
-      {
-        "Name": "v36",
-        "Type": "F32"
-      },
-      {
-        "Name": "v37",
-        "Type": "S32"
-      },
-      {
-        "Name": "v42",
-        "Type": "F32"
-      },
-      {
-        "Name": "v43",
-        "Type": "F32"
-      },
-      {
-        "Name": "v44",
-        "Type": "F32"
-      },
-      {
-        "Name": "v46",
-        "Type": "S32"
-      },
-      {
-        "Name": "v47",
-        "Type": "S32"
-      },
-      {
-        "Name": "v48",
-        "Type": "S32"
-      },
-      {
-        "Name": "v49",
-        "Type": "F32"
-      },
-      {
-        "Name": "v52",
-        "Type": "S32"
-      },
-      {
-        "Name": "v53",
-        "Type": "S32"
-      },
-      {
-        "Name": "v54",
-        "Type": "S32"
-      },
-      {
-        "Name": "v55",
-        "Type": "S32"
-      },
-      {
-        "Name": "v56",
-        "Type": "S32"
-      },
-      {
-        "Name": "v57",
-        "Type": "S32"
-      },
-      {
-        "Name": "v60",
+        "Name": "v1",
         "Type": "Object"
       }
     ]
   },
-  "via.AnimationCurve3D": {
+  "chainsaw.collision.GrassSensorUserData": {
     "FieldPatches": [
+      {
+        "Name": "v1",
+        "Type": "Object"
+      }
+    ]
+  },
+  "via.render.LocalCubemap": {
+    "FieldPatches": [
+      {
+        "Name": "v2",
+        "Type": "S32"
+      },
       {
         "Name": "v3",
         "Type": "F32"
@@ -482,20 +578,16 @@
         "Type": "F32"
       },
       {
-        "Name": "v5",
+        "Name": "v10",
         "Type": "S32"
-      },
+      }
+    ]
+  },
+  "chainsaw.collision.PressUserData": {
+    "FieldPatches": [
       {
-        "Name": "v6",
-        "Type": "F32"
-      },
-      {
-        "Name": "v7",
-        "Type": "S32"
-      },
-      {
-        "Name": "v8",
-        "Type": "S32"
+        "Name": "v1",
+        "Type": "Object"
       }
     ]
   },
@@ -559,15 +651,11 @@
       }
     ]
   },
-  "via.motion.Motion": {
+  "via.motion.MotionFsm2Layer": {
     "FieldPatches": [
       {
-        "Name": "v1",
+        "Name": "v3",
         "Type": "S32"
-      },
-      {
-        "Name": "v2",
-        "Type": "F32"
       },
       {
         "Name": "v6",
@@ -578,24 +666,124 @@
         "Type": "S32"
       },
       {
-        "Name": "v15",
+        "Name": "v9",
         "Type": "S32"
       },
       {
-        "Name": "v17",
+        "Name": "v11",
+        "Type": "S32"
+      },
+      {
+        "Name": "v13",
+        "Type": "S32"
+      },
+      {
+        "Name": "v15",
+        "Type": "F32"
+      }
+    ]
+  },
+  "via.motion.MotionFsm2": {
+    "FieldPatches": [
+      {
+        "Name": "v3",
+        "Type": "S32"
+      },
+      {
+        "Name": "v4",
+        "Type": "S32"
+      },
+      {
+        "Name": "v8",
+        "Type": "S32"
+      }
+    ]
+  },
+  "via.motion.IkLookAt2.JointParam": {
+    "FieldPatches": [
+      {
+        "Name": "v0",
+        "Type": "F32"
+      },
+      {
+        "Name": "v1",
+        "Type": "F32"
+      },
+      {
+        "Name": "v2",
+        "Type": "F32"
+      }
+    ]
+  },
+  "via.motion.IkLookAt2": {
+    "FieldPatches": [
+      {
+        "Name": "v2",
+        "Type": "S32"
+      },
+      {
+        "Name": "v3",
+        "Type": "S32"
+      },
+      {
+        "Name": "v11",
         "Type": "Object"
       },
       {
-        "Name": "v21",
+        "Name": "v12",
+        "Type": "F32"
+      },
+      {
+        "Name": "v13",
+        "Type": "F32"
+      },
+      {
+        "Name": "v14",
+        "Type": "F32"
+      },
+      {
+        "Name": "v15",
+        "Type": "F32"
+      },
+      {
+        "Name": "v16",
+        "Type": "F32"
+      },
+      {
+        "Name": "v17",
+        "Type": "F32"
+      },
+      {
+        "Name": "v18",
         "Type": "S32"
+      },
+      {
+        "Name": "v19",
+        "Type": "S32"
+      },
+      {
+        "Name": "v20",
+        "Type": "F32"
+      },
+      {
+        "Name": "v21",
+        "Type": "F32"
       },
       {
         "Name": "v22",
-        "Type": "S32"
+        "Type": "F32"
+      },
+      {
+        "Name": "v23",
+        "Type": "F32"
+      },
+      {
+        "Name": "v24",
+        "Type": "F32"
       },
       {
         "Name": "v25",
-        "Type": "S32"
+        "Type": "F32"
       },
       {
         "Name": "v26",
@@ -607,7 +795,263 @@
       },
       {
         "Name": "v28",
+        "Type": "F32"
+      },
+      {
+        "Name": "v29",
+        "Type": "F32"
+      },
+      {
+        "Name": "v30",
+        "Type": "F32"
+      },
+      {
+        "Name": "v31",
         "Type": "S32"
+      },
+      {
+        "Name": "v32",
+        "Type": "S32"
+      },
+      {
+        "Name": "v33",
+        "Type": "F32"
+      },
+      {
+        "Name": "v34",
+        "Type": "S32"
+      },
+      {
+        "Name": "v35",
+        "Type": "F32"
+      },
+      {
+        "Name": "v36",
+        "Type": "S32"
+      },
+      {
+        "Name": "v37",
+        "Type": "F32"
+      },
+      {
+        "Name": "v38",
+        "Type": "F32"
+      },
+      {
+        "Name": "v39",
+        "Type": "S32"
+      },
+      {
+        "Name": "v51",
+        "Type": "F32"
+      },
+      {
+        "Name": "v52",
+        "Type": "F32"
+      },
+      {
+        "Name": "v54",
+        "Type": "F32"
+      },
+      {
+        "Name": "v55",
+        "Type": "F32"
+      },
+      {
+        "Name": "v56",
+        "Type": "F32"
+      },
+      {
+        "Name": "v57",
+        "Type": "F32"
+      },
+      {
+        "Name": "v58",
+        "Type": "S32"
+      },
+      {
+        "Name": "v60",
+        "Type": "S32"
+      }
+    ]
+  },
+  "via.motion.JointConstraintsLayer": {
+    "FieldPatches": [
+      {
+        "Name": "v1",
+        "Type": "S32"
+      },
+      {
+        "Name": "v3",
+        "Type": "F32"
+      }
+    ]
+  },
+  "via.motion.Chain": {
+    "FieldPatches": [
+      {
+        "Name": "v2",
+        "Type": "S32"
+      },
+      {
+        "Name": "v3",
+        "Type": "S32"
+      },
+      {
+        "Name": "v5",
+        "Type": "F32"
+      },
+      {
+        "Name": "v7",
+        "Type": "S32"
+      },
+      {
+        "Name": "v8",
+        "Type": "S32"
+      },
+      {
+        "Name": "v9",
+        "Type": "S32"
+      },
+      {
+        "Name": "v10",
+        "Type": "Object"
+      },
+      {
+        "Name": "v11",
+        "Type": "S32"
+      },
+      {
+        "Name": "v12",
+        "Type": "S32"
+      },
+      {
+        "Name": "v13",
+        "Type": "Object"
+      },
+      {
+        "Name": "v16",
+        "Type": "S32"
+      },
+      {
+        "Name": "v17",
+        "Type": "S32"
+      },
+      {
+        "Name": "v24",
+        "Type": "F32"
+      }
+    ]
+  },
+  "via.render.MaterialParam": {
+    "FieldPatches": [
+      {
+        "Name": "v4",
+        "Type": "F32"
+      }
+    ]
+  },
+  "via.render.IESLight": {
+    "FieldPatches": [
+      {
+        "Name": "v1",
+        "Type": "F32"
+      },
+      {
+        "Name": "v2",
+        "Type": "Object"
+      },
+      {
+        "Name": "v5",
+        "Type": "F32"
+      },
+      {
+        "Name": "v6",
+        "Type": "S32"
+      },
+      {
+        "Name": "v7",
+        "Type": "F32"
+      },
+      {
+        "Name": "v8",
+        "Type": "S32"
+      },
+      {
+        "Name": "v9",
+        "Type": "S32"
+      },
+      {
+        "Name": "v10",
+        "Type": "S32"
+      },
+      {
+        "Name": "v11",
+        "Type": "S32"
+      },
+      {
+        "Name": "v12",
+        "Type": "S32"
+      },
+      {
+        "Name": "v14",
+        "Type": "S32"
+      },
+      {
+        "Name": "v16",
+        "Type": "F32"
+      },
+      {
+        "Name": "v20",
+        "Type": "F32"
+      },
+      {
+        "Name": "v21",
+        "Type": "F32"
+      },
+      {
+        "Name": "v22",
+        "Type": "F32"
+      },
+      {
+        "Name": "v23",
+        "Type": "F32"
+      },
+      {
+        "Name": "v24",
+        "Type": "F32"
+      },
+      {
+        "Name": "v28",
+        "Type": "S32"
+      },
+      {
+        "Name": "v29",
+        "Type": "F32"
+      },
+      {
+        "Name": "v30",
+        "Type": "F32"
+      },
+      {
+        "Name": "v31",
+        "Type": "F32"
+      },
+      {
+        "Name": "v32",
+        "Type": "F32"
+      },
+      {
+        "Name": "v33",
+        "Type": "F32"
+      },
+      {
+        "Name": "v34",
+        "Type": "F32"
+      },
+      {
+        "Name": "v35",
+        "Type": "F32"
       }
     ]
   },
@@ -679,35 +1123,195 @@
       }
     ]
   },
-  "via.render.CompositeMeshInstanceGroup": {
-    "FieldPatches": [
-      {
-        "Name": "v2",
-        "Type": "Object"
-      }
-    ]
-  },
-  "via.render.CompositeMesh": {
+  "via.render.Stamp": {
     "FieldPatches": [
       {
         "Name": "v0",
         "Type": "S32"
       },
       {
-        "Name": "v13",
+        "Name": "v15",
+        "Type": "S32"
+      },
+      {
+        "Name": "v16",
+        "Type": "S32"
+      },
+      {
+        "Name": "v17",
+        "Type": "F32"
+      },
+      {
+        "Name": "v18",
+        "Type": "F32"
+      },
+      {
+        "Name": "v19",
+        "Type": "F32"
+      },
+      {
+        "Name": "v20",
+        "Type": "S32"
+      },
+      {
+        "Name": "v21",
+        "Type": "S32"
+      },
+      {
+        "Name": "v24",
+        "Type": "S32"
+      },
+      {
+        "Name": "v27",
+        "Type": "S32"
+      }
+    ]
+  },
+  "via.render.ComputeSkinning": {
+    "FieldPatches": [
+      {
+        "Name": "v0",
+        "Type": "S32"
+      },
+      {
+        "Name": "v12",
+        "Type": "S32"
+      }
+    ]
+  },
+  "via.render.RenderTargetOperator": {
+    "FieldPatches": [
+      {
+        "Name": "v0",
+        "Type": "S32"
+      },
+      {
+        "Name": "v12",
+        "Type": "S32"
+      },
+      {
+        "Name": "v14",
         "Type": "S32"
       },
       {
         "Name": "v15",
         "Type": "S32"
+      },
+      {
+        "Name": "v16",
+        "Type": "S32"
+      },
+      {
+        "Name": "v17",
+        "Type": "S32"
+      },
+      {
+        "Name": "v18",
+        "Type": "S32"
+      },
+      {
+        "Name": "v19",
+        "Type": "S32"
+      },
+      {
+        "Name": "v20",
+        "Type": "S32"
+      },
+      {
+        "Name": "v21",
+        "Type": "S32"
+      },
+      {
+        "Name": "v23",
+        "Type": "S32"
+      },
+      {
+        "Name": "v24",
+        "Type": "S32"
+      },
+      {
+        "Name": "v25",
+        "Type": "S32"
+      },
+      {
+        "Name": "v26",
+        "Type": "S32"
       }
     ]
   },
-  "via.dynamics.StaticCompoundRigidBody": {
+  "via.AnimationCurve3D": {
+    "FieldPatches": [
+      {
+        "Name": "v3",
+        "Type": "F32"
+      },
+      {
+        "Name": "v4",
+        "Type": "F32"
+      },
+      {
+        "Name": "v5",
+        "Type": "S32"
+      },
+      {
+        "Name": "v6",
+        "Type": "F32"
+      },
+      {
+        "Name": "v7",
+        "Type": "S32"
+      },
+      {
+        "Name": "v8",
+        "Type": "S32"
+      }
+    ]
+  },
+  "via.AnimationCurve": {
     "FieldPatches": [
       {
         "Name": "v1",
+        "Type": "F32"
+      },
+      {
+        "Name": "v2",
+        "Type": "F32"
+      },
+      {
+        "Name": "v3",
         "Type": "S32"
+      },
+      {
+        "Name": "v4",
+        "Type": "F32"
+      },
+      {
+        "Name": "v5",
+        "Type": "S32"
+      },
+      {
+        "Name": "v6",
+        "Type": "S32"
+      }
+    ]
+  },
+  "via.physics.StaticCompoundShape": {
+    "FieldPatches": [
+      {
+        "Name": "v0",
+        "Type": "S32"
+      },
+      {
+        "Name": "v1",
+        "Type": "Object"
+      }
+    ]
+  },
+  "chainsaw.collision.PlayerActorZoneUserData": {
+    "FieldPatches": [
+      {
+        "Name": "v1",
+        "Type": "Object"
       }
     ]
   }

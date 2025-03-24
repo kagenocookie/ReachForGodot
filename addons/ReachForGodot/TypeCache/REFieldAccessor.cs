@@ -33,6 +33,15 @@ public class REFieldAccessor
         this.overrideFunc = (f) => f.MarkAsResource(godotResourceType.Name);
     }
 
+    public REFieldAccessor(string name, string objectOriginalType)
+    {
+        preferredName = name;
+        this.overrideFunc = (f) => {
+            f.RszField.type = RszFieldType.Object;
+            f.RszField.original_type = objectOriginalType;
+        };
+    }
+
     public REFieldAccessor WithConditions(params REFieldConditionFunc[] conditions)
     {
         this.conditions = conditions.Select(a => new REFieldCondition(a)).ToArray();
