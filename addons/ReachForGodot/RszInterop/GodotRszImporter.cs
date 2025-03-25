@@ -1206,11 +1206,9 @@ public class GodotRszImporter
         if (rsz.RSZUserData is RSZUserDataInfo ud1) {
             if (!string.IsNullOrEmpty(ud1.Path)) {
                 var userdataResource = Importer.FindOrImportResource<UserdataResource>(ud1.Path, AssetConfig)!;
-                if (userdataResource != null) {
-                    if (userdataResource.IsEmpty) {
-                        userdataResource.Data.ChangeClassname(rsz.RszClass.name);
-                        ResourceSaver.Save(userdataResource);
-                    }
+                if (userdataResource?.IsEmpty == true) {
+                    userdataResource.Data.ChangeClassname(rsz.RszClass.name);
+                    ResourceSaver.Save(userdataResource);
                 }
                 return userdataResource ?? new Variant();
             }

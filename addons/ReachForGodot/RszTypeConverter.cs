@@ -446,22 +446,22 @@ public static class RszTypeConverter
             };
         }
         return new mat4() {
-            m00 = val.W.X,
-            m01 = val.W.Y,
-            m02 = val.W.Z,
-            m03 = val.W.W,
-            m10 = val.X.X,
-            m11 = val.X.Y,
-            m12 = val.X.Z,
-            m13 = val.X.W,
-            m20 = val.Y.X,
-            m21 = val.Y.Y,
-            m22 = val.Y.Z,
-            m23 = val.Y.W,
-            m30 = val.Z.X,
-            m31 = val.Z.Y,
-            m32 = val.Z.Z,
-            m33 = val.Z.W,
+            m00 = val.X.X,
+            m01 = val.X.Y,
+            m02 = val.X.Z,
+            m03 = val.X.W,
+            m10 = val.Y.X,
+            m11 = val.Y.Y,
+            m12 = val.Y.Z,
+            m13 = val.Y.W,
+            m20 = val.Z.X,
+            m21 = val.Z.Y,
+            m22 = val.Z.Z,
+            m23 = val.Z.W,
+            m30 = val.W.X,
+            m31 = val.W.Y,
+            m32 = val.W.Z,
+            m33 = val.W.W,
         };
     }
 }
