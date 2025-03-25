@@ -20,6 +20,7 @@ public static partial class TypeCache
 
             allCacheData.Clear();
         };
+        InitResourceFormats(typeof(GodotRszImporter).Assembly);
         InitComponents(typeof(GodotRszImporter).Assembly);
     }
 
@@ -37,6 +38,19 @@ public static partial class TypeCache
     public static string? GetClassnameForComponentType(Type componentType)
     {
         return componentTypeToClassname.GetValueOrDefault(componentType);
+    }
+
+    public static void InitResourceFormats(Assembly assembly)
+    {
+        foreach (var type in assembly.GetTypes()) {
+            if (!type.IsAbstract && type.GetCustomAttribute<ResourceHolderAttribute>() is ResourceHolderAttribute attr) {
+                PathUtils.RegisterFileFormat(attr.Format, attr.Extension, type);
+
+                if (type.IsAssignableTo(typeof(REResource))) {
+                    Importer.RegisterResource(attr.Format, type);
+                }
+            }
+        }
     }
 
     public static void InitComponents(Assembly assembly)

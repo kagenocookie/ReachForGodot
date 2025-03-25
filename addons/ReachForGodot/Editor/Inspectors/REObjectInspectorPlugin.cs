@@ -22,7 +22,7 @@ public partial class REObjectInspectorPlugin : EditorInspectorPlugin, ISerializa
 
     public override void _ParseBegin(GodotObject @object)
     {
-        if (@object is REObject res and not REResource) {
+        if (@object is REObject res) {
             var inspector = new REObjectClassProperty();
             inspector.Target = res;
             AddCustomControl(inspector);

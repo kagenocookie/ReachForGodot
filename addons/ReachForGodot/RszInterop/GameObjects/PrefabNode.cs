@@ -1,10 +1,11 @@
 namespace ReaGE;
 
 using System.Diagnostics;
+using System.Threading.Tasks;
 using Godot;
 
-[GlobalClass, Tool, Icon("res://addons/ReachForGodot/icons/prefab.png")]
-public partial class PrefabNode : GameObject, IRszContainer
+[GlobalClass, Tool, Icon("res://addons/ReachForGodot/icons/prefab.png"), ResourceHolder("pfb", RESupportedFileFormats.Prefab)]
+public partial class PrefabNode : GameObject, IRszContainer, IImportableAsset
 {
     [Export] public AssetReference? Asset { get; set; }
     [Export] public REResource[]? Resources { get; set; }
@@ -25,5 +26,17 @@ public partial class PrefabNode : GameObject, IRszContainer
             }
             EditorInterface.Singleton.CallDeferred(EditorInterface.MethodName.MarkSceneAsUnsaved);
         });
+    }
+
+    IEnumerable<(string label, GodotRszImporter.PresetImportModes importMode)> IImportableAsset.SupportedImportTypes => [
+        ("Import anything missing", GodotRszImporter.PresetImportModes.ImportTreeChanges),
+        ("Discard and reimport structure", GodotRszImporter.PresetImportModes.ReimportStructure),
+        ("Fully reimport all resources", GodotRszImporter.PresetImportModes.FullReimport),
+    ];
+
+    async Task<bool> IImportableAsset.Import(string resolvedFilepath, GodotRszImporter importer)
+    {
+        await importer.RegeneratePrefabTree(this);
+        return true;
     }
 }

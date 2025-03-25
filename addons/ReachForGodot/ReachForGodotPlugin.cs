@@ -64,7 +64,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
             new REObjectInspectorPlugin(),
             new SceneFolderInspectorPlugin(),
             new AssetReferenceInspectorPlugin(),
-            new ResourceInspectorPlugin(),
+            new AssetImportInspectorPlugin(),
             new AssetExportInspectorPlugin(),
             new GameObjectInspectorPlugin(),
         };
@@ -91,6 +91,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
             // if (id == 100) UpgradeResources<MaterialResource>("mdf2");
             // if (id == 101) UpgradeResources<RcolResource>("rcol");
             // if (id == 102) UpgradeResources<CollisionFilterResource>("cfil");
+            if (id == 103) UpgradeResources<FoliageResource>("fol");
             if (id == 200) ExtractFileVersions();
         };
     }
@@ -119,6 +120,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
         // toolMenu.AddItem("Upgrade all material resources", 100);
         // toolMenu.AddItem("Upgrade all Rcol resources", 101);
         // toolMenu.AddItem("Upgrade all CFIL resources", 102);
+        toolMenu.AddItem("Upgrade all FOL resources", 103);
 
         toolMenu.AddItem("Extract file format versions from file lists", 200);
     }

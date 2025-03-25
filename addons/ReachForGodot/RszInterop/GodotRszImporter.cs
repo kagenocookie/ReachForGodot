@@ -304,7 +304,7 @@ public class GodotRszImporter
         return SaveOrReplaceResource(scene, importFilepath);
     }
 
-    private void UpdateProxyPackedScene<TRoot>(TRoot resource, Node rootNode) where TRoot : REResourceProxy, IRszContainer, new()
+    private void UpdateProxyPackedScene<TRoot>(TRoot resource, Node rootNode) where TRoot : REResourceProxy, new()
     {
         var relativeSourceFile = resource.Asset!.AssetFilename;
         var resourceImportPath = PathUtils.GetLocalizedImportPath(relativeSourceFile, AssetConfig) ?? throw new Exception("Couldn't resolve import path for resource " + relativeSourceFile);
@@ -738,15 +738,15 @@ public class GodotRszImporter
 
     public void GenerateUserdata(UserdataResource root)
     {
-        var scnFullPath = PathUtils.FindSourceFilePath(root.Asset!.AssetFilename, AssetConfig);
-        if (scnFullPath == null) return;
+        var fullSourcePath = PathUtils.FindSourceFilePath(root.Asset!.AssetFilename, AssetConfig);
+        if (fullSourcePath == null) return;
 
-        GD.Print("Opening user file " + scnFullPath);
-        using var file = new UserFile(fileOption, new FileHandler(scnFullPath));
+        GD.Print("Opening user file " + fullSourcePath);
+        using var file = new UserFile(fileOption, new FileHandler(fullSourcePath));
         try {
             file.Read();
         } catch (Exception e) {
-            GD.PrintErr("Failed to parse file " + scnFullPath, e);
+            GD.PrintErr("Failed to parse file " + fullSourcePath, e);
             return;
         }
 
@@ -759,12 +759,10 @@ public class GodotRszImporter
         }
 
         foreach (var instance in file.RSZ!.ObjectList) {
-            if (!string.IsNullOrEmpty(root.Classname) && root.Classname != instance.RszClass.name) {
-                root.ChangeClassname(instance.RszClass.name);
-            } else {
-                root.Classname = instance.RszClass.name;
+            if (string.IsNullOrEmpty(root.Classname) || root.Classname != instance.RszClass.name) {
+                root.Data.ChangeClassname(instance.RszClass.name);
             }
-            ApplyObjectValues(root, instance);
+            ApplyObjectValues(root.Data, instance);
             ResourceSaver.Save(root);
             break;
         }
@@ -878,7 +876,6 @@ public class GodotRszImporter
                 if (resource == null) {
                     resources.Add(new REResource() {
                         Asset = new AssetReference(res.Path),
-                        ResourceType = PathUtils.GetFileFormat(res.Path).format,
                         Game = AssetConfig.Game,
                         ResourceName = res.Path.GetFile()
                     });
@@ -887,7 +884,6 @@ public class GodotRszImporter
                 } else {
                     resources.Add(new REResourceProxy() {
                         Asset = new AssetReference(res.Path),
-                        ResourceType = PathUtils.GetFileFormat(res.Path).format,
                         ImportedResource = resource,
                         Game = AssetConfig.Game,
                         ResourceName = res.Path.GetFile()
@@ -1211,13 +1207,12 @@ public class GodotRszImporter
             if (!string.IsNullOrEmpty(ud1.Path)) {
                 var userdataResource = Importer.FindOrImportResource<UserdataResource>(ud1.Path, AssetConfig)!;
                 if (userdataResource != null) {
-                    ctx.objectSourceInstances[userdataResource] = rsz;
-                    if (userdataResource.IsEmpty && string.IsNullOrEmpty(userdataResource.Classname)) {
-                        userdataResource.Classname = rsz.RszClass.name;
+                    if (userdataResource.IsEmpty) {
+                        userdataResource.Data.ChangeClassname(rsz.RszClass.name);
                         ResourceSaver.Save(userdataResource);
                     }
                 }
-                return ctx.importedObjects[rsz] = userdataResource!;
+                return userdataResource ?? new Variant();
             }
         } else if (rsz.RSZUserData is RSZUserDataInfo_TDB_LE_67 ud2) {
             GD.PrintErr("Unsupported userdata reference TDB_LE_67");

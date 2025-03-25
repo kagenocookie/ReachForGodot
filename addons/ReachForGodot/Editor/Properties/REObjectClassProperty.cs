@@ -43,9 +43,6 @@ public partial class REObjectClassProperty : HBoxContainer
 
         string? baseclass = field?.RszField.original_type;
         if (string.IsNullOrEmpty(baseclass)) {
-            if (res is UserdataResource) {
-                baseclass = "via.UserData";
-            }
             // if current class is component, allow other components?
         }
 

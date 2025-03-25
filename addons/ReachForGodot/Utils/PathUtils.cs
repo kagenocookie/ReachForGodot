@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using System.Security.AccessControl;
 using System.Text.Json;
 using Godot;
 
@@ -7,6 +8,20 @@ namespace ReaGE;
 public static class PathUtils
 {
     private static readonly Dictionary<SupportedGame, Dictionary<string, int>> extensionVersions = new();
+
+    private sealed record FormatDescriptor(string extension, Type resourceType, RESupportedFileFormats format);
+
+    private static readonly List<FormatDescriptor> formats = new();
+    private static readonly Dictionary<RESupportedFileFormats, FormatDescriptor> formatToDescriptor = new();
+
+    private static readonly Dictionary<RESupportedFileFormats, Func<REResource>> resourceFactory = new();
+    public static void RegisterFileFormat(RESupportedFileFormats format, string extension, Type resourceType)
+    {
+        var desc = new FormatDescriptor(extension, resourceType, format);
+
+        formats.Add(desc);
+        formatToDescriptor[format] = desc;
+    }
 
     public static REFileFormat GetFileFormat(ReadOnlySpan<char> filename)
     {
@@ -54,49 +69,14 @@ public static class PathUtils
 
     public static RESupportedFileFormats GetFileFormatFromExtension(ReadOnlySpan<char> extension)
     {
-        if (extension.SequenceEqual("mesh")) return RESupportedFileFormats.Mesh;
-        if (extension.SequenceEqual("tex")) return RESupportedFileFormats.Texture;
-        if (extension.SequenceEqual("scn")) return RESupportedFileFormats.Scene;
-        if (extension.SequenceEqual("pfb")) return RESupportedFileFormats.Prefab;
-        if (extension.SequenceEqual("user")) return RESupportedFileFormats.Userdata;
-        if (extension.SequenceEqual("mdf2")) return RESupportedFileFormats.Material;
-        if (extension.SequenceEqual("rcol")) return RESupportedFileFormats.Rcol;
-        if (extension.SequenceEqual("uvar")) return RESupportedFileFormats.Uvar;
-        if (extension.SequenceEqual("motlist")) return RESupportedFileFormats.MotionList;
-        if (extension.SequenceEqual("motbank")) return RESupportedFileFormats.MotionBank;
-        if (extension.SequenceEqual("cfil")) return RESupportedFileFormats.CollisionFilter;
+        foreach (var desc in formats) {
+            if (extension.SequenceEqual(desc.extension)) return desc.format;
+        }
         return RESupportedFileFormats.Unknown;
     }
 
-    public static string? GetFileExtensionFromFormat(RESupportedFileFormats format) => format switch {
-        RESupportedFileFormats.Mesh => "mesh",
-        RESupportedFileFormats.Texture => "tex",
-        RESupportedFileFormats.Material => "mdf2",
-        RESupportedFileFormats.Scene => "scn",
-        RESupportedFileFormats.Prefab => "pfb",
-        RESupportedFileFormats.Userdata => "user",
-        RESupportedFileFormats.Rcol => "rcol",
-        RESupportedFileFormats.Uvar => "uvar",
-        RESupportedFileFormats.MotionList => "motlist",
-        RESupportedFileFormats.MotionBank => "motbank",
-        RESupportedFileFormats.CollisionFilter => "cfil",
-        _ => null,
-    };
-
-    public static Type GetResourceTypeFromFormat(RESupportedFileFormats format) => format switch {
-        RESupportedFileFormats.Mesh => typeof(MeshResource),
-        RESupportedFileFormats.Texture => typeof(Texture),
-        RESupportedFileFormats.Material => typeof(MaterialResource),
-        RESupportedFileFormats.Scene => typeof(PackedScene),
-        RESupportedFileFormats.Prefab => typeof(PackedScene),
-        RESupportedFileFormats.Userdata => typeof(UserdataResource),
-        RESupportedFileFormats.Rcol => typeof(RcolResource),
-        RESupportedFileFormats.Uvar => typeof(UvarResource),
-        RESupportedFileFormats.MotionList => typeof(MotionListResource),
-        RESupportedFileFormats.MotionBank => typeof(MotionBankResource),
-        RESupportedFileFormats.CollisionFilter => typeof(CollisionFilterResource),
-        _ => typeof(REResource),
-    };
+    public static string? GetFileExtensionFromFormat(RESupportedFileFormats format) => formatToDescriptor.GetValueOrDefault(format)?.extension;
+    public static Type GetResourceTypeFromFormat(RESupportedFileFormats format) => formatToDescriptor.TryGetValue(format, out var desc) ? desc.resourceType : typeof(REResource);
 
     private static bool TryFindFileExtensionVersion(GamePaths config, string extension, out int version)
     {
@@ -139,6 +119,7 @@ public static class PathUtils
             // seems to be safe to ignore, though we may need to handle them when putting the files back
             relativePath = relativePath.Substring(1);
         }
+        // TODO need special handling for file extensions sbnk, spck because they're ".1.x64" or ".1.x64.en"
 
         // see if there's any files at all with the same file ext in whatever dir the file in question is located in
         var dir = RelativeToFullPath(relativePath, config).GetBaseDir();

@@ -1,11 +1,12 @@
 namespace ReaGE;
 
 using System;
+using System.Threading.Tasks;
 using Godot;
 using ReaGE.EditorLogic;
 
-[GlobalClass, Tool, Icon("res://addons/ReachForGodot/icons/folder.png")]
-public partial class SceneFolder : Node3D, IRszContainer
+[GlobalClass, Tool, Icon("res://addons/ReachForGodot/icons/folder.png"), ResourceHolder("scn", RESupportedFileFormats.Scene)]
+public partial class SceneFolder : Node3D, IRszContainer, IImportableAsset
 {
     [Export] public SupportedGame Game { get; set; }
     [Export] public AssetReference? Asset { get; set; }
@@ -184,5 +185,19 @@ public partial class SceneFolder : Node3D, IRszContainer
         var action = new MakeProxyFolderAction(this);
         action.Do();
         return action.ActiveInstance!;
+    }
+
+    IEnumerable<(string label, GodotRszImporter.PresetImportModes importMode)> IImportableAsset.SupportedImportTypes => [
+        ("Placeholders only", GodotRszImporter.PresetImportModes.PlaceholderImport),
+        ("Import just this scene, no subfolders", GodotRszImporter.PresetImportModes.ThisFolderOnly),
+        ("Import missing objects", GodotRszImporter.PresetImportModes.ImportMissingItems),
+        ("Discard and reimport scene structure", GodotRszImporter.PresetImportModes.ReimportStructure),
+        ("Force reimport all resources", GodotRszImporter.PresetImportModes.FullReimport),
+    ];
+
+    async Task<bool> IImportableAsset.Import(string resolvedFilepath, GodotRszImporter importer)
+    {
+        await importer.RegenerateSceneTree(this);
+        return true;
     }
 }

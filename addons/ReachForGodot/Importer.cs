@@ -25,6 +25,8 @@ public class Importer
 
     private static bool _hasShownNoBlenderWarning = false;
 
+    private static readonly Dictionary<RESupportedFileFormats, Type> resourceTypes = new();
+
     public static REResource? FindImportedResourceAsset(Resource? asset)
     {
         if (asset == null) return null;
@@ -140,30 +142,12 @@ public class Importer
         var outputFilePath = ProjectSettings.GlobalizePath(importFilepath);
 
         switch (format.format) {
-            case RESupportedFileFormats.Mesh:
-                return ImportResource<MeshResource>(sourceFilePath, outputFilePath, config);
-            case RESupportedFileFormats.Texture:
-                return ImportResource<TextureResource>(sourceFilePath, outputFilePath, config);
             case RESupportedFileFormats.Scene:
                 return ImportScene(sourceFilePath, outputFilePath, config);
             case RESupportedFileFormats.Prefab:
                 return ImportPrefab(sourceFilePath, outputFilePath, config);
-            case RESupportedFileFormats.Userdata:
-                return ImportResource<UserdataResource>(sourceFilePath, outputFilePath, config);
-            case RESupportedFileFormats.Rcol:
-                return ImportResource<RcolResource>(sourceFilePath, outputFilePath, config);
-            case RESupportedFileFormats.Material:
-                return ImportMaterial(sourceFilePath, outputFilePath, config);
-            case RESupportedFileFormats.Uvar:
-                return ImportResource<UvarResource>(sourceFilePath, outputFilePath, config);
-            case RESupportedFileFormats.MotionList:
-                return ImportResource<MotionListResource>(sourceFilePath, outputFilePath, config);
-            case RESupportedFileFormats.MotionBank:
-                return ImportResource<MotionBankResource>(sourceFilePath, outputFilePath, config);
-            case RESupportedFileFormats.CollisionFilter:
-                return ImportCollisionFilter(sourceFilePath, outputFilePath, config);
             default:
-                return ImportResource<REResource>(sourceFilePath, outputFilePath, config);
+                return ImportResource(format.format, sourceFilePath, outputFilePath, config);
         }
     }
 
@@ -274,28 +258,6 @@ public class Importer
         return conv.CreateOrReplaceScene(resolvedPath, outputFilePath);
     }
 
-    public static CollisionFilterResource? ImportCollisionFilter(string? sourceFilePath, string outputFilePath, AssetConfig config)
-    {
-        var resolvedPath = PathUtils.FindSourceFilePath(sourceFilePath, config);
-        if (resolvedPath == null) {
-            GD.PrintErr("Scene file not found: " + sourceFilePath);
-            return null;
-        }
-        var cfil = CreateResource<CollisionFilterResource>(sourceFilePath, outputFilePath, config);
-        if (cfil == null) return null;
-        try {
-            using var handler = new FileHandler(resolvedPath);
-            var file = new CfilFile();
-            file.Read(handler);
-            cfil.Uuid = file.myGuid.ToString();
-            cfil.CollisionGuids = file.Guids?.Select(g => g.ToString()).ToArray();
-        } catch (Exception e) {
-            GD.PrintErr($"Failed to read cfil file {resolvedPath}", e);
-        }
-        TrySaveResource(cfil, sourceFilePath);
-        return cfil;
-    }
-
     public static PackedScene? ImportPrefab(string? sourceFilePath, string outputFilePath, AssetConfig config)
     {
         var resolvedPath = PathUtils.FindSourceFilePath(sourceFilePath, config);
@@ -305,11 +267,6 @@ public class Importer
         }
         var conv = new GodotRszImporter(config, GodotRszImporter.placeholderImport);
         return conv.CreateOrReplacePrefab(resolvedPath, outputFilePath);
-    }
-
-    public static MaterialResource? ImportMaterial(string? sourceFilePath, string? outputFilePath, AssetConfig config)
-    {
-        return ImportResource<MaterialResource>(sourceFilePath, outputFilePath, config);
     }
 
     public static void QueueFileRescan()
@@ -326,10 +283,9 @@ public class Importer
         // fs.CallDeferred(EditorFileSystem.MethodName.ReimportFiles, new Godot.Collections.Array<string>(new[] { file }));
     }
 
-    private static T? ImportResource<T>(string? sourceFilePath, string? outputFilePath, AssetConfig config)
-        where T : REResource, new()
+    private static REResource? ImportResource(RESupportedFileFormats format, string? sourceFilePath, string? outputFilePath, AssetConfig config)
     {
-        var newres = CreateResource<T>(sourceFilePath, outputFilePath, config);
+        var newres = CreateResource(format, sourceFilePath, outputFilePath, config);
         if (newres == null) return null;
 
         TrySaveResource(newres, sourceFilePath);
@@ -344,8 +300,7 @@ public class Importer
         }
     }
 
-    private static T? CreateResource<T>(string? sourceFilePath, string? outputFilePath, AssetConfig config)
-        where T : REResource, new()
+    private static REResource? CreateResource(RESupportedFileFormats format, string? sourceFilePath, string? outputFilePath, AssetConfig config)
     {
         if (string.IsNullOrEmpty(sourceFilePath) || string.IsNullOrEmpty(outputFilePath)) return null;
         var resolvedPath = PathUtils.FindSourceFilePath(sourceFilePath, config);
@@ -355,7 +310,6 @@ public class Importer
         } else {
             sourceFilePath = resolvedPath;
         }
-        var format = PathUtils.GetFileFormat(sourceFilePath).format;
 
         var relativePath = PathUtils.FullToRelativePath(sourceFilePath, config);
         if (relativePath == null) {
@@ -366,12 +320,10 @@ public class Importer
         var importPath = ProjectSettings.LocalizePath(outputFilePath);
 
         Directory.CreateDirectory(outputFilePath.GetBaseDir());
-        var newres = new T() {
-            Asset = new AssetReference(relativePath),
-            ResourceType = format,
-            Game = config.Game,
-            ResourceName = PathUtils.GetFilepathWithoutVersion(relativePath).GetFile(),
-        };
+        var newres = resourceTypes.GetValueOrDefault(format) is Type rt ? (REResource)Activator.CreateInstance(rt)! : new REResource();
+        newres.Asset = new AssetReference(relativePath);
+        newres.Game = config.Game;
+        newres.ResourceName = PathUtils.GetFilepathWithoutVersion(relativePath).GetFile();
 
         if (ResourceLoader.Exists(importPath)) {
             newres.TakeOverPath(importPath);
@@ -411,22 +363,11 @@ public class Importer
             cancellationTokenSource = null;
         }
     }
-}
 
-public enum RESupportedFileFormats
-{
-    Unknown,
-    Mesh,
-    Texture,
-    Scene,
-    Prefab,
-    Userdata,
-    Material,
-    Rcol,
-    Uvar,
-    MotionList,
-    MotionBank,
-    CollisionFilter,
+    internal static void RegisterResource(RESupportedFileFormats format, Type type)
+    {
+        resourceTypes[format] = type;
+    }
 }
 
 public record struct REFileFormat(RESupportedFileFormats format, int version)

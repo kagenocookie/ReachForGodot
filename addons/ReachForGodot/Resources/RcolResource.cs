@@ -3,15 +3,17 @@ namespace ReaGE;
 using System.Threading.Tasks;
 using Godot;
 
-[GlobalClass, Tool]
-public partial class RcolResource : REResourceProxy, IRszContainer, IExportableAsset
+[GlobalClass, Tool, ResourceHolder("rcol", RESupportedFileFormats.Rcol)]
+public partial class RcolResource : REResourceProxy, IExportableAsset
 {
-    REResource[]? IRszContainer.Resources { get => Array.Empty<REResource>(); set {} }
-
     public PackedScene? RcolScene => ImportedResource as PackedScene;
     public RcolRootNode? Instantiate() => RcolScene?.Instantiate<RcolRootNode>();
 
-    string IRszContainer.Path => PathUtils.ImportPathToRelativePath(ResourcePath, ReachForGodot.GetAssetConfig(Game)) ?? ResourcePath;
+    public RcolResource() : base(RESupportedFileFormats.Rcol)
+    {
+    }
+
+    // string IRszContainer.Path => PathUtils.ImportPathToRelativePath(ResourcePath, ReachForGodot.GetAssetConfig(Game)) ?? ResourcePath;
 
     protected override Task<Resource?> Import()
     {
@@ -23,6 +25,6 @@ public partial class RcolResource : REResourceProxy, IRszContainer, IExportableA
 
     public void Clear()
     {
-        __Data.Clear();
+        // __Data.Clear();
     }
 }

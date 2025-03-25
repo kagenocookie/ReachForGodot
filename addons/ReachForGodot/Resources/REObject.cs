@@ -48,7 +48,7 @@ public partial class REObject : Resource
     {
     }
 
-    public REObject(SupportedGame game, string classname)
+    public REObject(SupportedGame game, string? classname)
     {
         Game = game;
         _classname = classname;
@@ -145,19 +145,24 @@ public partial class REObject : Resource
             cache = TypeCache.GetClassInfo(Game, Classname);
             foreach (var (key, value) in __Data) {
                 if (value.VariantType == Variant.Type.Object) {
-                    if (cache.FieldsByName.TryGetValue(key, out var field) && field.RszField.type is RszFieldType.Object or RszFieldType.UserData) {
-                        if (value.As<REObject>() is not REObject fieldObj) continue;
-                        if (fieldObj is UserdataResource ur && ur.Asset?.IsEmpty == false) continue;
-                        fieldObj.SetBaseClass(field.RszField.original_type);
+                    if (cache.FieldsByName.TryGetValue(key, out var field) && field.RszField.type is RszFieldType.Object or RszFieldType.UserData && value.As<Resource>() is Resource res) {
+                        if (res is REObject fieldObj) {
+                            fieldObj.SetBaseClass(field.RszField.original_type);
+                        } else if (res is UserdataResource ur) {
+                            ur.Data.SetBaseClass(field.RszField.original_type);
+                        }
                     }
                 } else if (value.VariantType == Variant.Type.Array) {
                     if (cache.FieldsByName.TryGetValue(key, out var field) && field.RszField.type is RszFieldType.Object or RszFieldType.UserData) {
                         if (field.ElementType == null) continue;
                         var array = value.AsGodotArray();
                         foreach (var item in array) {
-                            if (item.VariantType != Variant.Type.Nil && item.As<REObject>() is REObject itemObj) {
-                                if (itemObj is UserdataResource ur && ur.Asset?.IsEmpty == false) continue;
-                                itemObj.SetBaseClass(field.ElementType);
+                            if (item.VariantType != Variant.Type.Nil && item.As<Resource>() is Resource res) {
+                                if (res is REObject itemObj) {
+                                    itemObj.SetBaseClass(field.ElementType);
+                                } else if (res is UserdataResource user) {
+                                    user.Data.SetBaseClass(field.ElementType);
+                                }
                             }
                         }
                     }
@@ -199,28 +204,44 @@ public partial class REObject : Resource
         if (cache.FieldsByName.TryGetValue(property, out var field)) {
             __Data[property] = value;
             if (field.RszField.array) {
-                var array = value.AsGodotArray<REObject>();
-                foreach (var item in array) {
-                    if (item == null) continue;
-                    if (item.Game == SupportedGame.Unknown) {
-                        item.Game = Game;
-                    }
-                    if (field.ElementType != null && string.IsNullOrEmpty(item.Classname)) {
-                        if (item is UserdataResource) {
-                            array[array.IndexOf(item)] = new REObject(Game, field.ElementType, true);
-                        } else {
+                if (field.RszField.type == RszFieldType.Object) {
+                    var array = value.AsGodotArray<REObject>();
+                    foreach (var item in array) {
+                        if (item == null) continue;
+                        if (item.Game == SupportedGame.Unknown) {
+                            item.Game = Game;
+                        }
+                        if (field.ElementType != null && string.IsNullOrEmpty(item.Classname)) {
                             item.ChangeClassname(field.ElementType);
+                        }
+                    }
+                } else if (field.RszField.type == RszFieldType.UserData) {
+                    var array = value.AsGodotArray<UserdataResource>();
+                    foreach (var item in array) {
+                        if (item == null) continue;
+                        if (item.Game == SupportedGame.Unknown) {
+                            item.Game = Game;
+                        }
+                        if (field.ElementType != null && string.IsNullOrEmpty(item.Classname)) {
+                            if (item is UserdataResource) {
+                                array[array.IndexOf(item)] = new UserdataResource() { Data = new REObject(Game, field.ElementType, true) };
+                            }
                         }
                     }
                 }
             } else {
-                if (field.RszField.type is RszFieldType.Object or RszFieldType.UserData && value.As<REObject>() is REObject obj) {
+                if (field.RszField.type is RszFieldType.Object && value.As<REObject>() is REObject obj) {
                     if (obj.Game == SupportedGame.Unknown) {
                         obj.Game = Game;
                     }
-                    if (string.IsNullOrEmpty(obj.Classname) && !string.IsNullOrEmpty(field.RszField.original_type) && obj is not UserdataResource) {
+                    if (string.IsNullOrEmpty(obj.Classname) && !string.IsNullOrEmpty(field.RszField.original_type)) {
                         obj.ChangeClassname(field.RszField.original_type);
                         __Data[property] = new REObject(Game, field.RszField.original_type, true);
+                    }
+                }
+                if (field.RszField.type is RszFieldType.UserData && value.As<UserdataResource>() is UserdataResource user) {
+                    if (user.Game == SupportedGame.Unknown) {
+                        user.Game = Game;
                     }
                 }
             }

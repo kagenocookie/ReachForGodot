@@ -17,3 +17,20 @@ public enum SupportedGame
     StreetFighter6 = 12,
     MonsterHunterWilds = 13,
 }
+
+public enum RESupportedFileFormats
+{
+    Unknown,
+    Mesh,
+    Texture,
+    Scene,
+    Prefab,
+    Userdata,
+    Material,
+    Rcol,
+    Uvar,
+    MotionList,
+    MotionBank,
+    CollisionFilter,
+    Foliage,
+}

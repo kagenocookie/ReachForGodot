@@ -3,8 +3,12 @@ namespace ReaGE;
 using Godot;
 
 [GlobalClass, Tool]
-public partial class REResource : REObject, IAssetPointer
+public partial class REResource : Resource, IAssetPointer
 {
+    [Export] public SupportedGame Game { get; set; }
     [Export] public AssetReference? Asset { get; set; }
-    [Export] public RESupportedFileFormats ResourceType { get; set; } = RESupportedFileFormats.Unknown;
+    public RESupportedFileFormats ResourceType { get; protected set; } = RESupportedFileFormats.Unknown;
+
+    public REResource() { }
+    protected REResource(RESupportedFileFormats format) => ResourceType = format;
 }

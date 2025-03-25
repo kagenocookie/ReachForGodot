@@ -1,9 +1,10 @@
 namespace ReaGE;
 
+using System.Threading.Tasks;
 using Godot;
 
 [GlobalClass, Tool]
-public partial class RcolRootNode : Node, IExportableAsset
+public partial class RcolRootNode : Node, IExportableAsset, IImportableAsset
 {
     [Export] public SupportedGame Game { get; set; }
     [Export] public AssetReference? Asset { get; set; }
@@ -12,6 +13,8 @@ public partial class RcolRootNode : Node, IExportableAsset
 
     public IEnumerable<RequestSetCollisionGroup> Groups => this.FindChild("Groups", false).FindChildrenByType<RequestSetCollisionGroup>();
     public IEnumerable<RequestSetCollider> Sets => this.FindChildrenByType<RequestSetCollider>();
+
+    bool IImportableAsset.IsEmpty => this.Resource?.IsEmpty != false;
 
     public void HideGroupsExcept(RequestSetCollider set)
     {
@@ -22,5 +25,12 @@ public partial class RcolRootNode : Node, IExportableAsset
         foreach (var group in Groups) {
             group.Visible = group == showGroup;
         }
+    }
+
+    Task<bool> IImportableAsset.Import(string resolvedFilepath, GodotRszImporter importer)
+    {
+        importer.GenerateRcol(this);
+        NotifyPropertyListChanged();
+        return Task.FromResult(true);
     }
 }

@@ -7,12 +7,13 @@ using Godot;
 /// Proxy placeholder resource for resources that have a non-REResource compatible representation in engine (e.g. meshes)
 /// </summary>
 [GlobalClass, Tool]
-public partial class REResourceProxy : REResource
+public partial class REResourceProxy : REResource, IImportableAsset
 {
     [Export] public Resource? ImportedResource { get; set; }
+    public bool IsEmpty => ImportedResource == null;
 
-    [ExportToolButton("Re-Import asset")]
-    private Callable ForceReimport => Callable.From(() => { Import(true); });
+    public REResourceProxy() { }
+    protected REResourceProxy(RESupportedFileFormats format) => ResourceType = format;
 
     public Task<Resource?> Import(bool forceReload)
     {
@@ -23,5 +24,13 @@ public partial class REResourceProxy : REResource
         ImportedResource = null;
         return Import();
     }
+
+    public async Task<bool> Import(string resolvedFilepath, GodotRszImporter importer)
+    {
+        await Import(true);
+        NotifyPropertyListChanged();
+        return ImportedResource != null;
+    }
+
     protected virtual Task<Resource?> Import() => Task.FromResult((Resource?)null);
 }

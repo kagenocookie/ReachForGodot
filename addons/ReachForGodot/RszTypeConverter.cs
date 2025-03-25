@@ -345,16 +345,23 @@ public static class RszTypeConverter
     public static Vector4 ToVector4(this RszTool.via.Sphere val) => new Vector4(val.pos.X, val.pos.Y, val.Pos.Z, val.R);
     public static Vector4 ToVector4(this Vector3 val) => new Vector4(val.X, val.Y, val.Z, 0);
     public static Vector4 ToVector4(this Quaternion val) => new Vector4(val.X, val.Y, val.Z, val.W);
+    public static Transform3D ToGodot(this RszTool.via.Transform transform) => new Transform3D(new Basis(transform.rot.ToGodot()).Scaled(transform.scale.ToGodot()), transform.pos.ToGodot());
+    public static Quaternion ToGodot(this System.Numerics.Quaternion val) => new Quaternion(val.X, val.Y, val.Z, val.W);
+    public static Aabb ToGodot(this RszTool.via.AABB val) => new Aabb(val.minpos.ToGodot(), val.maxpos.ToGodot() - val.minpos.ToGodot());
+
     public static RszTool.via.Sfix2 ToSfix(this Vector2I vec) => new() { x = new sfix() { v = vec.X }, y = new sfix() { v = vec.Y } };
     public static RszTool.via.Sfix3 ToSfix(this Vector3I vec) => new() { x = new sfix() { v = vec.X }, y = new sfix() { v = vec.Y }, z = new sfix() { v = vec.Z } };
     public static RszTool.via.Sfix4 ToSfix(this Vector4I vec) => new() { x = new sfix() { v = vec.X }, y = new sfix() { v = vec.Y }, z = new sfix() { v = vec.Z }, w = new sfix() { v = vec.W } };
     public static RszTool.via.Sphere ToSphere(this Vector4 val) => new RszTool.via.Sphere { pos = val.ToVector3().ToRsz(), r = val.W };
     public static RszTool.via.Rect ToRect(this Vector4 val) => new RszTool.via.Rect { t = val.X, r = val.Y, b = val.Z, l = val.W  };
-    public static Quaternion ToGodot(this System.Numerics.Quaternion val) => new Quaternion(val.X, val.Y, val.Z, val.W);
-    public static Aabb ToGodot(this RszTool.via.AABB val) => new Aabb(val.minpos.ToGodot(), val.maxpos.ToGodot() - val.minpos.ToGodot());
     public static RszTool.via.AABB ToRsz(this Aabb val) => new() {
         minpos = val.Position.ToRsz(),
-        maxpos = (val.End - val.Position).ToRsz(),
+        maxpos = val.End.ToRsz(),
+    };
+    public static RszTool.via.Transform ToRszTransform(this Transform3D transform) => new Transform() {
+        pos = transform.Origin.ToRsz(),
+        rot = transform.Basis.GetRotationQuaternion().ToRsz(),
+        scale = transform.Basis.Scale.ToRsz(),
     };
     public static Projection ToProjection(this RszTool.via.mat4 mat, SupportedGame game)
     {

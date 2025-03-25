@@ -1,5 +1,7 @@
 namespace ReaGE;
 
+using System.Threading.Tasks;
+
 public interface IAssetPointer
 {
     public SupportedGame Game { get; set; }
@@ -7,6 +9,13 @@ public interface IAssetPointer
 }
 
 public interface IExportableAsset : IAssetPointer { }
+
+interface IImportableAsset : IAssetPointer
+{
+    bool IsEmpty { get; }
+    Task<bool> Import(string resolvedFilepath, GodotRszImporter importer);
+    IEnumerable<(string label, GodotRszImporter.PresetImportModes importMode)> SupportedImportTypes => [("Full reimport", GodotRszImporter.PresetImportModes.FullReimport)];
+}
 
 public interface IRszContainer : IExportableAsset
 {
