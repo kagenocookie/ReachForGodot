@@ -82,8 +82,10 @@ public static partial class TypeCache
             parser.ReadPatch(paths.RszPatchPath);
             foreach (var (cn, accessors) in fieldOverrides) {
                 foreach (var acc in accessors) {
-                    var cls = parser.GetRSZClass(cn)!;
-                    GenerateObjectCache(this, cls);
+                    var cls = parser.GetRSZClass(cn);
+                    if (cls != null) {
+                        GenerateObjectCache(this, cls);
+                    }
                 }
             }
             time.Stop();
@@ -109,7 +111,7 @@ public static partial class TypeCache
                     return il2CppCache;
                 }
 
-                var cacheLastUpdate = File.GetLastWriteTimeUtc(paths.Il2cppPath!);
+                var cacheLastUpdate = File.GetLastWriteTimeUtc(baseCacheFile);
                 var il2cppLastUpdate = File.GetLastWriteTimeUtc(paths.Il2cppPath!);
                 if (il2cppLastUpdate <= cacheLastUpdate) {
                     var existingCacheWorks = TryApplyIl2cppCache(il2CppCache, baseCacheFile);
