@@ -47,6 +47,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
     private EditorImportPlugin[] importers = Array.Empty<EditorImportPlugin>();
 
     private PopupMenu toolMenu = null!;
+    private PopupMenu toolMenuDev = null!;
     private AssetBrowser? browser;
 
     public override void _EnterTree()
@@ -55,7 +56,9 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
         AddSettings();
 
         toolMenu = new PopupMenu() { Title = "RE ENGINE" };
+        toolMenuDev = new PopupMenu() { Title = "Reach for Godot Dev" };
         AddToolSubmenuItem(toolMenu.Title, toolMenu);
+        AddToolSubmenuItem(toolMenuDev.Title, toolMenuDev);
 
         EditorInterface.Singleton.GetEditorSettings().SettingsChanged += OnProjectSettingsChanged;
         OnProjectSettingsChanged();
@@ -83,17 +86,8 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
         foreach (var i in importers) AddImportPlugin(i);
 
         RefreshToolMenu();
-        toolMenu.IdPressed += (id) => {
-            if (id < 100) {
-                var game = (SupportedGame)id;
-                OpenAssetImporterWindow(game);
-            }
-            // if (id == 100) UpgradeResources<MaterialResource>("mdf2");
-            // if (id == 101) UpgradeResources<RcolResource>("rcol");
-            // if (id == 102) UpgradeResources<CollisionFilterResource>("cfil");
-            if (id == 103) UpgradeResources<FoliageResource>("fol");
-            if (id == 200) ExtractFileVersions();
-        };
+        toolMenu.IdPressed += HandleToolMenu;
+        toolMenuDev.IdPressed += HandleToolMenu;
     }
 
     public override void _ShortcutInput(InputEvent @event)
@@ -110,6 +104,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
     private void RefreshToolMenu()
     {
         toolMenu.Clear();
+        toolMenuDev.Clear();
         foreach (var game in ReachForGodot.GameList) {
             var pathSetting = ChunkPathSetting(game);
             if (!string.IsNullOrEmpty(EditorInterface.Singleton.GetEditorSettings().GetSetting(pathSetting).AsString())) {
@@ -122,7 +117,27 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
         // toolMenu.AddItem("Upgrade all CFIL resources", 102);
         toolMenu.AddItem("Upgrade all FOL resources", 103);
 
-        toolMenu.AddItem("Extract file format versions from file lists", 200);
+        toolMenuDev.AddItem("Extract file format versions from file lists", 200);
+        toolMenuDev.AddItem("File test: SCN", 300);
+        toolMenuDev.AddItem("File test: PFB", 301);
+        toolMenuDev.AddItem("File test: RCOL", 302);
+    }
+
+    private void HandleToolMenu(long id)
+    {
+        if (id < 100) {
+            var game = (SupportedGame)id;
+            OpenAssetImporterWindow(game);
+        }
+        if (id == 100) UpgradeResources<MaterialResource>("mdf2");
+        if (id == 101) UpgradeResources<RcolResource>("rcol");
+        if (id == 102) UpgradeResources<CollisionFilterResource>("cfil");
+        if (id == 103) UpgradeResources<FoliageResource>("fol");
+
+        if (id == 200) ExtractFileVersions();
+        if (id == 300) TestScnFiles();
+        if (id == 301) TestPfbFiles();
+        if (id == 302) TestRcolFiles();
     }
 
     public void OpenAssetImporterWindow(SupportedGame game)
@@ -168,76 +183,131 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
         GD.Print("You may need to reopen any scenes referencing the upgraded resources");
     }
 
+    private void TestScnFiles()
+    {
+        ExecuteOnAllSourceFiles(SupportedGame.Unknown, "scn", (game, fileOption, filepath) => {
+            using var file = new ScnFile(fileOption, new FileHandler(filepath));
+            file.Read();
+            file.SetupGameObjects();
+        });
+    }
+
+    private void TestPfbFiles()
+    {
+        ExecuteOnAllSourceFiles(SupportedGame.Unknown, "pfb", (game, fileOption, filepath) => {
+            using var file = new PfbFile(fileOption, new FileHandler(filepath));
+            file.Read();
+            file.SetupGameObjects();
+        });
+    }
+
+    private void TestRcolFiles()
+    {
+        ExecuteOnAllSourceFiles(SupportedGame.Unknown, "rcol", (game, fileOption, filepath) => {
+            using var file = new RcolFile(fileOption, new FileHandler(filepath));
+            file.Read();
+            if (file.Header.autoGenerateJointsCount > 0) {
+                Debug.Break();
+            }
+        });
+    }
+
     internal void FetchInferrableRszData(AssetConfig config)
     {
-        var scnVersion = PathUtils.GuessFileVersion(string.Empty, RESupportedFileFormats.Scene, config);
-        var pfbVersion = PathUtils.GuessFileVersion(string.Empty, RESupportedFileFormats.Prefab, config);
         var fileOption = TypeCache.CreateRszFileOptions(config);
         var sourcePath = config.Paths.ChunkPath;
 
-        var scnTotal = PathUtils.GetFilesByExtensionFromListFile(config.Paths.FilelistPath, sourcePath, $".scn.{scnVersion}").Count();
-        var pfbTotal = PathUtils.GetFilesByExtensionFromListFile(config.Paths.FilelistPath, sourcePath, $".pfb.{pfbVersion}").Count();
-        int count = 0;
-        var failed = 0;
-        foreach (var scn in PathUtils.GetFilesByExtensionFromListFile(config.Paths.FilelistPath, sourcePath, $".scn.{scnVersion}")) {
-            if (!File.Exists(scn)) {
-                failed++;
-                GD.PrintErr("File not found: " + scn);
-                continue;
-            }
-            using var file = new ScnFile(fileOption, new FileHandler(scn));
-            var success = false;
-            while (!success) {
-                try {
-                    file.Read();
-                    success = true;
-                } catch (RszRetryOpenException) {
-                    // retry time
-                } catch (Exception) {
-                    GD.PrintErr("Failed to read scn file " + scn);
-                    failed++;
-                    break;
-                }
-            }
-            if (++count % 100 == 0) {
-                GD.Print($"Handled {count}/{scnTotal} scn files...");
-            }
-        }
+        var scnTotal = PathUtils.GetFilesByExtensionFromListFile(config.Paths.FilelistPath, PathUtils.AppendFileVersion(".scn", config), sourcePath).Count();
+        var pfbTotal = PathUtils.GetFilesByExtensionFromListFile(config.Paths.FilelistPath, PathUtils.AppendFileVersion(".pfb", config), sourcePath).Count();
 
-        GD.Print($"Finished {scnTotal} scn files, {failed} failures");
+        GD.Print($"Expecting {scnTotal} scn files");
+        var (success, failed) = ExecuteOnAllSourceFiles(config.Game, "scn", (game, fileOption, filepath) => {
+            using var file = new ScnFile(fileOption, new FileHandler(filepath));
+            file.Read();
+        });
+        GD.Print($"Finished {success + failed} scn out of expected {scnTotal}");
 
-        count = 0;
-        failed = 0;
-        foreach (var pfb in PathUtils.GetFilesByExtensionFromListFile(config.Paths.FilelistPath, sourcePath, $".pfb.{pfbVersion}")) {
-            if (!File.Exists(pfb)) {
-                failed++;
-                GD.PrintErr("File not found: " + pfb);
-                continue;
-            }
-            using var file = new PfbFile(fileOption, new FileHandler(pfb));
-            var success = false;
-            while (!success) {
-                try {
-                    file.Read();
-                    success = true;
-                } catch (RszRetryOpenException) {
-                    // retry time
-                } catch (Exception) {
-                    GD.PrintErr("Failed to read pfb file " + pfb);
-                    failed++;
-                    break;
-                }
-            }
-            if (++count % 100 == 0) {
-                GD.Print($"Handled {count}/{pfbTotal} pfb files...");
-            }
-        }
+        GD.Print($"Expecting {pfbTotal} pfb files");
+        (success, failed) = ExecuteOnAllSourceFiles(config.Game, "pfb", (game, fileOption, filepath) => {
+            using var file = new PfbFile(fileOption, new FileHandler(filepath));
+            file.Read();
+        });
+        GD.Print($"Finished {success + failed} pfb out of expected {pfbTotal}");
 
-        GD.Print($"Finished {pfbTotal} pfb files, {failed} failures");
         TypeCache.StoreInferredRszTypes(fileOption.RszParser.ClassDict.Values, config);
     }
 
-    private void ExtractFileVersions()
+    private static (int successes, int failures) ExecuteOnAllSourceFiles(SupportedGame game, string extension, Action<SupportedGame, RszFileOption, string> action)
+    {
+        var count = 0;
+        var countSuccess = 0;
+        var fails = new List<string>();
+        foreach (var (curgame, fileOption, filepath) in FindOrExtractAllRszFilesOfType(game, extension)) {
+            var success = false;
+            int retryCount = 10;
+            do {
+                try {
+                    action(curgame, fileOption, filepath);
+                    success = true;
+                } catch (RszRetryOpenException) {
+                    retryCount--;
+                } catch (Exception) {
+                    GD.Print("Failed to read file " + filepath);
+                    success = false;
+                    break;
+                }
+            } while (!success && retryCount > 0);
+            count++;
+            if (success) {
+                countSuccess++;
+            } else {
+                fails.Add(filepath);
+            }
+            if (count % 100 == 0) {
+                GD.Print($"Handled {count} files...");
+            }
+        }
+        GD.Print($"Test finished ({extension}): {countSuccess}/{count} files were successful, {fails.Count} failed");
+        return (countSuccess, fails.Count);
+    }
+
+    private static IEnumerable<(SupportedGame game, RszFileOption fileOption, string filepath)> FindOrExtractAllRszFilesOfType(SupportedGame game, string extension)
+    {
+        SupportedGame? lastGame = null;
+        RszFileOption? fileOption = null;
+        foreach (var (curgame, filepath) in FindOrExtractAllFilesOfType(game, extension)) {
+            if (lastGame != curgame) {
+                lastGame = curgame;
+                fileOption = TypeCache.CreateRszFileOptions(ReachForGodot.GetAssetConfig(curgame));
+            }
+            yield return (curgame, fileOption!, filepath);
+        }
+    }
+
+    private static IEnumerable<(SupportedGame game, string filepath)> FindOrExtractAllFilesOfType(SupportedGame game, string extension)
+    {
+        var games = game == SupportedGame.Unknown ? ReachForGodot.GameList : [game];
+        foreach (var curgame in games) {
+            var config = ReachForGodot.GetAssetConfig(curgame);
+            if (!config.IsValid) continue;
+
+            var hasAttemptedFullExtract = false;
+            var extWithVersion = PathUtils.AppendFileVersion(extension, config);
+            foreach (var relativeFilepath in PathUtils.GetFilesByExtensionFromListFile(config.Paths.FilelistPath, extWithVersion, null)) {
+                var resolvedFile = PathUtils.FindSourceFilePath(PathUtils.GetFilepathWithoutNativesFolder(relativeFilepath), config, false);
+                if (!hasAttemptedFullExtract && string.IsNullOrEmpty(resolvedFile)) {
+                    hasAttemptedFullExtract = true;
+                    GD.Print($"Failed to resolve {relativeFilepath}. Attempting unpack of all {curgame} {extension} files if configured");
+                    FileUnpacker.TryExtractFilteredFiles($"\\.{extension}\\.\\d+$", config);
+                    resolvedFile = PathUtils.FindSourceFilePath(PathUtils.GetFilepathWithoutNativesFolder(relativeFilepath), config, false);
+                }
+                if (!string.IsNullOrEmpty(resolvedFile))
+                    yield return (curgame, resolvedFile);
+            }
+        }
+    }
+
+    private static void ExtractFileVersions()
     {
         foreach (var game in ReachForGodot.GameList) {
             var filelist = EditorInterface.Singleton.GetEditorSettings().GetSetting(FilelistPathSetting(game)).AsString();

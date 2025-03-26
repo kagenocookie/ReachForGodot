@@ -49,7 +49,7 @@ The addon integrates [RE Mesh Editor](https://github.com/NSACloud/RE-Mesh-Editor
 ## Prerequisites
 - Godot 4.4+ w/ .NET 8.0
 - Blender and [RE Mesh Editor](https://github.com/NSACloud/RE-Mesh-Editor) - used for mesh and texture import / export; data editing will still work without it, but no meshes will be generated.
-- Extract all relevant chunk files you wish to edit somewhere - [guide](https://github.com/Modding-Haven/REEngine-Modding-Documentation/wiki/Extracting-Game-Files)
+- Either pre-extract all resources somewhere ([guide](https://github.com/Modding-Haven/REEngine-Modding-Documentation/wiki/Extracting-Game-Files)), or configure the **File Unpacker** setting to extract required files on the fly
 - Download the latest RSZ json for the game you're trying to edit, place it wherever
 - The addon stores its own cache of relevant il2cpp json data (`addons/ReachForGodot/game_settings/{game}/il2cpp_cache.json`), but for games that don't have those in the repository or if the game gets updated, the il2cpp dump json for the game you're trying to edit is required to (re-)generate the cache file.
 

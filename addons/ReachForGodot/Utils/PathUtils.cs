@@ -208,14 +208,16 @@ public static class PathUtils
         return path;
     }
 
-    public static IEnumerable<string> GetFilesByExtensionFromListFile(string? listFilepath, string importPath, string extension)
+    public static IEnumerable<string> GetFilesByExtensionFromListFile(string? listFilepath, string extension, string? basePath)
     {
         if (!File.Exists(listFilepath)) {
             GD.PrintErr("List file '" + listFilepath + "' not found");
             yield break;
         }
 
-        importPath = GetFilepathWithoutNativesFolder(importPath);
+        if (basePath != null) {
+            basePath = GetFilepathWithoutNativesFolder(basePath);
+        }
 
         using var file = new StreamReader(File.OpenRead(listFilepath));
         while (!file.EndOfStream) {
@@ -223,7 +225,7 @@ public static class PathUtils
             if (string.IsNullOrEmpty(line)) continue;
 
             if (line.EndsWith(extension)) {
-                yield return Path.Combine(importPath, line);
+                yield return basePath == null ? line : Path.Combine(basePath, line);
             }
         }
     }
@@ -234,7 +236,7 @@ public static class PathUtils
     /// If file is not found, attempts to extract from PAK files if configured.
     /// </summary>
     /// <returns>The resolved path, or null if the file was not found.</returns>
-    public static string? FindSourceFilePath(string? sourceFilePath, AssetConfig config)
+    public static string? FindSourceFilePath(string? sourceFilePath, AssetConfig config, bool autoExtract = true)
     {
         if (Path.IsPathRooted(sourceFilePath)) {
             return File.Exists(sourceFilePath) ? sourceFilePath : null;
@@ -257,7 +259,7 @@ public static class PathUtils
             }
         }
 
-        if (FileUnpacker.TryExtractFile(sourceFilePath, config) && File.Exists(Path.Combine(config.Paths.ChunkPath, sourceFilePath))) {
+        if (autoExtract && FileUnpacker.TryExtractFile(sourceFilePath, config) && File.Exists(Path.Combine(config.Paths.ChunkPath, sourceFilePath))) {
             return Path.Combine(config.Paths.ChunkPath, sourceFilePath);
         }
 

@@ -89,7 +89,7 @@ public static partial class TypeCache
                 }
             }
             time.Stop();
-            GD.Print("Loaded RSZ data in " + time.Elapsed);
+            GD.Print($"Loaded {game} RSZ data in {time.Elapsed}");
             return parser;
         }
 

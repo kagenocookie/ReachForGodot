@@ -15,6 +15,12 @@ public class FileUnpacker
         // store list of accessed files, so we don't re-try the same missing pfb's several times per session
         if (!attemptedFiles.Add((config.Game, sourceFilePath))) return false;
 
+        sourceFilePath = PathUtils.AppendFileVersion(sourceFilePath, config).ToLowerInvariant();
+        return TryExtractFilteredFiles(sourceFilePath, config);
+    }
+
+    public static bool TryExtractFilteredFiles(string filter, AssetConfig config)
+    {
         var paklist = config.Paths.PakFiles;
         var listfile = config.Paths.FilelistPath;
         if (paklist.Length == 0 || string.IsNullOrEmpty(listfile)) return false;
@@ -26,10 +32,9 @@ public class FileUnpacker
             }
             return false;
         }
-        sourceFilePath = PathUtils.AppendFileVersion(sourceFilePath, config).ToLowerInvariant();
         var outputRoot = PathUtils.GetFilepathWithoutNativesFolder(config.Paths.ChunkPath);
 
-        var argsBase = $"unpack -p \"{listfile}\" -i {{PAKFILE}} -o \"{outputRoot}\" -f \"{sourceFilePath}\" --skip-unknown --override";
+        var argsBase = $"unpack -p \"{listfile}\" -i {{PAKFILE}} -o \"{outputRoot}\" -f \"{filter}\" --skip-unknown --override";
 
         foreach (var pak in paklist) {
             var args = argsBase.Replace("{PAKFILE}", EscapeFilepathArgument(pak));
