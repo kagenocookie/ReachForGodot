@@ -72,6 +72,7 @@ public sealed class EnumDescriptor<T> : EnumDescriptor where T : struct, IBinary
         // nasty; maybe add individual enum descriptor types eventually
         if (typeof(T) == typeof(System.Int64)) {
             converter = static (e) => {
+                // need to handle both cases - raw il2cpp dump always prints as unsigned, whereas we're storing them with correct sign in the cache
                 try {
                     return (T)(object)(long)e.GetInt64();
                 } catch {

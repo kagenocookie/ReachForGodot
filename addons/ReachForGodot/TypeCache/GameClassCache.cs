@@ -122,7 +122,7 @@ public static partial class TypeCache
             }
 
             if (!File.Exists(paths.Il2cppPath)) {
-                GD.PrintErr($"Il2cpp file does not exist, nor do we have an enum cache file yet for {paths.Game}. Enums won't show up properly.");
+                GD.PrintErr($"Il2cpp file does not exist, nor do we have a valid cache file for {paths.Game}. Enums and class names won't resolve properly.");
                 return il2CppCache;
             }
 
@@ -144,6 +144,10 @@ public static partial class TypeCache
         private bool TryApplyIl2cppCache(Il2cppCache target, string cacheFilename)
         {
             if (TryDeserialize<Il2cppCacheData>(cacheFilename, out var data)) {
+                if (data.CacheVersion < Il2cppCacheData.CurrentCacheVersion) {
+                    GD.PrintErr("Il2cpp cache data is out of date, needs a rebuild.");
+                    return false;
+                }
                 target.ApplyCacheData(data);
                 return true;
             }

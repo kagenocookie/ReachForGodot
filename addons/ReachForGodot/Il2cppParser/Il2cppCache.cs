@@ -7,6 +7,9 @@ using REFDumpFormatter;
 
 public class Il2cppCacheData
 {
+    public static readonly int CurrentCacheVersion = 1;
+
+    public int CacheVersion { get; set; }
     public Dictionary<string, EnumCacheEntry> Enums { get; set; } = new();
     public Dictionary<string, List<string>> Subclasses { get; set; } = new();
 }
@@ -73,7 +76,7 @@ public class Il2cppCache
                     if (item.parent == null) break;
                     if (!subclasses.TryGetValue(item.parent, out var list)) {
                         subclasses[item.parent] = list = new();
-                        if (!item.IsAbstract) {
+                        if (!data[item.parent].IsAbstract) {
                             // non-abstract base types should also be saved as instantiable
                             list.Add(item.parent);
                         }
@@ -116,7 +119,7 @@ public class Il2cppCache
 
     public Il2cppCacheData ToCacheData()
     {
-        var data = new Il2cppCacheData();
+        var data = new Il2cppCacheData() { CacheVersion = Il2cppCacheData.CurrentCacheVersion };
         foreach (var (name, entry) in enums) {
             var cacheEntry = new EnumCacheEntry();
             cacheEntry.BackingType = entry.BackingType.FullName!;
