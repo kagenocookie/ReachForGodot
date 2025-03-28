@@ -39,7 +39,7 @@ public partial class AssetConfig : Resource
     private Callable ImportBtn => Callable.From(() => ReachForGodotPlugin.Instance.OpenAssetImporterWindow(this));
 
     [ExportToolButton("Packed file browser")]
-    private Callable BrowserBtn => Callable.From(() => ShowFileBrowser());
+    private Callable BrowserBtn => Callable.From(() => ReachForGodotPlugin.Instance.OpenPackedAssetBrowser(this));
 
     [ExportToolButton("DEV: Build all RSZ data")]
     private Callable InferRszData => Callable.From(() => ReachForGodotPlugin.Instance.FetchInferrableRszData(this));
@@ -47,42 +47,6 @@ public partial class AssetConfig : Resource
     private void InvokeCallback(Callable callable)
     {
         callable.Call();
-    }
-
-    private void ShowFileBrowser()
-    {
-        if (string.IsNullOrEmpty(Paths.FilelistPath)) {
-            GD.PrintErr("File list setting not defined");
-            return;
-        }
-
-        var dlg = ResourceLoader.Load<PackedScene>("res://addons/CustomFileBrowser/CustomFileDialog.tscn")?.Instantiate<CustomFileDialog>();
-
-        dlg ??= new CustomFileBrowser.CustomFileDialog();
-        dlg.FileSystem = new FileListFileSystem(Paths.FilelistPath);
-        dlg.FileMode = FileDialog.FileModeEnum.OpenFiles;
-        dlg.FilesSelected += (files) => {
-            GD.Print($"Attempting to extract {files.Length} files...");
-            var successCount = 0;
-            foreach (var file in files) {
-                var sourcePath = PathUtils.GetFilepathWithoutNativesFolder(file);
-                var importPath = PathUtils.GetLocalizedImportPath(sourcePath, this);
-                if (ResourceLoader.Exists(importPath)) {
-                    successCount++;
-                    continue;
-                }
-
-                var resolvedPath = PathUtils.FindSourceFilePath(sourcePath, this);
-                if (resolvedPath != null) {
-                    successCount++;
-                    Importer.Import(sourcePath, this, importPath);
-                }
-            }
-            GD.Print($"Successfully extracted {successCount} out of {files.Length} files");
-        };
-        ((SceneTree)(Engine.GetMainLoop())).Root.AddChild(dlg);
-        dlg.SetUnparentWhenInvisible(true);
-        dlg.Show();
     }
 }
 #endif

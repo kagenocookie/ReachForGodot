@@ -8,8 +8,6 @@ public class FileListFileSystem : ICustomFileSystem
 
     private Dictionary<string, string[]> folderListCache = new();
 
-    private static readonly StringStartsWithComparer stringStartsWithComparer = new();
-
     public FileListFileSystem()
     {
     }
@@ -59,15 +57,12 @@ public class FileListFileSystem : ICustomFileSystem
             return names;
         }
 
-        // TODO: we maybe able to simplify these with the default comparer, because binary search returns not just -1
-        var midIndex = Array.BinarySearch<string>(Files, folderNormalized, stringStartsWithComparer);
-        if (midIndex == -1) return Array.Empty<string>();
-        ReaGE.Debug.Assert(Files[midIndex].StartsWith(folderNormalized));
-        var startIndex = midIndex;
-
-        while (startIndex > 0 && Files[startIndex - 1].StartsWith(folderNormalized)) {
-            startIndex--;
+        var startIndex = Array.BinarySearch<string>(Files, folderNormalized);
+        if (startIndex < 0) {
+            startIndex = ~startIndex;
+            if (startIndex > Files.Length) return Array.Empty<string>();
         }
+        // TODO will have to handle invalid filepaths here as well - maybe a StartsWith check
         var count = Files.Length;
         var list = new List<string>();
 
@@ -112,18 +107,5 @@ public class FileListFileSystem : ICustomFileSystem
     {
         var exactMatch = Array.BinarySearch(Files, NormalizePath(path));
         return exactMatch < 0 ? PathType.Folder : PathType.File;
-    }
-
-#pragma warning disable CS8767 // Nullability of reference types in type of parameter doesn't match implicitly implemented member (possibly because of nullability attributes).
-    private sealed class StringStartsWithComparer : IComparer<string>
-    {
-        public int Compare(string fullpath, string partial)
-        {
-            // if (fullpath.Length > partial.Length) {
-            //     return fullpath.AsSpan().CompareTo(partial.AsSpan(), StringComparison.Ordinal);
-            // }
-
-            return fullpath.AsSpan().Slice(0, partial.Length).CompareTo(partial.AsSpan(), StringComparison.Ordinal);
-        }
     }
 }

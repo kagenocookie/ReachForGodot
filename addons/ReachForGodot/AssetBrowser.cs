@@ -3,6 +3,7 @@
 
 using System.Diagnostics;
 using System.Threading.Tasks;
+using CustomFileBrowser;
 using Godot;
 
 namespace ReaGE;
@@ -24,7 +25,7 @@ public partial class AssetBrowser : Resource
     }
 
     [ExportToolButton("Import Assets")]
-    private Callable ImportAssets => Callable.From(ShowFilePicker);
+    private Callable ImportAssets => Callable.From(ShowNativeFilePicker);
 
     [ExportToolButton("Open chunk folder")]
     private Callable OpenFolder => Callable.From(() => {
@@ -47,7 +48,7 @@ public partial class AssetBrowser : Resource
         }
     }
 
-    public void ShowFilePicker()
+    public void ShowNativeFilePicker()
     {
         Assets ??= AssetConfig.DefaultInstance;
         if (Assets.Game == SupportedGame.Unknown) {
@@ -61,9 +62,11 @@ public partial class AssetBrowser : Resource
             return;
         }
 
+        // ensure resource formats and stuff are registered
+        System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(TypeCache).TypeHandle);
         if (_dialog == null) {
             _dialog = new FileDialog();
-            _dialog.Filters = ["*.mesh.*", "*.tex.*", "*.scn.*", "*.pfb.*", "*.user.*", "*.mdf2.*"];
+            _dialog.Filters = ["*.*"];
             _dialog.Access = FileDialog.AccessEnum.Filesystem;
             _dialog.UseNativeDialog = true;
             _dialog.FileMode = FileDialog.FileModeEnum.OpenFiles;
@@ -73,6 +76,33 @@ public partial class AssetBrowser : Resource
         }
 
         _dialog.Show();
+    }
+
+    public void ShowFileBrowser()
+    {
+        if (string.IsNullOrEmpty(Assets?.Paths.FilelistPath)) {
+            GD.PrintErr("File list setting not defined");
+            return;
+        }
+        // ensure resource formats and stuff are registered
+        System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(TypeCache).TypeHandle);
+
+        var dlg = ResourceLoader.Load<PackedScene>("res://addons/CustomFileBrowser/CustomFileDialog.tscn")?.Instantiate<CustomFileDialog>();
+
+        dlg ??= new CustomFileBrowser.CustomFileDialog();
+        dlg.FileSystem = new FileListFileSystem(Assets.Paths.FilelistPath);
+        dlg.FileMode = FileDialog.FileModeEnum.OpenFiles;
+        dlg.FilesSelected += (files) => {
+            GD.Print($"Attempting to extract from {files.Length} paths...");
+            var importList = files
+                .SelectMany(f => !Path.GetExtension(f.AsSpan()).IsEmpty ? [f] : dlg.FileSystem.GetRecursiveFileList(f))
+                .Select(f => PathUtils.FindSourceFilePath(PathUtils.GetFilepathWithoutNativesFolder(f), Assets)!)
+                .ToArray();
+            _ = ImportAssetsAsync(importList);
+        };
+        ((SceneTree)(Engine.GetMainLoop())).Root.AddChild(dlg);
+        dlg.SetUnparentWhenInvisible(true);
+        dlg.Show();
     }
 
     private async Task ImportAssetsAsync(string[] files)
@@ -101,6 +131,17 @@ public partial class AssetBrowser : Resource
     {
         Debug.Assert(Assets != null);
         return Task.WhenAll(files.Select(ImportSingleAsset));
+    }
+
+    private bool ImportByRelativePath(string file)
+    {
+        Debug.Assert(Assets != null);
+        var sourcePath = PathUtils.GetFilepathWithoutNativesFolder(file);
+        var resolvedPath = PathUtils.FindSourceFilePath(sourcePath, Assets);
+        if (resolvedPath != null) {
+            return Importer.Import(sourcePath, Assets) != null;
+        }
+        return false;
     }
 
     private async Task ImportSingleAsset(string file)

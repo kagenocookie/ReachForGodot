@@ -84,7 +84,6 @@ public partial class FilePickerItem : HBoxContainer
                             EmitSignal(SignalName.DoublePressed);
                         } else {
                             lastPressTime = DateTime.Now;
-                            IsSelected = true;
                             EmitSignal(SignalName.Pressed);
                         }
                     }

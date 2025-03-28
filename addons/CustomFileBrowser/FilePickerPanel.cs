@@ -130,9 +130,17 @@ public partial class FilePickerPanel : Control
             } else if (FileMode == FileDialog.FileModeEnum.OpenFiles) {
                 EmitSignal(SignalName.FilesSelected, [item.Path]);
             }
-        } else if (FileMode == FileDialog.FileModeEnum.OpenDir) {
-            EmitSignal(SignalName.FileSelected, item.Path);
+        } else {
+            CurrentDir = item.Path;
         }
+    }
+
+    private void ClearSelection()
+    {
+        foreach (var sel in _selectedItems) {
+            sel.IsSelected = false;
+        }
+        _selectedItems.Clear();
     }
 
     private void OnItemPressed(FilePickerItem item)
@@ -144,18 +152,22 @@ public partial class FilePickerPanel : Control
         }
 
         if (FileMode == FileDialog.FileModeEnum.OpenFile) {
-            foreach (var sel in _selectedItems) {
-                sel.IsSelected = false;
-            }
-            _selectedItems.Clear();
+            ClearSelection();
         }
 
-        item.IsSelected = true;
+        if (FileMode == FileDialog.FileModeEnum.OpenFiles) {
+            item.IsSelected = !item.IsSelected;
+            if (item.IsSelected) _selectedItems.Add(item);
+            else _selectedItems.Remove(item);
+        } else {
+            ClearSelection();
+            item.IsSelected = true;
+            _selectedItems.Add(item);
+        }
         LastSelectedItem = item.Path;
-        _selectedItems.Add(item);
         var type = FileSystem.GetPathType(path);
         if (type == PathType.Folder) {
-            CurrentDir = path;
+            CurrentFile = path;
         } else if (FileMode is FileDialog.FileModeEnum.OpenFile or FileDialog.FileModeEnum.OpenFiles or FileDialog.FileModeEnum.SaveFile) {
             CurrentFile = path;
         }
@@ -224,11 +236,8 @@ public partial class FilePickerPanel : Control
         }
 
         var files = FileSystem.GetFilesInFolder(dir);
-        foreach (var sel in _selectedItems) {
-            sel.IsSelected = false;
-        }
+        ClearSelection();
         LastSelectedItem = null;
-        _selectedItems.Clear();
         CurrentFile = null;
         items.Clear();
         items.AddRange(files);
