@@ -13,7 +13,7 @@ public partial class PrefabNode : GameObject, IRszContainer, IImportableAsset
     public bool IsEmpty => GetChildCount() == 0;
     public new string Path => $"{Asset?.AssetFilename}:{Name}";
 
-    public void BuildTree(RszGodotConversionOptions options)
+    public void BuildTree(GodotImportOptions options)
     {
         var sw = new Stopwatch();
         sw.Start();
@@ -28,10 +28,10 @@ public partial class PrefabNode : GameObject, IRszContainer, IImportableAsset
         });
     }
 
-    IEnumerable<(string label, GodotRszImporter.PresetImportModes importMode)> IImportableAsset.SupportedImportTypes => [
-        ("Import anything missing", GodotRszImporter.PresetImportModes.ImportTreeChanges),
-        ("Discard and reimport structure", GodotRszImporter.PresetImportModes.ReimportStructure),
-        ("Fully reimport all resources", GodotRszImporter.PresetImportModes.FullReimport),
+    IEnumerable<(string label, PresetImportModes importMode)> IImportableAsset.SupportedImportTypes => [
+        ("Import anything missing", PresetImportModes.ImportTreeChanges),
+        ("Discard and reimport structure", PresetImportModes.ReimportStructure),
+        ("Fully reimport all resources", PresetImportModes.FullReimport),
     ];
 
     async Task<bool> IImportableAsset.Import(string resolvedFilepath, GodotRszImporter importer)

@@ -36,6 +36,7 @@ public class FileUnpacker
 
         var argsBase = $"unpack -p \"{listfile}\" -i {{PAKFILE}} -o \"{outputRoot}\" -f \"{filter}\" --skip-unknown --override";
 
+        // TODO: reverse order and remove --override flag?
         foreach (var pak in paklist) {
             var args = argsBase.Replace("{PAKFILE}", EscapeFilepathArgument(pak));
             var proc = Process.Start(new ProcessStartInfo(exePath) {

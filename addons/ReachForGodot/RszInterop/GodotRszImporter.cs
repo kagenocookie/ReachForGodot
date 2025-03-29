@@ -7,38 +7,31 @@ using RszTool;
 
 public static class PresetImportModeExtensions
 {
-    public static RszGodotConversionOptions ToOptions(this GodotRszImporter.PresetImportModes mode) => mode switch {
-        GodotRszImporter.PresetImportModes.PlaceholderImport => GodotRszImporter.placeholderImport,
-        GodotRszImporter.PresetImportModes.ThisFolderOnly => GodotRszImporter.thisFolderOnly,
-        GodotRszImporter.PresetImportModes.ImportMissingItems => GodotRszImporter.importMissing,
-        GodotRszImporter.PresetImportModes.ImportTreeChanges => GodotRszImporter.importTreeChanges,
-        GodotRszImporter.PresetImportModes.ReimportStructure => GodotRszImporter.forceReimportStructure,
-        GodotRszImporter.PresetImportModes.FullReimport => GodotRszImporter.fullReimport,
+    public static GodotImportOptions ToOptions(this PresetImportModes mode) => mode switch {
+        PresetImportModes.PlaceholderImport => GodotRszImporter.placeholderImport,
+        PresetImportModes.ThisFolderOnly => GodotRszImporter.thisFolderOnly,
+        PresetImportModes.ImportMissingItems => GodotRszImporter.importMissing,
+        PresetImportModes.ImportTreeChanges => GodotRszImporter.importTreeChanges,
+        PresetImportModes.ReimportStructure => GodotRszImporter.forceReimportStructure,
+        PresetImportModes.FullReimport => GodotRszImporter.fullReimport,
         _ => GodotRszImporter.placeholderImport,
     };
 }
 
 public class GodotRszImporter
 {
-    public static readonly RszGodotConversionOptions placeholderImport = new(RszImportType.Placeholders, RszImportType.Placeholders, RszImportType.Placeholders, RszImportType.Placeholders);
-    public static readonly RszGodotConversionOptions thisFolderOnly = new(RszImportType.Placeholders, RszImportType.Reimport, RszImportType.CreateOrReuse, RszImportType.Reimport);
-    public static readonly RszGodotConversionOptions importMissing = new(RszImportType.CreateOrReuse, RszImportType.CreateOrReuse, RszImportType.CreateOrReuse, RszImportType.CreateOrReuse);
-    public static readonly RszGodotConversionOptions importTreeChanges = new(RszImportType.Reimport, RszImportType.Reimport, RszImportType.CreateOrReuse, RszImportType.Reimport);
-    public static readonly RszGodotConversionOptions forceReimportStructure = new(RszImportType.ForceReimport, RszImportType.ForceReimport, RszImportType.CreateOrReuse, RszImportType.ForceReimport);
-    public static readonly RszGodotConversionOptions fullReimport = new(RszImportType.ForceReimport, RszImportType.ForceReimport, RszImportType.ForceReimport, RszImportType.ForceReimport);
-
-    public enum PresetImportModes
-    {
-        PlaceholderImport = 0,
-        ThisFolderOnly,
-        ImportMissingItems,
-        ImportTreeChanges,
-        ReimportStructure,
-        FullReimport
-    }
+    public static readonly GodotImportOptions placeholderImport = new(RszImportType.Placeholders, RszImportType.Placeholders, RszImportType.Placeholders, RszImportType.Placeholders);
+    public static readonly GodotImportOptions thisFolderOnly = new(RszImportType.Placeholders, RszImportType.Reimport, RszImportType.CreateOrReuse, RszImportType.Reimport);
+    public static readonly GodotImportOptions importMissing = new(RszImportType.CreateOrReuse, RszImportType.CreateOrReuse, RszImportType.CreateOrReuse, RszImportType.CreateOrReuse);
+    public static readonly GodotImportOptions importTreeChanges = new(RszImportType.Reimport, RszImportType.Reimport, RszImportType.CreateOrReuse, RszImportType.Reimport);
+    public static readonly GodotImportOptions forceReimportStructure = new(RszImportType.ForceReimport, RszImportType.ForceReimport, RszImportType.CreateOrReuse, RszImportType.ForceReimport);
+    public static readonly GodotImportOptions fullReimport = new(RszImportType.ForceReimport, RszImportType.ForceReimport, RszImportType.ForceReimport, RszImportType.ForceReimport);
 
     public AssetConfig AssetConfig { get; }
-    public RszGodotConversionOptions Options { get; }
+    public SupportedGame Game => AssetConfig.Game;
+    public GodotImportOptions Options { get; }
+    private bool LogInfo => Options.logInfo;
+    private bool LogErrors => Options.logErrors;
 
     private RszFileOption fileOption;
 
@@ -262,7 +255,7 @@ public class GodotRszImporter
         public (int total, int finished) GameObjectCount { get; }
     }
 
-    public GodotRszImporter(AssetConfig paths, RszGodotConversionOptions options)
+    public GodotRszImporter(AssetConfig paths, GodotImportOptions options)
     {
         AssetConfig = paths;
         Options = options;
@@ -319,7 +312,7 @@ public class GodotRszImporter
     private TRes? SaveOrReplaceRszResource<TRes>(TRes newResource, string sourceFilePath, string importFilepath) where TRes : Resource, IRszContainer
     {
         if (!File.Exists(sourceFilePath)) {
-            GD.PrintErr("Invalid resource source file, does not exist: " + sourceFilePath);
+            ErrorLog("Invalid resource source file, does not exist: " + sourceFilePath);
             return null;
         }
 
@@ -342,10 +335,10 @@ public class GodotRszImporter
             Directory.CreateDirectory(ProjectSettings.GlobalizePath(importFilepath.GetBaseDir()));
             newResource.ResourcePath = importFilepath;
         }
-        GD.Print(" Saving resource " + importFilepath);
+        InfoLog(" Saving resource " + importFilepath);
         var status = ResourceSaver.Save(newResource);
         if (status != Error.Ok) {
-            GD.PrintErr($"Failed to save resource {importFilepath}:\n{status}");
+            ErrorLog($"Failed to save resource {importFilepath}:\n{status}");
         }
         ctx.resolvedResources[importFilepath] = newResource;
         Importer.QueueFileRescan();
@@ -360,7 +353,7 @@ public class GodotRszImporter
         try {
             await task;
         } catch (TaskCanceledException) {
-            GD.PrintErr("Import cancelled by the user");
+            ErrorLog("Import cancelled by the user");
         }
         ctx.Clear();
     }
@@ -373,7 +366,7 @@ public class GodotRszImporter
         try {
             await task;
         } catch (TaskCanceledException) {
-            GD.PrintErr("Import cancelled by the user");
+            ErrorLog("Import cancelled by the user");
         }
         ctx.Clear();
     }
@@ -382,11 +375,11 @@ public class GodotRszImporter
     {
         var fullPath = PathUtils.FindSourceFilePath(root.Asset?.AssetFilename, AssetConfig);
         if (fullPath == null) {
-            GD.PrintErr("File not found: " + root.Asset?.AssetFilename);
+            ErrorLog("File not found: " + root.Asset?.AssetFilename);
             return;
         }
 
-        GD.Print("Opening scn file " + fullPath);
+        InfoLog("Opening scn file " + fullPath);
         using var file = new ScnFile(fileOption, new FileHandler(fullPath));
         try {
             file.Read();
@@ -395,7 +388,7 @@ public class GodotRszImporter
             await GenerateSceneTree(root);
             return;
         } catch (Exception e) {
-            GD.PrintErr("Failed to parse file " + fullPath, e);
+            ErrorLog("Failed to parse file " + fullPath, e);
             return;
         }
 
@@ -425,7 +418,7 @@ public class GodotRszImporter
 
         ctx.EndBatch(batch);
 
-        GD.Print(" Finished scene tree " + root.Name);
+        InfoLog(" Finished scene tree " + root.Name);
         if (!root.IsInsideTree()) {
             UpdateSceneResource(root);
         }
@@ -546,7 +539,7 @@ public class GodotRszImporter
                 batch.finishedFolders.Add(folder);
 
                 if (importPath == null || childFullPath == null) {
-                    GD.PrintErr("Invalid folder source file " + folder.Asset?.ToString());
+                    ErrorLog("Invalid folder source file " + folder.Asset?.ToString());
                     return;
                 }
             }
@@ -587,17 +580,17 @@ public class GodotRszImporter
     {
         var fullPath = PathUtils.FindSourceFilePath(root.Asset!.AssetFilename, AssetConfig);
         if (fullPath == null) {
-            GD.PrintErr("File not found: " + root.Asset?.AssetFilename);
+            ErrorLog("File not found: " + root.Asset?.AssetFilename);
             return;
         }
 
-        GD.Print("Opening pfb file " + fullPath);
+        InfoLog("Opening pfb file " + fullPath);
         using var file = new PfbFile(fileOption, new FileHandler(fullPath));
         try {
             file.Read();
             file.SetupGameObjects();
         } catch (Exception e) {
-            GD.PrintErr("Failed to parse file " + fullPath, e);
+            ErrorLog("Failed to parse file " + fullPath, e);
             return;
         }
 
@@ -651,7 +644,7 @@ public class GodotRszImporter
                     if (refField == field) {
                         propInfo = prop;
                     }
-                    GD.PrintErr("Auto-detected GameObjectRef property " + refField.SerializedName + " as propertyId " + propId + ". It may be wrong, but hopefully not.");
+                    ErrorLog("Auto-detected GameObjectRef property " + refField.SerializedName + " as propertyId " + propId + ". It may be wrong, but hopefully not.");
                 }
                 TypeCache.UpdatePfbGameObjectRefCache(AssetConfig.Game, obj.Classname!, propInfoDict);
                 Debug.Assert(propInfo != null);
@@ -659,7 +652,7 @@ public class GodotRszImporter
                 // if any refs from this object do not have a known property Id; this way we only print error if we actually found an unmapped ref
                 if (file.GameObjectRefInfoList.Any(info => info.Data.objectId == idx
                     && !propInfoDict.Values.Any(entry => entry.PropertyId == info.Data.propertyId))) {
-                    GD.PrintErr("Found undeclared GameObjectRef property " + field.SerializedName + " in class " + obj.Classname + ". If the field had an actual value, it won't be imported correctly.");
+                    ErrorLog("Found undeclared GameObjectRef property " + field.SerializedName + " in class " + obj.Classname + ". If the field had an actual value, it won't be imported correctly.");
                 }
                 return default;
             }
@@ -667,24 +660,24 @@ public class GodotRszImporter
 
         var objref = fieldRefs.FirstOrDefault(rr => rr.Data.propertyId == propInfo.PropertyId);
         if (objref == null) {
-            GD.PrintErr("Could not match GameObjectRef field ref");
+            ErrorLog("Could not match GameObjectRef field ref");
             return default;
         }
 
         var targetInstance = file.RSZ?.ObjectList[(int)objref.Data.targetId];
         if (targetInstance == null) {
-            GD.PrintErr("GameObjectRef target object not found");
+            ErrorLog("GameObjectRef target object not found");
             return default;
         }
 
         if (!ctx.importedObjects.TryGetValue(targetInstance, out var targetGameobjData)) {
-            GD.Print("Referenced game object was not imported");
+            ErrorLog("Referenced game object was not imported");
             return default;
         }
 
         var targetGameobj = root.AllChildrenIncludingSelf.FirstOrDefault(x => x.Data == targetGameobjData);
         if (targetGameobj == null) {
-            GD.Print("Could not find actual gameobject instance");
+            ErrorLog("Could not find actual gameobject instance");
             return default;
         }
 
@@ -703,7 +696,7 @@ public class GodotRszImporter
                     for (int i = 0; i < indices.Count; ++i) {
                         var refval = ResolveGameObjectRef(file, field, obj, instance, component, root, i);
                         if (refval == null && (Guid)indices[i] != Guid.Empty) {
-                            GD.PrintErr($"Couldn't resolve pfb GameObjectRef node path field {field.SerializedName}[{i}] for {component.Path}");
+                            ErrorLog($"Couldn't resolve pfb GameObjectRef node path field {field.SerializedName}[{i}] for {component.Path}");
                         }
                         paths.Add(refval ?? new GameObjectRef());
                     }
@@ -711,7 +704,7 @@ public class GodotRszImporter
                 } else {
                     var refval = ResolveGameObjectRef(file, field, obj, instance, component, root, 0);
                     if (refval == null && (Guid)instance.Values[field.FieldIndex] != Guid.Empty) {
-                        GD.PrintErr($"Couldn't resolve pfb GameObjectRef node path in field {field.SerializedName} for {component.Path}");
+                        ErrorLog($"Couldn't resolve pfb GameObjectRef node path in field {field.SerializedName} for {component.Path}");
                     }
                     obj.SetField(field, refval ?? new GameObjectRef());
                 }
@@ -741,12 +734,12 @@ public class GodotRszImporter
         var fullSourcePath = PathUtils.FindSourceFilePath(root.Asset!.AssetFilename, AssetConfig);
         if (fullSourcePath == null) return;
 
-        GD.Print("Opening user file " + fullSourcePath);
+        InfoLog("Opening user file " + fullSourcePath);
         using var file = new UserFile(fileOption, new FileHandler(fullSourcePath));
         try {
             file.Read();
         } catch (Exception e) {
-            GD.PrintErr("Failed to parse file " + fullSourcePath, e);
+            ErrorLog("Failed to parse file " + fullSourcePath, e);
             return;
         }
 
@@ -754,9 +747,7 @@ public class GodotRszImporter
 
         GenerateResources(root, file.ResourceInfoList, AssetConfig);
 
-        if (file.RSZ!.ObjectList.Skip(1).Any()) {
-            GD.PrintErr("WTF Capcom, why do you have multiple objects in the userfile root???");
-        }
+        Debug.Assert(!file.RSZ.ObjectList.Skip(1).Any());
 
         foreach (var instance in file.RSZ!.ObjectList) {
             if (string.IsNullOrEmpty(root.Classname) || root.Classname != instance.RszClass.name) {
@@ -788,12 +779,12 @@ public class GodotRszImporter
         var fullpath = PathUtils.FindSourceFilePath(root.Asset?.AssetFilename, AssetConfig);
         if (fullpath == null) return;
 
-        GD.Print("Opening rcol file " + fullpath);
+        InfoLog("Opening rcol file " + fullpath);
         using var file = new RcolFile(fileOption, new FileHandler(fullpath));
         try {
             file.Read();
         } catch (Exception e) {
-            GD.PrintErr("Failed to parse file " + fullpath, e);
+            ErrorLog("Failed to parse file " + fullpath, e);
             return;
         }
 
@@ -802,6 +793,9 @@ public class GodotRszImporter
             root.AddChild(groupsNode = new Node3D() { Name = "Groups" });
             groupsNode.Owner = root;
         }
+
+        root.IgnoreTags = file.IgnoreTags.ToArray();
+        var fileVersion = PathUtils.GuessFileVersion(fullpath, RESupportedFileFormats.Rcol, AssetConfig);
 
         var groupsDict = new Dictionary<Guid, RequestSetCollisionGroup>();
         foreach (var child in groupsNode.FindChildrenByType<RequestSetCollisionGroup>()) {
@@ -826,6 +820,7 @@ public class GodotRszImporter
             group.CollisionLayer = (uint)(1 << srcGroup.Info.layerIndex);
             group.MaskGuids = srcGroup.Info.MaskGuids.Select(c => c.ToString()).ToArray();
             group.LayerGuid = srcGroup.Info.layerGuid;
+            group.Data = srcGroup.Info.UserData == null ? null : CreateOrGetObject(srcGroup.Info.UserData);
 
             group.ClearChildren();
             foreach (var srcShape in srcGroup.Shapes) {
@@ -847,22 +842,60 @@ public class GodotRszImporter
                 }
                 group.AddUniqueNamedChild(shapeNode);
             }
+
+            foreach (var srcShape in srcGroup.ExtraShapes) {
+                var shapeNode = new RequestSetCollisionShape3D();
+                shapeNode.Guid = srcShape.Guid;
+                shapeNode.Name = "EXTRA__" + (!string.IsNullOrEmpty(srcShape.Name) ? srcShape.Name : shapeNode.Uuid!);
+                shapeNode.IsExtraShape = true;
+                shapeNode.OriginalName = srcShape.Name;
+                shapeNode.PrimaryJointNameStr = srcShape.PrimaryJointNameStr;
+                shapeNode.SecondaryJointNameStr = srcShape.SecondaryJointNameStr;
+                shapeNode.LayerIndex = srcShape.LayerIndex;
+                shapeNode.SkipIdBits = srcShape.SkipIdBits;
+                shapeNode.IgnoreTagBits = srcShape.IgnoreTagBits;
+                shapeNode.Attribute = srcShape.Attribute;
+                shapeNode.Data = srcShape.UserData == null ? null : CreateOrGetObject(srcShape.UserData);
+                shapeNode.RcolShapeType = srcShape.shapeType;
+                if (srcShape.shape != null) {
+                    var fieldType = RequestSetCollisionShape3D.GetShapeFieldType(srcShape.shapeType);
+                    RequestSetCollisionShape3D.ApplyShape(shapeNode, srcShape.shapeType, RszTypeConverter.FromRszValueSingleValue(fieldType, srcShape.shape, AssetConfig.Game));
+                }
+                group.AddUniqueNamedChild(shapeNode);
+            }
         }
 
-        foreach (var set in file.RequestSetInfoList) {
-            if (!setsDict.TryGetValue(set.id, out var requestSet)) {
-                setsDict[set.id] = requestSet = new RequestSetCollider();
-                requestSet.Name = !string.IsNullOrEmpty(set.name) ? set.name : ("Set_" + set.id.ToString());
+        foreach (var importSet in file.RequestSetInfoList) {
+            var name = "Set_" + importSet.id.ToString("000000") + (!string.IsNullOrEmpty(importSet.name) ? $"_{importSet.name}" : "");
+            if (!setsDict.TryGetValue(importSet.id, out var requestSet)) {
+                setsDict[importSet.id] = requestSet = new RequestSetCollider() { Name = name };
                 root.AddUniqueNamedChild(requestSet);
-                requestSet.ID = set.id;
-                requestSet.OriginalName = set.name;
-                requestSet.KeyName = set.keyName;
+                requestSet.ID = importSet.id;
+                requestSet.OriginalName = importSet.name;
+                requestSet.KeyName = importSet.keyName;
+            } else {
+                requestSet.Name = name;
             }
-            if (set.Group != null && groupsDict.TryGetValue(set.Group.Info.guid, out var group)) {
+            requestSet.Status = importSet.status;
+            if (importSet.Group != null && groupsDict.TryGetValue(importSet.Group.Info.guid, out var group)) {
                 requestSet.Group = group;
+                int i = 0, extra = 0;
+                foreach (var shape in group.Shapes) {
+                    var setData = importSet.ShapeUserdata[(shape.IsExtraShape ? extra++ : i++)];
+                    shape.SetDatas ??= new();
+                    shape.SetDatas[requestSet.ID] = CreateOrGetObject(setData);
+                }
+                // if (fileVersion >= 25) {
+                //     int i = 0, extra = 0;
+                //     foreach (var shape in group.Shapes) {
+                //         var setData = importSet.ShapeUserdata[(shape.IsExtraShape ? extra++ : i++)];
+                //         shape.SetDatas ??= new();
+                //         shape.SetDatas[requestSet] = CreateOrGetObject(setData);
+                //     }
+                // }
             }
-            if (set.Userdata != null) {
-                requestSet.Data = CreateOrGetObject(set.Userdata);
+            if (importSet.Userdata != null) {
+                requestSet.Data = CreateOrGetObject(importSet.Userdata);
             }
         }
     }
@@ -890,7 +923,7 @@ public class GodotRszImporter
                     });
                 }
             } else {
-                GD.Print("Found a resource with null path: " + resources.Count);
+                InfoLog("Found a resource with null path: " + resources.Count);
             }
         }
         root.Resources = resources.ToArray();
@@ -914,9 +947,7 @@ public class GodotRszImporter
             }
 
             subfolder.OriginalName = name;
-            if (folder.Children.Any()) {
-                GD.PrintErr($"Unexpected situation: resource-linked scene also has additional children in parent scene.\nParent scene:{root.Asset?.AssetFilename}\nSubfolder:{scnPath}");
-            }
+            Debug.Assert(!folder.Children.Any());
 
             var skipImport = (Options.folders == RszImportType.Placeholders || !isNew && Options.folders == RszImportType.CreateOrReuse);
             if (!skipImport) {
@@ -926,7 +957,7 @@ public class GodotRszImporter
             }
         } else {
             if (subfolder == null) {
-                GD.Print("Creating folder " + name);
+                InfoLog("Creating folder " + name);
                 subfolder = new SceneFolder() {
                     Game = root.Game,
                     Name = parent.GetNodeOrNull(name) != null ? name + "__folder" : name,
@@ -935,9 +966,7 @@ public class GodotRszImporter
                 subfolder.LockNode(true);
                 parent.AddFolder(subfolder);
             } else {
-                if (!string.IsNullOrEmpty(subfolder.SceneFilePath)) {
-                    GD.PrintErr($"Found local folder that was also instantiated from a scene - could this be problematic?\nParent scene:{root.Asset?.AssetFilename}\nSubfolder:{name}");
-                }
+                Debug.Assert(string.IsNullOrEmpty(subfolder.SceneFilePath));
             }
 
             var newBatch = ctx.CreateFolderBatch(subfolder, folder, subfolder.Path);
@@ -1072,7 +1101,7 @@ public class GodotRszImporter
     private void SetupComponent(RszInstance instance, GameObjectBatch batch, RszImportType importType)
     {
         if (AssetConfig.Game == SupportedGame.Unknown) {
-            GD.PrintErr("Game required on rsz container root for SetupComponent");
+            ErrorLog("Game required on rsz container root for SetupComponent");
             return;
         }
         var gameObject = batch.GameObject;
@@ -1187,11 +1216,9 @@ public class GodotRszImporter
         var values = (IList<object>)value;
         var newArray = new Godot.Collections.Array();
         foreach (var element in values) {
-            if (element is RszInstance rsz) {
-                newArray.Add(rsz.Index == 0 ? new Variant() : CreateOrGetObject(rsz));
-            } else {
-                GD.PrintErr("INVALID ARRAY WTF");
-            }
+            var rsz = element as RszInstance;
+            Debug.Assert(rsz != null);
+            newArray.Add(rsz.Index == 0 ? new Variant() : CreateOrGetObject(rsz));
         }
         return newArray;
     }
@@ -1213,22 +1240,41 @@ public class GodotRszImporter
                 return userdataResource ?? new Variant();
             }
         } else if (rsz.RSZUserData is RSZUserDataInfo_TDB_LE_67 ud2) {
-            GD.PrintErr("Unsupported userdata reference TDB_LE_67");
-        } else if (string.IsNullOrEmpty(rsz.RszClass.name)) {
-            return new Variant();
-        } else {
-            GD.PrintErr("Unhandled userdata reference type??");
+            ErrorLog("Unsupported embedded userdata instance found");
         }
+        Debug.Assert(string.IsNullOrEmpty(rsz.RszClass.name));
         return new Variant();
+    }
+
+    private void InfoLog(string text)
+    {
+        if (LogInfo) GD.Print(text);
+    }
+
+    private void ErrorLog(string text, object? context = null)
+    {
+        if (LogErrors) GD.PrintErr(text, context);
     }
 }
 
-public record RszGodotConversionOptions(
+public record GodotImportOptions(
     RszImportType folders = RszImportType.Placeholders,
     RszImportType prefabs = RszImportType.CreateOrReuse,
     RszImportType meshes = RszImportType.CreateOrReuse,
-    RszImportType userdata = RszImportType.Placeholders
+    RszImportType userdata = RszImportType.Placeholders,
+    bool logInfo = true,
+    bool logErrors = true
 );
+
+public enum PresetImportModes
+{
+    PlaceholderImport = 0,
+    ThisFolderOnly,
+    ImportMissingItems,
+    ImportTreeChanges,
+    ReimportStructure,
+    FullReimport
+}
 
 public enum RszImportType
 {

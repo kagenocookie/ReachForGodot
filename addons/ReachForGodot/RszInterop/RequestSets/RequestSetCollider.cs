@@ -10,4 +10,5 @@ public partial class RequestSetCollider : Node
     [Export] public string? KeyName { get; set; }
     [Export] public RequestSetCollisionGroup? Group { get; set; }
     [Export] public REObject? Data { get; set; }
+    [Export] public int Status { get; set; }
 }

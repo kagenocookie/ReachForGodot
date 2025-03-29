@@ -75,9 +75,16 @@ public class Exporter
     {
         if (rcolRoot == null) return false;
 
-        var fileOption = TypeCache.CreateRszFileOptions(config);
+        using var file = new RcolFile(TypeCache.CreateRszFileOptions(config), new FileHandler(outputFile));
+        if (!RebuildRcol(file, rcolRoot, config)) return false;
+        return PostExport(file.Save(), outputFile);
+    }
 
-        using var file = new RcolFile(fileOption, new FileHandler(outputFile));
+    public static bool RebuildRcol(RcolFile file, RcolRootNode rcolRoot, AssetConfig config)
+    {
+        // var fileVersion = PathUtils.GetFileFormatVersion(RESupportedFileFormats.Rcol, config.Paths);
+        // using var file = new RcolFile(TypeCache.CreateRszFileOptions(config), new FileHandler(new MemoryStream()) { FileVersion = fileVersion });
+
         file.RSZ.ClearInstances();
 
         var groupsNode = rcolRoot.FindChild("Groups");
@@ -86,71 +93,163 @@ public class Exporter
             return false;
         }
 
-        var groupsDict = new Dictionary<RequestSetCollisionGroup, int>();
-        int groupIndex = 0;
-        foreach (var child in groupsNode.FindChildrenByType<RequestSetCollisionGroup>()) {
-            var group = new RcolFile.RcolGroup();
-            group.Info.guid = child.Guid;
-            group.Info.name = child.Name;
-            group.Info.MaskBits = child.CollisionMask;
-            group.Info.MaskGuids = child.MaskGuids?.Select(c => Guid.Parse(c)).ToArray() ?? Array.Empty<Guid>();
-            group.Info.LayerGuid = child.LayerGuid;
-            file.GroupInfoList.Add(group);
+        file.IgnoreTags.AddRange(rcolRoot.IgnoreTags ?? Array.Empty<string>());
 
-            foreach (var shape in child.FindChildrenByType<RequestSetCollisionShape3D>()) {
-                var outShape = new RcolFile.RcolShape();
-                group.Shapes.Add(outShape);
-                outShape.Guid = shape.Guid;
-                outShape.Name = shape.OriginalName;
-                outShape.PrimaryJointNameStr = shape.PrimaryJointNameStr;
-                outShape.SecondaryJointNameStr = shape.SecondaryJointNameStr;
-                outShape.LayerIndex = shape.LayerIndex;
-                outShape.SkipIdBits = shape.SkipIdBits;
-                outShape.IgnoreTagBits = shape.IgnoreTagBits;
-                outShape.Attribute = shape.Attribute;
-                if (shape.Data != null) {
-                    var instanceId = Exporter.ConstructObjectInstances(shape.Data, file.RSZ, fileOption, file, false);
-                    outShape.UserData = file.RSZ.InstanceList[instanceId];
-                    file.RSZ.AddToObjectTable(outShape.UserData);
-                    outShape.userDataIndex = outShape.UserData.ObjectTableIndex;
-                } else {
-                    outShape.userDataIndex = -1;
-                }
-
-                // from what I can tell, there's one of these, empty, for every single shape
-                // might be game specific?
-                var userdata = Exporter.ConstructObjectInstances(new REObject(rcolRoot.Game, "via.physics.RequestSetColliderUserData", true), file.RSZ, fileOption, file, false);
-                file.RSZ.AddToObjectTable(file.RSZ.InstanceList[userdata]);
-
-                outShape.shapeType = shape.RcolShapeType;
-                outShape.shape = RequestSetCollisionShape3D.Shape3DToRszShape(shape.Shape, shape, shape.RcolShapeType, rcolRoot.Game);
-            }
-            groupsDict[child] = groupIndex++;
+        var srcGroups = groupsNode.FindChildrenByType<RequestSetCollisionGroup>().ToArray();
+        if (file.FileHandler.FileVersion >= 25) {
+            ExportRcol25(rcolRoot, file, srcGroups);
+        } else {
+            ExportRcol20(rcolRoot, file, srcGroups);
         }
+        return true;
+    }
 
-        foreach (var sourceSet in rcolRoot.FindChildrenByType<RequestSetCollider>()) {
+    private static void ExportRcol20(RcolRootNode rcolRoot, RcolFile file, RequestSetCollisionGroup[] srcGroups)
+    {
+        var setIndex = 0;
+        Dictionary<RequestSetCollisionGroup, int> offsetCounts = new();
+        foreach (var sourceSet in rcolRoot.Sets) {
             var set = new RcolFile.RequestSet();
             set.id = sourceSet.ID;
             set.name = sourceSet.OriginalName ?? string.Empty;
             set.keyName = sourceSet.KeyName ?? string.Empty;
-            if (sourceSet.Group != null) {
-                set.groupIndex = groupsDict[sourceSet.Group];
-            } else {
-                set.groupIndex = -1;
-            }
+            set.requestSetIndex = setIndex++;
+            set.status = sourceSet.Status;
             if (sourceSet.Data != null) {
-                var instanceId = Exporter.ConstructObjectInstances(sourceSet.Data, file.RSZ, fileOption, file, false);
+                var instanceId = Exporter.ConstructObjectInstances(sourceSet.Data, file.RSZ, file.Option, file, false);
                 set.Userdata = file.RSZ.InstanceList[instanceId];
                 file.RSZ.AddToObjectTable(set.Userdata);
                 set.requestSetUserdataIndex = set.Userdata.ObjectTableIndex;
-                set.groupUserdataIndexStart = (uint)set.requestSetUserdataIndex + 1;
+                set.groupUserdataIndexStart = set.requestSetUserdataIndex + 1;
             } else {
                 set.requestSetUserdataIndex = -1;
             }
+            Debug.Assert(sourceSet.Group != null);
+            set.groupIndex = Array.IndexOf(srcGroups, sourceSet.Group);
+
+            // 20-specific:
+            if (!offsetCounts.TryGetValue(sourceSet.Group, out int repeatCount)) {
+                offsetCounts[sourceSet.Group] = 0;
+            } else {
+                offsetCounts[sourceSet.Group] = ++repeatCount;
+            }
+            set.shapeOffset = repeatCount * sourceSet.Group.Shapes.Count();
+
             file.RequestSetInfoList.Add(set);
         }
 
-        return PostExport(file.Save(), outputFile);
+        var groupIndex = 0;
+        foreach (var srcGroup in srcGroups) {
+            var group = srcGroup.ToRsz();
+            file.GroupInfoList.Add(group);
+            Debug.Assert(srcGroup.Data == null); // TODO handle this properly if we find not-null cases
+
+            foreach (var srcShape in srcGroup.Shapes) {
+                var outShape = srcShape.ToRsz(rcolRoot.Game);
+
+                Debug.AssertIf(file.FileHandler.FileVersion < 25, !srcShape.IsExtraShape);
+
+                foreach (var ownerSet in file.RequestSetInfoList.Where(s => s.groupIndex == groupIndex)) {
+                    var srcShapeData = srcShape.SetDatas?.GetValueOrDefault(ownerSet.id);
+                    if (srcShapeData == null) {
+                        srcShapeData = srcShape.Data;
+                    }
+                    Debug.Assert(srcShapeData != null);
+                    var instanceId = Exporter.ConstructObjectInstances(srcShapeData, file.RSZ, file.Option, file, false);
+                    var instance = file.RSZ.InstanceList[instanceId];
+                    file.RSZ.AddToObjectTable(instance);
+
+                    if (outShape.UserData == null) {
+                        outShape.UserData = file.RSZ.InstanceList[instanceId];
+                        outShape.userDataIndex = outShape.UserData.ObjectTableIndex;
+                    } else {
+                        // for <rcol.20, extra shapes just exist in the object list
+                    }
+                    ownerSet.Group = file.GroupInfoList[ownerSet.groupIndex]; // not strictly needed just for exporting, but may as well
+                }
+
+                // fallback in case of group without request sets
+                if (outShape.UserData == null && srcShape.Data != null) {
+                    var instanceId = ConstructObjectInstances(srcShape.Data, file.RSZ, file.Option, file, false);
+                    outShape.UserData = file.RSZ.InstanceList[instanceId];
+                    file.RSZ.AddToObjectTable(outShape.UserData);
+                    outShape.userDataIndex = outShape.UserData.ObjectTableIndex;
+                }
+
+                group.Shapes.Add(outShape);
+            }
+            groupIndex++;
+        }
+    }
+
+    private static void ExportRcol25(RcolRootNode rcolRoot, RcolFile file, RequestSetCollisionGroup[] srcGroups)
+    {
+        var groupsIndexes = new Dictionary<RequestSetCollisionGroup, int>();
+        int groupIndex = 0;
+
+        foreach (var child in srcGroups) {
+            var group = child.ToRsz();
+            file.GroupInfoList.Add(group);
+            if (child.Data != null) {
+                group.Info.userDataIndex = Exporter.ConstructObjectInstances(child.Data, file.RSZ, file.Option, file, false);
+                group.Info.UserData = file.RSZ.InstanceList[group.Info.userDataIndex];
+            }
+
+            foreach (var shape in child.Shapes) {
+                var outShape = shape.ToRsz(rcolRoot.Game);
+
+                Debug.Assert(shape.Data == null);
+
+                if (shape.IsExtraShape) {
+                    group.ExtraShapes.Add(outShape);
+                    group.Info.extraShapes = group.ExtraShapes.Count;
+                } else {
+                    group.Shapes.Add(outShape);
+                }
+            }
+            groupsIndexes[child] = groupIndex++;
+        }
+
+        var setIndex = 0;
+        Dictionary<RequestSetCollisionGroup, int> offsetCounts = new();
+        foreach (var sourceSet in rcolRoot.Sets) {
+            var set = new RcolFile.RequestSet();
+            set.id = sourceSet.ID;
+            set.name = sourceSet.OriginalName ?? string.Empty;
+            set.keyName = sourceSet.KeyName ?? string.Empty;
+            set.requestSetIndex = setIndex++;
+            set.status = sourceSet.Status;
+            if (sourceSet.Data != null) {
+                var instanceId = Exporter.ConstructObjectInstances(sourceSet.Data, file.RSZ, file.Option, file, false);
+                set.Userdata = file.RSZ.InstanceList[instanceId];
+                file.RSZ.AddToObjectTable(set.Userdata);
+                set.requestSetUserdataIndex = set.Userdata.ObjectTableIndex;
+                set.groupUserdataIndexStart = set.requestSetUserdataIndex + 1;
+            } else {
+                set.requestSetUserdataIndex = -1;
+            }
+            Debug.Assert(sourceSet.Group != null);
+
+            set.groupIndex = groupsIndexes[sourceSet.Group];
+            set.Group = file.GroupInfoList[set.groupIndex];
+
+            foreach (var shape in sourceSet.Group.Shapes) {
+                if (!shape.IsExtraShape) {
+                    var shapeData = shape.SetDatas?.GetValueOrDefault(sourceSet.ID) ?? new REObject(rcolRoot.Game, "via.physics.RequestSetColliderUserData", true);
+                    var userdata = ConstructObjectInstances(shapeData, file.RSZ, file.Option, file, false);
+                    file.RSZ.AddToObjectTable(file.RSZ.InstanceList[userdata]);
+                    set.ShapeUserdata.Add(file.RSZ.InstanceList[userdata]);
+                }
+            }
+
+            // haven't seen this be actually used yet ¯\_(ツ)_/¯
+            if (sourceSet.Group.Data != null) {
+                var idx = ConstructObjectInstances(sourceSet.Group.Data, file.RSZ, file.Option, file, false);
+                set.Group.Info.UserData = file.RSZ.InstanceList[idx];
+            }
+
+            file.RequestSetInfoList.Add(set);
+        }
     }
 
     private static bool ExportFoliage(FoliageResource resource, string outputFile, AssetConfig config)

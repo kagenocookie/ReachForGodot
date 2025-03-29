@@ -9,6 +9,8 @@ public partial class RcolRootNode : Node, IExportableAsset, IImportableAsset
     [Export] public SupportedGame Game { get; set; }
     [Export] public AssetReference? Asset { get; set; }
 
+    [Export] public string[]? IgnoreTags { get; set; }
+
     public RcolResource? Resource => Importer.FindOrImportResource<RcolResource>(Asset, ReachForGodot.GetAssetConfig(Game));
 
     public IEnumerable<RequestSetCollisionGroup> Groups => this.FindChild("Groups", false).FindChildrenByType<RequestSetCollisionGroup>();

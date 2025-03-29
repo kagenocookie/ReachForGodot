@@ -14,7 +14,7 @@ interface IImportableAsset : IAssetPointer
 {
     bool IsEmpty { get; }
     Task<bool> Import(string resolvedFilepath, GodotRszImporter importer);
-    IEnumerable<(string label, GodotRszImporter.PresetImportModes importMode)> SupportedImportTypes => [("Full reimport", GodotRszImporter.PresetImportModes.FullReimport)];
+    IEnumerable<(string label, PresetImportModes importMode)> SupportedImportTypes => [("Full reimport", PresetImportModes.FullReimport)];
 }
 
 public interface IRszContainer : IExportableAsset

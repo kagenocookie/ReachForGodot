@@ -244,6 +244,8 @@ public static class RszTypeConverter
                 RszFieldType.Uint3 => ConvertArray(variant.AsGodotArray<Vector3I>(), static v => v.ToRsz()),
                 RszFieldType.Uint4 => ConvertArray(variant.AsGodotArray<Vector4I>(), static v => v.ToRsz()),
                 RszFieldType.Bool => ConvertArray(variant.AsGodotArray<bool>(), static v => v),
+                RszFieldType.Range => ConvertArray(variant.AsGodotArray<Vector2>(), static v => v.ToRszRange()),
+                RszFieldType.RangeI => ConvertArray(variant.AsGodotArray<Vector2I>(), static v => v.ToRszRange()),
                 RszFieldType.OBB => ConvertArray(variant.AsGodotArray<OrientedBoundingBox>(), v => v.ToRsz(game)),
                 _ => throw new Exception("Unhandled rsz export array type " + valueType),
             };

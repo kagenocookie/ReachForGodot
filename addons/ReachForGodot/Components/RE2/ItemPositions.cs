@@ -44,7 +44,7 @@ public partial class ItemPositions : REComponent
 
 		if (root.IsEmpty) {
 			try {
-				var conv = new GodotRszImporter(ReachForGodot.GetAssetConfig(root.Game), GodotRszImporter.PresetImportModes.ImportMissingItems.ToOptions());
+				var conv = new GodotRszImporter(ReachForGodot.GetAssetConfig(root.Game), PresetImportModes.ImportMissingItems.ToOptions());
 				await conv.RegeneratePrefabTree(root);
 			} catch (Exception) {
 				return null;

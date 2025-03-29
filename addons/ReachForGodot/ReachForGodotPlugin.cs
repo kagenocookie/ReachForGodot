@@ -1,3 +1,5 @@
+using System.Threading.Tasks;
+using Chickensoft.GoDotTest;
 using Godot;
 using RszTool;
 using GC = Godot.Collections;
@@ -57,8 +59,8 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
 
         toolMenu = new PopupMenu() { Title = "RE ENGINE" };
         toolMenuDev = new PopupMenu() { Title = "Reach for Godot Dev" };
-        AddToolSubmenuItem(toolMenu.Title, toolMenu);
         AddToolSubmenuItem(toolMenuDev.Title, toolMenuDev);
+        AddToolSubmenuItem(toolMenu.Title, toolMenu);
 
         EditorInterface.Singleton.GetEditorSettings().SettingsChanged += OnProjectSettingsChanged;
         OnProjectSettingsChanged();
@@ -118,9 +120,11 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
         toolMenu.AddItem("Upgrade all FOL resources", 103);
 
         toolMenuDev.AddItem("Extract file format versions from file lists", 200);
-        toolMenuDev.AddItem("File test: SCN", 300);
-        toolMenuDev.AddItem("File test: PFB", 301);
-        toolMenuDev.AddItem("File test: RCOL", 302);
+        var tests = GoTest.Adapter.CreateProvider().GetTestSuites(System.Reflection.Assembly.GetExecutingAssembly());
+        int testId = 1000;
+        foreach (var test in tests) {
+            toolMenuDev.AddItem("Test: " + (test.Name.StartsWith("Test") ? test.Name.Substring(4) : test.Name), testId++);
+        }
     }
 
     private void HandleToolMenu(long id)
@@ -135,9 +139,12 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
         if (id == 103) UpgradeResources<FoliageResource>("fol");
 
         if (id == 200) ExtractFileVersions();
-        if (id == 300) TestScnFiles();
-        if (id == 301) TestPfbFiles();
-        if (id == 302) TestRcolFiles();
+
+        if (id >= 1000) {
+            var tests = GoTest.Adapter.CreateProvider().GetTestSuites(System.Reflection.Assembly.GetExecutingAssembly());
+            var test = tests[(int)(id - 1000)];
+            RunTests(test.Name);
+        }
     }
 
     public void OpenAssetImporterWindow(SupportedGame game)
@@ -155,7 +162,14 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
     {
         browser ??= new AssetBrowser();
         browser.Assets = config;
-        browser.CallDeferred(AssetBrowser.MethodName.ShowFilePicker);
+        browser.CallDeferred(AssetBrowser.MethodName.ShowNativeFilePicker);
+    }
+
+    public void OpenPackedAssetBrowser(AssetConfig config)
+    {
+        browser ??= new AssetBrowser();
+        browser.Assets = config;
+        browser.CallDeferred(AssetBrowser.MethodName.ShowFileBrowser);
     }
 
     private void UpgradeResources<TResource>(string extension) where TResource : REResource, new()
@@ -183,32 +197,13 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
         GD.Print("You may need to reopen any scenes referencing the upgraded resources");
     }
 
-    private void TestScnFiles()
+    private static void RunTests(string filter)
     {
-        ExecuteOnAllSourceFiles(SupportedGame.Unknown, "scn", (game, fileOption, filepath) => {
-            using var file = new ScnFile(fileOption, new FileHandler(filepath));
-            file.Read();
-            file.SetupGameObjects();
-        });
-    }
-
-    private void TestPfbFiles()
-    {
-        ExecuteOnAllSourceFiles(SupportedGame.Unknown, "pfb", (game, fileOption, filepath) => {
-            using var file = new PfbFile(fileOption, new FileHandler(filepath));
-            file.Read();
-            file.SetupGameObjects();
-        });
-    }
-
-    private void TestRcolFiles()
-    {
-        ExecuteOnAllSourceFiles(SupportedGame.Unknown, "rcol", (game, fileOption, filepath) => {
-            using var file = new RcolFile(fileOption, new FileHandler(filepath));
-            file.Read();
-            if (file.Header.autoGenerateJointsCount > 0) {
-                Debug.Break();
-            }
+        var env = new TestEnvironment(true, false, false, false, false, filter, Array.Empty<string>());
+        var tmp = new Node();
+        GoTest.RunTests(System.Reflection.Assembly.GetExecutingAssembly(), tmp, env).ContinueWith(t => {
+            GD.Print(t.IsCompletedSuccessfully ? "Tests finished" : "Tests failed");
+            tmp.QueueFree();
         });
     }
 
@@ -219,6 +214,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
 
         var scnTotal = PathUtils.GetFilesByExtensionFromListFile(config.Paths.FilelistPath, PathUtils.AppendFileVersion(".scn", config), sourcePath).Count();
         var pfbTotal = PathUtils.GetFilesByExtensionFromListFile(config.Paths.FilelistPath, PathUtils.AppendFileVersion(".pfb", config), sourcePath).Count();
+        var rcolTotal = PathUtils.GetFilesByExtensionFromListFile(config.Paths.FilelistPath, PathUtils.AppendFileVersion(".rcol", config), sourcePath).Count();
 
         GD.Print($"Expecting {scnTotal} scn files");
         var (success, failed) = ExecuteOnAllSourceFiles(config.Game, "scn", (game, fileOption, filepath) => {
@@ -234,10 +230,41 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
         });
         GD.Print($"Finished {success + failed} pfb out of expected {pfbTotal}");
 
+        GD.Print($"Expecting {rcolTotal} rcol files");
+        (success, failed) = ExecuteOnAllSourceFiles(config.Game, "rcol", (game, fileOption, filepath) => {
+            using var file = new RcolFile(fileOption, new FileHandler(filepath));
+            file.Read();
+        });
+        GD.Print($"Finished {success + failed} rcol out of expected {rcolTotal}");
+
         TypeCache.StoreInferredRszTypes(fileOption.RszParser.ClassDict.Values, config);
     }
 
-    private static (int successes, int failures) ExecuteOnAllSourceFiles(SupportedGame game, string extension, Action<SupportedGame, RszFileOption, string> action)
+    internal static IEnumerable<(T, string)> SelectFilesWhere<T>(SupportedGame game, string extension, Func<SupportedGame, RszFileOption, string, T?> condition) where T : class
+    {
+        foreach (var (curgame, fileOption, filepath) in FindOrExtractAllRszFilesOfType(game, extension)) {
+            var success = false;
+            int retryCount = 10;
+            T? result = default;
+            do {
+                try {
+                    result = condition(curgame, fileOption, filepath);
+                    success = true;
+                } catch (RszRetryOpenException) {
+                    retryCount--;
+                } catch (Exception e) {
+                    GD.Print("Failed to read file " + filepath, e);
+                    success = false;
+                    break;
+                }
+            } while (!success && retryCount > 0);
+            if (success && result != null) {
+                yield return (result, filepath);
+            }
+        }
+    }
+
+    internal static (int successes, int failures) ExecuteOnAllSourceFiles(SupportedGame game, string extension, Action<SupportedGame, RszFileOption, string> action)
     {
         var count = 0;
         var countSuccess = 0;
@@ -251,8 +278,8 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
                     success = true;
                 } catch (RszRetryOpenException) {
                     retryCount--;
-                } catch (Exception) {
-                    GD.Print("Failed to read file " + filepath);
+                } catch (Exception e) {
+                    GD.Print("Failed to read file " + filepath, e);
                     success = false;
                     break;
                 }
@@ -267,7 +294,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
                 GD.Print($"Handled {count} files...");
             }
         }
-        GD.Print($"Test finished ({extension}): {countSuccess}/{count} files were successful, {fails.Count} failed");
+        GD.Print($"{game} test finished ({extension}): {countSuccess}/{count} files were successful, {fails.Count} failed");
         return (countSuccess, fails.Count);
     }
 
@@ -294,11 +321,22 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
             var hasAttemptedFullExtract = false;
             var extWithVersion = PathUtils.AppendFileVersion(extension, config);
             foreach (var relativeFilepath in PathUtils.GetFilesByExtensionFromListFile(config.Paths.FilelistPath, extWithVersion, null)) {
+                if (PathUtils.IsIgnoredFilepath(relativeFilepath, config)) continue;
+
                 var resolvedFile = PathUtils.FindSourceFilePath(PathUtils.GetFilepathWithoutNativesFolder(relativeFilepath), config, false);
+
                 if (!hasAttemptedFullExtract && string.IsNullOrEmpty(resolvedFile)) {
                     hasAttemptedFullExtract = true;
                     GD.Print($"Failed to resolve {relativeFilepath}. Attempting unpack of all {curgame} {extension} files if configured");
-                    FileUnpacker.TryExtractFilteredFiles($"\\.{extension}\\.\\d+$", config);
+                    FileUnpacker.TryExtractFilteredFiles($"\\.{extWithVersion}$", config);
+
+                    if (PathUtils.FindMissingFiles(extension, config).Any()) {
+                        Directory.CreateDirectory(ReachForGodot.UserdataPath);
+                        var missingFilelistPath = Path.Combine(ReachForGodot.UserdataPath, config.Paths.ShortName + "_missing_files.list");
+                        File.WriteAllLines(missingFilelistPath, PathUtils.FindMissingFiles(extension, config));
+                        GD.PrintErr("List of missing files has been written to " + missingFilelistPath);
+                    }
+
                     resolvedFile = PathUtils.FindSourceFilePath(PathUtils.GetFilepathWithoutNativesFolder(relativeFilepath), config, false);
                 }
                 if (!string.IsNullOrEmpty(resolvedFile))

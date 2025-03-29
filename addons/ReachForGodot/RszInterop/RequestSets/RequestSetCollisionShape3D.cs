@@ -2,6 +2,7 @@ namespace ReaGE;
 
 using System;
 using Godot;
+using Godot.Collections;
 using RszTool;
 
 [GlobalClass, Tool]
@@ -17,13 +18,33 @@ public partial class RequestSetCollisionShape3D : CollisionShape3D
     [Export] public int Attribute { get; set; }
     [Export] public string? PrimaryJointNameStr { get; set; }
     [Export] public string? SecondaryJointNameStr { get; set; }
+    [Export] public bool IsExtraShape { get; set; }
 
     [Export] public REObject? Data { get; set; }
+    [Export] public Godot.Collections.Dictionary<uint, REObject>? SetDatas { get; set; }
 
     public Guid Guid {
         get => Guid.TryParse(Uuid, out var guid) ? guid : Guid.Empty;
         set => Uuid = value.ToString();
     }
+
+    public RcolFile.RcolShape ToRsz(SupportedGame game)
+    {
+        var shape = new RcolFile.RcolShape();
+        shape.Guid = Guid;
+        shape.Name = OriginalName;
+        shape.PrimaryJointNameStr = PrimaryJointNameStr;
+        shape.SecondaryJointNameStr = SecondaryJointNameStr;
+        shape.LayerIndex = LayerIndex;
+        shape.SkipIdBits = SkipIdBits;
+        shape.IgnoreTagBits = IgnoreTagBits;
+        shape.Attribute = Attribute;
+        shape.shapeType = RcolShapeType;
+        shape.shape = RequestSetCollisionShape3D.Shape3DToRszShape(Shape, this, RcolShapeType, game);
+        return shape;
+    }
+
+    public override string ToString() => Name;
 
     public static void ApplyShape(CollisionShape3D collider, RszTool.RcolFile.ShapeType shapeType, Variant shape)
     {

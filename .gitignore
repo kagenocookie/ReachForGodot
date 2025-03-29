@@ -15,5 +15,6 @@ build/*
 /dmc5/
 /mhwilds/
 /re2rt/
+/re2/
 /re4/
 /asset_config*.tres

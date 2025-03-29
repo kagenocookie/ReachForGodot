@@ -13,6 +13,7 @@ public static class PathUtils
 
     private static readonly List<FormatDescriptor> formats = new();
     private static readonly Dictionary<RESupportedFileFormats, FormatDescriptor> formatToDescriptor = new();
+    private static readonly Dictionary<SupportedGame, HashSet<string>> ignoredFilepaths = new();
 
     private static readonly Dictionary<RESupportedFileFormats, Func<REResource>> resourceFactory = new();
     public static void RegisterFileFormat(RESupportedFileFormats format, string extension, Type resourceType)
@@ -78,7 +79,16 @@ public static class PathUtils
     public static string? GetFileExtensionFromFormat(RESupportedFileFormats format) => formatToDescriptor.GetValueOrDefault(format)?.extension;
     public static Type GetResourceTypeFromFormat(RESupportedFileFormats format) => formatToDescriptor.TryGetValue(format, out var desc) ? desc.resourceType : typeof(REResource);
 
-    private static bool TryFindFileExtensionVersion(GamePaths config, string extension, out int version)
+    public static int GetFileFormatVersion(RESupportedFileFormats format, GamePaths config)
+    {
+        if (TryGetFileExtensionVersion(config, GetFileExtensionFromFormat(format)!, out var version)) {
+            return version;
+        }
+
+        return 0;
+    }
+
+    public static bool TryGetFileExtensionVersion(GamePaths config, string extension, out int version)
     {
         if (!extensionVersions.TryGetValue(config.Game, out var versions)) {
             if (File.Exists(config.ExtensionVersionsCacheFilepath)) {
@@ -110,7 +120,7 @@ public static class PathUtils
         }
 
         var ext = GetFileExtensionFromFormat(format) ?? relativePath.GetExtension();
-        if (TryFindFileExtensionVersion(config.Paths, ext, out var version)) {
+        if (TryGetFileExtensionVersion(config.Paths, ext, out var version)) {
             return version;
         }
 
@@ -181,7 +191,7 @@ public static class PathUtils
 
             var versionStr = line.GetExtension();
             var ext = line.GetBaseName()?.GetExtension();
-            if (!string.IsNullOrEmpty(ext) && !TryFindFileExtensionVersion(paths, ext, out _) && int.TryParse(versionStr, out var version)) {
+            if (!string.IsNullOrEmpty(ext) && !TryGetFileExtensionVersion(paths, ext, out _) && int.TryParse(versionStr, out var version)) {
                 UpdateFileExtension(paths, ext, version);
             }
         }
@@ -230,6 +240,43 @@ public static class PathUtils
         }
     }
 
+    public static bool IsIgnoredFilepath(string filepath, AssetConfig config)
+    {
+        if (!ignoredFilepaths.TryGetValue(config.Game, out var list)) {
+            ignoredFilepaths[config.Game] = list = new();
+            if (File.Exists(config.Paths.IgnoredFilesListPath)) {
+                using var f = new StreamReader(File.OpenRead(config.Paths.IgnoredFilesListPath));
+                while (!f.EndOfStream) {
+                    var line = f.ReadLine();
+                    if (!string.IsNullOrWhiteSpace(line)) list.Add(GetFilepathWithoutNativesFolder(line));
+                }
+            }
+        }
+        filepath = GetFilepathWithoutNativesFolder(AppendFileVersion(filepath, config)).ToLowerInvariant();
+        return list.Contains(filepath);
+    }
+
+    public static IEnumerable<string> FindMissingFiles(string extension, AssetConfig config)
+    {
+        var listfile = config.Paths.FilelistPath;
+        var basepath = GetFilepathWithoutNativesFolder(config.Paths.ChunkPath);
+        if (!File.Exists(listfile) || string.IsNullOrEmpty(basepath)) yield break;
+
+        extension = AppendFileVersion(extension.StartsWith('.') ? extension : "." + extension, config);
+
+        using var f = new StreamReader(File.OpenRead(listfile));
+        while (!f.EndOfStream) {
+            var line = f.ReadLine();
+            if (!string.IsNullOrWhiteSpace(line) && line.EndsWith(extension)) {
+                if (!File.Exists(Path.Combine(basepath, line))) {
+                    yield return GetFilepathWithoutNativesFolder(line);
+                }
+            }
+        }
+    }
+
+    public static bool IsFilepath(this ReadOnlySpan<char> path) => !Path.GetExtension(path).IsEmpty;
+
     /// <summary>
     /// Search through all known file paths for the game to find the full path to a file.<br/>
     /// Search priority: Override > Chunk path > Additional paths
@@ -259,7 +306,7 @@ public static class PathUtils
             }
         }
 
-        if (autoExtract && FileUnpacker.TryExtractFile(sourceFilePath, config) && File.Exists(Path.Combine(config.Paths.ChunkPath, sourceFilePath))) {
+        if (autoExtract && !IsIgnoredFilepath(sourceFilePath, config) && FileUnpacker.TryExtractFile(sourceFilePath, config) && File.Exists(Path.Combine(config.Paths.ChunkPath, sourceFilePath))) {
             return Path.Combine(config.Paths.ChunkPath, sourceFilePath);
         }
 

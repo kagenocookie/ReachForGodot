@@ -84,7 +84,7 @@ public partial class AssetImportInspectorPlugin : EditorInspectorPlugin, ISerial
 
                 config.Paths.SourcePathOverride = source;
                 try {
-                    var options = ((GodotRszImporter.PresetImportModes)importType.GetSelectedId()).ToOptions();
+                    var options = ((PresetImportModes)importType.GetSelectedId()).ToOptions();
                     await DoRebuild(importable, options);
                     if (emptyLabel != null) emptyLabel.Visible = importable.IsEmpty;
                 } finally {
@@ -101,7 +101,7 @@ public partial class AssetImportInspectorPlugin : EditorInspectorPlugin, ISerial
         pluginSerializationFixer.Register((GodotObject)importable, container);
     }
 
-    private async Task DoRebuild(IImportableAsset root, RszGodotConversionOptions options)
+    private async Task DoRebuild(IImportableAsset root, GodotImportOptions options)
     {
         var sw = new Stopwatch();
         sw.Start();

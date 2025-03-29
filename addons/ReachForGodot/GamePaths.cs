@@ -16,6 +16,7 @@ public record GamePaths(SupportedGame Game, string ChunkPath, string? Il2cppPath
     public string EnumOverridesFilename => ProjectSettings.GlobalizePath($"res://addons/ReachForGodot/game_config/{ShortName}/il2cpp_cache.en.json");
     public string PfbGameObjectRefPropsPath => ProjectSettings.GlobalizePath($"res://addons/ReachForGodot/game_config/{ShortName}/pfb_ref_props.json");
     public string ExtensionVersionsCacheFilepath => ProjectSettings.GlobalizePath($"res://addons/ReachForGodot/game_config/{ShortName}/file_extensions.json");
+    public string IgnoredFilesListPath => ProjectSettings.GlobalizePath($"res://addons/ReachForGodot/game_config/{ShortName}/ignored_files.list");
 
     public GameName GetRszToolGameEnum()
     {

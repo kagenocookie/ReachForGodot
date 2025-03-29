@@ -268,6 +268,8 @@ public partial class REObject : Resource
         return __Data.TryGetValue(field.SerializedName, out var variant) ? variant : new Variant();
     }
 
+    public Variant GetField(int fieldIndex) => GetField(TypeInfo.Fields[fieldIndex]);
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public Variant GetField(REFieldAccessor field)
     {
