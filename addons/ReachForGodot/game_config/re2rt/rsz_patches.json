@@ -1058,6 +1058,11 @@
       {
         "Name": "v0",
         "Type": "S32"
+      },
+      {
+        "Name": "v1",
+        "ReplaceName": "Sphere",
+        "Type": "Sphere"
       }
     ]
   },

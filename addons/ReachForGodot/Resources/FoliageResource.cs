@@ -14,9 +14,20 @@ public partial class FoliageResource : REResource, IExportableAsset, IImportable
     {
     }
 
-    bool IImportableAsset.IsEmpty => Groups == null || Groups.Length == 0;
+    public bool IsEmpty => Groups == null || Groups.Length == 0;
 
-    public Task<bool> Import(string resolvedFilepath, GodotRszImporter importer)
+    public async Task<bool> EnsureImported(bool saveResource)
+    {
+        var resolved = PathUtils.FindSourceFilePath(Asset?.AssetFilename, ReachForGodot.GetAssetConfig(Game));
+        if (resolved == null) return false;
+        await Import(resolved, null);
+        if (saveResource) {
+            ResourceSaver.Save(this);
+        }
+        return true;
+    }
+
+    public Task<bool> Import(string resolvedFilepath, GodotRszImporter? importer)
     {
         using var file = new FolFile(new FileHandler(resolvedFilepath));
         file.Read();

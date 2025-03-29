@@ -443,6 +443,11 @@
       {
         "Name": "v0",
         "Type": "S32"
+      },
+      {
+        "Name": "v1",
+        "ReplaceName": "Sphere",
+        "Type": "Sphere"
       }
     ]
   },
@@ -451,6 +456,11 @@
       {
         "Name": "v0",
         "Type": "S32"
+      },
+      {
+        "Name": "v1",
+        "ReplaceName": "Box",
+        "Type": "OBB"
       }
     ]
   },
@@ -568,6 +578,11 @@
       {
         "Name": "v0",
         "Type": "S32"
+      },
+      {
+        "Name": "v1",
+        "ReplaceName": "Aabb",
+        "Type": "AABB"
       }
     ]
   },
