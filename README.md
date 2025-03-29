@@ -18,21 +18,19 @@ Should work for any RE engine game (mostly based on RszTool's support), but I ca
 - Resident Evil 2 non-RT** (untested)
 - Resident Evil 3 non-RT (untested)
 - Resident Evil 3 RT (untested)
-- Resident Evil 4 (untested)
+- Resident Evil 4
 - Resident Evil 7 non-RT** (untested)
 - Resident Evil 7 RT (untested)
 - Resident Evil 8 (untested)
 - Monster Hunter Rise (untested)
 - Street Fighter 6 (untested)
-- Monster Hunter Wilds*** (untested)
+- Monster Hunter Wilds (untested)
 
 For the open world games: The scene structure is a mess thanks to how it's structured, slow and tedious to edit, but functional; could be improved with future game-specific tooling additions once the common core functionality is stabilized.
 
 \* Many of the terrain meshes use MPLY format meshes which are currently unsupported by RE Mesh Editor and will therefore be loaded as placeholders
 
 ** Partial support: files with embedded userdata do not fully load and therefore won't export correctly either
-
-*** Partial support: some user files work fine; most pfbs or scn, probably due to rsz data issues, don't
 
 ## Current features
 The addon integrates [RE Mesh Editor](https://github.com/NSACloud/RE-Mesh-Editor) for meshes/textures and a [custom fork](https://github.com/kagenocookie/RszTool) of RszTool for reading structured data.
@@ -41,10 +39,11 @@ The addon integrates [RE Mesh Editor](https://github.com/NSACloud/RE-Mesh-Editor
 - tex: can be imported through RE Mesh editor; not useable directly in Godot yet due to lacking DDS support but the files otherwise convert fine
 - pfb files [info](https://github.com/kagenocookie/ReachForGodot/wiki/Prefabs)
 - scn files [info](https://github.com/kagenocookie/ReachForGodot/wiki/Scenes)
-- rcol files (not yet fully tested)  [info](https://github.com/kagenocookie/ReachForGodot/wiki/RCOL)
+- rcol files  [info](https://github.com/kagenocookie/ReachForGodot/wiki/RCOL)
 - user files
+- packed file browser GUI, allowing you to extract specific files or folders
+- some misc resource files are also fully parsed (CFIL, FOL, ...)
 - other resource files are imported as placeholders so they can be drag-dropped into resource fields but have no actual logic or data to them
-- can explore list file structure using a GUI and extract specific files
 
 ## Prerequisites
 - Godot 4.4+ w/ .NET 8.0
