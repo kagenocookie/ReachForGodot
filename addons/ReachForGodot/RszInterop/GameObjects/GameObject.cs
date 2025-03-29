@@ -43,8 +43,8 @@ public partial class GameObject : Node3D, ISerializationListener, ICloneable
                     ? $"{pfbParent.Path}:/{pfbParent.GetPathTo(this)}"
                     : Owner != null ? Owner.GetPathTo(this) : Name;
 
-    private static readonly REFieldAccessor UpdateField = new REFieldAccessor("Update").WithConditions("v2");
-    private static readonly REFieldAccessor DrawField = new REFieldAccessor("Draw").WithConditions("v3");
+    private static readonly REFieldAccessor UpdateField = new REFieldAccessor("Update").Conditions("v2");
+    private static readonly REFieldAccessor DrawField = new REFieldAccessor("Draw").Conditions("v3");
 
     public override void _EnterTree()
     {

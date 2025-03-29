@@ -9,49 +9,57 @@ public class REFieldAccessor
     public readonly string preferredName;
     private REFieldCondition[] conditions = Array.Empty<REFieldCondition>();
     private Dictionary<SupportedGame, REField?> _cache = new(1);
-    public Action<REField>? overrideFunc;
+    public event Action<REField>? Override;
+    public bool HasOverrides => Override != null;
 
-    public REFieldAccessor(string name, Action<REField>? overrideFunc = null)
+    public REFieldAccessor(string name)
     {
         preferredName = name;
         conditions = [name];
-        this.overrideFunc = overrideFunc;
     }
 
-    public REFieldAccessor(string name, RszFieldType rszType)
-    {
-        preferredName = name;
-        this.overrideFunc = (f) => {
-            f.RszField.type = rszType;
-        };
-    }
-
-    public REFieldAccessor(string name, Type godotResourceType)
-    {
-        preferredName = name;
-        Debug.Assert(godotResourceType.IsAssignableTo(typeof(REResource)));
-        this.overrideFunc = (f) => f.MarkAsResource(godotResourceType.Name);
-    }
-
-    public REFieldAccessor(string name, string objectOriginalType)
-    {
-        preferredName = name;
-        this.overrideFunc = (f) => {
-            f.RszField.type = RszFieldType.Object;
-            f.RszField.original_type = objectOriginalType;
-        };
-    }
-
-    public REFieldAccessor WithConditions(params REFieldConditionFunc[] conditions)
+    public REFieldAccessor Conditions(params REFieldConditionFunc[] conditions)
     {
         this.conditions = conditions.Select(a => new REFieldCondition(a)).ToArray();
         return this;
     }
 
-    public REFieldAccessor WithConditions(params REFieldCondition[] conditions)
+    public REFieldAccessor Type(RszFieldType type)
+    {
+        this.Override += (f) => f.RszField.type = type;
+        return this;
+    }
+
+    public REFieldAccessor OriginalType(string classname, RszFieldType type = RszFieldType.Object)
+    {
+        this.Override += (f) => {
+            f.RszField.original_type = classname;
+            f.RszField.type = type;
+        };
+        return this;
+    }
+
+    public REFieldAccessor Resource<TRes>() where TRes : REResource
+    {
+        this.Override += (f) => f.MarkAsResource(typeof(TRes).Name);
+        return this;
+    }
+
+    public REFieldAccessor CustomOverride(Action<REField> overrideFunc)
+    {
+        this.Override += overrideFunc;
+        return this;
+    }
+
+    public REFieldAccessor Conditions(params REFieldCondition[] conditions)
     {
         this.conditions = conditions;
         return this;
+    }
+
+    public void Invoke(REField field)
+    {
+        Override?.Invoke(field);
     }
 
     public REField Get(REObject target) => Get(target.Game, target.TypeInfo);

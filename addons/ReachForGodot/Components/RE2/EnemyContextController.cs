@@ -10,7 +10,7 @@ public partial class EnemyContextController : REComponent
     public EnemyContextController() { }
     public EnemyContextController(SupportedGame game, string classname) : base(game, classname) {}
 
-    private static readonly REFieldAccessor InitialKind = new REFieldAccessor("InitialKind").WithConditions("InitialKind");
+    private static readonly REFieldAccessor InitialKind = new REFieldAccessor("InitialKind").Conditions("InitialKind");
 
     private const string NodeName = "__EnemyPreview";
 

@@ -326,6 +326,11 @@
       {
         "Name": "v1",
         "Type": "UserData"
+      },
+      {
+        "Name": "v2",
+        "ReplaceName": "Sphere",
+        "Type": "Sphere"
       }
     ]
   },

@@ -233,10 +233,10 @@ public static partial class TypeCache
         var cache = new ClassInfo(cls, GenerateFields(cls, root), root.GetClassProps(cls.name));
         if (root.fieldOverrides.TryGetValue(cls.name, out var yes) == true) {
             foreach (var accessor in yes) {
-                if (accessor.overrideFunc != null) {
+                if (accessor.HasOverrides) {
                     var field = accessor.Get(root.game, cache);
                     if (field != null) {
-                        accessor.overrideFunc.Invoke(field);
+                        accessor.Invoke(field);
                         var prop = cache.PropertyList.First(dict => dict["name"].AsString() == field.SerializedName);
                         if (field.RszField.name != accessor.preferredName) {
                             var props = root.FindOrCreateClassPatch(cls.name);
@@ -281,7 +281,7 @@ public static partial class TypeCache
         foreach (var field in type.GetFields(BindingFlags.Public|BindingFlags.NonPublic|BindingFlags.Static)) {
             if (field.FieldType == typeof(REFieldAccessor)) {
                 var accessor = (REFieldAccessor)field.GetValue(null)!;
-                if (accessor.overrideFunc == null) continue;
+                if (!accessor.HasOverrides) continue;
 
                 var curclass = classname;
                 if (field.GetCustomAttribute<REObjectFieldTargetAttribute>() is REObjectFieldTargetAttribute overrideAttr) {
