@@ -31,10 +31,12 @@
       },
       {
         "Name": "v2",
+        "ReplaceName": "Mesh",
         "Type": "Resource"
       },
       {
         "Name": "v3",
+        "ReplaceName": "Material",
         "Type": "Resource"
       },
       {
@@ -111,6 +113,7 @@
     "FieldPatches": [
       {
         "Name": "v5",
+        "ReplaceName": "Colliders",
         "Type": "Object"
       },
       {
@@ -391,6 +394,7 @@
       },
       {
         "Name": "v1",
+        "ReplaceName": "Mesh",
         "Type": "Resource"
       },
       {
@@ -411,10 +415,12 @@
       },
       {
         "Name": "v5",
+        "ReplaceName": "CollisionFilter",
         "Type": "Resource"
       },
       {
         "Name": "v2",
+        "ReplaceName": "Shape",
         "Type": "Object"
       }
     ]
@@ -427,6 +433,7 @@
       },
       {
         "Name": "v1",
+        "ReplaceName": "Capsule",
         "Type": "Capsule"
       }
     ]
@@ -487,6 +494,7 @@
       },
       {
         "Name": "v12",
+        "ReplaceName": "FoliageData",
         "Type": "Resource"
       }
     ]

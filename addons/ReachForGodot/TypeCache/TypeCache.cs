@@ -238,6 +238,20 @@ public static partial class TypeCache
                     if (field != null) {
                         accessor.overrideFunc.Invoke(field);
                         var prop = cache.PropertyList.First(dict => dict["name"].AsString() == field.SerializedName);
+                        if (field.RszField.name != accessor.preferredName) {
+                            var props = root.FindOrCreateClassPatch(cls.name);
+                            var patch = props.FieldPatches?.FirstOrDefault(fp => fp.Name == field.RszField.name);
+                            if (patch == null) {
+                                patch = new RszFieldPatch() {
+                                    Name = field.RszField.name,
+                                    Type = field.RszField.type,
+                                };
+                                props.FieldPatches = (props.FieldPatches ?? Array.Empty<RszFieldPatch>()).Append(patch).ToArray();
+                            }
+                            patch.ReplaceName = accessor.preferredName;
+                            field.RszField.name = accessor.preferredName;
+                            root.UpdateRszPatches(ReachForGodot.GetAssetConfig(root.game));
+                        }
                         cache.UpdateFieldProperty(field, prop);
                     }
                 }

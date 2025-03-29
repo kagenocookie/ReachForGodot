@@ -333,6 +333,7 @@
     "FieldPatches": [
       {
         "Name": "v2",
+        "ReplaceName": "Shape",
         "OriginalType": "via.physics.Shape",
         "Type": "Object"
       },
@@ -347,6 +348,7 @@
       },
       {
         "Name": "v5",
+        "ReplaceName": "CollisionFilter",
         "Type": "Resource"
       }
     ]
@@ -741,6 +743,7 @@
       },
       {
         "Name": "v1",
+        "ReplaceName": "Box",
         "Type": "OBB"
       },
       {
@@ -786,6 +789,7 @@
       },
       {
         "Name": "v2",
+        "ReplaceName": "Aabb",
         "Type": "AABB"
       }
     ]
@@ -894,6 +898,7 @@
       },
       {
         "Name": "v2",
+        "ReplaceName": "Mesh",
         "Type": "Resource"
       }
     ]
@@ -946,6 +951,7 @@
     "FieldPatches": [
       {
         "Name": "v1",
+        "ReplaceName": "Capsule",
         "Type": "Capsule"
       }
     ]
@@ -2242,6 +2248,7 @@
       },
       {
         "Name": "v12",
+        "ReplaceName": "FoliageData",
         "Type": "Resource"
       }
     ]

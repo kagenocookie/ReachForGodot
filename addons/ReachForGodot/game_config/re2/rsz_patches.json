@@ -31,10 +31,12 @@
       },
       {
         "Name": "v20",
+        "ReplaceName": "Mesh",
         "Type": "Resource"
       },
       {
         "Name": "v21",
+        "ReplaceName": "Material",
         "Type": "Resource"
       },
       {
@@ -83,6 +85,7 @@
       },
       {
         "Name": "v1",
+        "ReplaceName": "Mesh",
         "Type": "Resource"
       }
     ]
@@ -123,10 +126,12 @@
       },
       {
         "Name": "v2",
+        "ReplaceName": "Shape",
         "Type": "Object"
       },
       {
         "Name": "v5",
+        "ReplaceName": "CollisionFilter",
         "Type": "Resource"
       }
     ]
@@ -139,6 +144,7 @@
       },
       {
         "Name": "v5",
+        "ReplaceName": "Colliders",
         "Type": "Object"
       }
     ]
@@ -1019,6 +1025,7 @@
     "FieldPatches": [
       {
         "Name": "v1",
+        "ReplaceName": "Capsule",
         "Type": "Capsule"
       }
     ]
@@ -1052,6 +1059,33 @@
       {
         "Name": "v1",
         "Type": "Object"
+      }
+    ]
+  },
+  "via.physics.SphereShape": {
+    "FieldPatches": [
+      {
+        "Name": "v1",
+        "ReplaceName": "Sphere",
+        "Type": "Sphere"
+      }
+    ]
+  },
+  "via.physics.BoxShape": {
+    "FieldPatches": [
+      {
+        "Name": "v1",
+        "ReplaceName": "Box",
+        "Type": "OBB"
+      }
+    ]
+  },
+  "via.physics.AabbShape": {
+    "FieldPatches": [
+      {
+        "Name": "v1",
+        "ReplaceName": "Aabb",
+        "Type": "AABB"
       }
     ]
   }
