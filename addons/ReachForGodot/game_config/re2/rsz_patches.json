@@ -124,6 +124,10 @@
       {
         "Name": "v2",
         "Type": "Object"
+      },
+      {
+        "Name": "v5",
+        "Type": "Resource"
       }
     ]
   },
@@ -816,6 +820,238 @@
       {
         "Name": "v27",
         "Type": "F32"
+      }
+    ]
+  },
+  "app.ropeway.AttackUserDataToEnemy": {
+    "FieldPatches": [
+      {
+        "Name": "v1",
+        "Type": "Object"
+      }
+    ]
+  },
+  "app.ropeway.AttackSensorUserData": {
+    "FieldPatches": [
+      {
+        "Name": "v1",
+        "Type": "Object"
+      }
+    ]
+  },
+  "app.ropeway.EnemyGrappleUserData": {
+    "FieldPatches": [
+      {
+        "Name": "v1",
+        "Type": "Object"
+      }
+    ]
+  },
+  "app.ropeway.AvoidMarkerUserData": {
+    "FieldPatches": [
+      {
+        "Name": "v1",
+        "Type": "Object"
+      }
+    ]
+  },
+  "app.ropeway.TouchAttentionUserData": {
+    "FieldPatches": [
+      {
+        "Name": "v1",
+        "Type": "Object"
+      }
+    ]
+  },
+  "app.ropeway.enemy.userdata.Em7100PillerAttackUserData": {
+    "FieldPatches": [
+      {
+        "Name": "v1",
+        "Type": "Object"
+      }
+    ]
+  },
+  "app.ropeway.enemy.em0000.userdata.Em0000AttackUserDataToPlayer": {
+    "FieldPatches": [
+      {
+        "Name": "v1",
+        "Type": "Object"
+      }
+    ]
+  },
+  "app.ropeway.enemy.userdata.Em6000AttackUserData": {
+    "FieldPatches": [
+      {
+        "Name": "v1",
+        "Type": "Object"
+      }
+    ]
+  },
+  "app.ropeway.AimTargetUserData": {
+    "FieldPatches": [
+      {
+        "Name": "v1",
+        "Type": "Object"
+      }
+    ]
+  },
+  "app.ropeway.enemy.userdata.Em6200AttackUserData": {
+    "FieldPatches": [
+      {
+        "Name": "v1",
+        "Type": "Object"
+      }
+    ]
+  },
+  "app.ropeway.enemy.userdata.Em7000DamageUserData": {
+    "FieldPatches": [
+      {
+        "Name": "v1",
+        "Type": "Object"
+      }
+    ]
+  },
+  "app.ropeway.TouchAppealUserData": {
+    "FieldPatches": [
+      {
+        "Name": "v1",
+        "Type": "Object"
+      }
+    ]
+  },
+  "app.ropeway.PlayerDamageUserData": {
+    "FieldPatches": [
+      {
+        "Name": "v1",
+        "Type": "Object"
+      }
+    ]
+  },
+  "app.ropeway.RopewayRSCUserDataRoot": {
+    "FieldPatches": [
+      {
+        "Name": "v1",
+        "Type": "Object"
+      }
+    ]
+  },
+  "app.ropeway.enemy.userdata.Em5000DamageUserData": {
+    "FieldPatches": [
+      {
+        "Name": "v1",
+        "Type": "Object"
+      }
+    ]
+  },
+  "app.ropeway.AttackUserData": {
+    "FieldPatches": [
+      {
+        "Name": "v1",
+        "Type": "Object"
+      }
+    ]
+  },
+  "via.physics.RequestSetColliderUserData": {
+    "FieldPatches": [
+      {
+        "Name": "v1",
+        "Type": "Object"
+      }
+    ]
+  },
+  "app.ropeway.EnemyDamageUserData": {
+    "FieldPatches": [
+      {
+        "Name": "v1",
+        "Type": "Object"
+      }
+    ]
+  },
+  "app.ropeway.AimForbidUserData": {
+    "FieldPatches": [
+      {
+        "Name": "v1",
+        "Type": "Object"
+      }
+    ]
+  },
+  "app.ropeway.GimmickDamageUserData": {
+    "FieldPatches": [
+      {
+        "Name": "v1",
+        "Type": "Object"
+      }
+    ]
+  },
+  "app.ropeway.enemy.userdata.Em0000AttackUserData": {
+    "FieldPatches": [
+      {
+        "Name": "v1",
+        "Type": "Object"
+      }
+    ]
+  },
+  "app.ropeway.SoundColliderUserData": {
+    "FieldPatches": [
+      {
+        "Name": "v1",
+        "Type": "Object"
+      }
+    ]
+  },
+  "app.ropeway.enemy.userdata.Em7300DamageUserData": {
+    "FieldPatches": [
+      {
+        "Name": "v1",
+        "Type": "Object"
+      }
+    ]
+  },
+  "app.ropeway.AttackUserDataToPlayer": {
+    "FieldPatches": [
+      {
+        "Name": "v1",
+        "Type": "Object"
+      }
+    ]
+  },
+  "via.physics.CapsuleShape": {
+    "FieldPatches": [
+      {
+        "Name": "v1",
+        "Type": "Capsule"
+      }
+    ]
+  },
+  "app.ropeway.DamageUserData": {
+    "FieldPatches": [
+      {
+        "Name": "v1",
+        "Type": "Object"
+      }
+    ]
+  },
+  "app.ropeway.enemy.userdata.Em9000PlayerFindUserData": {
+    "FieldPatches": [
+      {
+        "Name": "v1",
+        "Type": "Object"
+      }
+    ]
+  },
+  "app.ropeway.ReactionMarkerUserData": {
+    "FieldPatches": [
+      {
+        "Name": "v1",
+        "Type": "Object"
+      }
+    ]
+  },
+  "app.ropeway.PressUserData": {
+    "FieldPatches": [
+      {
+        "Name": "v1",
+        "Type": "Object"
       }
     ]
   }

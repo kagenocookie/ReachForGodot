@@ -2239,6 +2239,10 @@
       {
         "Name": "v24",
         "Type": "S32"
+      },
+      {
+        "Name": "v12",
+        "Type": "Resource"
       }
     ]
   },
@@ -6315,6 +6319,62 @@
       {
         "Name": "v5",
         "Type": "S32"
+      }
+    ]
+  },
+  "app.AttackNoticeUserData": {
+    "FieldPatches": [
+      {
+        "Name": "v1",
+        "Type": "Object"
+      }
+    ]
+  },
+  "app.FoliageStateUserData": {
+    "FieldPatches": [
+      {
+        "Name": "v1",
+        "Type": "Object"
+      }
+    ]
+  },
+  "app.EnemyStepAttackUserData": {
+    "FieldPatches": [
+      {
+        "Name": "v1",
+        "Type": "Object"
+      }
+    ]
+  },
+  "app.ShapeUserData": {
+    "FieldPatches": [
+      {
+        "Name": "v1",
+        "Type": "Object"
+      }
+    ]
+  },
+  "app.SmokeAttackUserData": {
+    "FieldPatches": [
+      {
+        "Name": "v1",
+        "Type": "Object"
+      }
+    ]
+  },
+  "via.physics.RequestSetColliderUserData": {
+    "FieldPatches": [
+      {
+        "Name": "v1",
+        "Type": "Object"
+      }
+    ]
+  },
+  "app.PressShapeUserData": {
+    "FieldPatches": [
+      {
+        "Name": "v1",
+        "Type": "Object"
       }
     ]
   }
