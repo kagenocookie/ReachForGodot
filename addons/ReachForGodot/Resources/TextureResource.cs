@@ -10,6 +10,8 @@ public partial class TextureResource : REResourceProxy
     {
     }
 
+    protected TextureResource(RESupportedFileFormats texformat) : base (texformat) { }
+
     protected override async Task<Resource?> Import()
     {
         if (Asset?.AssetFilename == null) return null;

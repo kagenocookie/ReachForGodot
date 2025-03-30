@@ -1,8 +1,10 @@
 using System.Threading.Tasks;
-using Chickensoft.GoDotTest;
 using Godot;
 using RszTool;
 using GC = Godot.Collections;
+#if ENABLE_TESTS
+using Chickensoft.GoDotTest;
+#endif
 
 #if TOOLS
 namespace ReaGE;
@@ -117,11 +119,13 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
         toolMenu.AddItem("Upgrade resources", 100);
 
         toolMenuDev.AddItem("Extract file format versions from file lists", 200);
+#if ENABLE_TESTS
         var tests = GoTest.Adapter.CreateProvider().GetTestSuites(System.Reflection.Assembly.GetExecutingAssembly());
         int testId = 1000;
         foreach (var test in tests) {
             toolMenuDev.AddItem("Test: " + (test.Name.StartsWith("Test") ? test.Name.Substring(4) : test.Name), testId++);
         }
+#endif
     }
 
     private void HandleToolMenu(long id)
@@ -133,11 +137,13 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
         if (id == 100) UpgradeObsoleteResources("mdf2");
         if (id == 200) ExtractFileVersions();
 
+#if ENABLE_TESTS
         if (id >= 1000) {
             var tests = GoTest.Adapter.CreateProvider().GetTestSuites(System.Reflection.Assembly.GetExecutingAssembly());
             var test = tests[(int)(id - 1000)];
             RunTests(test.Name);
         }
+#endif
     }
 
     public void OpenAssetImporterWindow(SupportedGame game)
@@ -201,6 +207,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
         GD.Print("You may need to reopen any scenes referencing the upgraded resources");
     }
 
+#if ENABLE_TESTS
     private static void RunTests(string filter)
     {
         var env = new TestEnvironment(true, false, false, false, false, filter, Array.Empty<string>());
@@ -210,6 +217,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
             tmp.QueueFree();
         });
     }
+#endif
 
     internal void FetchInferrableRszData(AssetConfig config)
     {

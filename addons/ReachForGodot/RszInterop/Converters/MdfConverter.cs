@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Godot;
 using RszTool;
 using RszTool.Common;
-using Shouldly;
 
 public class MdfConverter : RszAssetConverter<MaterialDefinitionResource, MdfFile, MaterialDefinitionResource>
 {

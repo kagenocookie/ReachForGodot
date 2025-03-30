@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Godot;
 
 [GlobalClass, Tool, ResourceHolder("rtex", RESupportedFileFormats.RenderTexture)]
-public partial class RenderTextureResource : REResourceProxy
+public partial class RenderTextureResource : TextureResource
 {
     public RenderTextureResource() : base(RESupportedFileFormats.RenderTexture)
     {
