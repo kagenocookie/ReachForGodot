@@ -578,6 +578,11 @@ public static partial class TypeCache
         }
     }
 
+    public static string GetEnumHintString(SupportedGame game, string clasname)
+    {
+        return GetEnumDescriptor(GetCacheRoot(game), clasname).HintstringLabels;
+    }
+
     public static string GetEnumLabel<T>(SupportedGame game, string clasname, T id) where T : struct, IBinaryInteger<T>
     {
         var cache = GetCacheRoot(game);

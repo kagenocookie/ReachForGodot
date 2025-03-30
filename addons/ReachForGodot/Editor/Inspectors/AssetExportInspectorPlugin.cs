@@ -29,6 +29,12 @@ public partial class AssetExportInspectorPlugin : EditorInspectorPlugin, ISerial
 
     private void CreateUI(IExportableAsset res)
     {
+        var config = ReachForGodot.GetAssetConfig(res.Game);
+        if (!config.IsValid) {
+            AddCustomControl(new Label() { Text = $"{res.Game} is not fully configured. Please define at least a chunk path in editor settings." });
+            return;
+        }
+
         inspectorScene ??= ResourceLoader.Load<PackedScene>("res://addons/ReachForGodot/Editor/Inspectors/AssetExportInspectorPlugin.tscn");
         var container = inspectorScene.Instantiate<Control>();
         serializationFixer.Register((GodotObject)res, container);
@@ -41,7 +47,7 @@ public partial class AssetExportInspectorPlugin : EditorInspectorPlugin, ISerial
         var selectedIndex = -1;
         int i = 0;
         exportPath.Clear();
-        var paths = ReachForGodot.GetAssetConfig(res.Game).Paths.AdditionalPaths;
+        var paths = config.Paths.AdditionalPaths;
         foreach (var path in paths) {
             exportPath.AddItem(path.DisplayLabel);
             if (path.path == selected?.path) {

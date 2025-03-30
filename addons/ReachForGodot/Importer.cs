@@ -107,7 +107,7 @@ public class Importer
 
         if (ResourceLoader.Exists(importPath)) {
             try {
-                var resource = ResourceLoader.Load<T>(importPath);
+                var resource = ResourceLoader.Load<Resource>(importPath) as T;
                 if (resource != null) return resource;
                 GD.PrintErr("Failed to load imported resource, re-importing: " + importPath);
             } catch (Exception e) {
@@ -133,6 +133,9 @@ public class Importer
         var resolvedPath = PathUtils.FindSourceFilePath(sourceFilePath, config);
         if (resolvedPath == null) {
             GD.PrintErr("Resource not found: " + sourceFilePath);
+            if (!Path.IsPathRooted(sourceFilePath)) {
+                sourceFilePath = Path.Combine(config.Paths.ChunkPath, sourceFilePath);
+            }
         }
         var options = saveAssetToFilesystem && resolvedPath != null ? writeImport : nowriteImport;
 

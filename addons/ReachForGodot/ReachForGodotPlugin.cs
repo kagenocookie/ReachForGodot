@@ -114,10 +114,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
             }
         }
 
-        // toolMenu.AddItem("Upgrade all material resources", 100);
-        // toolMenu.AddItem("Upgrade all Rcol resources", 101);
-        // toolMenu.AddItem("Upgrade all CFIL resources", 102);
-        toolMenu.AddItem("Upgrade all FOL resources", 103);
+        toolMenu.AddItem("Upgrade resources", 100);
 
         toolMenuDev.AddItem("Extract file format versions from file lists", 200);
         var tests = GoTest.Adapter.CreateProvider().GetTestSuites(System.Reflection.Assembly.GetExecutingAssembly());
@@ -133,11 +130,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
             var game = (SupportedGame)id;
             OpenAssetImporterWindow(game);
         }
-        if (id == 100) UpgradeResources<MaterialResource>("mdf2");
-        if (id == 101) UpgradeResources<RcolResource>("rcol");
-        if (id == 102) UpgradeResources<CollisionFilterResource>("cfil");
-        if (id == 103) UpgradeResources<FoliageResource>("fol");
-
+        if (id == 100) UpgradeObsoleteResources("mdf2");
         if (id == 200) ExtractFileVersions();
 
         if (id >= 1000) {
@@ -172,6 +165,16 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
         browser.CallDeferred(AssetBrowser.MethodName.ShowFileBrowser);
     }
 
+    private void UpgradeObsoleteResources(string extension)
+    {
+        foreach (var (file, current) in FindUpgradeableResources($"*.*.tres",
+            (current) => current.GetType() == typeof(REResource) &&
+            PathUtils.GetFileFormatFromExtension(Path.GetExtension(Path.GetFileNameWithoutExtension(current.ResourcePath.AsSpan())).Slice(1)) != RESupportedFileFormats.Unknown)
+        ) {
+            Importer.Import(current.Asset!.AssetFilename, ReachForGodot.GetAssetConfig(current.Game), file);
+        }
+    }
+
     private void UpgradeResources<TResource>(string extension) where TResource : REResource, new()
     {
         foreach (var (file, current) in FindUpgradeableResources($"*.{extension}.tres", (current) => current is not TResource || current.ResourceType == RESupportedFileFormats.Unknown)) {
@@ -181,6 +184,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
 
     private IEnumerable<(string file, REResource current)> FindUpgradeableResources(string searchPattern, Func<REResource, bool> upgradeCondition)
     {
+        System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(TypeCache).TypeHandle);
         var list = Directory.EnumerateFiles(ProjectSettings.GlobalizePath("res://"), searchPattern, SearchOption.AllDirectories);
         foreach (var file in list) {
             if (file.Contains(".godot")) continue;

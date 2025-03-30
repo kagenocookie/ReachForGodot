@@ -13,17 +13,10 @@ public partial class RcolResource : REResourceProxy, IExportableAsset
     {
     }
 
-    // string IRszContainer.Path => PathUtils.ImportPathToRelativePath(ResourcePath, ReachForGodot.GetAssetConfig(Game)) ?? ResourcePath;
-
     protected override Task<Resource?> Import()
     {
         CreateImporter().Rcol.ImportFromFile(this);
         NotifyPropertyListChanged();
         return Task.FromResult(ImportedResource);
-    }
-
-    public void Clear()
-    {
-        // __Data.Clear();
     }
 }

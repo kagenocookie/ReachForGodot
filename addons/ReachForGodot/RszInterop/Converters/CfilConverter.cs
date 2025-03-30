@@ -12,7 +12,6 @@ public class CfilConverter : ResourceConverter<CollisionFilterResource, CfilFile
 
     public override Task<bool> Import(CfilFile file, CollisionFilterResource target)
     {
-        file.Read();
         target.Uuid = file.myGuid.ToString();
         target.CollisionGuids = file.Guids?.Select(g => g.ToString()).ToArray();
         return Task.FromResult(true);

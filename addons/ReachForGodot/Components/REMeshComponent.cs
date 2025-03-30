@@ -12,7 +12,7 @@ public partial class REMeshComponent : REComponent, IVisualREComponent
         .Conditions((fields) => fields.FirstOrDefault(f => f.RszField.type is RszFieldType.String or RszFieldType.Resource));
 
     private static readonly REFieldAccessor MaterialField = new REFieldAccessor("Material")
-        .Resource<MaterialResource>()
+        .Resource<MaterialDefinitionResource>()
         .Conditions((fields) => fields.Where(f => f.RszField.type is RszFieldType.String or RszFieldType.Resource).Skip(1).FirstOrDefault());
 
     private Node3D? meshNode;
@@ -71,7 +71,7 @@ public partial class REMeshComponent : REComponent, IVisualREComponent
             if (resource != null) EnsureResourceInContainer(resource);
         }
         if (MaterialField.IsMatch(this, property)) {
-            EnsureResourceInContainer(value.As<MaterialResource>());
+            EnsureResourceInContainer(value.As<MaterialDefinitionResource>());
         }
         return r;
     }

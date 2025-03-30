@@ -43,6 +43,9 @@ public class AssetConverter
     private TextureConverter? _tex;
     public TextureConverter Texture => _tex ??= new TextureConverter() { Convert = this };
 
+    private MdfConverter? _mdf2;
+    public MdfConverter Mdf2 => _mdf2 ??= new MdfConverter() { Convert = this };
+
     private RszFileOption? _fileOption;
     public RszFileOption FileOption => _fileOption ??= TypeCache.CreateRszFileOptions(AssetConfig);
 
@@ -69,42 +72,6 @@ public class AssetConverter
     {
         AssetConfig = null!;
         Options = options;
-    }
-
-    public Task<bool> ExportAsset(IExportableAsset resource, string exportBasepath)
-    {
-        var outputPath = ResolveExportPath(exportBasepath, resource.Asset!.AssetFilename, resource.Game);
-        if (string.IsNullOrEmpty(outputPath)) {
-            GD.PrintErr("Invalid empty export filepath");
-            return Task.FromResult(false);
-        }
-
-        Game = resource.Game;
-
-        Directory.CreateDirectory(outputPath.GetBaseDir());
-        Context.Clear();
-        if (resource is REResource reres) {
-            switch (reres.ResourceType) {
-                case RESupportedFileFormats.Userdata:
-                    return User.ExportToFile((UserdataResource)reres, outputPath);
-                case RESupportedFileFormats.Rcol:
-                    return Rcol.ExportToFile(((RcolResource)reres).Instantiate()!, outputPath);
-                case RESupportedFileFormats.Foliage:
-                    return Fol.ExportToFile((FoliageResource)reres, outputPath);
-                default:
-                    GD.PrintErr("Currently unsupported export for resource type " + reres.ResourceType);
-                    return Task.FromResult(false);
-            }
-        } else if (resource is PrefabNode pfb) {
-            return Pfb.ExportToFile(pfb, outputPath);
-        } else if (resource is SceneFolder scn) {
-            return Scn.ExportToFile(scn, outputPath);
-        } else if (resource is RcolRootNode rcol) {
-            return Rcol.ExportToFile(rcol, outputPath);
-        } else {
-            GD.PrintErr("Currently unsupported export for object type " + resource.GetType());
-            return Task.FromResult(false);
-        }
     }
 
     public async Task<bool> ImportAssetAsync(IImportableAsset asset, string sourceFilepath)
@@ -139,10 +106,10 @@ public class AssetConverter
                     return Fol.ImportFromFile(filepath);
                 case RESupportedFileFormats.Mesh:
                     return Mesh.ImportAsset((MeshResource)reres, filepath);
-                    // return Task.FromResult(Importer.FindOrImportResource<MeshResource>(filepath, AssetConfig, Options.allowWriting) != null);
                 case RESupportedFileFormats.Texture:
                     return Texture.ImportAsset((TextureResource)reres, filepath);
-                    // return Task.FromResult(Importer.FindOrImportResource<TextureResource>(filepath, AssetConfig, Options.allowWriting) != null);
+                case RESupportedFileFormats.MaterialDefinition:
+                    return Mdf2.ImportFromFile(filepath, asset as MaterialDefinitionResource);
                 default:
                     GD.PrintErr("Currently unsupported import for resource type " + reres.ResourceType);
                     return Task.FromResult(false);
@@ -155,6 +122,44 @@ public class AssetConverter
             return Rcol.ImportFromFile(filepath, rcol);
         } else {
             GD.PrintErr("Currently unsupported import for object type " + asset.GetType());
+            return Task.FromResult(false);
+        }
+    }
+
+    public Task<bool> ExportAsset(IExportableAsset resource, string exportBasepath)
+    {
+        var outputPath = ResolveExportPath(exportBasepath, resource.Asset!.AssetFilename, resource.Game);
+        if (string.IsNullOrEmpty(outputPath)) {
+            GD.PrintErr("Invalid empty export filepath");
+            return Task.FromResult(false);
+        }
+
+        Game = resource.Game;
+
+        Directory.CreateDirectory(outputPath.GetBaseDir());
+        Context.Clear();
+        if (resource is REResource reres) {
+            switch (reres.ResourceType) {
+                case RESupportedFileFormats.Userdata:
+                    return User.ExportToFile((UserdataResource)reres, outputPath);
+                case RESupportedFileFormats.Rcol:
+                    return Rcol.ExportToFile(((RcolResource)reres).Instantiate()!, outputPath);
+                case RESupportedFileFormats.Foliage:
+                    return Fol.ExportToFile((FoliageResource)reres, outputPath);
+                case RESupportedFileFormats.MaterialDefinition:
+                    return Mdf2.ExportToFile((MaterialDefinitionResource)reres, outputPath);
+                default:
+                    GD.PrintErr("Currently unsupported export for resource type " + reres.ResourceType);
+                    return Task.FromResult(false);
+            }
+        } else if (resource is PrefabNode pfb) {
+            return Pfb.ExportToFile(pfb, outputPath);
+        } else if (resource is SceneFolder scn) {
+            return Scn.ExportToFile(scn, outputPath);
+        } else if (resource is RcolRootNode rcol) {
+            return Rcol.ExportToFile(rcol, outputPath);
+        } else {
+            GD.PrintErr("Currently unsupported export for object type " + resource.GetType());
             return Task.FromResult(false);
         }
     }

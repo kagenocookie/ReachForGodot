@@ -31,6 +31,12 @@ public partial class AssetImportInspectorPlugin : EditorInspectorPlugin, ISerial
 
     private void CreateUI(IImportableAsset importable)
     {
+        var config = ReachForGodot.GetAssetConfig(importable.Game);
+        if (!config.IsValid) {
+            AddCustomControl(new Label() { Text = $"{importable.Game} is not fully configured. Please define at least a chunk path in editor settings." });
+            return;
+        }
+
         inspectorScene ??= ResourceLoader.Load<PackedScene>("res://addons/ReachForGodot/Editor/Inspectors/AssetImportInspector.tscn");
         var container = inspectorScene.Instantiate<Control>();
 
