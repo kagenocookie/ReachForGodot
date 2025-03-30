@@ -17,8 +17,7 @@ public partial class RcolResource : REResourceProxy, IExportableAsset
 
     protected override Task<Resource?> Import()
     {
-        var conv = new GodotRszImporter(ReachForGodot.GetAssetConfig(Game!)!, GodotRszImporter.importTreeChanges);
-        conv.GenerateRcol(this);
+        CreateImporter().Rcol.ImportFromFile(this);
         NotifyPropertyListChanged();
         return Task.FromResult(ImportedResource);
     }

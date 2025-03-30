@@ -13,30 +13,9 @@ public partial class PrefabNode : GameObject, IRszContainer, IImportableAsset
     public bool IsEmpty => GetChildCount() == 0;
     public new string Path => $"{Asset?.AssetFilename}:{Name}";
 
-    public void BuildTree(GodotImportOptions options)
-    {
-        var sw = new Stopwatch();
-        sw.Start();
-        var conv = new GodotRszImporter(ReachForGodot.GetAssetConfig(Game!)!, options);
-        conv.RegeneratePrefabTree(this).ContinueWith((t) => {
-            if (t.IsCompletedSuccessfully) {
-                GD.Print("Tree rebuild finished in " + sw.Elapsed);
-            } else {
-                GD.Print("Tree rebuild failed:", t.Exception);
-            }
-            EditorInterface.Singleton.CallDeferred(EditorInterface.MethodName.MarkSceneAsUnsaved);
-        });
-    }
-
-    IEnumerable<(string label, PresetImportModes importMode)> IImportableAsset.SupportedImportTypes => [
-        ("Import anything missing", PresetImportModes.ImportTreeChanges),
-        ("Discard and reimport structure", PresetImportModes.ReimportStructure),
-        ("Fully reimport all resources", PresetImportModes.FullReimport),
+    IEnumerable<(string label, GodotImportOptions importMode)> IImportableAsset.SupportedImportTypes => [
+        ("Import anything missing", GodotImportOptions.importTreeChanges),
+        ("Discard and reimport structure", GodotImportOptions.forceReimportStructure),
+        ("Fully reimport all resources", GodotImportOptions.fullReimport),
     ];
-
-    async Task<bool> IImportableAsset.Import(string resolvedFilepath, GodotRszImporter importer)
-    {
-        await importer.RegeneratePrefabTree(this);
-        return true;
-    }
 }

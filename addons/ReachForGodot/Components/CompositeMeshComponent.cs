@@ -25,7 +25,7 @@ public partial class CompositeMeshComponent : REComponent, IVisualREComponent
         meshNode = null;
     }
 
-    public override async Task Setup(RszInstance rsz, RszImportType importType)
+    public override async Task Setup(RszImportType importType)
     {
         if (importType == RszImportType.Placeholders || importType == RszImportType.CreateOrReuse && meshNode != null) {
             return;

@@ -51,7 +51,7 @@ public partial class AssetExportInspectorPlugin : EditorInspectorPlugin, ISerial
         }
         exportPath.Selected = selectedIndex;
         void UpdateShowButton() {
-            showBtn.Visible = exportPath.Selected != -1 && File.Exists(Exporter.ResolveExportPath(paths[exportPath.Selected], res.Asset!, res.Game));
+            showBtn.Visible = exportPath.Selected != -1 && File.Exists(PathUtils.ResolveExportPath(paths[exportPath.Selected], res.Asset!, res.Game));
         }
         exportPath.ItemSelected += (id) => {
             ReachForGodot.LastExportPath = paths[id];
@@ -65,7 +65,10 @@ public partial class AssetExportInspectorPlugin : EditorInspectorPlugin, ISerial
                 return;
             }
 
-            var success = Exporter.Export(res, paths[exportPath.Selected]);
+            var conv = new AssetConverter(res.Game, GodotImportOptions.placeholderImport);
+            var task = conv.ExportAsset(res, paths[exportPath.Selected]);
+            task.Wait();
+            var success = task.Result;
             if (success) {
                 GD.Print("Export successful!");
                 UpdateShowButton();
@@ -74,9 +77,7 @@ public partial class AssetExportInspectorPlugin : EditorInspectorPlugin, ISerial
             }
         };
         UpdateShowButton();
-        showBtn.Pressed += () => FileSystemUtils.ShowFileInExplorer(Exporter.ResolveExportPath(paths[exportPath.Selected], res.Asset, res.Game));
-
-        // FileSystemUtils.ShowFileInExplorer(file);
+        showBtn.Pressed += () => FileSystemUtils.ShowFileInExplorer(PathUtils.ResolveExportPath(paths[exportPath.Selected], res.Asset, res.Game));
 
         AddCustomControl(container);
     }

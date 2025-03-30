@@ -25,12 +25,5 @@ public partial class REResourceProxy : REResource, IImportableAsset
         return Import();
     }
 
-    public async Task<bool> Import(string resolvedFilepath, GodotRszImporter importer)
-    {
-        await Import(true);
-        NotifyPropertyListChanged();
-        return ImportedResource != null;
-    }
-
     protected virtual Task<Resource?> Import() => Task.FromResult((Resource?)null);
 }

@@ -450,8 +450,6 @@ public static class GodotObjectExtensions
         return skeleton.GlobalTransform * pose;
     }
 
-    public static string ResourceFilename(this Resource resource) => resource.ResourcePath.GetFile().GetBaseName();
-
     public static void DisconnectAllSignals(this Node node, StringName? signalName)
     {
         var signals = signalName == null ? node.GetSignalList() : node.GetSignalConnectionList(signalName);

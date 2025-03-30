@@ -44,8 +44,8 @@ public partial class ItemPositions : REComponent
 
 		if (root.IsEmpty) {
 			try {
-				var conv = new GodotRszImporter(ReachForGodot.GetAssetConfig(root.Game), PresetImportModes.ImportMissingItems.ToOptions());
-				await conv.RegeneratePrefabTree(root);
+				var conv = new AssetConverter(root.Game, GodotImportOptions.importTreeChanges);
+				await conv.Pfb.ImportFromFile(root);
 			} catch (Exception) {
 				return null;
 			}
@@ -55,8 +55,10 @@ public partial class ItemPositions : REComponent
 		return meshcomponent?.Resource;
 	}
 
-	public override async Task Setup(RszInstance rsz, RszImportType importType)
+	public override async Task Setup(RszImportType importType)
 	{
+        if (importType == RszImportType.Placeholders) return;
+
         var node = GameObject.FindChild(NodeName);
         if (node != null) {
             node.GetParent().RemoveChild(node);

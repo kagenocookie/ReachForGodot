@@ -22,7 +22,7 @@ public partial class AsyncImporter : Window
         public required string originalFilepath;
         public required string importFilename;
         public required SupportedGame game;
-        public required Func<string, SupportedGame, Task<bool>?> importAction;
+        public required Func<string, string, Task<bool>?> importAction;
         public List<Action<Resource?>> callbacks = new();
         public Resource? resource;
         public ImportState state;
@@ -169,7 +169,7 @@ public partial class AsyncImporter : Window
 
     static AsyncImporter()
     {
-        System.Runtime.Loader.AssemblyLoadContext.GetLoadContext(typeof(GodotRszImporter).Assembly)!.Unloading += (c) => {
+        System.Runtime.Loader.AssemblyLoadContext.GetLoadContext(typeof(AsyncImporter).Assembly)!.Unloading += (c) => {
             instance?.CancelImports();
         };
     }
@@ -189,46 +189,22 @@ public partial class AsyncImporter : Window
         instance?.Hide();
     }
 
-    public static Task<Resource?> QueueAssetImport(string originalFilepath, SupportedGame game, Action<Resource?>? callback = null)
-    {
-        if (finishedResources.TryGetValue(originalFilepath, out var existingTask)) {
-            return existingTask;
-        }
-        var format = PathUtils.GetFileFormat(originalFilepath).format;
-        switch (format) {
-            case RESupportedFileFormats.Mesh:
-                if (!Importer.IsSupportedMeshFile(originalFilepath, game)) {
-                    return Task.FromResult((Resource?)null);
-                }
-
-                return QueueAssetImport(originalFilepath, game, format, Importer.ImportMesh, callback).awaitTask;
-            case RESupportedFileFormats.Texture:
-                return QueueAssetImport(originalFilepath, game, format, Importer.ImportTexture, callback).awaitTask;
-            default:
-                return Task.FromException<Resource?>(new ArgumentException("Invalid async import asset " + originalFilepath));
-        }
-    }
-
-    private static ImportQueueItem QueueAssetImport(string originalFilepath, SupportedGame game, RESupportedFileFormats format, Func<string, SupportedGame, Task<bool>?> importAction, Action<Resource?>? callback)
+    public static Task<Resource?> QueueAssetImport(string originalFilepath, string targetFilepath, SupportedGame game, Func<string, string, Task<bool>?> importAction)
     {
         var queueItem = queuedImports.FirstOrDefault(qi => qi.originalFilepath == originalFilepath && qi.game == game);
         if (queueItem == null) {
-            var config = ReachForGodot.GetAssetConfig(game);
             queuedImports.Enqueue(queueItem = new ImportQueueItem() {
                 originalFilepath = originalFilepath,
-                importFilename = PathUtils.GetAssetImportPath(originalFilepath, format, config)!,
+                importFilename = ProjectSettings.LocalizePath(targetFilepath),
                 game = game,
                 importAction = importAction,
             });
             cancellationTokenSource ??= new CancellationTokenSource();
             queueItem.awaitTask = AwaitResource(queueItem, cancellationTokenSource.Token);
         }
-        if (callback != null) {
-            queueItem.callbacks.Add(callback);
-        }
         EnsureImporterNode();
 
-        return queueItem;
+        return queueItem.awaitTask;
     }
 
     private static AsyncImporter EnsureImporterNode()
@@ -259,7 +235,7 @@ public partial class AsyncImporter : Window
     {
         cancellationTokenSource ??= new CancellationTokenSource();
         item.state = ImportState.Triggered;
-        var convertTask = item.importAction.Invoke(item.originalFilepath, item.game);
+        var convertTask = item.importAction.Invoke(item.originalFilepath, ProjectSettings.GlobalizePath(item.importFilename));
         if (convertTask == null) {
             ExecutePostImport(item);
             item.state = ImportState.Failed;

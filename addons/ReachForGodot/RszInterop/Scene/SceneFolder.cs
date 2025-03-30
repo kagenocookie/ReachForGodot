@@ -187,17 +187,12 @@ public partial class SceneFolder : Node3D, IRszContainer, IImportableAsset
         return action.ActiveInstance!;
     }
 
-    IEnumerable<(string label, PresetImportModes importMode)> IImportableAsset.SupportedImportTypes => [
-        ("Placeholders only", PresetImportModes.PlaceholderImport),
-        ("Import just this scene, no subfolders", PresetImportModes.ThisFolderOnly),
-        ("Import missing objects", PresetImportModes.ImportMissingItems),
-        ("Discard and reimport scene structure", PresetImportModes.ReimportStructure),
-        ("Force reimport all resources", PresetImportModes.FullReimport),
+    IEnumerable<(string label, GodotImportOptions importMode)> IImportableAsset.SupportedImportTypes => [
+        ("Placeholders only", GodotImportOptions.placeholderImport),
+        ("Import this scene missing objects", GodotImportOptions.thisFolderOnly),
+        ("Import nested missing objects", GodotImportOptions.importMissing),
+        ("Discard and reimport nested scenes", GodotImportOptions.forceReimportStructure),
+        ("Discard and reimport this scene", GodotImportOptions.forceReimportThisStructure),
+        ("Force reimport all resources", GodotImportOptions.fullReimport),
     ];
-
-    async Task<bool> IImportableAsset.Import(string resolvedFilepath, GodotRszImporter importer)
-    {
-        await importer.RegenerateSceneTree(this);
-        return true;
-    }
 }

@@ -14,10 +14,6 @@ public partial class TextureResource : REResourceProxy
     {
         if (Asset?.AssetFilename == null) return null;
 
-        ImportedResource = await AsyncImporter.QueueAssetImport(Asset.AssetFilename, Game);
-        if (!string.IsNullOrEmpty(ResourcePath)) {
-            ResourceSaver.Save(this);
-        }
-        return ImportedResource;
+        return await CreateImporter().Texture.ImportAssetGetResource(this);
     }
 }

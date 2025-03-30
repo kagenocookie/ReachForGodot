@@ -17,7 +17,8 @@ public abstract partial class REComponent : REObject, ISerializationListener
     public REComponent() { }
     public REComponent(SupportedGame game, string classname) : base(game, classname) {}
 
-    public abstract Task Setup(RszInstance rsz, RszImportType importType);
+    public abstract Task Setup(RszImportType importType);
+
     public virtual void PreExport()
     {
     }

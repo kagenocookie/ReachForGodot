@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using Chickensoft.GoDotTest;
 using Godot;
 using GodotTestDriver;
-using RszTool;
 using Shouldly;
 
 namespace ReaGE.Tests;
@@ -15,11 +14,15 @@ public partial class TestRcol : TestBase
     [Test]
     public void FullReadTest()
     {
-        GodotRszImporter? importer = null;
-        var importSettings = new GodotImportOptions(RszImportType.Placeholders, RszImportType.Reimport, RszImportType.CreateOrReuse, RszImportType.Reimport, false, true);
+        var converter = new AssetConverter(new GodotImportOptions(RszImportType.Placeholders, RszImportType.Reimport, RszImportType.CreateOrReuse, RszImportType.Reimport) {
+            logInfo = false,
+            allowWriting = false,
+        });
         ExecuteFullReadTest("rcol", (game, fileOption, filepath) => {
-            using var file = new RcolFile(fileOption, new FileHandler(filepath));
-            file.Read();
+            converter.Game = game;
+            using var file = converter.Rcol.CreateFile(filepath);
+            converter.Rcol.LoadFile(file).ShouldBe(true);
+
             if (file.FileHandler.FileVersion >= 25) {
                 file.GroupInfoList.SelectMany(gg => gg.Shapes.Where(sh => sh.userDataIndex != 0)).Count().ShouldBe(0, "shapes have userdata again");
 
@@ -29,13 +32,9 @@ public partial class TestRcol : TestBase
             }
             file.GroupInfoList.Count(gg => gg.Info.UserData != null || gg.Info.userDataIndex != 0).ShouldBe(0, "groups do indeed have userdata");
 
-            if (importer == null || importer.Game != game) {
-                importer = new GodotRszImporter(ReachForGodot.GetAssetConfig(game), importSettings);
-            }
-
-            var node = new RcolRootNode() { Asset = new AssetReference(PathUtils.FullToRelativePath(filepath, importer.AssetConfig)!) };
+            var node = new RcolRootNode() { Asset = new AssetReference(PathUtils.FullToRelativePath(filepath, converter.AssetConfig)!) };
             try {
-                importer.GenerateRcol(node);
+                converter.Rcol.Import(file, node);
                 var sets = node.Sets.ToArray();
 
                 sets.Length.ShouldBe(file.RequestSetInfoList.Count);
@@ -46,13 +45,15 @@ public partial class TestRcol : TestBase
                     .ShouldAllBe(grp => grp.Key!.Shapes.All(s => s.SetDatas!.Count == grp.Count()));
 
                 // export and verify equality with original data
-                using var exportFile = new RcolFile(fileOption, new FileHandler(new MemoryStream()) { FileVersion = file.FileHandler.FileVersion });
-                Exporter.RebuildRcol(exportFile, node, importer.AssetConfig).ShouldBeTrue();
+                using var exportFile = converter.Rcol.CreateFile(new MemoryStream(), file.FileHandler.FileVersion);
+                converter.Rcol.ExportSync(node, exportFile).ShouldBe(true);
                 exportFile.GroupInfoList.Count.ShouldBe(file.GroupInfoList.Count);
                 exportFile.RequestSetInfoList.Count.ShouldBe(file.RequestSetInfoList.Count);
                 exportFile.IgnoreTags.ShouldBeEquivalentTo(file.IgnoreTags);
                 exportFile.RSZ.ObjectList.Count.ShouldBe(file.RSZ.ObjectList.Count);
                 exportFile.RSZ.InstanceInfoList.Count.ShouldBe(file.RSZ.InstanceInfoList.Count);
+
+                exportFile.RSZ.InstanceInfoList.Select(a => a.CRC).ShouldBeEquivalentTo(file.RSZ.InstanceInfoList.Select(b => b.CRC));
 
                 foreach (var (a, b) in exportFile.GroupInfoList.Select((grp, i) => (grp, file.GroupInfoList[i]))) {
                     a.Info.guid.ShouldBe(b.Info.guid);

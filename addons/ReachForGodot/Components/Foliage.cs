@@ -12,9 +12,9 @@ public partial class Foliage : REComponent
         .Conditions(l => l.FirstOrDefault(f => f.RszField.type is RszFieldType.String or RszFieldType.Resource));
 
     [ExportToolButton("Re-setup foliage meshes")]
-    private Callable Resetup => Callable.From(() => { _ = Setup(null!, RszImportType.Reimport); });
+    private Callable Resetup => Callable.From(() => { _ = Setup(RszImportType.Reimport); });
 
-    public override async Task Setup(RszInstance rsz, RszImportType importType)
+    public override async Task Setup(RszImportType importType)
     {
         var foliage = GetField(FoliageResourceField).As<FoliageResource>();
         if (foliage == null) return;

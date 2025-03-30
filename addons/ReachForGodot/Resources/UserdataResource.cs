@@ -26,7 +26,7 @@ public partial class UserdataResource : REResource, IRszContainer, IImportableAs
 
     public void Reimport()
     {
-        _ = Import(string.Empty, new GodotRszImporter(ReachForGodot.GetAssetConfig(Game!)!, GodotRszImporter.importTreeChanges));
+        CreateImporter().User.ImportFromFile(this);
         NotifyPropertyListChanged();
     }
 
@@ -36,11 +36,5 @@ public partial class UserdataResource : REResource, IRszContainer, IImportableAs
         if (!string.IsNullOrEmpty(Data?.Classname)) {
             Data.ResetProperties();
         }
-    }
-
-    public Task<bool> Import(string resolvedFilepath, GodotRszImporter importer)
-    {
-        importer.GenerateUserdata(this);
-        return Task.FromResult(true);
     }
 }

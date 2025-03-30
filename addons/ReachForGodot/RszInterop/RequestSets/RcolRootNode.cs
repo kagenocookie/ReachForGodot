@@ -11,7 +11,7 @@ public partial class RcolRootNode : Node, IExportableAsset, IImportableAsset
 
     [Export] public string[]? IgnoreTags { get; set; }
 
-    public RcolResource? Resource => Importer.FindOrImportResource<RcolResource>(Asset, ReachForGodot.GetAssetConfig(Game));
+    public RcolResource? Resource => Importer.FindOrImportResource<RcolResource>(Asset, ReachForGodot.GetAssetConfig(Game), !string.IsNullOrEmpty(SceneFilePath));
 
     public IEnumerable<RequestSetCollisionGroup> Groups => this.FindChild("Groups", false).FindChildrenByType<RequestSetCollisionGroup>();
     public IEnumerable<RequestSetCollider> Sets => this.FindChildrenByType<RequestSetCollider>();
@@ -27,12 +27,5 @@ public partial class RcolRootNode : Node, IExportableAsset, IImportableAsset
         foreach (var group in Groups) {
             group.Visible = group == showGroup;
         }
-    }
-
-    Task<bool> IImportableAsset.Import(string resolvedFilepath, GodotRszImporter importer)
-    {
-        importer.GenerateRcol(this);
-        NotifyPropertyListChanged();
-        return Task.FromResult(true);
     }
 }

@@ -47,7 +47,7 @@ public static class PathUtils
         if (filepath.StartsWith("res://") == true) {
             throw new Exception("Can't normalize godot res:// filepath");
         }
-        return NormalizeSourceFilePath(GetFilepathWithoutVersion(filepath));
+        return NormalizeFilePath(GetFilepathWithoutVersion(filepath));
     }
 
     public static string GetFilepathWithoutVersion(string filepath)
@@ -292,6 +292,11 @@ public static class PathUtils
         if (sourceFilePath == null) return null;
         sourceFilePath = AppendFileVersion(sourceFilePath, config);
 
+        if (sourceFilePath.StartsWith('@')) {
+            // what are these?
+            sourceFilePath = sourceFilePath.Substring(1);
+        }
+
         if (!string.IsNullOrEmpty(config.Paths.SourcePathOverride) && File.Exists(Path.Combine(config.Paths.SourcePathOverride, sourceFilePath))) {
             return Path.Combine(config.Paths.SourcePathOverride, sourceFilePath);
         }
@@ -311,6 +316,20 @@ public static class PathUtils
         }
 
         return null;
+    }
+
+    public static string? ResolveExportPath(string? basePath, string? assetPath, SupportedGame game)
+    {
+        if (!Path.IsPathRooted(assetPath)) {
+            if (string.IsNullOrEmpty(assetPath) || string.IsNullOrEmpty(basePath)) {
+                return null;
+            }
+
+            assetPath = Path.Combine(basePath, assetPath);
+        }
+
+        var config = ReachForGodot.GetAssetConfig(game) ?? throw new Exception("Missing config for game " + game);
+        return AppendFileVersion(assetPath, config);
     }
 
     /// <summary>
@@ -352,17 +371,17 @@ public static class PathUtils
         if (!string.IsNullOrEmpty(config.Paths.SourcePathOverride)) {
             var overridePath = Path.Join(config.Paths.ChunkPath, relativeSourcePath);
             if (File.Exists(overridePath)) {
-                return NormalizeSourceFilePath(overridePath);
+                return NormalizeFilePath(overridePath);
             }
         }
 
-        return NormalizeSourceFilePath(Path.Join(config.Paths.ChunkPath, relativeSourcePath));
+        return NormalizeFilePath(Path.Join(config.Paths.ChunkPath, relativeSourcePath));
     }
 
     /// <summary>
     /// Normalize a file path - replace any backslashes (\) with forward slashes (/)
     /// </summary>
-    public static string NormalizeSourceFilePath(string filepath)
+    public static string NormalizeFilePath(string filepath)
     {
         return filepath.Replace('\\', '/');
     }
@@ -381,7 +400,7 @@ public static class PathUtils
 
     public static string? GetSourceFileBasePath(string fullSourcePath, AssetConfig config)
     {
-        fullSourcePath = NormalizeSourceFilePath(fullSourcePath);
+        fullSourcePath = NormalizeFilePath(fullSourcePath);
 
         if (!string.IsNullOrEmpty(config.Paths.SourcePathOverride) && fullSourcePath.StartsWith(config.Paths.SourcePathOverride)) {
             return config.Paths.SourcePathOverride;

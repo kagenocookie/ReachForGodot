@@ -76,7 +76,7 @@ public partial class REMeshComponent : REComponent, IVisualREComponent
         return r;
     }
 
-    public override async Task Setup(RszInstance rsz, RszImportType importType)
+    public override async Task Setup(RszImportType importType)
     {
         meshNode ??= GetOrFindMeshNode();
         if (Resource == null) {
@@ -85,11 +85,9 @@ public partial class REMeshComponent : REComponent, IVisualREComponent
             return;
         }
 
-        if (importType == RszImportType.Placeholders || importType == RszImportType.CreateOrReuse && meshNode != null) {
-            return;
-        }
+        if (importType == RszImportType.Placeholders) return;
 
-        await ReloadMesh(Resource, importType == RszImportType.ForceReimport);
+        await ReloadMesh(Resource, importType >= RszImportType.Reimport);
     }
 
     protected async Task ReloadMesh(MeshResource? mr, bool forceReload)

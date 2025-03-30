@@ -27,21 +27,8 @@ public class Importer
 
     private static readonly Dictionary<RESupportedFileFormats, Type> resourceTypes = new();
 
-    public static REResource? FindImportedResourceAsset(Resource? asset)
-    {
-        if (asset == null) return null;
-        if (asset is REResource reres) return reres;
-
-        var path = asset.ResourcePath;
-        if (asset is PackedScene ps) {
-            // packed scene could be tscn (pfb, scn) or a mesh (.blend/.glb)
-            if (path.EndsWith(".blend") || path.EndsWith(".glb")) {
-                return FindImportedResourceAsset(path);
-            }
-        }
-
-        throw new ArgumentException("Unsupported asset resource " + path, nameof(asset));
-    }
+    private static readonly GodotImportOptions writeImport = new(RszImportType.Placeholders, RszImportType.Placeholders, RszImportType.Placeholders, RszImportType.Placeholders) { allowWriting = true };
+    private static readonly GodotImportOptions nowriteImport = new(RszImportType.Placeholders, RszImportType.Placeholders, RszImportType.Placeholders, RszImportType.Placeholders) { allowWriting = true };
 
     public static REResource? FindImportedResourceAsset(string? resourceFilepath)
     {
@@ -89,7 +76,7 @@ public class Importer
         return true;
     }
 
-    public static bool CheckResourceExists(string sourceFile, AssetConfig config)
+    public static bool CheckResourceExists(string sourceFile, AssetConfig config, bool tryExtract = true)
     {
         if (string.IsNullOrEmpty(sourceFile)) {
             return false;
@@ -99,13 +86,13 @@ public class Importer
         if (importPath == null) return false;
         if (ResourceLoader.Exists(importPath)) return true;
 
-        return PathUtils.FindSourceFilePath(sourceFile, config) != null;
+        return PathUtils.FindSourceFilePath(sourceFile, config, tryExtract) != null;
     }
 
     /// <summary>
     /// Fetch an existing resource, or if it doesn't exist yet, create a placeholder resource for it.
     /// </summary>
-    public static T? FindOrImportResource<T>(string? chunkRelativeFilepath, AssetConfig config) where T : Resource
+    public static T? FindOrImportResource<T>(string? chunkRelativeFilepath, AssetConfig config, bool saveAssetToFilesystem = true) where T : Resource
     {
         if (string.IsNullOrEmpty(chunkRelativeFilepath)) {
             GD.PrintErr("Empty import path for resource " + typeof(T) + ": " + chunkRelativeFilepath);
@@ -130,24 +117,32 @@ public class Importer
 
         var sourcePath = PathUtils.FindSourceFilePath(chunkRelativeFilepath, config);
         if (sourcePath == null) {
-            return Importer.Import(PathUtils.RelativeToFullPath(chunkRelativeFilepath, config), config, importPath) as T;
+            return Importer.Import(PathUtils.RelativeToFullPath(chunkRelativeFilepath, config), config, importPath, saveAssetToFilesystem) as T;
         }
-        return Importer.Import(sourcePath, config, importPath) as T;
+        return Importer.Import(sourcePath, config, importPath, saveAssetToFilesystem) as T;
     }
 
-    public static Resource? Import(string sourceFilePath, AssetConfig config, string? importFilepath = null)
+    public static Resource? Import(string sourceFilePath, AssetConfig config, string? importFilepath = null, bool saveAssetToFilesystem = true)
     {
         importFilepath ??= PathUtils.GetLocalizedImportPath(sourceFilePath, config);
-        var format = PathUtils.GetFileFormat(sourceFilePath);
+        if (string.IsNullOrEmpty(importFilepath)) return null;
+
+        var format = PathUtils.GetFileFormat(sourceFilePath).format;
         var outputFilePath = ProjectSettings.GlobalizePath(importFilepath);
 
-        switch (format.format) {
+        var resolvedPath = PathUtils.FindSourceFilePath(sourceFilePath, config);
+        if (resolvedPath == null) {
+            GD.PrintErr("Resource not found: " + sourceFilePath);
+        }
+        var options = saveAssetToFilesystem && resolvedPath != null ? writeImport : nowriteImport;
+
+        switch (format) {
             case RESupportedFileFormats.Scene:
-                return ImportScene(sourceFilePath, outputFilePath, config);
+                return ImportScene(resolvedPath ?? sourceFilePath, outputFilePath, config, options);
             case RESupportedFileFormats.Prefab:
-                return ImportPrefab(sourceFilePath, outputFilePath, config);
+                return ImportPrefab(resolvedPath ?? sourceFilePath, outputFilePath, config, options);
             default:
-                return ImportResource(format.format, sourceFilePath, outputFilePath, config);
+                return ImportResource(format, resolvedPath ?? sourceFilePath, outputFilePath, config, options);
         }
     }
 
@@ -187,7 +182,7 @@ public class Importer
 
         var path = Directory.GetCurrentDirectory();
         var outputGlobalized = ProjectSettings.GlobalizePath(importFilepath);
-        var blendPath = PathUtils.NormalizeSourceFilePath(Path.GetFullPath(outputGlobalized));
+        var outputPath = PathUtils.NormalizeFilePath(Path.GetFullPath(outputGlobalized));
         var importDir = Path.GetFullPath(outputGlobalized.GetBaseDir());
         // GD.Print($"Importing mesh...\nBlender: {ReachForGodot.BlenderPath}\nFile: {path}\nTarget: {blendPath}\nPython script: {meshImportScriptPath}");
 
@@ -199,17 +194,17 @@ public class Importer
             .Replace("__FILEPATH__", sourceFilePath)
             .Replace("__FILEDIR__", sourceFilePath.GetBaseDir())
             .Replace("__FILENAME__", sourceFilePath.GetFile())
-            .Replace("__OUTPUT_PATH__", blendPath)
+            .Replace("__OUTPUT_PATH__", outputPath)
             .Replace("__INCLUDE_MATERIALS__", includeMaterials ? "True" : "False")
             ;
 
         return ExecuteBlenderScript(importScript, !includeMaterials).ContinueWith((t) => {
-            if (!t.IsCompletedSuccessfully || !File.Exists(blendPath)) {
+            if (!t.IsCompletedSuccessfully || !File.Exists(outputPath)) {
                 GD.Print("Unsuccessfully imported mesh " + sourceFilePath);
                 return false;
             }
 
-            ForceEditorImportNewFile(blendPath);
+            ForceEditorImportNewFile(outputPath);
             return true;
         });
     }
@@ -247,26 +242,16 @@ public class Importer
         });
     }
 
-    public static PackedScene? ImportScene(string? sourceFilePath, string outputFilePath, AssetConfig config)
+    private static PackedScene? ImportScene(string sourceFilePath, string outputFilePath, AssetConfig config, GodotImportOptions options)
     {
-        var resolvedPath = PathUtils.FindSourceFilePath(sourceFilePath, config);
-        if (resolvedPath == null) {
-            GD.PrintErr("Scene file not found: " + sourceFilePath);
-            return null;
-        }
-        var conv = new GodotRszImporter(config, GodotRszImporter.placeholderImport);
-        return conv.CreateOrReplaceScene(resolvedPath, outputFilePath);
+        var converter = new AssetConverter(config, options);
+        return converter.Scn.CreateOrReplaceResourcePlaceholder(new AssetReference(PathUtils.FullToRelativePath(sourceFilePath, config)!));
     }
 
-    public static PackedScene? ImportPrefab(string? sourceFilePath, string outputFilePath, AssetConfig config)
+    private static PackedScene? ImportPrefab(string sourceFilePath, string outputFilePath, AssetConfig config, GodotImportOptions options)
     {
-        var resolvedPath = PathUtils.FindSourceFilePath(sourceFilePath, config);
-        if (resolvedPath == null) {
-            GD.PrintErr("Prefab file not found: " + sourceFilePath);
-            return null;
-        }
-        var conv = new GodotRszImporter(config, GodotRszImporter.placeholderImport);
-        return conv.CreateOrReplacePrefab(resolvedPath, outputFilePath);
+        var converter = new AssetConverter(config, options);
+        return converter.Pfb.CreateOrReplaceResourcePlaceholder(new AssetReference(PathUtils.FullToRelativePath(sourceFilePath, config)!));
     }
 
     public static void QueueFileRescan()
@@ -283,11 +268,17 @@ public class Importer
         // fs.CallDeferred(EditorFileSystem.MethodName.ReimportFiles, new Godot.Collections.Array<string>(new[] { file }));
     }
 
-    private static REResource? ImportResource(RESupportedFileFormats format, string? sourceFilePath, string? outputFilePath, AssetConfig config)
+    private static REResource? ImportResource(RESupportedFileFormats format, string sourceFilePath, string outputFilePath, AssetConfig config, GodotImportOptions options)
     {
         var newres = CreateResource(format, sourceFilePath, outputFilePath, config);
-        if (newres == null) return null;
+        if (newres == null || !options.allowWriting) return newres;
 
+        var importPath = ProjectSettings.LocalizePath(outputFilePath);
+        if (ResourceLoader.Exists(importPath)) {
+            newres.TakeOverPath(importPath);
+        } else {
+            newres.ResourcePath = importPath;
+        }
         TrySaveResource(newres, sourceFilePath);
         return newres;
     }
@@ -300,24 +291,13 @@ public class Importer
         }
     }
 
-    private static REResource? CreateResource(RESupportedFileFormats format, string? sourceFilePath, string? outputFilePath, AssetConfig config)
+    private static REResource? CreateResource(RESupportedFileFormats format, string sourceFilePath, string outputFilePath, AssetConfig config)
     {
-        if (string.IsNullOrEmpty(sourceFilePath) || string.IsNullOrEmpty(outputFilePath)) return null;
-        var resolvedPath = PathUtils.FindSourceFilePath(sourceFilePath, config);
-
-        if (resolvedPath == null) {
-            GD.PrintErr("Resource file not found: " + sourceFilePath);
-        } else {
-            sourceFilePath = resolvedPath;
-        }
-
         var relativePath = PathUtils.FullToRelativePath(sourceFilePath, config);
         if (relativePath == null) {
             GD.PrintErr("Could not guarantee correct relative path for file " + sourceFilePath);
             relativePath = sourceFilePath;
         }
-
-        var importPath = ProjectSettings.LocalizePath(outputFilePath);
 
         Directory.CreateDirectory(outputFilePath.GetBaseDir());
         var newres = resourceTypes.GetValueOrDefault(format) is Type rt ? (REResource)Activator.CreateInstance(rt)! : new REResource();
@@ -325,11 +305,6 @@ public class Importer
         newres.Game = config.Game;
         newres.ResourceName = PathUtils.GetFilepathWithoutVersion(relativePath).GetFile();
 
-        if (ResourceLoader.Exists(importPath)) {
-            newres.TakeOverPath(importPath);
-        } else {
-            newres.ResourcePath = importPath;
-        }
         return newres;
     }
 

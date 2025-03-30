@@ -10,11 +10,10 @@ public interface IAssetPointer
 
 public interface IExportableAsset : IAssetPointer { }
 
-interface IImportableAsset : IAssetPointer
+public interface IImportableAsset : IAssetPointer
 {
     bool IsEmpty { get; }
-    Task<bool> Import(string resolvedFilepath, GodotRszImporter importer);
-    IEnumerable<(string label, PresetImportModes importMode)> SupportedImportTypes => [("Full reimport", PresetImportModes.FullReimport)];
+    IEnumerable<(string label, GodotImportOptions importMode)> SupportedImportTypes => [("Full reimport", GodotImportOptions.fullReimport)];
 }
 
 public interface IRszContainer : IExportableAsset

@@ -80,7 +80,7 @@ public partial class PhysicsCollidersComponent : REComponent, IVisualREComponent
         }
     }
 
-    public override async Task Setup(RszInstance rsz, RszImportType importType)
+    public override async Task Setup(RszImportType importType)
     {
         await GenerateColliderNodes();
     }

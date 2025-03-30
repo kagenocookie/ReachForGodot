@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Godot;
 
 [GlobalClass, Tool, ResourceHolder("mesh", RESupportedFileFormats.Mesh)]
-public partial class MeshResource : REResourceProxy
+public partial class MeshResource : REResourceProxy, IImportableAsset
 {
     public PackedScene? ImportedMesh => ImportedResource as PackedScene;
 
@@ -12,14 +12,16 @@ public partial class MeshResource : REResourceProxy
     {
     }
 
+    IEnumerable<(string label, GodotImportOptions importMode)> IImportableAsset.SupportedImportTypes => [
+        ("Reimport", GodotImportOptions.fullReimport),
+        ("Reimport (textured)", GodotImportOptions.fullReimportTextured),
+        ("Reimport (untextured)", GodotImportOptions.fullReimportUntextured)
+    ];
+
     protected override async Task<Resource?> Import()
     {
         if (Asset?.AssetFilename == null) return null;
 
-        ImportedResource = await AsyncImporter.QueueAssetImport(Asset.AssetFilename, Game);
-        if (!string.IsNullOrEmpty(ResourcePath)) {
-            ResourceSaver.Save(this);
-        }
-        return ImportedResource;
+        return await CreateImporter().Mesh.ImportAssetGetResource(this);
     }
 }

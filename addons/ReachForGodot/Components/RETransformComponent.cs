@@ -15,9 +15,13 @@ public partial class RETransformComponent : REComponent
     {
     }
 
-    public override Task Setup(RszInstance rsz, RszImportType importType)
+    public override Task Setup(RszImportType importType)
     {
-        ApplyTransform(GameObject, rsz);
+        GameObject.Transform = new Transform3D(
+            new Basis(GetField(1).AsQuaternion())
+                .Scaled(GetField(2).AsVector4().ToVector3()),
+            GetField(0).AsVector4().ToVector3()
+        );
         return Task.CompletedTask;
     }
 

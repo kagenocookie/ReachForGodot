@@ -12,7 +12,7 @@ public static partial class TypeCache
 {
     static TypeCache()
     {
-        System.Runtime.Loader.AssemblyLoadContext.GetLoadContext(typeof(GodotRszImporter).Assembly)!.Unloading += (c) => {
+        System.Runtime.Loader.AssemblyLoadContext.GetLoadContext(typeof(TypeCache).Assembly)!.Unloading += (c) => {
             var assembly = typeof(System.Text.Json.JsonSerializerOptions).Assembly;
             var updateHandlerType = assembly.GetType("System.Text.Json.JsonSerializerOptionsUpdateHandler");
             var clearCacheMethod = updateHandlerType?.GetMethod("ClearCache", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public);
@@ -20,8 +20,8 @@ public static partial class TypeCache
 
             allCacheData.Clear();
         };
-        InitResourceFormats(typeof(GodotRszImporter).Assembly);
-        InitComponents(typeof(GodotRszImporter).Assembly);
+        InitResourceFormats(typeof(TypeCache).Assembly);
+        InitComponents(typeof(TypeCache).Assembly);
     }
 
     private static readonly Dictionary<SupportedGame, GameClassCache> allCacheData = new();

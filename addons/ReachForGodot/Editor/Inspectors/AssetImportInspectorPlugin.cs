@@ -15,7 +15,7 @@ public partial class AssetImportInspectorPlugin : EditorInspectorPlugin, ISerial
 
     private PackedScene? inspectorScene;
 
-    private static Dictionary<Type, int> lastSelectedImportTypes = new();
+    private static Dictionary<Type, GodotImportOptions> lastSelectedImportTypes = new();
 
     public override bool _CanHandle(GodotObject @object)
     {
@@ -41,10 +41,12 @@ public partial class AssetImportInspectorPlugin : EditorInspectorPlugin, ISerial
         var importBtn = container.GetNode<Button>("%ImportButton");
         importType.Clear();
         if (importable.Asset?.IsEmpty == false) {
-            foreach (var it in importable.SupportedImportTypes) {
-                importType.AddItem(it.label, (int)it.importMode);
+            var modes = importable.SupportedImportTypes.ToArray();
+            var lastSelected = lastSelectedImportTypes.GetValueOrDefault(mainImportedType);
+            foreach (var it in modes) {
+                importType.AddItem(it.label);
+                if (lastSelected == it.importMode) importType.Selected = importType.ItemCount - 1;
             }
-            importType.Selected = lastSelectedImportTypes.GetValueOrDefault(mainImportedType);
             importType.Visible = true;
 
             Label? emptyLabel = null;
@@ -56,7 +58,7 @@ public partial class AssetImportInspectorPlugin : EditorInspectorPlugin, ISerial
             }
 
             importType.ItemSelected += (index) => {
-                lastSelectedImportTypes[mainImportedType] = (int)index;
+                lastSelectedImportTypes[mainImportedType] = modes[(int)index].importMode;
             };
 
             var fileSources = PathUtils.FindFileSourceFolders(importable.Asset?.AssetFilename, ReachForGodot.GetAssetConfig(importable.Game)).ToArray();
@@ -84,7 +86,7 @@ public partial class AssetImportInspectorPlugin : EditorInspectorPlugin, ISerial
 
                 config.Paths.SourcePathOverride = source;
                 try {
-                    var options = ((PresetImportModes)importType.GetSelectedId()).ToOptions();
+                    var options = modes[importType.GetSelectedId()].importMode;
                     await DoRebuild(importable, options);
                     if (emptyLabel != null) emptyLabel.Visible = importable.IsEmpty;
                 } finally {
@@ -106,8 +108,8 @@ public partial class AssetImportInspectorPlugin : EditorInspectorPlugin, ISerial
         var sw = new Stopwatch();
         sw.Start();
 
-        AssetConfig config = ReachForGodot.GetAssetConfig(root.Game);
-        var conv = new GodotRszImporter(config, options);
+        var config = ReachForGodot.GetAssetConfig(root.Game);
+        var converter = new AssetConverter(config, options);
         var sourceFilepath = PathUtils.FindSourceFilePath(root.Asset?.AssetFilename, config);
         if (sourceFilepath == null) {
             GD.PrintErr("Source file not found");
@@ -130,7 +132,7 @@ public partial class AssetImportInspectorPlugin : EditorInspectorPlugin, ISerial
                     return;
                 }
 
-                var linkedScene = Importer.FindOrImportResource<PackedScene>(scn.Asset.AssetFilename, conv.AssetConfig);
+                var linkedScene = Importer.FindOrImportResource<PackedScene>(scn.Asset.AssetFilename, config);
                 var newScn = linkedScene!.Instantiate<SceneFolder>();
                 scn.GetParent().EmplaceChild(scn, newScn);
                 scn = newScn;
@@ -142,7 +144,7 @@ public partial class AssetImportInspectorPlugin : EditorInspectorPlugin, ISerial
         }
 
         try {
-            await asset.Import(sourceFilepath, conv);
+            await converter.ImportAssetAsync(asset, sourceFilepath);
             GD.Print("Resource reimport finished in " + sw.Elapsed);
             if (root is SceneFolderProxy proxy) {
                 if (proxy.ShowLinkedFolder) {

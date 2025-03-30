@@ -29,8 +29,10 @@ public partial class EnemyContextController : REComponent
         return null;
     }
 
-    public override async Task Setup(RszInstance rsz, RszImportType importType)
+    public override async Task Setup(RszImportType importType)
     {
+        if (importType == RszImportType.Placeholders) return;
+
         var node = GameObject.FindChild(NodeName);
         if (node != null) {
             node.GetParent().RemoveChild(node);
