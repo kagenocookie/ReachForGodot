@@ -88,7 +88,7 @@ public partial class AssetImportInspectorPlugin : EditorInspectorPlugin, ISerial
                 try {
                     var options = modes[importType.GetSelectedId()].importMode;
                     await DoRebuild(importable, options);
-                    if (emptyLabel != null) emptyLabel.Visible = importable.IsEmpty;
+                    if (emptyLabel != null && IsInstanceValid(emptyLabel)) emptyLabel.Visible = importable.IsEmpty;
                 } finally {
                     config.Paths.SourcePathOverride = null;
                 }

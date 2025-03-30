@@ -747,13 +747,13 @@
         "Type": "AABB"
       },
       {
-        "Name": "v1",
+        "Name": "v2",
         "ReplaceName": "Box",
         "Type": "OBB"
       },
       {
-        "Name": "v2",
-        "Type": "AABB"
+        "Name": "v1",
+        "Type": "S32"
       }
     ]
   },

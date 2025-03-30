@@ -89,22 +89,6 @@
       }
     ]
   },
-  "via.physics.CapsuleShape": {
-    "FieldPatches": [
-      {
-        "Name": "v1",
-        "Type": "Capsule"
-      }
-    ]
-  },
-  "via.physics.BoxShape": {
-    "FieldPatches": [
-      {
-        "Name": "v1",
-        "Type": "OBB"
-      }
-    ]
-  },
   "via.Prefab": {
     "FieldPatches": [
       {
