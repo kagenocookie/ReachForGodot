@@ -9,8 +9,15 @@ Integrates various open source tools dealing with RE Engine games and packs them
 
 ![scene example](.gdignore/docs/images/scene.jpg)
 
+## Main features
+- integration of [RE Mesh Editor](https://github.com/NSACloud/RE-Mesh-Editor) for meshes, a [custom fork of RszTool](https://github.com/kagenocookie/RszTool) with additional file support and fixes, and [ree-pak-rs](https://github.com/eigeen/ree-pak-rs) for on-the-fly PAK file extraction.
+- direct support for many RE Engine file formats: mesh, tex, pfb, scn, mdf2, rcol, user, cfil, fol, ...
+- default Godot features (3d visualization and editing, resource pickers, data editing UI)
+- PAK content browser and extractor GUI
+- detailed info in [wiki](https://github.com/kagenocookie/ReachForGodot/wiki)
+
 ## Supported games
-Should work for any RE engine game (mostly based on RszTool's support), but I can only test what I own
+Should work for any RE engine game, but I can only test what I own
 
 - Dragon's Dogma 2*
 - Resident Evil 2 RT
@@ -31,19 +38,6 @@ For the open world games: The scene structure is a mess thanks to how it's struc
 \* Many of the terrain meshes use MPLY format meshes which are currently unsupported by RE Mesh Editor and will therefore be loaded as placeholders
 
 ** Partial support: files with embedded userdata do not fully load and therefore won't export correctly either
-
-## Current features
-The addon integrates [RE Mesh Editor](https://github.com/NSACloud/RE-Mesh-Editor) for meshes/textures and a [custom fork](https://github.com/kagenocookie/RszTool) of RszTool for reading structured data.
-
-- mesh: automatic import through RE Mesh editor into .glb files (MPLY / composite meshes: currently unsupported); default untextured but can be enabled through editor settings (not recommended because texture conversions need blender in the foreground)
-- tex: can be imported through RE Mesh editor; not useable directly in Godot yet due to lacking DDS support but the files otherwise convert fine
-- pfb files [info](https://github.com/kagenocookie/ReachForGodot/wiki/Prefabs)
-- scn files [info](https://github.com/kagenocookie/ReachForGodot/wiki/Scenes)
-- rcol files  [info](https://github.com/kagenocookie/ReachForGodot/wiki/RCOL)
-- user files
-- packed file browser GUI, allowing you to extract specific files or folders
-- some misc resource files are also fully parsed (CFIL, FOL, ...)
-- other resource files are imported as placeholders so they can be drag-dropped into resource fields but have no actual logic or data to them
 
 ## Prerequisites
 - Godot 4.4+ w/ .NET 8.0
@@ -97,20 +91,10 @@ If you've ever worked with a game engine before, the basic UI should be more or 
 ### Mapping of engine objects
 - <img src="addons/ReachForGodot/icons/folder.png" alt="isolated" width="16"/> `via.Folder` (scn file) => Node (`SceneFolder` or `SceneFolderProxy`)
 - <img src="addons/ReachForGodot/icons/gear.png" alt="isolated" width="16"/> `via.GameObject` => Node3D (`GameObject` or `PrefabNode`)
-    - Inspector button additions:
-        - "Clone GameObject": creates a clone of this gameobject, including fixing all child nodes and their references. Use this instead of Godot's default duplicate feature as that one breaks references
-- `via.Component` => Components array inside `GameObject`
     - all components have their full data editable
-    - specific components can have additional logic, listed in the next section
+    - specific components can have additional logic and tooling
 
-General components support:
-- `via.Transform`: transforms are transformed to Godot equivalents on the game object node
-    - you can move the GameObject nodes directly and the transforms will get updated on export
-    - all other Node transforms will be ignored and not transferred over to the game
-- `via.render.Mesh`: meshes are imported automatically into an additional mesh Node3D child of the game object with a `__{mesh_name}` prefix
-    - meshes can be swapped around by changing the mesh field within the component's data
-- `via.render.CompositeMesh`: composite meshes are mapped into several MultiMeshInstance3D nodes
-- `via.physics.Colliders`: Basic shape colliders get converted to godot equivalents and can be moved around in 3D. Mesh colliders can only be swapped from the component data with no actual visualization or editing support yet.
+See [the wiki](https://github.com/kagenocookie/ReachForGodot/wiki) for more details.
 
 ## Asset exporting
 - every exportable asset has a base path picker and export button at the top of its inspector
