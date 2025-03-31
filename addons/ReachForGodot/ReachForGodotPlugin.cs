@@ -65,6 +65,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
         AddToolSubmenuItem(toolMenu.Title, toolMenu);
 
         EditorInterface.Singleton.GetEditorSettings().SettingsChanged += OnProjectSettingsChanged;
+        ProjectSettings.SettingsChanged += OnProjectSettingsChanged;
         OnProjectSettingsChanged();
 
         inspectors = new EditorInspectorPlugin[] {
@@ -391,6 +392,8 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
             AddEditorSetting(FilelistPathSetting(game), Variant.Type.String, string.Empty, PropertyHint.GlobalFile);
             AddEditorSetting(AdditionalPathSetting(game), Variant.Type.PackedStringArray, string.Empty, PropertyHint.GlobalDir);
             AddEditorSetting(PakFilepathSetting(game), Variant.Type.PackedStringArray, string.Empty, PropertyHint.GlobalFile, "*.pak");
+
+            AddProjectSetting(AdditionalPathSetting(game), Variant.Type.PackedStringArray, string.Empty, PropertyHint.GlobalDir);
         }
     }
 
@@ -411,7 +414,8 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
             var pathIl2cpp = settings.GetSetting(Il2cppPathSetting(game)).AsString();
             var pathRsz = settings.GetSetting(RszPathSetting(game)).AsString();
             var pathFilelist = settings.GetSetting(FilelistPathSetting(game)).AsString();
-            var additional = settings.GetSetting(AdditionalPathSetting(game)).AsStringArray()
+            var additional = ProjectSettings.GetSetting(AdditionalPathSetting(game)).AsStringArray()
+                .Concat(settings.GetSetting(AdditionalPathSetting(game)).AsStringArray())
                 .Select(path => {
                     var parts = path.Split('|');
                     string? label = parts.Length >= 2 ? parts[0] : null;
@@ -430,18 +434,14 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
         RefreshToolMenu();
     }
 
-    private void AddProjectSetting(string name, Variant.Type type, Variant initialValue)
+    private void AddProjectSetting(string name, Variant.Type type, Variant initialValue, PropertyHint hint = PropertyHint.None, string? hintstring = null)
     {
-        if (ProjectSettings.HasSetting(name)) {
-            return;
+        if (!ProjectSettings.HasSetting(name)) {
+            ProjectSettings.SetSetting(name, initialValue);
         }
 
-        var dict = new GC.Dictionary();
-        dict.Add("name", name);
-        dict.Add("type", (int)type);
-        dict.Add("hint", (int)PropertyHint.None);
+        var dict = CreateSettingDict(name, type, hint, hintstring);
 
-        ProjectSettings.Singleton.Set(name, initialValue);
         ProjectSettings.SetInitialValue(name, initialValue);
         ProjectSettings.AddPropertyInfo(dict);
     }
@@ -453,6 +453,14 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
             settings.Set(name, initialValue);
         }
 
+        var dict = CreateSettingDict(name, type, hint, hintstring);
+
+        settings.SetInitialValue(name, initialValue, false);
+        settings.AddPropertyInfo(dict);
+    }
+
+    private static GC.Dictionary CreateSettingDict(string name, Variant.Type type, PropertyHint hint, string? hintstring)
+    {
         var dict = new GC.Dictionary();
         dict.Add("name", name);
         dict.Add("type", (int)type);
@@ -461,8 +469,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
             dict.Add("hint_string", hintstring);
         }
 
-        settings.SetInitialValue(name, initialValue, false);
-        settings.AddPropertyInfo(dict);
+        return dict;
     }
 
     public void OnBeforeSerialize()
