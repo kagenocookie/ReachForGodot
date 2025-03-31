@@ -86,6 +86,8 @@ public static partial class TypeCache
 
                 componentTypeToClassname[type] = classAttr.Classname;
                 TypeCache.HandleFieldOverrideAttributes(type, classAttr.Classname, classAttr.SupportedGames);
+            } else if (type.GetCustomAttribute<FieldAccessorProviderAttribute>() is FieldAccessorProviderAttribute classAttr2) {
+                TypeCache.HandleFieldOverrideAttributes(type, classAttr2.Classname, classAttr2.SupportedGames);
             }
         }
     }
@@ -276,7 +278,7 @@ public static partial class TypeCache
         return fields;
     }
 
-    private static void HandleFieldOverrideAttributes(Type type, string classname, SupportedGame[] supportedGames)
+    private static void HandleFieldOverrideAttributes(Type type, string? classname, SupportedGame[] supportedGames)
     {
         foreach (var field in type.GetFields(BindingFlags.Public|BindingFlags.NonPublic|BindingFlags.Static)) {
             if (field.FieldType == typeof(REFieldAccessor)) {
@@ -287,6 +289,7 @@ public static partial class TypeCache
                 if (field.GetCustomAttribute<REObjectFieldTargetAttribute>() is REObjectFieldTargetAttribute overrideAttr) {
                     curclass = overrideAttr.Classname;
                 }
+                if (curclass == null) continue;
 
                 var games = supportedGames.Length == 0 ? ReachForGodot.GameList : supportedGames;
 

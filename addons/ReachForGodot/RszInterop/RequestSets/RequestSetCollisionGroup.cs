@@ -4,13 +4,18 @@ using System;
 using Godot;
 using RszTool;
 
-[GlobalClass, Tool]
+[GlobalClass, Tool, FieldAccessorProvider]
 public partial class RequestSetCollisionGroup : AnimatableBody3D
 {
     [Export] private string? uuidString;
     [Export] private string? layerGuid;
     [Export] public string[]? MaskGuids { get; set; }
     [Export] public REObject? Data { get; set; }
+
+    [REObjectFieldTarget("via.physics.RequestSetCollider.RequestSetGroup")]
+    private static readonly REFieldAccessor RcolGroupField = new REFieldAccessor("File")
+        .Resource<RcolResource>()
+        .Conditions(list => list.FirstOrDefault(f => f.RszField.type is RszFieldType.String or RszFieldType.Resource));
 
     public IEnumerable<RequestSetCollisionShape3D> Shapes => this.FindChildrenByType<RequestSetCollisionShape3D>();
 
