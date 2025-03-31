@@ -27,8 +27,12 @@ public partial class AssetConfig : Resource
     }
 
     public bool IsValid => ReachForGodot.GetPaths(Game) != null;
+    private GamePaths? _overridePaths;
 
-    public GamePaths Paths => ReachForGodot.GetPaths(Game) ?? throw new Exception("Paths not defined for game " + Game);
+    public GamePaths Paths {
+        get => _overridePaths ?? ReachForGodot.GetPaths(Game) ?? throw new Exception("Paths not defined for game " + Game);
+        set => _overridePaths = value;
+    }
 
     public string ImportBasePath => ProjectSettings.GlobalizePath("res://" + AssetDirectory);
 
