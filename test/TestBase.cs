@@ -37,6 +37,40 @@ public abstract partial class TestBase : TestClass
         return (path, opt);
     }
 
+    protected static TResource CreateTempResource<TImported, TExported, TResource>(
+        AssetConverter converter,
+        ConverterBase<TImported, TExported, TResource> fileConverter,
+        string fullpath
+    )
+        where TImported : GodotObject
+        where TResource : Resource
+    {
+        return fileConverter.CreateOrReplaceResourcePlaceholder(new AssetReference(PathUtils.FullToRelativePath(fullpath, converter.AssetConfig)!));
+    }
+
+    protected static IEnumerable<(T, T)> PairEnumerate<T>(IEnumerable<T> var1, IEnumerable<T> var2)
+    {
+        var it1 = var1.GetEnumerator();
+        var it2 = var2.GetEnumerator();
+
+        while (it1.MoveNext() && it2.MoveNext()) {
+            yield return (it1.Current, it2.Current);
+        }
+    }
+
+    protected static TExported? ExportToMemory<TImported, TExported, TResource>(
+        RszToolConverter<TImported, TExported, TResource> converter,
+        TImported resource,
+        int fileVersion
+    )
+        where TImported : GodotObject
+        where TExported : BaseFile
+        where TResource : Resource
+    {
+        var f = converter.CreateFile(new FileHandler(new MemoryStream()) { FileVersion = fileVersion });
+        return converter.ExportSync(resource, f) && f.Write() ? f : null;
+    }
+
     protected static void ExecuteFullReadTest(
         string extension,
         Action<SupportedGame, RszFileOption, string> action,

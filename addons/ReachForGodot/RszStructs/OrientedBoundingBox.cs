@@ -13,8 +13,8 @@ public partial class OrientedBoundingBox : Resource
         extent = rszValue.Extent.ToGodot(),
     };
 
-    public RszTool.via.OBB ToRsz(SupportedGame game) => new() {
-        Coord = coord.ToRsz(game),
+    public RszTool.via.OBB ToRsz() => new() {
+        Coord = coord.ToRsz(),
         Extent = extent.ToRsz(),
     };
 }

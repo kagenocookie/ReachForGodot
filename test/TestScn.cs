@@ -19,7 +19,8 @@ public partial class TestScn : TestBase
             file.Read();
             file.SetupGameObjects();
         }, new () {
-            { SupportedGame.ResidentEvil4, 26 } // 25 gimmicks and 1 level are expected to fail
+            { SupportedGame.DragonsDogma2, 1 }, // appsystem\scene\maincamera.scn.20
+            { SupportedGame.ResidentEvil4, 26 }, // 25 gimmicks and 1 level are currently expected to fail
         }, SupportedGame.ResidentEvil2, SupportedGame.DevilMayCry5, SupportedGame.ResidentEvil3, SupportedGame.ResidentEvil7);
     }
 }

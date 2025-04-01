@@ -90,7 +90,7 @@ public partial class RequestSetCollisionShape3D : CollisionShape3D
                 var obb = new RszTool.via.OBB();
                 var box2 = (BoxShape3D)godotShape;
                 obb.Extent = box2.Size.ToRsz();
-                obb.Coord = new Projection(node.Transform).ToRsz(game);
+                obb.Coord = new Projection(node.Transform).ToRsz();
                 return obb;
             case RcolFile.ShapeType.Sphere:
             case RcolFile.ShapeType.ContinuousSphere:

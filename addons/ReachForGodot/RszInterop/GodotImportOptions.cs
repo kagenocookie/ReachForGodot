@@ -17,7 +17,10 @@ public class GodotImportOptions
     public static readonly GodotImportOptions fullReimportTextured = new(RszImportType.ForceReimport, RszImportType.ForceReimport, RszImportType.ForceReimport, RszImportType.ForceReimport) { overrideImportMaterials = true };
     public static readonly GodotImportOptions fullReimportUntextured = new(RszImportType.ForceReimport, RszImportType.ForceReimport, RszImportType.ForceReimport, RszImportType.ForceReimport) { overrideImportMaterials = false };
 
-    public static readonly GodotImportOptions testImport = new(RszImportType.Placeholders, RszImportType.Placeholders, RszImportType.Placeholders, RszImportType.Placeholders);
+    public static readonly GodotImportOptions testImport = new(RszImportType.Reimport, RszImportType.Reimport, RszImportType.CreateOrReuse, RszImportType.CreateOrReuse) {
+        logInfo = false,
+        allowWriting = false,
+    };
 
     public RszImportType folders = RszImportType.Placeholders;
     public RszImportType prefabs = RszImportType.CreateOrReuse;

@@ -196,5 +196,14 @@
         "Type": "AABB"
       }
     ]
+  },
+  "via.physics.RequestSetCollider.RequestSetGroup": {
+    "FieldPatches": [
+      {
+        "Name": "v0",
+        "ReplaceName": "File",
+        "Type": "Resource"
+      }
+    ]
   }
 }

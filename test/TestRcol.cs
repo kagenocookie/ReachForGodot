@@ -14,10 +14,7 @@ public partial class TestRcol : TestBase
     [Test]
     public void FullReadTest()
     {
-        var converter = new AssetConverter(new GodotImportOptions(RszImportType.Placeholders, RszImportType.Reimport, RszImportType.CreateOrReuse, RszImportType.Reimport) {
-            logInfo = false,
-            allowWriting = false,
-        });
+        var converter = new AssetConverter(GodotImportOptions.testImport);
         ExecuteFullReadTest("rcol", (game, fileOption, filepath) => {
             converter.Game = game;
             using var file = converter.Rcol.CreateFile(filepath);

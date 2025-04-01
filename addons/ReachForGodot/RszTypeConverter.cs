@@ -246,7 +246,7 @@ public static class RszTypeConverter
                 RszFieldType.Bool => ConvertArray(variant.AsGodotArray<bool>(), static v => v),
                 RszFieldType.Range => ConvertArray(variant.AsGodotArray<Vector2>(), static v => v.ToRszRange()),
                 RszFieldType.RangeI => ConvertArray(variant.AsGodotArray<Vector2I>(), static v => v.ToRszRange()),
-                RszFieldType.OBB => ConvertArray(variant.AsGodotArray<OrientedBoundingBox>(), v => v.ToRsz(game)),
+                RszFieldType.OBB => ConvertArray(variant.AsGodotArray<OrientedBoundingBox>(), v => v.ToRsz()),
                 _ => throw new Exception("Unhandled rsz export array type " + valueType),
             };
         }
@@ -291,7 +291,7 @@ public static class RszTypeConverter
             RszFieldType.S16 => variant.AsInt16(),
             RszFieldType.U16 => variant.AsUInt16(),
             RszFieldType.Data => variant.AsByteArray(),
-            RszFieldType.Mat4 => variant.AsProjection().ToRsz(game),
+            RszFieldType.Mat4 => variant.AsProjection().ToRsz(),
             RszFieldType.Vec2 or RszFieldType.Float2 or RszFieldType.Point => variant.AsVector2().ToRsz(),
             RszFieldType.Vec3 or RszFieldType.Float3 or RszFieldType.Position => variant.AsVector3().ToRsz(),
             RszFieldType.Vec4 or RszFieldType.Float4 => variant.AsVector4().ToRsz(),
@@ -301,7 +301,7 @@ public static class RszTypeConverter
             RszFieldType.Uint2 => (RszTool.via.Uint2)variant.AsVector2I().ToRszU(),
             RszFieldType.Uint3 => (RszTool.via.Uint3)variant.AsVector3I().ToRszU(),
             RszFieldType.Uint4 => (RszTool.via.Uint4)variant.AsVector4I().ToRszU(),
-            RszFieldType.OBB => variant.As<OrientedBoundingBox>().ToRsz(game),
+            RszFieldType.OBB => variant.As<OrientedBoundingBox>().ToRsz(),
             RszFieldType.AABB => (RszTool.via.AABB)variant.AsAabb().ToRsz(),
             RszFieldType.Guid or RszFieldType.Uri => Guid.TryParse(variant.AsString(), out var guid) ? guid : Guid.Empty,
             RszFieldType.GameObjectRef => variant.As<GameObjectRef>().TargetGuid,
@@ -388,7 +388,7 @@ public static class RszTypeConverter
     public static RszTool.via.Uint2 ToRszU(this Vector2I val) => new RszTool.via.Uint2 { x = (uint)val.X, y = (uint)val.Y };
     public static RszTool.via.Uint3 ToRszU(this Vector3I val) => new RszTool.via.Uint3 { x = (uint)val.X, y = (uint)val.Y, z = (uint)val.Z };
     public static RszTool.via.Uint4 ToRszU(this Vector4I val) => new RszTool.via.Uint4 { x = (uint)val.X, y = (uint)val.Y, z = (uint)val.Z, w = (uint)val.W };
-    public static RszTool.via.mat4 ToRsz(this Projection val, SupportedGame game)
+    public static RszTool.via.mat4 ToRsz(this Projection val)
     {
         return new mat4() {
             m00 = val.X.X,
