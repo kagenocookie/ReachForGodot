@@ -15,7 +15,7 @@ public sealed class ResourceFieldFinder : IDisposable
     {
         foreach (var (game, list) in dict) {
             var sb = new StringBuilder();
-            foreach (var (cls, field, ext, inList) in list) {
+            foreach (var (cls, field, ext, inList) in list.OrderBy(a => new { a.cls, a.field })) {
                 sb.Append("ext:").Append(ext).Append(" class:").Append(cls).Append(" field:").Append(field).Append(" resourceList:").Append(inList).AppendLine();
             }
             var outFile = suffix == null ? game.ToString() + "_resource_fields.txt" : game.ToString() + "_resource_fields" + suffix + ".txt";

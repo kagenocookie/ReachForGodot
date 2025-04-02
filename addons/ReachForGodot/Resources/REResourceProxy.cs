@@ -15,14 +15,14 @@ public partial class REResourceProxy : REResource, IImportableAsset
     public REResourceProxy() { }
     protected REResourceProxy(RESupportedFileFormats format) => ResourceType = format;
 
-    public Task<Resource?> Import(bool forceReload)
+    public async Task<Resource?> Import(bool forceReload)
     {
         if (!forceReload && ImportedResource != null) {
-            return Task.FromResult<Resource?>(ImportedResource);
+            return ImportedResource;
         }
 
         ImportedResource = null;
-        return Import();
+        return ImportedResource = await Import();
     }
 
     protected virtual Task<Resource?> Import() => Task.FromResult((Resource?)null);

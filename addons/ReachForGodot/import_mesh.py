@@ -119,13 +119,12 @@ def clean_materials_for_export():
         'BackMap',
         'BaseMap',
         'BackMap_1',
-        'BaseAlphaMap',
         'BaseMetalMap',
         'BaseMetalMapArray',
         'BaseShiftMap',
         'BaseAnisoShiftMap',
-        #'BaseDielectricMapBase',
-        'BaseAlphaMap',
+        'BaseDielectricMapBase',
+        # 'BaseAlphaMap',
         'BaseDielectricMap',
         #Vertex Color
         #'BaseDielectricMap_B',
@@ -138,7 +137,7 @@ def clean_materials_for_export():
         'Face_BaseDielectricMap',
         'Moon_Tex',
         'Sky_Top_Tex',
-        'BaseColor',
+        # 'BaseColor',
     ])
 
     for obj in bpy.data.objects:
@@ -148,8 +147,9 @@ def clean_materials_for_export():
             output = next((node for node in tree.nodes if node.name == 'Principled BSDF'), None)
             if albedo and output:
                 for input in output.inputs:
-                    for link in input.links:
-                        tree.links.remove(link)
+                    if input.is_linked and input.links:
+                        for link in input.links:
+                            tree.links.remove(link)
                 tree.links.new(albedo.outputs[0], output.inputs[0])
 
 try:

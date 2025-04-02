@@ -44,9 +44,19 @@ public abstract class BlenderResourceConverter<TResource, TAsset> : ConverterBas
         var outputPath = PathUtils.NormalizeFilePath(ProjectSettings.GlobalizePath(importFilepath));
 
         Directory.CreateDirectory(Path.GetFullPath(outputPath.GetBaseDir()));
-        resource.ImportedResource = await AsyncImporter.QueueAssetImport(sourceFilePath, outputPath, Game, ExecuteImport);
+        var assetExisted = File.Exists(outputPath) && ResourceLoader.Exists(importFilepath);
+        var updatedResource = await AsyncImporter.QueueAssetImport(sourceFilePath, outputPath, Game, ExecuteImport);
         if (!string.IsNullOrEmpty(resource.ResourcePath)) {
             ResourceSaver.Save(resource);
+            EditorInterface.Singleton.GetResourceFilesystem().UpdateFile(resource.ResourcePath);
+        }
+        if (!string.IsNullOrEmpty(updatedResource?.ResourcePath)) {
+            resource.ImportedResource = ResourceLoader.Load<Resource>(updatedResource?.ResourcePath);
+        }
+        if (assetExisted) {
+            ReimportExistingFile(outputPath);
+        } else {
+            ForceEditorImportNewFiles();
         }
         return resource.ImportedResource;
     }
@@ -57,12 +67,17 @@ public abstract class BlenderResourceConverter<TResource, TAsset> : ConverterBas
         if (!fs.IsScanning()) fs.CallDeferred(EditorFileSystem.MethodName.Scan);
     }
 
-    protected static void ForceEditorImportNewFile(string file)
+    protected static void ForceEditorImportNewFiles()
     {
         QueueFileRescan();
+    }
+
+    protected static void ReimportExistingFile(string file)
+    {
         // var fs = EditorInterface.Singleton.GetResourceFilesystem();
         // fs.CallDeferred(EditorFileSystem.MethodName.UpdateFile, file);
         // fs.CallDeferred(EditorFileSystem.MethodName.ReimportFiles, new Godot.Collections.Array<string>(new[] { file }));
+        QueueFileRescan();
     }
 
     protected async Task ExecuteBlenderScript(string script, bool background)

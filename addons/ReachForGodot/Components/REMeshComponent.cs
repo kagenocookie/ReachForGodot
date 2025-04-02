@@ -16,9 +16,10 @@ public partial class REMeshComponent : REComponent, IVisualREComponent
         .Conditions((fields) => fields.Where(f => f.RszField.type is RszFieldType.String or RszFieldType.Resource).Skip(1).FirstOrDefault());
 
     private Node3D? meshNode;
-    public MeshResource? Resource => TryGetFieldValue(MeshField.Get(this), out var path) ? path.As<MeshResource>() : null;
+    public MaterialDefinitionResource? Material => TryGetFieldValue(MaterialField.Get(this), out var path) ? path.As<MaterialDefinitionResource>() : null;
+    public MeshResource? Mesh => TryGetFieldValue(MeshField.Get(this), out var path) ? path.As<MeshResource>() : null;
 
-    [ExportToolButton("Reinstantiate mesh")]
+    [ExportToolButton("Import & reinstantiate mesh")]
     private Callable ForceReinstance => Callable.From(FindResourceAndReinit);
 
     public override void PreExport()
@@ -43,7 +44,7 @@ public partial class REMeshComponent : REComponent, IVisualREComponent
 
     private void FindResourceAndReinit()
     {
-        _ = ReloadMesh(Resource, true);
+        _ = ReloadMesh(false);
     }
 
     public override void OnDestroy()
@@ -59,7 +60,7 @@ public partial class REMeshComponent : REComponent, IVisualREComponent
 
     private bool IsCorrectMesh(MeshResource mr)
     {
-        return Resource?.ResourcePath == mr.ResourcePath;
+        return Mesh?.ResourcePath == mr.ResourcePath;
     }
 
     public override bool _Set(StringName property, Variant value)
@@ -79,7 +80,7 @@ public partial class REMeshComponent : REComponent, IVisualREComponent
     public override async Task Setup(RszImportType importType)
     {
         meshNode ??= GetOrFindMeshNode();
-        if (Resource == null) {
+        if (Mesh == null) {
             meshNode?.QueueFree();
             meshNode = null;
             return;
@@ -87,12 +88,15 @@ public partial class REMeshComponent : REComponent, IVisualREComponent
 
         if (importType == RszImportType.Placeholders) return;
 
-        await ReloadMesh(Resource, importType >= RszImportType.Reimport);
+        await ReloadMesh(importType >= RszImportType.Reimport);
     }
 
-    protected async Task ReloadMesh(MeshResource? mr, bool forceReload)
+    protected async Task ReloadMesh(bool forceReload)
     {
-        if (mr != null) {
+        if (Material is MaterialDefinitionResource mdf) {
+            await mdf.EnsureNotEmpty();
+        }
+        if (Mesh is MeshResource mr) {
             var (tk, res) = await mr.Import(forceReload).ContinueWith(static (t) => (t, t.IsCompletedSuccessfully ? t.Result : null));
             if (tk.IsCanceled) return;
             await ReinstantiateMesh(res as PackedScene);
@@ -107,7 +111,7 @@ public partial class REMeshComponent : REComponent, IVisualREComponent
         meshNode = GetOrFindMeshNode();
         meshNode?.Free();
         if (scene != null) {
-            meshNode = scene.Instantiate<Node3D>(PackedScene.GenEditState.Instance);
+            meshNode = scene.Instantiate<Node3D>(PackedScene.GenEditState.Disabled);
             meshNode.Name = "__" + meshNode.Name;
         } else {
             var mi = new MeshInstance3D() { Name = "__Mesh" };

@@ -52,7 +52,7 @@ public partial class ItemPositions : REComponent
 		}
 
 		var meshcomponent = root.GetComponentInChildren<REMeshComponent>();
-		return meshcomponent?.Resource;
+		return meshcomponent?.Mesh;
 	}
 
 	public override async Task Setup(RszImportType importType)

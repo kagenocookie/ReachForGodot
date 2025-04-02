@@ -54,7 +54,6 @@ public class MeshConverter : BlenderResourceConverter<MeshResource, PackedScene>
                 return false;
             }
 
-            ForceEditorImportNewFile(outputPath);
             return true;
         });
     }

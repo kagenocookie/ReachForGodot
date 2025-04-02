@@ -13,7 +13,13 @@ public partial class GameObject : Node3D, ISerializationListener, ICloneable
     private Godot.Collections.Array<REComponent> _components = null!;
     [Export]
     public Godot.Collections.Array<REComponent> Components {
-        get => _components;
+        get {
+            if (_components != null && _components.Count > 0 && _components[0].GameObject != this) {
+                // Godot quietly reinstantiates whole scene trees sometimes, which is why we may need to re-apply the references
+                UpdateComponentGameObjects();
+            }
+            return _components!;
+        }
         set {
             _components = value;
             foreach (var comp in value) {
@@ -48,7 +54,7 @@ public partial class GameObject : Node3D, ISerializationListener, ICloneable
 
     public override void _EnterTree()
     {
-        Components ??= new();
+        _components ??= new();
         if (Game == SupportedGame.Unknown) {
             Game = (GetParent() as GameObject)?.Game ?? (GetParent() as SceneFolder)?.Game ?? SupportedGame.Unknown;
         }
@@ -62,7 +68,7 @@ public partial class GameObject : Node3D, ISerializationListener, ICloneable
     public void Clear()
     {
         this.ClearChildren();
-        Components?.Clear();
+        _components?.Clear();
     }
 
     public int GetChildDeduplicationIndex(string name, GameObject? relativeTo)
@@ -114,10 +120,10 @@ public partial class GameObject : Node3D, ISerializationListener, ICloneable
             Components ??= new();
             var tr = new RETransformComponent(Game, "via.Transform") { GameObject = this, ResourceName = "via.Transform" };
             tr.ResetProperties();
-            Components.Insert(0, tr);
+            _components.Insert(0, tr);
         }
 
-        foreach (var comp in Components) {
+        foreach (var comp in _components) {
             comp.PreExport();
         }
 
@@ -129,7 +135,7 @@ public partial class GameObject : Node3D, ISerializationListener, ICloneable
     public void AddComponent(REComponent component)
     {
         Components ??= new();
-        Components.Add(component);
+        _components.Add(component);
     }
 
     object ICloneable.Clone() => this.Clone();
@@ -158,18 +164,19 @@ public partial class GameObject : Node3D, ISerializationListener, ICloneable
 
     private GameObject CloneSelf()
     {
-        var clone = new GameObject() {
-            Name = Name,
-            Game = Game,
-            OriginalName = OriginalName,
-            Uuid = Guid.NewGuid().ToString(),
-            Data = Data?.Duplicate(true) as REObject,
-            Components = new Godot.Collections.Array<REComponent>(),
-            Prefab = Prefab,
-        };
+        var clone = string.IsNullOrEmpty(Prefab) ? new GameObject() : new PrefabNode();
+        clone.Name = Name;
+        clone.Game = Game;
+        clone.OriginalName = OriginalName;
+        clone.Uuid = Guid.NewGuid().ToString();
+        clone.Data = Data?.Duplicate(true) as REObject;
+        clone.Prefab = Prefab;
         clone.Transform = Transform;
+        clone.Components = new Godot.Collections.Array<REComponent>();
         foreach (var comp in Components) {
-            clone.Components.Add(comp.Clone(clone));
+            var cloneComp = comp.Clone(clone);
+            clone._components.Add(cloneComp);
+            cloneComp.GameObject = clone;
         }
         return clone;
     }
@@ -198,7 +205,7 @@ public partial class GameObject : Node3D, ISerializationListener, ICloneable
 
     public bool HasComponent(string classname)
     {
-        return Components?.Any(x => x.Classname == classname) == true;
+        return _components?.Any(x => x.Classname == classname) == true;
     }
 
     public override string ToString()
@@ -227,7 +234,7 @@ public partial class GameObject : Node3D, ISerializationListener, ICloneable
 
         Components ??= new();
         UpdateComponentGameObjects();
-        foreach (var vis in Components.OfType<IVisualREComponent>()) {
+        foreach (var vis in _components.OfType<IVisualREComponent>()) {
             var compBounds = vis.GetBounds();
             if (compBounds.Size.IsZeroApprox()) {
                 origin = compBounds.Position;
@@ -257,7 +264,9 @@ public partial class GameObject : Node3D, ISerializationListener, ICloneable
 
     private void UpdateComponentGameObjects()
     {
-        foreach (var comp in Components) {
+        if (_components == null) return;
+
+        foreach (var comp in _components) {
             comp.GameObject = this;
         }
     }
