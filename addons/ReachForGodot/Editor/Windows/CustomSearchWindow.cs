@@ -207,8 +207,8 @@ public partial class CustomSearchWindow : Window
 
     private static bool SearchGameObjectsByComponent(CustomSearchWindow self, Node node, out string? summary)
     {
-        if (node is GameObject obj && obj.Components.Any(c => true == c?.Classname?.Contains(self.SearchedQuery!, StringComparison.OrdinalIgnoreCase))) {
-            summary = node.Name;
+        if (node is GameObject obj && obj.Components.FirstOrDefault(c => true == c?.Classname?.Contains(self.SearchedQuery!, StringComparison.OrdinalIgnoreCase)) is REComponent comp) {
+            summary = $"{node.Name} ({comp.Classname})";
             return true;
         }
 
