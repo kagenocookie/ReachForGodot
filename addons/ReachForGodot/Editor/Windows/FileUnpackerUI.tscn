@@ -1,0 +1,150 @@
+[gd_scene load_steps=4 format=3 uid="uid://bjsp3epj6lgbx"]
+
+[ext_resource type="Script" uid="uid://bulp4kp1jcnbr" path="res://addons/ReachForGodot/Editor/Windows/FileUnpackerUI.cs" id="1_682hi"]
+[ext_resource type="PackedScene" uid="uid://d1la5j3gkcqcf" path="res://addons/CustomFileBrowser/FilePickerPanel.tscn" id="2_ii2h1"]
+[ext_resource type="Script" uid="uid://va46q8at6sls" path="res://addons/CustomFileBrowser/FilePickerColumnSlider.cs" id="3_p1edu"]
+
+[node name="FileUnpacker" type="Window" node_paths=PackedStringArray("FilePanel", "ExtensionButtonsContainer", "ImportFilesCheckbox")]
+title = "Select a file"
+initial_position = 4
+size = Vector2i(800, 305)
+script = ExtResource("1_682hi")
+FileMode = 1
+FilePanel = NodePath("VBoxContainer/MarginContainer/Panel/HSplitContainer/ScrollContainer/FilePickerPanel")
+ExtensionButtonsContainer = NodePath("VBoxContainer/MarginContainer/Panel/HSplitContainer/VBoxContainer/MarginContainer/FileExtensionFilter/VBoxContainer")
+ImportFilesCheckbox = NodePath("VBoxContainer/MainButtonContainer/ShouldImport")
+metadata/_custom_type_script = "uid://bulp4kp1jcnbr"
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Panel" type="Panel" parent="VBoxContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="HSplitContainer" type="HSplitContainer" parent="VBoxContainer/MarginContainer/Panel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+split_offset = 200
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/MarginContainer/Panel/HSplitContainer"]
+layout_mode = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer/MarginContainer/Panel/HSplitContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="FileExtensionFilter" type="ScrollContainer" parent="VBoxContainer/MarginContainer/Panel/HSplitContainer/VBoxContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/MarginContainer/Panel/HSplitContainer/VBoxContainer/MarginContainer/FileExtensionFilter"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/MarginContainer/Panel/HSplitContainer/VBoxContainer/MarginContainer/FileExtensionFilter/VBoxContainer"]
+layout_mode = 2
+
+[node name="BtnSelectAll" type="Button" parent="VBoxContainer/MarginContainer/Panel/HSplitContainer/VBoxContainer/MarginContainer/FileExtensionFilter/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Select all"
+
+[node name="BtnDeselectAll" type="Button" parent="VBoxContainer/MarginContainer/Panel/HSplitContainer/VBoxContainer/MarginContainer/FileExtensionFilter/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "Deselect all"
+
+[node name="Label" type="Label" parent="VBoxContainer/MarginContainer/Panel/HSplitContainer/VBoxContainer/MarginContainer/FileExtensionFilter/VBoxContainer"]
+layout_mode = 2
+text = "File extension filter"
+horizontal_alignment = 1
+
+[node name="CheckButton" type="CheckButton" parent="VBoxContainer/MarginContainer/Panel/HSplitContainer/VBoxContainer/MarginContainer/FileExtensionFilter/VBoxContainer"]
+layout_mode = 2
+text = "mdf2"
+
+[node name="CheckButton2" type="CheckButton" parent="VBoxContainer/MarginContainer/Panel/HSplitContainer/VBoxContainer/MarginContainer/FileExtensionFilter/VBoxContainer"]
+layout_mode = 2
+text = "mesh"
+
+[node name="CheckButton3" type="CheckButton" parent="VBoxContainer/MarginContainer/Panel/HSplitContainer/VBoxContainer/MarginContainer/FileExtensionFilter/VBoxContainer"]
+layout_mode = 2
+text = "tex"
+
+[node name="Buttons" type="MarginContainer" parent="VBoxContainer/MarginContainer/Panel/HSplitContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 8
+theme_override_constants/margin_bottom = 4
+
+[node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/MarginContainer/Panel/HSplitContainer"]
+layout_mode = 2
+
+[node name="FilePickerPanel" parent="VBoxContainer/MarginContainer/Panel/HSplitContainer/ScrollContainer" instance=ExtResource("2_ii2h1")]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+FileMode = 1
+
+[node name="MarginContainer" parent="VBoxContainer/MarginContainer/Panel/HSplitContainer/ScrollContainer/FilePickerPanel/VBoxContainer/Panel" index="0"]
+anchors_preset = 9
+anchor_right = 0.0
+offset_right = 665.0
+grow_horizontal = 1
+
+[node name="Path" type="Label" parent="VBoxContainer/MarginContainer/Panel/HSplitContainer/ScrollContainer/FilePickerPanel/VBoxContainer/Panel/MarginContainer/VBoxContainer/ColumnHeaders" index="6"]
+custom_minimum_size = Vector2(600, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Path"
+
+[node name="ColSlider4" type="ColorRect" parent="VBoxContainer/MarginContainer/Panel/HSplitContainer/ScrollContainer/FilePickerPanel/VBoxContainer/Panel/MarginContainer/VBoxContainer/ColumnHeaders" index="7"]
+custom_minimum_size = Vector2(2, 0)
+layout_mode = 2
+mouse_default_cursor_shape = 10
+color = Color(0.775063, 0.775063, 0.775063, 1)
+script = ExtResource("3_p1edu")
+metadata/_custom_type_script = "uid://va46q8at6sls"
+
+[node name="MainButtonContainer" type="HBoxContainer" parent="VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="BtnExtractFiltered" type="Button" parent="VBoxContainer/MainButtonContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Extract all filtered"
+
+[node name="BtnExtractSelected" type="Button" parent="VBoxContainer/MainButtonContainer"]
+layout_mode = 2
+text = "Extract selected files"
+
+[node name="BtnClose" type="Button" parent="VBoxContainer/MainButtonContainer"]
+layout_mode = 2
+text = "Close"
+
+[node name="ShouldImport" type="CheckBox" parent="VBoxContainer/MainButtonContainer"]
+layout_mode = 2
+button_pressed = true
+text = "Import extracted files"
+
+[connection signal="close_requested" from="." to="." method="OnCloseRequested"]
+[connection signal="pressed" from="VBoxContainer/MarginContainer/Panel/HSplitContainer/VBoxContainer/MarginContainer/FileExtensionFilter/VBoxContainer/HBoxContainer/BtnSelectAll" to="." method="SelectAllExtensions"]
+[connection signal="pressed" from="VBoxContainer/MarginContainer/Panel/HSplitContainer/VBoxContainer/MarginContainer/FileExtensionFilter/VBoxContainer/HBoxContainer/BtnDeselectAll" to="." method="DeselectAllExtensions"]
+[connection signal="pressed" from="VBoxContainer/MarginContainer/Panel/HSplitContainer/VBoxContainer/MarginContainer/FileExtensionFilter/VBoxContainer/CheckButton" to="." method="DeselectAllExtensions"]
+[connection signal="FileSelected" from="VBoxContainer/MarginContainer/Panel/HSplitContainer/ScrollContainer/FilePickerPanel" to="." method="OnFileSelected"]
+[connection signal="FilesSelected" from="VBoxContainer/MarginContainer/Panel/HSplitContainer/ScrollContainer/FilePickerPanel" to="." method="OnFilesSelected"]
+[connection signal="pressed" from="VBoxContainer/MainButtonContainer/BtnExtractFiltered" to="." method="ExtractFilteredFiles"]
+[connection signal="pressed" from="VBoxContainer/MainButtonContainer/BtnExtractSelected" to="." method="ConfirmImport"]
+[connection signal="pressed" from="VBoxContainer/MainButtonContainer/BtnClose" to="." method="OnCloseRequested"]
+
+[editable path="VBoxContainer/MarginContainer/Panel/HSplitContainer/ScrollContainer/FilePickerPanel"]

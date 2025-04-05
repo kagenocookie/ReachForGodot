@@ -6,7 +6,7 @@ public interface ICustomFileSystem
     PathType GetPathType(string path);
     string? GetPathInfo(string path, string field);
 
-    IEnumerable<string> GetRecursiveFileList(string folder)
+    IEnumerable<string> GetRecursiveFileList(string folder, int limit = -1)
     {
         var list = new List<string>();
         var queueFolders = new Queue<string>();

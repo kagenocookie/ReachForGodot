@@ -101,10 +101,18 @@ script = ExtResource("2_ghbal")
 metadata/_custom_type_script = "uid://va46q8at6sls"
 
 [node name="Comment" type="Label" parent="VBoxContainer/Panel/MarginContainer/VBoxContainer/ColumnHeaders"]
-custom_minimum_size = Vector2(50, 0)
+custom_minimum_size = Vector2(80, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Comment"
+
+[node name="ColSlider3" type="ColorRect" parent="VBoxContainer/Panel/MarginContainer/VBoxContainer/ColumnHeaders"]
+custom_minimum_size = Vector2(2, 0)
+layout_mode = 2
+mouse_default_cursor_shape = 10
+color = Color(0.775063, 0.775063, 0.775063, 1)
+script = ExtResource("2_ghbal")
+metadata/_custom_type_script = "uid://va46q8at6sls"
 
 [node name="ScrollContainer" type="ScrollContainer" parent="VBoxContainer/Panel/MarginContainer/VBoxContainer"]
 layout_mode = 2

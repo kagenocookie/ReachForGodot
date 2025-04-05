@@ -19,10 +19,24 @@ public class FileUnpacker
         return TryExtractFilteredFiles(sourceFilePath, config);
     }
 
+    public static bool TryExtractCustomFileList(string[] files, AssetConfig config)
+    {
+        var tmpfn = Path.GetTempFileName();
+        File.WriteAllLines(tmpfn, files);
+        var success = FileUnpacker.TryExtractFilteredFiles(string.Empty, tmpfn, config);
+        File.Delete(tmpfn);
+        return success;
+    }
+
     public static bool TryExtractFilteredFiles(string filter, AssetConfig config)
     {
-        var paklist = config.Paths.PakFiles;
         var listfile = config.Paths.FilelistPath;
+        if (string.IsNullOrEmpty(listfile)) return false;
+        return TryExtractFilteredFiles(filter, listfile, config);
+    }
+    public static bool TryExtractFilteredFiles(string filter, string listfile, AssetConfig config)
+    {
+        var paklist = config.Paths.PakFiles;
         if (paklist.Length == 0 || string.IsNullOrEmpty(listfile)) return false;
         var exePath = ReachForGodot.UnpackerExeFilepath;
         if (exePath == null) {

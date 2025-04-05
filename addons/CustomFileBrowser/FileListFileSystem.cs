@@ -1,4 +1,5 @@
 using Godot;
+using JetBrains.Annotations;
 
 namespace CustomFileBrowser;
 
@@ -8,6 +9,36 @@ public class FileListFileSystem : ICustomFileSystem
 
     private Dictionary<string, string[]> folderListCache = new();
 
+    private PathFilter? _filter;
+    public PathFilter? Filter
+    {
+        get => _filter;
+        set {
+            _filter = value;
+            folderListCache.Clear();
+        }
+    }
+
+    public delegate bool PathFilter(ReadOnlySpan<char> path);
+
+    public IEnumerable<string> GetRecursiveFileList(string folder, int limit = -1)
+    {
+        var list = new List<string>();
+        var queueFolders = new Queue<string>();
+        queueFolders.Enqueue(folder);
+        while (queueFolders.Count > 0) {
+            foreach (var file in GetFilesInFolder(queueFolders.Dequeue())) {
+                if (Path.GetExtension(file.AsSpan()).IsEmpty) {
+                    queueFolders.Enqueue(file);
+                } else if (Filter?.Invoke(file) != false) {
+                    list.Add(file);
+                    if (limit > 0 && list.Count >= limit) return list;
+                }
+            }
+        }
+
+        return list;
+    }
     public FileListFileSystem()
     {
     }
@@ -66,22 +97,24 @@ public class FileListFileSystem : ICustomFileSystem
         var count = Files.Length;
         var list = new List<string>();
 
-        list.Add(GetWithImmediateSubfolder(Files[startIndex], folderNormalized).ToString());
+        if (startIndex >= 0 && startIndex < Files.Length && Filter?.Invoke(Files[startIndex]) != false) {
+            list.Add(GetSubfolderPath(Files[startIndex], folderNormalized).ToString());
+        }
         int endIndex = startIndex + 1;
         while (endIndex < count) {
             var next = Files[endIndex++];
             if (!next.StartsWith(folderNormalized)) break;
-            if (!next.StartsWith(list.Last())) {
-                list.Add(GetWithImmediateSubfolder(next, folderNormalized).ToString());
+            if ((list.Count == 0 || !next.StartsWith(list.Last())) && Filter?.Invoke(next) != false) {
+                list.Add(GetSubfolderPath(next, folderNormalized).ToString());
             }
         }
 
         return folderListCache[folderNormalized] = names = list.ToArray();
     }
 
-    private static ReadOnlySpan<char> GetWithImmediateSubfolder(string path, string relativeTo)
+    private static ReadOnlySpan<char> GetSubfolderPath(string path, string fromFolder)
     {
-        var nextSlash = relativeTo.EndsWith('/') ? path.IndexOf('/', relativeTo.Length) : path.IndexOf('/', relativeTo.Length + 1);
+        var nextSlash = fromFolder.EndsWith('/') ? path.IndexOf('/', fromFolder.Length) : path.IndexOf('/', fromFolder.Length + 1);
         if (nextSlash == -1) return path;
         return path.AsSpan().Slice(0, nextSlash);
     }

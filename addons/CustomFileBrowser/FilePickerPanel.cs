@@ -22,6 +22,15 @@ public partial class FilePickerPanel : Control
     [Signal] public delegate void FilesSelectedEventHandler(string[] files);
     [Signal] public delegate void SelectedFileChangedEventHandler(string? file);
 
+    private const int RecursiveMatchLimit = 1000;
+
+    public FileDisplayMode DisplayMode { get; set; }
+
+    public enum FileDisplayMode
+    {
+        SingleFolder,
+        Recursive,
+    }
 
     private readonly List<FilePickerItem> _selectedItems = new();
     public IReadOnlyList<FilePickerItem> SelectedItems => _selectedItems;
@@ -235,7 +244,16 @@ public partial class FilePickerPanel : Control
             PathEdit.Text = dir;
         }
 
-        var files = FileSystem.GetFilesInFolder(dir);
+        RefreshItems();
+    }
+
+    public void RefreshItems()
+    {
+        _currentDir ??= string.Empty;
+
+        var files = DisplayMode == FileDisplayMode.SingleFolder
+            ? FileSystem.GetFilesInFolder(_currentDir)
+            : FileSystem.GetRecursiveFileList(_currentDir, RecursiveMatchLimit);
         ClearSelection();
         LastSelectedItem = null;
         CurrentFile = null;

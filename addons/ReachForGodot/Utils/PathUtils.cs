@@ -88,7 +88,7 @@ public static class PathUtils
         return 0;
     }
 
-    public static bool TryGetFileExtensionVersion(GamePaths config, string extension, out int version)
+    private static Dictionary<string, int> GetVersionDict(GamePaths config)
     {
         if (!extensionVersions.TryGetValue(config.Game, out var versions)) {
             if (File.Exists(config.ExtensionVersionsCacheFilepath)) {
@@ -97,15 +97,22 @@ public static class PathUtils
             }
             extensionVersions[config.Game] = versions ??= new Dictionary<string, int>();
         }
+        return versions;
+    }
 
-        return versions.TryGetValue(extension, out version);
+    public static bool TryGetFileExtensionVersion(GamePaths config, string extension, out int version)
+    {
+        return GetVersionDict(config).TryGetValue(extension, out version);
+    }
+
+    public static IEnumerable<string> GetGameFileExtensions(SupportedGame game)
+    {
+        return GetVersionDict(ReachForGodot.GetPaths(game)!).Keys;
     }
 
     private static void UpdateFileExtension(GamePaths config, string extension, int version)
     {
-        if (!extensionVersions.TryGetValue(config.Game, out var versions)) {
-            extensionVersions[config.Game] = versions = new Dictionary<string, int>();
-        }
+        var versions = GetVersionDict(config);
         versions[extension] = version;
         var path = config.ExtensionVersionsCacheFilepath;
         Directory.CreateDirectory(path.GetBaseDir());

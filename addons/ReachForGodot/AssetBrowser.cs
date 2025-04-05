@@ -87,22 +87,29 @@ public partial class AssetBrowser : Resource
         // ensure resource formats and stuff are registered
         System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(TypeCache).TypeHandle);
 
-        var dlg = ResourceLoader.Load<PackedScene>("res://addons/CustomFileBrowser/CustomFileDialog.tscn")?.Instantiate<CustomFileDialog>();
+        var dlg = ResourceLoader.Load<PackedScene>("res://addons/ReachForGodot/Editor/Windows/FileUnpackerUI.tscn")?.Instantiate<FileUnpackerUI>();
 
-        dlg ??= new CustomFileBrowser.CustomFileDialog();
-        dlg.FileSystem = new FileListFileSystem(Assets.Paths.FilelistPath);
+        dlg ??= new FileUnpackerUI();
         dlg.FileMode = FileDialog.FileModeEnum.OpenFiles;
+        dlg.Game = Assets.Game;
         dlg.FilesSelected += (files) => {
             var tmpConfig = (AssetConfig)Assets.Duplicate();
             // create a new temp config with no additional paths to ensure we fetch PAK sourced files here and not get distracted by whatever other modded files we may already have
             // maybe add more action buttons to the file picker UI so we can specify Get original or Get whichever files or Find in project file system
             tmpConfig.Paths = new GamePaths(tmpConfig.Game, tmpConfig.Paths.ChunkPath, tmpConfig.Paths.Il2cppPath, tmpConfig.Paths.RszJsonPath, tmpConfig.Paths.FilelistPath, Array.Empty<LabelledPathSetting>(), tmpConfig.Paths.PakFiles);
+
             GD.Print($"Attempting to extract from {files.Length} paths...");
-            var importList = files
-                .SelectMany(f => !Path.GetExtension(f.AsSpan()).IsEmpty ? [f] : dlg.FileSystem.GetRecursiveFileList(f))
-                .Select(f => PathUtils.FindSourceFilePath(PathUtils.GetFilepathWithoutNativesFolder(f), tmpConfig)!)
-                .ToArray();
-            _ = ImportAssetsAsync(importList);
+            var relativeFilepaths = files
+                .SelectMany(f => !Path.GetExtension(f.AsSpan()).IsEmpty ? [f] : ((ICustomFileSystem)dlg.FileSystem!).GetRecursiveFileList(f));
+            if (dlg.ShouldImportFiles) {
+                var importList = relativeFilepaths
+                    .Select(f => PathUtils.FindSourceFilePath(PathUtils.GetFilepathWithoutNativesFolder(f), tmpConfig)!)
+                    .ToArray();
+                _ = ImportAssetsAsync(importList);
+            } else {
+                var success = FileUnpacker.TryExtractCustomFileList(relativeFilepaths.ToArray(), Assets);
+                GD.Print("Extraction finished, success: " + success);
+            }
         };
         ((SceneTree)(Engine.GetMainLoop())).Root.AddChild(dlg);
         dlg.SetUnparentWhenInvisible(true);

@@ -199,11 +199,18 @@ public static class GodotObjectExtensions
 
     public static void ClearChildren(this Node node)
     {
+        ClearChildren(node, (_) => true);
+    }
+
+    public static void ClearChildren(this Node node, Func<Node, bool> filter)
+    {
         var i = node.GetChildCount();
         while (--i >= 0) {
             var child = node.GetChild(i);
-            node.RemoveChild(child);
-            child.Free();
+            if (filter.Invoke(child)) {
+                node.RemoveChild(child);
+                child.Free();
+            }
         }
     }
 
