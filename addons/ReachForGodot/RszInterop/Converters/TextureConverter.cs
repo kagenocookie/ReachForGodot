@@ -6,7 +6,7 @@ using Godot;
 public class TextureConverter : BlenderResourceConverter<TextureResource, Texture2D>
 {
     private static string? _script;
-    private static string ImportScript => _script ??= File.ReadAllText(ProjectSettings.GlobalizePath("res://addons/ReachForGodot/import_tex.py"));
+    private static string ImportScript => _script ??= File.ReadAllText(ProjectSettings.GlobalizePath("res://addons/ReachForGodot/scripts/import_tex.py"));
 
     public override TextureResource CreateOrReplaceResourcePlaceholder(AssetReference reference)
         => SetupResource(new TextureResource(), reference);

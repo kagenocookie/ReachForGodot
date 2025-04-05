@@ -7,7 +7,7 @@ using Godot;
 public class MeshConverter : BlenderResourceConverter<MeshResource, PackedScene>
 {
     private static string? _script;
-    private static string ImportScript => _script ??= File.ReadAllText(ProjectSettings.GlobalizePath("res://addons/ReachForGodot/import_mesh.py"));
+    private static string ImportScript => _script ??= File.ReadAllText(ProjectSettings.GlobalizePath("res://addons/ReachForGodot/scripts/import_mesh.py"));
 
     private static readonly byte[] MPLY_mesh_bytes = System.Text.Encoding.ASCII.GetBytes("MPLY");
 
