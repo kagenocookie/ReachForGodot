@@ -244,10 +244,11 @@ public static class GodotObjectExtensions
 
     public static void SetRecursiveOwner(this Node node, Node owner, Node? sourceOwner = null)
     {
-        node.Owner = owner;
+        if (node != owner) node.Owner = owner;
         foreach (var child in node.GetChildren()) {
-            if (sourceOwner != null ? child.Owner == sourceOwner : string.IsNullOrEmpty(child.SceneFilePath)) {
-                SetRecursiveOwner(child, owner);
+            if (sourceOwner != null && child.Owner != sourceOwner) continue;
+            if (sourceOwner == null && string.IsNullOrEmpty(child.SceneFilePath)) {
+                SetRecursiveOwner(child, owner, sourceOwner);
             } else {
                 child.Owner = owner;
             }

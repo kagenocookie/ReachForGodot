@@ -14,7 +14,7 @@ public partial class GameObject : Node3D, ISerializationListener, ICloneable
     [Export]
     public Godot.Collections.Array<REComponent> Components {
         get {
-            if (_components != null && _components.Count > 0 && _components[0].GameObject != this) {
+            if (_components != null && _components.Count > 0 && _components[0]?.GameObject != this) {
                 // Godot quietly reinstantiates whole scene trees sometimes, which is why we may need to re-apply the references
                 UpdateComponentGameObjects();
             }
@@ -267,7 +267,7 @@ public partial class GameObject : Node3D, ISerializationListener, ICloneable
         if (_components == null) return;
 
         foreach (var comp in _components) {
-            comp.GameObject = this;
+            if (comp != null) comp.GameObject = this;
         }
     }
 }
