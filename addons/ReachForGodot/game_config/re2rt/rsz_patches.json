@@ -5266,5 +5266,85 @@
         "Type": "Resource"
       }
     ]
+  },
+  "via.f16.UF": {
+    "FieldPatches": [
+      {
+        "Name": "u",
+        "ReplaceName": "u1",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "u",
+        "ReplaceName": "u2",
+        "Type": "ukn_error"
+      }
+    ]
+  },
+  "via.KeyFrame.UF": {
+    "FieldPatches": [
+      {
+        "Name": "f",
+        "ReplaceName": "f1",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "f",
+        "ReplaceName": "f2",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "f",
+        "ReplaceName": "f3",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "f",
+        "ReplaceName": "f4",
+        "Type": "ukn_error"
+      }
+    ]
+  },
+  "app.ropeway.DistanceAndLookAwayLightController": {
+    "FieldPatches": [
+      {
+        "Name": "STRUCT__Value_Curve",
+        "ReplaceName": "STRUCT__Value_Curve1",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT__Value_Curve",
+        "ReplaceName": "STRUCT__Value_Curve2",
+        "Type": "ukn_error"
+      }
+    ]
+  },
+  "via.KeyFrame.Time_Type": {
+    "FieldPatches": [
+      {
+        "Name": "ui",
+        "ReplaceName": "ui1",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "ui",
+        "ReplaceName": "ui2",
+        "Type": "ukn_error"
+      }
+    ]
+  },
+  "via.KeyFrame.Normal": {
+    "FieldPatches": [
+      {
+        "Name": "ui",
+        "ReplaceName": "ui1",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "ui",
+        "ReplaceName": "ui2",
+        "Type": "ukn_error"
+      }
+    ]
   }
 }

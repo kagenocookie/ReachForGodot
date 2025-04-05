@@ -205,5 +205,99 @@
         "Type": "Resource"
       }
     ]
+  },
+  "via.KeyFrame.UF": {
+    "FieldPatches": [
+      {
+        "Name": "f",
+        "ReplaceName": "f1",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "f",
+        "ReplaceName": "f2",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "f",
+        "ReplaceName": "f3",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "f",
+        "ReplaceName": "f4",
+        "Type": "ukn_error"
+      }
+    ]
+  },
+  "app.player.Em6100LoopAction": {
+    "FieldPatches": [
+      {
+        "Name": "Action",
+        "ReplaceName": "Action1",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "Action",
+        "ReplaceName": "Action2",
+        "Type": "ukn_error"
+      }
+    ]
+  },
+  "via.render.SpotLight": {
+    "FieldPatches": [
+      {
+        "Name": "Cone",
+        "ReplaceName": "Cone1",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "Cone",
+        "ReplaceName": "Cone2",
+        "Type": "ukn_error"
+      }
+    ]
+  },
+  "via.KeyFrame.Time_Type": {
+    "FieldPatches": [
+      {
+        "Name": "ui",
+        "ReplaceName": "ui1",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "ui",
+        "ReplaceName": "ui2",
+        "Type": "ukn_error"
+      }
+    ]
+  },
+  "via.KeyFrame.Normal": {
+    "FieldPatches": [
+      {
+        "Name": "ui",
+        "ReplaceName": "ui1",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "ui",
+        "ReplaceName": "ui2",
+        "Type": "ukn_error"
+      }
+    ]
+  },
+  "app.BreakWallController": {
+    "FieldPatches": [
+      {
+        "Name": "Unknown",
+        "ReplaceName": "Unknown1",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "Unknown",
+        "ReplaceName": "Unknown2",
+        "Type": "ukn_error"
+      }
+    ]
   }
 }

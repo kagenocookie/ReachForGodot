@@ -5834,5 +5834,171 @@
         "Type": "Resource"
       }
     ]
+  },
+  "via.f16.UF": {
+    "FieldPatches": [
+      {
+        "Name": "u",
+        "ReplaceName": "u1",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "u",
+        "ReplaceName": "u2",
+        "Type": "ukn_error"
+      }
+    ]
+  },
+  "via.KeyFrame.UF": {
+    "FieldPatches": [
+      {
+        "Name": "f",
+        "ReplaceName": "f1",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "f",
+        "ReplaceName": "f2",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "f",
+        "ReplaceName": "f3",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "f",
+        "ReplaceName": "f4",
+        "Type": "ukn_error"
+      }
+    ]
+  },
+  "chainsaw.Ch1f0z0Backup": {
+    "FieldPatches": [
+      {
+        "Name": "_Version",
+        "ReplaceName": "_Version1",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "_Version",
+        "ReplaceName": "_Version2",
+        "Type": "ukn_error"
+      }
+    ]
+  },
+  "chainsaw.Ch4f9z0Backup": {
+    "FieldPatches": [
+      {
+        "Name": "_Version",
+        "ReplaceName": "_Version1",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "_Version",
+        "ReplaceName": "_Version2",
+        "Type": "ukn_error"
+      }
+    ]
+  },
+  "chainsaw.gui.shop.InGameShopGuiState_FileExit.EnterParam": {
+    "FieldPatches": [
+      {
+        "Name": "NextState",
+        "ReplaceName": "NextState1",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "NextState",
+        "ReplaceName": "NextState2",
+        "Type": "ukn_error"
+      }
+    ]
+  },
+  "via.KeyFrame.Time_Type": {
+    "FieldPatches": [
+      {
+        "Name": "ui",
+        "ReplaceName": "ui1",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "ui",
+        "ReplaceName": "ui2",
+        "Type": "ukn_error"
+      }
+    ]
+  },
+  "via.KeyFrame.Normal": {
+    "FieldPatches": [
+      {
+        "Name": "ui",
+        "ReplaceName": "ui1",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "ui",
+        "ReplaceName": "ui2",
+        "Type": "ukn_error"
+      }
+    ]
+  },
+  "chainsaw.Ch4d7z0Backup": {
+    "FieldPatches": [
+      {
+        "Name": "_Version",
+        "ReplaceName": "_Version1",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "_Version",
+        "ReplaceName": "_Version2",
+        "Type": "ukn_error"
+      }
+    ]
+  },
+  "chainsaw.AutoWalkInterpolationInput": {
+    "FieldPatches": [
+      {
+        "Name": "STRUCT_Left_Pos",
+        "ReplaceName": "STRUCT_Left_Pos1",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT_Left_Pos",
+        "ReplaceName": "STRUCT_Left_Pos2",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT_Left_Rot",
+        "ReplaceName": "STRUCT_Left_Rot1",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT_Left_Rot",
+        "ReplaceName": "STRUCT_Left_Rot2",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT_Right_Pos",
+        "ReplaceName": "STRUCT_Right_Pos1",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT_Right_Pos",
+        "ReplaceName": "STRUCT_Right_Pos2",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT_Right_Rot",
+        "ReplaceName": "STRUCT_Right_Rot1",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT_Right_Rot",
+        "ReplaceName": "STRUCT_Right_Rot2",
+        "Type": "ukn_error"
+      }
+    ]
   }
 }

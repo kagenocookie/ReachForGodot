@@ -282,6 +282,9 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
         var fileOption = TypeCache.CreateRszFileOptions(config);
         var sourcePath = config.Paths.ChunkPath;
 
+        GD.Print("Checking for duplicate field names...");
+        TypeCache.VerifyDuplicateFields(fileOption.RszParser.ClassDict.Values, config);
+
         var scnTotal = PathUtils.GetFilesByExtensionFromListFile(config.Paths.FilelistPath, PathUtils.AppendFileVersion(".scn", config), sourcePath).Count();
         var pfbTotal = PathUtils.GetFilesByExtensionFromListFile(config.Paths.FilelistPath, PathUtils.AppendFileVersion(".pfb", config), sourcePath).Count();
         var rcolTotal = PathUtils.GetFilesByExtensionFromListFile(config.Paths.FilelistPath, PathUtils.AppendFileVersion(".rcol", config), sourcePath).Count();

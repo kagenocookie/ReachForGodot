@@ -6398,5 +6398,557 @@
         "Type": "Resource"
       }
     ]
+  },
+  "app.DynamicsDamage": {
+    "FieldPatches": [
+      {
+        "Name": "STRUCT_EnemyCleanHit_Max",
+        "ReplaceName": "STRUCT_EnemyCleanHit_Max1",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT_EnemyCleanHit_Max",
+        "ReplaceName": "STRUCT_EnemyCleanHit_Max2",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT_EnemyCleanHit_Min",
+        "ReplaceName": "STRUCT_EnemyCleanHit_Min1",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT_EnemyCleanHit_Min",
+        "ReplaceName": "STRUCT_EnemyCleanHit_Min2",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT_EnemyScratch_Max",
+        "ReplaceName": "STRUCT_EnemyScratch_Max1",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT_EnemyScratch_Max",
+        "ReplaceName": "STRUCT_EnemyScratch_Max2",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT_EnemyScratch_Min",
+        "ReplaceName": "STRUCT_EnemyScratch_Min1",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT_EnemyScratch_Min",
+        "ReplaceName": "STRUCT_EnemyScratch_Min2",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT_Friend_Max",
+        "ReplaceName": "STRUCT_Friend_Max1",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT_Friend_Max",
+        "ReplaceName": "STRUCT_Friend_Max2",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT_Friend_Min",
+        "ReplaceName": "STRUCT_Friend_Min1",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT_Friend_Min",
+        "ReplaceName": "STRUCT_Friend_Min2",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT_EnemyCleanHit_Max",
+        "ReplaceName": "STRUCT_EnemyCleanHit_Max3",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT_EnemyCleanHit_Min",
+        "ReplaceName": "STRUCT_EnemyCleanHit_Min3",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT_EnemyScratch_Max",
+        "ReplaceName": "STRUCT_EnemyScratch_Max3",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT_EnemyScratch_Min",
+        "ReplaceName": "STRUCT_EnemyScratch_Min3",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT_Friend_Max",
+        "ReplaceName": "STRUCT_Friend_Max3",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT_Friend_Min",
+        "ReplaceName": "STRUCT_Friend_Min3",
+        "Type": "ukn_error"
+      }
+    ]
+  },
+  "via.f16.UF": {
+    "FieldPatches": [
+      {
+        "Name": "u",
+        "ReplaceName": "u1",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "u",
+        "ReplaceName": "u2",
+        "Type": "ukn_error"
+      }
+    ]
+  },
+  "app.Job06RepairLoop": {
+    "FieldPatches": [
+      {
+        "Name": "STRUCT_DataContainerID__HasValue",
+        "ReplaceName": "STRUCT_DataContainerID__HasValue1",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT_DataContainerID__HasValue",
+        "ReplaceName": "STRUCT_DataContainerID__HasValue2",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT_DataContainerID__Value",
+        "ReplaceName": "STRUCT_DataContainerID__Value1",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT_DataContainerID__Value",
+        "ReplaceName": "STRUCT_DataContainerID__Value2",
+        "Type": "ukn_error"
+      }
+    ]
+  },
+  "via.KeyFrame.UF": {
+    "FieldPatches": [
+      {
+        "Name": "f",
+        "ReplaceName": "f1",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "f",
+        "ReplaceName": "f2",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "f",
+        "ReplaceName": "f3",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "f",
+        "ReplaceName": "f4",
+        "Type": "ukn_error"
+      }
+    ]
+  },
+  "app.DamageStatusConditionEndAction": {
+    "FieldPatches": [
+      {
+        "Name": "InterpolationParam",
+        "ReplaceName": "InterpolationParam1",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "InterpolationParam",
+        "ReplaceName": "InterpolationParam2",
+        "Type": "ukn_error"
+      }
+    ]
+  },
+  "app.Job09CastRageFregrance": {
+    "FieldPatches": [
+      {
+        "Name": "STRUCT_DataContainerID__HasValue",
+        "ReplaceName": "STRUCT_DataContainerID__HasValue1",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT_DataContainerID__HasValue",
+        "ReplaceName": "STRUCT_DataContainerID__HasValue2",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT_DataContainerID__Value",
+        "ReplaceName": "STRUCT_DataContainerID__Value1",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT_DataContainerID__Value",
+        "ReplaceName": "STRUCT_DataContainerID__Value2",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT_DataContainerID__HasValue",
+        "ReplaceName": "STRUCT_DataContainerID__HasValue3",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT_DataContainerID__Value",
+        "ReplaceName": "STRUCT_DataContainerID__Value3",
+        "Type": "ukn_error"
+      }
+    ]
+  },
+  "app.AfterImage": {
+    "FieldPatches": [
+      {
+        "Name": "STRUCT__Value_DataContainerID",
+        "ReplaceName": "STRUCT__Value_DataContainerID1",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT__Value_DataContainerID",
+        "ReplaceName": "STRUCT__Value_DataContainerID2",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT__Value_ContainerID",
+        "ReplaceName": "STRUCT__Value_ContainerID1",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT__Value_ContainerID",
+        "ReplaceName": "STRUCT__Value_ContainerID2",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT__Value_ElementID",
+        "ReplaceName": "STRUCT__Value_ElementID1",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT__Value_ElementID",
+        "ReplaceName": "STRUCT__Value_ElementID2",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT__Value_DataContainerID",
+        "ReplaceName": "STRUCT__Value_DataContainerID3",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT__Value_ContainerID",
+        "ReplaceName": "STRUCT__Value_ContainerID3",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT__Value_ElementID",
+        "ReplaceName": "STRUCT__Value_ElementID3",
+        "Type": "ukn_error"
+      }
+    ]
+  },
+  "app.CloneCharacter": {
+    "FieldPatches": [
+      {
+        "Name": "STRUCT__Value_DataContainerID",
+        "ReplaceName": "STRUCT__Value_DataContainerID1",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT__Value_DataContainerID",
+        "ReplaceName": "STRUCT__Value_DataContainerID2",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT__Value_ContainerID",
+        "ReplaceName": "STRUCT__Value_ContainerID1",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT__Value_ContainerID",
+        "ReplaceName": "STRUCT__Value_ContainerID2",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT__Value_ElementID",
+        "ReplaceName": "STRUCT__Value_ElementID1",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT__Value_ElementID",
+        "ReplaceName": "STRUCT__Value_ElementID2",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT__Value_DataContainerID",
+        "ReplaceName": "STRUCT__Value_DataContainerID3",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT__Value_ContainerID",
+        "ReplaceName": "STRUCT__Value_ContainerID3",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT__Value_ElementID",
+        "ReplaceName": "STRUCT__Value_ElementID3",
+        "Type": "ukn_error"
+      }
+    ]
+  },
+  "via.KeyFrame.Time_Type": {
+    "FieldPatches": [
+      {
+        "Name": "ui",
+        "ReplaceName": "ui1",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "ui",
+        "ReplaceName": "ui2",
+        "Type": "ukn_error"
+      }
+    ]
+  },
+  "app.SmokeDecoy": {
+    "FieldPatches": [
+      {
+        "Name": "STRUCT__Value_DataContainerID",
+        "ReplaceName": "STRUCT__Value_DataContainerID1",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT__Value_DataContainerID",
+        "ReplaceName": "STRUCT__Value_DataContainerID2",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT__Value_ContainerID",
+        "ReplaceName": "STRUCT__Value_ContainerID1",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT__Value_ContainerID",
+        "ReplaceName": "STRUCT__Value_ContainerID2",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT__Value_ElementID",
+        "ReplaceName": "STRUCT__Value_ElementID1",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT__Value_ElementID",
+        "ReplaceName": "STRUCT__Value_ElementID2",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT__Value_DataContainerID",
+        "ReplaceName": "STRUCT__Value_DataContainerID3",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT__Value_ContainerID",
+        "ReplaceName": "STRUCT__Value_ContainerID3",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT__Value_ElementID",
+        "ReplaceName": "STRUCT__Value_ElementID3",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT__Value_DataContainerID",
+        "ReplaceName": "STRUCT__Value_DataContainerID4",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT__Value_ContainerID",
+        "ReplaceName": "STRUCT__Value_ContainerID4",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT__Value_ElementID",
+        "ReplaceName": "STRUCT__Value_ElementID4",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT__Value_DataContainerID",
+        "ReplaceName": "STRUCT__Value_DataContainerID5",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT__Value_ContainerID",
+        "ReplaceName": "STRUCT__Value_ContainerID5",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT__Value_ElementID",
+        "ReplaceName": "STRUCT__Value_ElementID5",
+        "Type": "ukn_error"
+      }
+    ]
+  },
+  "via.KeyFrame.Normal": {
+    "FieldPatches": [
+      {
+        "Name": "ui",
+        "ReplaceName": "ui1",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "ui",
+        "ReplaceName": "ui2",
+        "Type": "ukn_error"
+      }
+    ]
+  },
+  "app.SmokeAstralBody": {
+    "FieldPatches": [
+      {
+        "Name": "STRUCT__Value_DataContainerID",
+        "ReplaceName": "STRUCT__Value_DataContainerID1",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT__Value_DataContainerID",
+        "ReplaceName": "STRUCT__Value_DataContainerID2",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT__Value_ContainerID",
+        "ReplaceName": "STRUCT__Value_ContainerID1",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT__Value_ContainerID",
+        "ReplaceName": "STRUCT__Value_ContainerID2",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT__Value_ElementID",
+        "ReplaceName": "STRUCT__Value_ElementID1",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT__Value_ElementID",
+        "ReplaceName": "STRUCT__Value_ElementID2",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT__Value_DataContainerID",
+        "ReplaceName": "STRUCT__Value_DataContainerID3",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT__Value_ContainerID",
+        "ReplaceName": "STRUCT__Value_ContainerID3",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT__Value_ElementID",
+        "ReplaceName": "STRUCT__Value_ElementID3",
+        "Type": "ukn_error"
+      }
+    ]
+  },
+  "app.ThrowHitDamageParameter": {
+    "FieldPatches": [
+      {
+        "Name": "STRUCT_EnemyCleanHit_Max",
+        "ReplaceName": "STRUCT_EnemyCleanHit_Max1",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT_EnemyCleanHit_Max",
+        "ReplaceName": "STRUCT_EnemyCleanHit_Max2",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT_EnemyCleanHit_Min",
+        "ReplaceName": "STRUCT_EnemyCleanHit_Min1",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT_EnemyCleanHit_Min",
+        "ReplaceName": "STRUCT_EnemyCleanHit_Min2",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT_EnemyScratch_Max",
+        "ReplaceName": "STRUCT_EnemyScratch_Max1",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT_EnemyScratch_Max",
+        "ReplaceName": "STRUCT_EnemyScratch_Max2",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT_EnemyScratch_Min",
+        "ReplaceName": "STRUCT_EnemyScratch_Min1",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT_EnemyScratch_Min",
+        "ReplaceName": "STRUCT_EnemyScratch_Min2",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT_Friend_Max",
+        "ReplaceName": "STRUCT_Friend_Max1",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT_Friend_Max",
+        "ReplaceName": "STRUCT_Friend_Max2",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT_Friend_Min",
+        "ReplaceName": "STRUCT_Friend_Min1",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT_Friend_Min",
+        "ReplaceName": "STRUCT_Friend_Min2",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT_EnemyCleanHit_Max",
+        "ReplaceName": "STRUCT_EnemyCleanHit_Max3",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT_EnemyCleanHit_Min",
+        "ReplaceName": "STRUCT_EnemyCleanHit_Min3",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT_EnemyScratch_Max",
+        "ReplaceName": "STRUCT_EnemyScratch_Max3",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT_EnemyScratch_Min",
+        "ReplaceName": "STRUCT_EnemyScratch_Min3",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT_Friend_Max",
+        "ReplaceName": "STRUCT_Friend_Max3",
+        "Type": "ukn_error"
+      },
+      {
+        "Name": "STRUCT_Friend_Min",
+        "ReplaceName": "STRUCT_Friend_Min3",
+        "Type": "ukn_error"
+      }
+    ]
   }
 }

@@ -212,6 +212,41 @@ public static partial class TypeCache
         }
     }
 
+    public static void VerifyDuplicateFields(IEnumerable<RszClass> classlist, AssetConfig config)
+    {
+        var cache = GetCacheRoot(config.Game);
+        var dupeDict = new Dictionary<string, int>();
+        int changes = 0;
+        RszClassPatch? patch;
+        foreach (var cls in classlist) {
+            dupeDict.Clear();
+            patch = null;
+            foreach (var f in cls.fields) {
+                if (dupeDict.TryGetValue(f.name, out var count)) {
+                    patch ??= cache.FindOrCreateClassPatch(cls.name);
+                    if (count == 1) {
+                        var prev = cls.fields.First(p => p.name == f.name);
+                        var entryPrev = new RszFieldPatch() { Name = f.name, ReplaceName = f.name + "1" };
+                        prev.name = entryPrev.ReplaceName;
+                        patch.FieldPatches = patch.FieldPatches == null ? [entryPrev] : patch.FieldPatches.Append(entryPrev).ToArray();
+                        changes++;
+                    }
+                    var nameOverride = f.name + (dupeDict[f.name] = ++count);
+                    var entry = new RszFieldPatch() { Name = f.name, ReplaceName = nameOverride };
+                    patch.FieldPatches = patch.FieldPatches == null ? [entry] : patch.FieldPatches.Append(entry).ToArray();
+                    changes++;
+                    f.name = nameOverride;
+                } else {
+                    dupeDict[f.name] = 1;
+                }
+            }
+        }
+        if (changes > 0) {
+            cache.UpdateRszPatches(config);
+            GD.Print($"Updating RSZ duplicate field names for {changes} fields");
+        }
+    }
+
     private static GameClassCache GetCacheRoot(SupportedGame game)
     {
         if (!allCacheData.TryGetValue(game, out var data)) {
