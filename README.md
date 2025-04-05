@@ -80,7 +80,7 @@ For the open world games: The scene structure is a mess thanks to how it's struc
 - **Additional paths**: List of secondary additional filepaths for exporting to and importing from of assets, like a custom mod folder or the game's natives path
 - **Pak Priority list**: List of PAK files to extract assets from. The list should be defined in chronological order, e.g. re_chunk_000.pak, re_chunk_000.pak.patch_001.pak, re_chunk_000.pak.patch_002.pak, ...
 - **File Unpacker Executable**: A path to the `ree-pak-cli.exe` from [ree-pak-rs](https://github.com/eigeen/ree-pak-rs)
-- **Import Mesh Materials**: Whether to enable generation of textures for all meshes. Not recommended if you wish to use your computer while it's importing things.
+- **Import Mesh Materials**: Whether to enable textures for imported meshes. The conversion process may take longer and it will take more storage space. Requires Blender 4.2 for RE Mesh Editor's "use DDS" setting, as otherwise textures need an additional conversion step that doesn't work when blender is executed in the background.
 - **Create Scene Proxy Node Threshold**: At how many nodes within a scene should the scene be automatically separated with an additional proxy node that can be disabled for performance. Can always manually toggle proxy nodes later.
 
 ## Usage

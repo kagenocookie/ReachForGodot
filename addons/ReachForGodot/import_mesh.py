@@ -10,9 +10,11 @@ includeMaterials = __INCLUDE_MATERIALS__
 
 lastDragDropOptions = bpy.context.preferences.addons[prefName].preferences.dragDropImportOptions
 lastShowConsole = bpy.context.preferences.addons[prefName].preferences.showConsole
+lastUseDDS = bpy.context.preferences.addons[prefName].preferences.useDDS
 
 bpy.context.preferences.addons[prefName].preferences.dragDropImportOptions = False
 bpy.context.preferences.addons[prefName].preferences.showConsole = False
+bpy.context.preferences.addons[prefName].preferences.useDDS = True
 
 # %AppData%\Roaming\Blender Foundation\Blender\4.3\scripts\presets\operator\export_scene.gltf/
 op = {
@@ -168,3 +170,4 @@ except:
 finally:
     bpy.context.preferences.addons[prefName].preferences.dragDropImportOptions = lastDragDropOptions
     bpy.context.preferences.addons[prefName].preferences.showConsole = lastShowConsole
+    bpy.context.preferences.addons[prefName].preferences.useDDS = lastUseDDS
