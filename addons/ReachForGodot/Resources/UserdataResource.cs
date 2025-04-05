@@ -3,10 +3,10 @@ namespace ReaGE;
 using System.Threading.Tasks;
 using Godot;
 
-[GlobalClass, Tool, ResourceHolder("user", RESupportedFileFormats.Userdata)]
+[GlobalClass, Tool, ResourceHolder("user", SupportedFileFormats.Userdata)]
 public partial class UserdataResource : REResource, IRszContainer, IImportableAsset
 {
-    public UserdataResource() : base(RESupportedFileFormats.Userdata)
+    public UserdataResource() : base(SupportedFileFormats.Userdata)
     {
     }
 

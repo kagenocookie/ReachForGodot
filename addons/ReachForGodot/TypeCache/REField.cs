@@ -10,7 +10,7 @@ public class REField
     public PropertyHint Hint { get; set; }
     public string? HintString { get; set; }
     public string? ElementType { get; set; }
-    public RESupportedFileFormats ResourceType {
+    public SupportedFileFormats ResourceType {
         set => HintString = PathUtils.GetResourceTypeFromFormat(value).Name;
     }
 

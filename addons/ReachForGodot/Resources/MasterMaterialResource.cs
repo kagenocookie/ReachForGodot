@@ -2,10 +2,10 @@ namespace ReaGE;
 
 using Godot;
 
-[GlobalClass, Tool, ResourceHolder("mmtr", RESupportedFileFormats.MasterMaterial)]
+[GlobalClass, Tool, ResourceHolder("mmtr", SupportedFileFormats.MasterMaterial)]
 public partial class MasterMaterialResource : REResource
 {
-    public MasterMaterialResource() : base(RESupportedFileFormats.MasterMaterial)
+    public MasterMaterialResource() : base(SupportedFileFormats.MasterMaterial)
     {
     }
 }

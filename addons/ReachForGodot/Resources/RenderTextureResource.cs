@@ -3,10 +3,10 @@ namespace ReaGE;
 using System.Threading.Tasks;
 using Godot;
 
-[GlobalClass, Tool, ResourceHolder("rtex", RESupportedFileFormats.RenderTexture)]
+[GlobalClass, Tool, ResourceHolder("rtex", SupportedFileFormats.RenderTexture)]
 public partial class RenderTextureResource : TextureResource
 {
-    public RenderTextureResource() : base(RESupportedFileFormats.RenderTexture)
+    public RenderTextureResource() : base(SupportedFileFormats.RenderTexture)
     {
     }
 

@@ -2,10 +2,10 @@ namespace ReaGE;
 
 using Godot;
 
-[GlobalClass, Tool, ResourceHolder("gpbf", RESupportedFileFormats.GpuBuffer)]
+[GlobalClass, Tool, ResourceHolder("gpbf", SupportedFileFormats.GpuBuffer)]
 public partial class GpuBufferResource : REResource
 {
-    public GpuBufferResource() : base(RESupportedFileFormats.GpuBuffer)
+    public GpuBufferResource() : base(SupportedFileFormats.GpuBuffer)
     {
     }
 }

@@ -15,9 +15,6 @@ public partial class FilePickerColumnSlider : ColorRect
 
     public float Width => ResizedControl?.CustomMinimumSize.X ?? 0;
 
-    [Signal]
-    public delegate void ResizedEventHandler(int width);
-
     public override void _Ready()
     {
         MouseEntered += OnItemMouseEntered;

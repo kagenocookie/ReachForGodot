@@ -66,8 +66,8 @@ public partial class FileUnpackerUI : Window
         FileSystem = new FileListFileSystem(config.Paths.FilelistPath);
         if (ExtensionButtonsContainer != null) {
             var orderedFormats = PathUtils.GetGameFileExtensions(Game)
-                .OrderBy(ext => PathUtils.GetFileFormatFromExtension(ext) is RESupportedFileFormats fmt
-                    && fmt != RESupportedFileFormats.Unknown ? ((int)fmt, string.Empty) : (99, ext));
+                .OrderBy(ext => PathUtils.GetFileFormatFromExtension(ext) is SupportedFileFormats fmt
+                    && fmt != SupportedFileFormats.Unknown ? ((int)fmt, string.Empty) : (99, ext));
 
             foreach (var ext in orderedFormats) {
                 var btn = new CheckButton() { Text = ext };

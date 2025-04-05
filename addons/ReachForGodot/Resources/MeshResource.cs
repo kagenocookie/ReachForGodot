@@ -3,12 +3,12 @@ namespace ReaGE;
 using System.Threading.Tasks;
 using Godot;
 
-[GlobalClass, Tool, ResourceHolder("mesh", RESupportedFileFormats.Mesh)]
+[GlobalClass, Tool, ResourceHolder("mesh", SupportedFileFormats.Mesh)]
 public partial class MeshResource : REResourceProxy, IImportableAsset
 {
     public PackedScene? ImportedMesh => ImportedResource as PackedScene;
 
-    public MeshResource() : base(RESupportedFileFormats.Mesh)
+    public MeshResource() : base(SupportedFileFormats.Mesh)
     {
     }
 

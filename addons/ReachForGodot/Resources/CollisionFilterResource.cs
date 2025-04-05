@@ -4,13 +4,13 @@ using System.Threading.Tasks;
 using Godot;
 using RszTool;
 
-[GlobalClass, Tool, ResourceHolder("cfil", RESupportedFileFormats.CollisionFilter)]
+[GlobalClass, Tool, ResourceHolder("cfil", SupportedFileFormats.CollisionFilter)]
 public partial class CollisionFilterResource : REResource, IImportableAsset
 {
     [Export] public string? Uuid;
     [Export] public string[]? CollisionGuids;
 
-    public CollisionFilterResource() : base(RESupportedFileFormats.CollisionFilter)
+    public CollisionFilterResource() : base(SupportedFileFormats.CollisionFilter)
     {
     }
 

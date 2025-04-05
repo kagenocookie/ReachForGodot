@@ -3,7 +3,7 @@ namespace ReaGE;
 using Godot;
 using Godot.Collections;
 
-[GlobalClass, Tool, ResourceHolder("uvar", RESupportedFileFormats.Uvar)]
+[GlobalClass, Tool, ResourceHolder("uvar", SupportedFileFormats.Uvar)]
 public partial class UvarResource : REResource, IImportableAsset, IExportableAsset
 {
     [Export] public string? OriginalName { get; set; }
@@ -12,7 +12,7 @@ public partial class UvarResource : REResource, IImportableAsset, IExportableAss
 
     private Array<Dictionary>? propertyList;
 
-    public UvarResource() : base(RESupportedFileFormats.Uvar)
+    public UvarResource() : base(SupportedFileFormats.Uvar)
     {
     }
 

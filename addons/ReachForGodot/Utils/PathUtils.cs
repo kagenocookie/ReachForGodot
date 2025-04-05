@@ -9,14 +9,14 @@ public static class PathUtils
 {
     private static readonly Dictionary<SupportedGame, Dictionary<string, int>> extensionVersions = new();
 
-    private sealed record FormatDescriptor(string extension, Type resourceType, RESupportedFileFormats format);
+    private sealed record FormatDescriptor(string extension, Type resourceType, SupportedFileFormats format);
 
     private static readonly List<FormatDescriptor> formats = new();
-    private static readonly Dictionary<RESupportedFileFormats, FormatDescriptor> formatToDescriptor = new();
+    private static readonly Dictionary<SupportedFileFormats, FormatDescriptor> formatToDescriptor = new();
     private static readonly Dictionary<SupportedGame, HashSet<string>> ignoredFilepaths = new();
 
-    private static readonly Dictionary<RESupportedFileFormats, Func<REResource>> resourceFactory = new();
-    public static void RegisterFileFormat(RESupportedFileFormats format, string extension, Type resourceType)
+    private static readonly Dictionary<SupportedFileFormats, Func<REResource>> resourceFactory = new();
+    public static void RegisterFileFormat(SupportedFileFormats format, string extension, Type resourceType)
     {
         var desc = new FormatDescriptor(extension, resourceType, format);
 
@@ -68,18 +68,18 @@ public static class PathUtils
         return filename.GetFile().GetBaseName().GetBaseName();
     }
 
-    public static RESupportedFileFormats GetFileFormatFromExtension(ReadOnlySpan<char> extension)
+    public static SupportedFileFormats GetFileFormatFromExtension(ReadOnlySpan<char> extension)
     {
         foreach (var desc in formats) {
             if (extension.SequenceEqual(desc.extension)) return desc.format;
         }
-        return RESupportedFileFormats.Unknown;
+        return SupportedFileFormats.Unknown;
     }
 
-    public static string? GetFileExtensionFromFormat(RESupportedFileFormats format) => formatToDescriptor.GetValueOrDefault(format)?.extension;
-    public static Type GetResourceTypeFromFormat(RESupportedFileFormats format) => formatToDescriptor.TryGetValue(format, out var desc) ? desc.resourceType : typeof(REResource);
+    public static string? GetFileExtensionFromFormat(SupportedFileFormats format) => formatToDescriptor.GetValueOrDefault(format)?.extension;
+    public static Type GetResourceTypeFromFormat(SupportedFileFormats format) => formatToDescriptor.TryGetValue(format, out var desc) ? desc.resourceType : typeof(REResource);
 
-    public static int GetFileFormatVersion(RESupportedFileFormats format, GamePaths config)
+    public static int GetFileFormatVersion(SupportedFileFormats format, GamePaths config)
     {
         if (TryGetFileExtensionVersion(config, GetFileExtensionFromFormat(format)!, out var version)) {
             return version;
@@ -120,9 +120,9 @@ public static class PathUtils
         JsonSerializer.Serialize(fs, versions, TypeCache.jsonOptions);
     }
 
-    public static int GuessFileVersion(string relativePath, RESupportedFileFormats format, AssetConfig config)
+    public static int GuessFileVersion(string relativePath, SupportedFileFormats format, AssetConfig config)
     {
-        if (format == RESupportedFileFormats.Unknown) {
+        if (format == SupportedFileFormats.Unknown) {
             format = GetFileFormat(relativePath).format;
         }
 
@@ -163,7 +163,7 @@ public static class PathUtils
     /// <summary>
     /// Gets the path that a resource's asset file will get imported to. This is the mesh/texture/audio/other linked resource, and not the main resource file.
     /// </summary>
-    public static string? GetAssetImportPath(string? fullSourcePath, RESupportedFileFormats format, AssetConfig config)
+    public static string? GetAssetImportPath(string? fullSourcePath, SupportedFileFormats format, AssetConfig config)
     {
         if (fullSourcePath == null) return null;
         return ProjectSettings.LocalizePath(FullOrRelativePathToImportPath(fullSourcePath, format, config, false));
@@ -461,7 +461,7 @@ public static class PathUtils
         return null;
     }
 
-    private static string? FullOrRelativePathToImportPath(string sourcePath, RESupportedFileFormats fmt, AssetConfig config, bool resource)
+    private static string? FullOrRelativePathToImportPath(string sourcePath, SupportedFileFormats fmt, AssetConfig config, bool resource)
     {
         var relativePath = Path.IsPathRooted(sourcePath) ? FullToRelativePath(sourcePath, config) : sourcePath;
         if (relativePath == null) return null;
@@ -471,16 +471,16 @@ public static class PathUtils
         var targetPath = Path.Combine(config.AssetDirectory, relativePath);
 
         switch (fmt) {
-            case RESupportedFileFormats.Mesh:
+            case SupportedFileFormats.Mesh:
                 return targetPath + (resource ? ".tres" : ".glb");
-            case RESupportedFileFormats.Texture:
+            case SupportedFileFormats.Texture:
                 return targetPath + (resource ? ".tres" : ".dds");
-            case RESupportedFileFormats.Rcol:
+            case SupportedFileFormats.Rcol:
                 return targetPath + (resource ? ".tres" : ".tscn");
-            case RESupportedFileFormats.Scene:
-            case RESupportedFileFormats.Prefab:
+            case SupportedFileFormats.Scene:
+            case SupportedFileFormats.Prefab:
                 return targetPath + ".tscn";
-            case RESupportedFileFormats.Userdata:
+            case SupportedFileFormats.Userdata:
                 return targetPath + ".tres";
             default:
                 return targetPath + ".tres";

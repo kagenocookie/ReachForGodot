@@ -13,7 +13,7 @@ public partial class REResourceProxy : REResource, IImportableAsset
     public bool IsEmpty => ImportedResource == null;
 
     public REResourceProxy() { }
-    protected REResourceProxy(RESupportedFileFormats format) => ResourceType = format;
+    protected REResourceProxy(SupportedFileFormats format) => ResourceType = format;
 
     public async Task<Resource?> Import(bool forceReload)
     {

@@ -4,9 +4,9 @@ namespace ReaGE;
 public sealed class ResourceHolderAttribute : System.Attribute
 {
     public string Extension { get; }
-    public RESupportedFileFormats Format { get; }
+    public SupportedFileFormats Format { get; }
 
-    public ResourceHolderAttribute(string extension, RESupportedFileFormats format)
+    public ResourceHolderAttribute(string extension, SupportedFileFormats format)
     {
         Extension = extension;
         Format = format;

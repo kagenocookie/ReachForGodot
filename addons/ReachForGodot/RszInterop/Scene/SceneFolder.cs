@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Godot;
 using ReaGE.EditorLogic;
 
-[GlobalClass, Tool, Icon("res://addons/ReachForGodot/icons/folder.png"), ResourceHolder("scn", RESupportedFileFormats.Scene)]
+[GlobalClass, Tool, Icon("res://addons/ReachForGodot/icons/folder.png"), ResourceHolder("scn", SupportedFileFormats.Scene)]
 public partial class SceneFolder : Node3D, IRszContainer, IImportableAsset
 {
     [Export] public SupportedGame Game { get; set; }

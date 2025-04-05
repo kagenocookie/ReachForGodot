@@ -4,13 +4,13 @@ using System.Threading.Tasks;
 using Godot;
 using RszTool;
 
-[GlobalClass, Tool, ResourceHolder("fol", RESupportedFileFormats.Foliage)]
+[GlobalClass, Tool, ResourceHolder("fol", SupportedFileFormats.Foliage)]
 public partial class FoliageResource : REResource, IExportableAsset, IImportableAsset
 {
     [Export] public FoliageGroup[]? Groups;
     [Export] public Aabb Bounds;
 
-    public FoliageResource() : base(RESupportedFileFormats.Foliage)
+    public FoliageResource() : base(SupportedFileFormats.Foliage)
     {
     }
 

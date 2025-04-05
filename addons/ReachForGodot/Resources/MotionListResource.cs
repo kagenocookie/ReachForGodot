@@ -2,10 +2,10 @@ namespace ReaGE;
 
 using Godot;
 
-[GlobalClass, Tool, ResourceHolder("motlist", RESupportedFileFormats.MotionList)]
+[GlobalClass, Tool, ResourceHolder("motlist", SupportedFileFormats.MotionList)]
 public partial class MotionListResource : REResource
 {
-    public MotionListResource() : base(RESupportedFileFormats.MotionList)
+    public MotionListResource() : base(SupportedFileFormats.MotionList)
     {
     }
 }

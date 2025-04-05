@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using Godot;
 
-[GlobalClass, Tool, Icon("res://addons/ReachForGodot/icons/prefab.png"), ResourceHolder("pfb", RESupportedFileFormats.Prefab)]
+[GlobalClass, Tool, Icon("res://addons/ReachForGodot/icons/prefab.png"), ResourceHolder("pfb", SupportedFileFormats.Prefab)]
 public partial class PrefabNode : GameObject, IRszContainer, IImportableAsset
 {
     [Export] public AssetReference? Asset { get; set; }

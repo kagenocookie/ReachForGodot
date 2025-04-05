@@ -18,7 +18,7 @@ public enum SupportedGame
     MonsterHunterWilds = 13,
 }
 
-public enum RESupportedFileFormats
+public enum SupportedFileFormats
 {
     Unknown,
     Mesh,

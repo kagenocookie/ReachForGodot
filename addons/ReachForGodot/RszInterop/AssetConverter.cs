@@ -101,19 +101,19 @@ public class AssetConverter
     {
         if (asset is REResource reres) {
             switch (reres.ResourceType) {
-                case RESupportedFileFormats.Userdata:
+                case SupportedFileFormats.Userdata:
                     return User.ImportFromFile(filepath, asset as UserdataResource);
-                case RESupportedFileFormats.Rcol:
+                case SupportedFileFormats.Rcol:
                     return Rcol.ImportFromFile(filepath);
-                case RESupportedFileFormats.Foliage:
+                case SupportedFileFormats.Foliage:
                     return Fol.ImportFromFile(filepath, asset as FoliageResource);
-                case RESupportedFileFormats.Mesh:
+                case SupportedFileFormats.Mesh:
                     return Mesh.ImportAsset((MeshResource)reres, filepath);
-                case RESupportedFileFormats.Texture:
+                case SupportedFileFormats.Texture:
                     return Texture.ImportAsset((TextureResource)reres, filepath);
-                case RESupportedFileFormats.MaterialDefinition:
+                case SupportedFileFormats.MaterialDefinition:
                     return Mdf2.ImportFromFile(filepath, asset as MaterialDefinitionResource);
-                case RESupportedFileFormats.Uvar:
+                case SupportedFileFormats.Uvar:
                     return Uvar.ImportFromFile(filepath, asset as UvarResource);
                 default:
                     GD.PrintErr("Currently unsupported import for resource type " + reres.ResourceType);
@@ -145,15 +145,15 @@ public class AssetConverter
         Context.Clear();
         if (resource is REResource reres) {
             switch (reres.ResourceType) {
-                case RESupportedFileFormats.Userdata:
+                case SupportedFileFormats.Userdata:
                     return User.ExportToFile((UserdataResource)reres, outputPath);
-                case RESupportedFileFormats.Rcol:
+                case SupportedFileFormats.Rcol:
                     return Rcol.ExportToFile(((RcolResource)reres).Instantiate()!, outputPath);
-                case RESupportedFileFormats.Foliage:
+                case SupportedFileFormats.Foliage:
                     return Fol.ExportToFile((FoliageResource)reres, outputPath);
-                case RESupportedFileFormats.MaterialDefinition:
+                case SupportedFileFormats.MaterialDefinition:
                     return Mdf2.ExportToFile((MaterialDefinitionResource)reres, outputPath);
-                case RESupportedFileFormats.Uvar:
+                case SupportedFileFormats.Uvar:
                     return Uvar.ExportToFile((UvarResource)reres, outputPath);
                 default:
                     GD.PrintErr("Currently unsupported export for resource type " + reres.ResourceType);

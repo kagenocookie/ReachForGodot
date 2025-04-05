@@ -130,7 +130,7 @@ public partial class AssetBrowser : Resource
 
         if (importPaths.FirstOrDefault(x => x != null) is string str && ResourceLoader.Exists(str)) {
             var fmt = PathUtils.GetFileFormat(files.First(x => x != null));
-            if (fmt.format == RESupportedFileFormats.Scene || fmt.format == RESupportedFileFormats.Prefab) {
+            if (fmt.format == SupportedFileFormats.Scene || fmt.format == SupportedFileFormats.Prefab) {
                 EditorInterface.Singleton.CallDeferred(EditorInterface.MethodName.OpenSceneFromPath, str);
             } else {
                 EditorInterface.Singleton.CallDeferred(EditorInterface.MethodName.SelectFile, str);
