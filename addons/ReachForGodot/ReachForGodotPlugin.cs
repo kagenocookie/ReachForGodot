@@ -2,6 +2,8 @@ using System.Threading.Tasks;
 using Godot;
 using RszTool;
 using GC = Godot.Collections;
+using System.Diagnostics;
+
 #if ENABLE_TESTS
 using Chickensoft.GoDotTest;
 #endif
@@ -50,6 +52,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
     private EditorSceneFormatImporter[] sceneImporters = Array.Empty<EditorSceneFormatImporter>();
     private EditorImportPlugin[] importers = Array.Empty<EditorImportPlugin>();
 
+    private const string DonateButtonText = "Reach for Godot: Donate on Ko-fi";
     private PopupMenu toolMenu = null!;
     private PopupMenu toolMenuDev = null!;
     private AssetBrowser? browser;
@@ -107,29 +110,30 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
         fs.ResourcesReimporting += OnImporting;
         fs.ResourcesReimported += OnStopImporting;
 
-        toolMenu = new PopupMenu() { Title = "RE ENGINE" };
+        toolMenu = new PopupMenu() { Title = "RE ENGINE Assets" };
         toolMenuDev = new PopupMenu() { Title = "Reach for Godot Dev" };
         AddToolSubmenuItem(toolMenuDev.Title, toolMenuDev);
         AddToolSubmenuItem(toolMenu.Title, toolMenu);
+        AddToolMenuItem(DonateButtonText, Callable.From(OpenDonationPage));
 
         EditorInterface.Singleton.GetEditorSettings().SettingsChanged += OnProjectSettingsChanged;
         ProjectSettings.SettingsChanged += OnProjectSettingsChanged;
         OnProjectSettingsChanged();
 
-        inspectors = new EditorInspectorPlugin[] {
+        inspectors = [
             new REObjectInspectorPlugin(),
             new SceneFolderInspectorPlugin(),
             new AssetReferenceInspectorPlugin(),
             new AssetImportInspectorPlugin(),
             new AssetExportInspectorPlugin(),
             new GameObjectInspectorPlugin(),
-        };
+        ];
         foreach (var i in inspectors) AddInspectorPlugin(i);
 
         contextMenus = new EditorContextMenuPlugin[1];
         AddContextMenuPlugin(EditorContextMenuPlugin.ContextMenuSlot.SceneTree, contextMenus[0] = new SceneFolderContextMenuPlugin());
 
-        gizmos = new EditorNode3DGizmoPlugin[] { new MeshGizmo() };
+        gizmos = [new MeshGizmo()];
         foreach (var gizmo in gizmos) AddNode3DGizmoPlugin(gizmo);
 
         // sceneImporters = new EditorSceneFormatImporter[] { };
@@ -141,6 +145,11 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
         RefreshToolMenu();
         toolMenu.IdPressed += HandleToolMenu;
         toolMenuDev.IdPressed += HandleToolMenu;
+    }
+
+    private void OpenDonationPage()
+    {
+        Process.Start(new ProcessStartInfo("https://ko-fi.com/shadowcookie") { UseShellExecute = true });
     }
 
     public override void _ShortcutInput(InputEvent @event)
@@ -165,7 +174,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
             }
         }
 
-        toolMenu.AddItem("Upgrade resources", 100);
+        toolMenu.AddItem("Upgrade imported resources", 100);
 
         toolMenuDev.AddItem("Extract file format versions from file lists", 200);
 #if ENABLE_TESTS
@@ -420,6 +429,8 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
     public override void _ExitTree()
     {
         RemoveToolMenuItem(toolMenu.Title);
+        RemoveToolMenuItem(toolMenuDev.Title);
+        RemoveToolMenuItem(DonateButtonText);
         browser = null;
         foreach (var insp in inspectors) RemoveInspectorPlugin(insp);
         foreach (var menu in contextMenus) RemoveContextMenuPlugin(menu);
