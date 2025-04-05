@@ -38,6 +38,7 @@ public partial class CustomSearchWindow : Window
         NodeName,
         GameObjectName,
         Guid,
+        ComponentClassname,
     }
 
     public enum SearchTargetType
@@ -61,7 +62,7 @@ public partial class CustomSearchWindow : Window
     {
         filterTypeBtn.Clear();
         foreach (var label in Enum.GetNames<SearchType>()) {
-            filterTypeBtn.AddItem(label);
+            filterTypeBtn.AddItem(label.Capitalize());
         }
         filterTypeBtn.Selected = (int)Type;
         filterTypeBtn.ItemSelected += OnFilterTypeChanged;
@@ -149,6 +150,10 @@ public partial class CustomSearchWindow : Window
                 Filter = SearchGameObjectsByName;
                 break;
 
+            case SearchType.ComponentClassname:
+                Filter = SearchGameObjectsByComponent;
+                break;
+
             case SearchType.NodeName:
             default:
                 Filter = SearchNodesByName;
@@ -192,6 +197,17 @@ public partial class CustomSearchWindow : Window
     private static bool SearchGameObjectsByName(CustomSearchWindow self, Node node, out string? summary)
     {
         if (node is GameObject obj && obj.OriginalName.Contains(self.SearchedQuery!, StringComparison.OrdinalIgnoreCase)) {
+            summary = node.Name;
+            return true;
+        }
+
+        summary = null;
+        return false;
+    }
+
+    private static bool SearchGameObjectsByComponent(CustomSearchWindow self, Node node, out string? summary)
+    {
+        if (node is GameObject obj && obj.Components.Any(c => true == c?.Classname?.Contains(self.SearchedQuery!, StringComparison.OrdinalIgnoreCase))) {
             summary = node.Name;
             return true;
         }
