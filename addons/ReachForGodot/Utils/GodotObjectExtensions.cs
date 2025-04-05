@@ -245,7 +245,6 @@ public static class GodotObjectExtensions
             child.Name = nextname;
         }
         parent.AddChild(child);
-        child.Owner = parent.Owner ?? parent;
         return child;
     }
 

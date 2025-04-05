@@ -186,6 +186,29 @@ public partial class GameObject : Node3D, ISerializationListener, ICloneable
         return Components?.FirstOrDefault(x => x.Classname == classname);
     }
 
+    public void AddOrReplaceComponent(string classname, REComponent newComponent)
+    {
+        _components ??= new();
+        newComponent.GameObject = this;
+        for (int i = 0;i < _components.Count; ++i) {
+            if (_components[i] == null || _components[i].Classname == classname) {
+                _components[i] = newComponent;
+                return;
+            }
+        }
+
+        _components.Add(newComponent);
+    }
+
+    public REComponent? RemoveComponent(string classname)
+    {
+        var comp = GetComponent(classname);
+        if (comp != null) {
+            Components.Remove(comp);
+        }
+        return comp;
+    }
+
     public TComponent? GetComponent<TComponent>() where TComponent : REComponent
     {
         return Components?.OfType<TComponent>().FirstOrDefault();

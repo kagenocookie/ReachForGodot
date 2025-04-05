@@ -1,24 +1,25 @@
 [gd_scene format=3 uid="uid://78dy5u373jwi"]
 
 [node name="GameObjectInspectorPlugin" type="MarginContainer"]
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 4
-
-[node name="VBoxContainer" type="VBoxContainer" parent="."]
-layout_mode = 2
-
-[node name="Filter" type="LineEdit" parent="VBoxContainer"]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 28)
-layout_mode = 2
+custom_minimum_size = Vector2(0, 35)
+offset_right = 154.0
+offset_bottom = 33.0
 size_flags_horizontal = 3
-placeholder_text = "Filter components..."
+theme_override_constants/margin_left = 2
+theme_override_constants/margin_bottom = 4
 
-[node name="ComponentContainer" type="VBoxContainer" parent="VBoxContainer"]
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="CloneBtn" type="Button" parent="HBoxContainer"]
 unique_name_in_owner = true
 layout_mode = 2
+text = "Clone GameObject"
+
+[node name="ComponentFromTemplateBtn" type="OptionButton" parent="HBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+selected = 0
+item_count = 1
+popup/item_0/text = "Placeholder"
+popup/item_0/id = 0

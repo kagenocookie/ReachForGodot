@@ -121,7 +121,7 @@ public partial class REObjectClassProperty : HBoxContainer
         classnames = Target?.AllowedSubclasses.Count > 0 ? Target.AllowedSubclasses : TypeCache.GetSubclasses(Game, baseclass);
         var current = Target?.Classname ?? string.Empty;
         foreach (var cls in classnames) {
-            button.AddItem(cls);
+            button.AddItem(cls.Length > 100 ? string.Concat(cls.AsSpan(0, 98), "...") : cls);
             if (cls == current) {
                 button.Selected = button.ItemCount - 1;
             }

@@ -172,7 +172,7 @@ public partial class REObject : Resource
         return cache.PropertyList;
     }
 
-    private void SetBaseClass(string baseclass)
+    public void SetBaseClass(string baseclass)
     {
         if (string.IsNullOrEmpty(baseclass)) {
             subclasses = EmptyStringList;

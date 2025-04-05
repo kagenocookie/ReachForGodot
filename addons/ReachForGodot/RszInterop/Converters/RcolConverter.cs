@@ -84,6 +84,7 @@ public class RcolConverter : RszAssetConverter<RcolRootNode, RcolFile, RcolResou
                     RequestSetCollisionShape3D.ApplyShape(shapeNode, srcShape.shapeType, RszTypeConverter.FromRszValueSingleValue(fieldType, srcShape.shape, Game));
                 }
                 group.AddUniqueNamedChild(shapeNode);
+                shapeNode.Owner = target;
             }
 
             foreach (var srcShape in srcGroup.ExtraShapes) {
@@ -105,6 +106,7 @@ public class RcolConverter : RszAssetConverter<RcolRootNode, RcolFile, RcolResou
                     RequestSetCollisionShape3D.ApplyShape(shapeNode, srcShape.shapeType, RszTypeConverter.FromRszValueSingleValue(fieldType, srcShape.shape, Game));
                 }
                 group.AddUniqueNamedChild(shapeNode);
+                shapeNode.Owner = target;
             }
         }
 
@@ -113,6 +115,7 @@ public class RcolConverter : RszAssetConverter<RcolRootNode, RcolFile, RcolResou
             if (!setsDict.TryGetValue(importSet.id, out var requestSet)) {
                 setsDict[importSet.id] = requestSet = new RequestSetCollider() { Name = name };
                 target.AddUniqueNamedChild(requestSet);
+                requestSet.Owner = target;
                 requestSet.ID = importSet.id;
                 requestSet.OriginalName = importSet.name;
                 requestSet.KeyName = importSet.keyName;

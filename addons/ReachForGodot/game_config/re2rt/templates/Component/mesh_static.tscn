@@ -1,0 +1,77 @@
+[gd_scene load_steps=6 format=3 uid="uid://dwb20yjqipikg"]
+
+[ext_resource type="Script" uid="uid://dnr6p6wk1ckry" path="res://addons/ReachForGodot/Editor/ObjectTemplates/ComponentTemplate.cs" id="1_fbb6f"]
+[ext_resource type="Resource" uid="uid://ddanexvwpt057" path="res://re2rt/ObjectRoot/SetModel/sm3x_ArtifactProps/sm33/sm33_028_cars01A/sm33_028_cars01A_00ms_Mat.mdf2.tres" id="2_g8cyo"]
+[ext_resource type="Resource" uid="uid://hahj4cij6u1n" path="res://re2rt/ObjectRoot/SetModel/sm3x_ArtifactProps/sm33/sm33_028_cars01A/sm33_028_cars01A_00ms.mesh.tres" id="3_uqjtn"]
+[ext_resource type="Script" uid="uid://drdexacu7ucsc" path="res://addons/ReachForGodot/Components/REMeshComponent.cs" id="4_xu2ck"]
+
+[sub_resource type="Resource" id="Resource_b8tk3"]
+script = ExtResource("4_xu2ck")
+Game = 4
+Classname = "via.render.Mesh"
+__Data = Dictionary[StringName, Variant]({
+&"Material": ExtResource("2_g8cyo"),
+&"Mesh": ExtResource("3_uqjtn"),
+&"v0": 31,
+&"v1": 1,
+&"v10": 1,
+&"v11": 0,
+&"v12": 0,
+&"v13": 0,
+&"v14": 1,
+&"v15": 1,
+&"v16": 0,
+&"v17": 1,
+&"v18": 1,
+&"v19": 0,
+&"v20": 0,
+&"v21": 0,
+&"v22": 0,
+&"v23": 0,
+&"v24": 1,
+&"v25": 3,
+&"v26": 0,
+&"v27": 0,
+&"v28": 0,
+&"v29": [],
+&"v30": 0,
+&"v31": 0,
+&"v32": 0,
+&"v33": 0,
+&"v34": 10,
+&"v35": 1,
+&"v36": 1,
+&"v37": 0,
+&"v38": 0,
+&"v39": 0,
+&"v4": 1,
+&"v40": 0,
+&"v41": "00000000-0000-0000-0000-000000000000",
+&"v42": 0,
+&"v43": Vector2(0, 0),
+&"v44": 0,
+&"v45": 0,
+&"v46": 0,
+&"v47": Vector2(0, 0),
+&"v48": -1,
+&"v49": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+&"v5": 1.0,
+&"v50": 0,
+&"v51": 1,
+&"v52": 0,
+&"v53": 0,
+&"v54": 1,
+&"v55": [],
+&"v56": 0,
+&"v57": 0,
+&"v58": 0,
+&"v6": 0.25,
+&"v7": 0,
+&"v8": 1,
+&"v9": 1
+})
+
+[node name="ComponentTemplate" type="Node"]
+script = ExtResource("1_fbb6f")
+Component = SubResource("Resource_b8tk3")
+metadata/_custom_type_script = "uid://dnr6p6wk1ckry"

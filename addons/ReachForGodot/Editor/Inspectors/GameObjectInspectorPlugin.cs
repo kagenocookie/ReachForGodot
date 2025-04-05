@@ -29,9 +29,45 @@ public partial class GameObjectInspectorPlugin : EditorInspectorPlugin, ISeriali
     public override void _ParseBegin(GodotObject @object)
     {
         if (@object is GameObject gameobj) {
-            AddButtons(gameobj);
+            CreateUI(gameobj);
         }
         base._ParseBegin(@object);
+    }
+
+    private void CreateUI(GameObject target)
+    {
+        inspectorScene ??= ResourceLoader.Load<PackedScene>("res://addons/ReachForGodot/Editor/Inspectors/GameObjectInspectorPlugin.tscn");
+        var root = inspectorScene.Instantiate<Control>();
+
+        var cloneBtn = root.GetNode<Button>("%CloneBtn");
+        var templateComponentBtn = root.GetNode<OptionButton>("%ComponentFromTemplateBtn");
+
+        cloneBtn.Pressed += () => {
+            var action = new GameObjectCloneAction(target);
+            action.Trigger();
+            EditorInterface.Singleton.EditNode(action.Clone);
+        };
+
+        var templateList = ObjectTemplateManager.GetAvailableTemplates(ObjectTemplateType.Component, target.Game);
+        if (templateList.Length == 0) {
+            templateComponentBtn.Visible = false;
+        } else {
+            templateComponentBtn.Clear();
+            templateComponentBtn.AddItem("<Add component from template>", 99999);
+            int i = 0;
+            foreach (var template in templateList) {
+                templateComponentBtn.AddItem(Path.GetFileNameWithoutExtension(template).Capitalize(), i++);
+            }
+            templateComponentBtn.ItemSelected += (index) => {
+                var id = templateComponentBtn.GetItemId((int)index);
+                if (id == 99999) return;
+                var chosen = templateList[id];
+                ObjectTemplateManager.InstantiateComponent(chosen, target);
+                templateComponentBtn.Selected = 0;
+            };
+        }
+        AddCustomControl(root);
+        pluginSerializationFixer.Register(target, root);
     }
 
     private void AddButtons(GameObject gameobj)
@@ -60,31 +96,10 @@ public partial class GameObjectInspectorPlugin : EditorInspectorPlugin, ISeriali
         var clone = source.Clone();
         source.GetParent().AddUniqueNamedChild(clone);
         source.GetParent().MoveChild(clone, source.GetIndex() + 1);
-        SetChildrenOwner(clone, source.Owner);
+        clone.SetRecursiveOwner(source.Owner);
     }
 
-    private static void SetChildrenOwner(Node node, Node owner)
-    {
-        foreach (var child in node.GetChildren()) {
-            child.Owner = owner;
-            if (string.IsNullOrEmpty(child.SceneFilePath)) {
-                SetChildrenOwner(child, owner);
-            }
-        }
-    }
-
-    public override bool _ParseProperty(GodotObject @object, Variant.Type type, string name, PropertyHint hintType, string hintString, PropertyUsageFlags usageFlags, bool wide)
-    {
-        if (@object is GameObject target) {
-            // if (name == nameof(REGameObject.Components)) {
-            //     CreateComponentsUI(target);
-            //     return true;
-            // }
-        }
-        return base._ParseProperty(@object, type, name, hintType, hintString, usageFlags, wide);
-    }
-
-    private void CreateComponentsUI(GameObject target)
+    private void CreateComponentListEditorUI(GameObject target)
     {
         inspectorScene ??= ResourceLoader.Load<PackedScene>("res://addons/ReachForGodot/Editor/Inspectors/GameObjectInspectorPlugin.tscn");
         var root = inspectorScene.Instantiate<Control>();

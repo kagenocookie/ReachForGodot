@@ -11,7 +11,10 @@ public partial class SceneFolderContextMenuPlugin : EditorContextMenuPlugin
     public override void _PopupMenu(string[] paths)
     {
         if (paths.Length != 1) return;
-        var targetNode = EditorInterface.Singleton.GetEditedSceneRoot().GetNode(paths[0]);
+        var root = EditorInterface.Singleton.GetEditedSceneRoot();
+        if (root == null) return;
+
+        var targetNode = root.GetNode(paths[0]);
         if (targetNode is SceneFolder scene) {
             HandleSceneFolder(scene);
             HandleGameObjectContainer(scene);
@@ -22,6 +25,34 @@ public partial class SceneFolderContextMenuPlugin : EditorContextMenuPlugin
         } else if (targetNode is GameObject) {
             HandleGameObjectContainer(targetNode);
         }
+
+        if (targetNode is SceneFolder or GameObject) {
+            var game = (targetNode as SceneFolder)?.Game ?? (targetNode as GameObject)?.Game ?? SupportedGame.Unknown;
+            ShowTemplateOptions(targetNode, game);
+        }
+    }
+
+    private void ShowTemplateOptions(Node targetNode, SupportedGame game)
+    {
+        if (game == SupportedGame.Unknown) return;
+
+        var templates = ObjectTemplateManager.GetAvailableTemplates(ObjectTemplateType.GameObject, game);
+        if (templates.Length == 0) return;
+
+        var menu = new PopupMenu();
+        foreach (var template in templates) {
+            menu.AddItem(Path.GetFileNameWithoutExtension(template).Capitalize());
+        }
+        menu.IdPressed += (id) => HandleTemplateItems(targetNode, id, game);
+        AddContextSubmenuItem("Templates", menu, Logo);
+    }
+
+    private void HandleTemplateItems(Node parent, long id, SupportedGame game)
+    {
+        var templates = ObjectTemplateManager.GetAvailableTemplates(ObjectTemplateType.GameObject, game);
+        var chosenTemplate = templates[id];
+
+        ObjectTemplateManager.InstantiateGameobject(chosenTemplate, parent, EditorInterface.Singleton.GetEditedSceneRoot());
     }
 
     private void HandleSceneFolder(SceneFolder scene)
