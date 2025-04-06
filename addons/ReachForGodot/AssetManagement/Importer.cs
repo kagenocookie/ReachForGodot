@@ -98,7 +98,7 @@ public class Importer
             }
         }
 
-        var sourcePath = PathUtils.FindSourceFilePath(chunkRelativeFilepath, config);
+        var sourcePath = PathUtils.FindSourceFilePath(chunkRelativeFilepath, config, saveAssetToFilesystem);
         if (sourcePath == null) {
             return Importer.Import(PathUtils.RelativeToFullPath(chunkRelativeFilepath, config), config, importPath, saveAssetToFilesystem) as T;
         }
@@ -115,7 +115,7 @@ public class Importer
 
         var resolvedPath = PathUtils.FindSourceFilePath(sourceFilePath, config);
         if (resolvedPath == null) {
-            GD.PrintErr("Resource not found: " + sourceFilePath);
+            if (saveAssetToFilesystem) GD.PrintErr("Resource not found: " + sourceFilePath);
             if (!Path.IsPathRooted(sourceFilePath)) {
                 sourceFilePath = Path.Combine(config.Paths.ChunkPath, sourceFilePath);
             }

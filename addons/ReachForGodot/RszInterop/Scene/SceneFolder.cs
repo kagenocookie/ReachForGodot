@@ -35,7 +35,7 @@ public partial class SceneFolder : Node3D, IRszContainer, IImportableAsset
     public void AddFolder(SceneFolder folder)
     {
         Debug.Assert(folder != this);
-        AddChild(folder);
+        this.AddUniqueNamedChild(folder);
         folder.Owner = this.FindRszOwnerNode();
     }
 
@@ -112,9 +112,15 @@ public partial class SceneFolder : Node3D, IRszContainer, IImportableAsset
         Resources = Array.Empty<REResource>();
     }
 
-    public SceneFolder? GetFolder(string name)
+    public SceneFolder? GetFolder(string name, int dedupeIndex)
     {
-        return this.FindChildWhere<SceneFolder>(c => string.IsNullOrEmpty(c.OriginalName) ? c.Name == name : c.OriginalName == name);
+        var folders = this.FindChildrenWhere<SceneFolder>(c => string.IsNullOrEmpty(c.OriginalName) ? c.Name == name : c.OriginalName == name);
+
+        if (dedupeIndex == 0) {
+            return folders.FirstOrDefault();
+        } else {
+            return folders.ElementAtOrDefault(dedupeIndex);
+        }
     }
 
     public GameObject? GetGameObject(string name, int deduplicationIndex)
