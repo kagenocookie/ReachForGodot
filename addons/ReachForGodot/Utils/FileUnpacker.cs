@@ -16,10 +16,12 @@ public class FileUnpacker
         if (!attemptedFiles.Add((config.Game, sourceFilePath))) return false;
 
         sourceFilePath = PathUtils.AppendFileVersion(sourceFilePath, config).ToLowerInvariant();
-        return TryExtractFilteredFiles(sourceFilePath, config);
+        var fullFn = PathUtils.GetFilepathWithNativesFolder(sourceFilePath, config.Game);
+        var fullFnX64 = fullFn + ".x64"; // dirty workaround for the occasional fmt.##.x64 files
+        return TryExtractCustomFileList([fullFn, fullFnX64], config);
     }
 
-    public static bool TryExtractCustomFileList(string[] files, AssetConfig config)
+    public static bool TryExtractCustomFileList(IEnumerable<string> files, AssetConfig config)
     {
         var tmpfn = Path.GetTempFileName();
         File.WriteAllLines(tmpfn, files);
@@ -34,6 +36,7 @@ public class FileUnpacker
         if (string.IsNullOrEmpty(listfile)) return false;
         return TryExtractFilteredFiles(filter, listfile, config);
     }
+
     public static bool TryExtractFilteredFiles(string filter, string listfile, AssetConfig config)
     {
         var paklist = config.Paths.PakFiles;
