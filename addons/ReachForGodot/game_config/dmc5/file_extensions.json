@@ -1,80 +1,740 @@
 {
-  "rcol": 10,
-  "wss": 2,
-  "wcgp": 5,
-  "cfil": 7,
-  "rtex": 4,
-  "tml": 27,
-  "mcambank": 1,
-  "mcamlist": 13,
-  "motbank": 1,
-  "uvar": 2,
-  "wcc": 2,
-  "jcns": 11,
-  "bhvt": 30,
-  "fbxskel": 3,
-  "rdd": 27019,
-  "motfsm2": 31,
-  "gui": 270020,
-  "mesh": 1808282334,
-  "mdf2": 10,
-  "chain": 21,
-  "tex": 11,
-  "clip": 27,
-  "fsmv2": 30,
-  "pfb": 16,
-  "jmap": 10,
-  "efx": 1769672,
-  "motlist": 85,
-  "mmtr": 1808168797,
-  "mot": 65,
-  "clsm": 14,
-  "scn": 19,
-  "uvs": 7,
-  "ikdamage": 4,
-  "rbs": 27,
-  "mcol": 3017,
-  "cmat": 3,
-  "cdef": 3,
-  "auto": 1,
-  "def": 5,
-  "rmesh": 10008,
-  "motfsm": 17,
-  "aimap": 28,
-  "mov": 1,
-  "aimapattr": 28,
-  "fsm": 16,
-  "sst": 3,
-  "ies": 2,
-  "lprb": 3,
-  "prb": 9,
-  "motcam": 7,
-  "msg": 14,
-  "nar": 1,
-  "lod": 3,
-  "psop": 1,
-  "sss": 1,
-  "wcja": 3,
-  "wcv": 3,
-  "wcjr": 2,
-  "wcsa": 2,
-  "wel": 11,
-  "wcmo": 3,
-  "wcp": 3,
-  "wcrd": 5,
-  "wcrb": 5,
-  "wcsf": 1,
-  "wcmsw": 4,
-  "wcsw": 5,
-  "wcmts": 2,
-  "wms": 5,
-  "wpi": 3,
-  "sdf": 1808168797,
-  "gcf": 15,
-  "ncf": 3,
-  "oft": 1,
-  "ift": 1,
-  "ucurve": 27,
-  "fxct": 1,
-  "lfa": 4
+  "Versions": {
+    "bhvt": 30,
+    "fsmv2": 30,
+    "motbank": 1,
+    "motfsm2": 31,
+    "uvar": 2,
+    "pfb": 16,
+    "jmap": 10,
+    "rcol": 10,
+    "efx": 1769672,
+    "motlist": 85,
+    "mmtr": 1808168797,
+    "mesh": 1808282334,
+    "tex": 11,
+    "mdf2": 10,
+    "mot": 65,
+    "tml": 27,
+    "clsm": 14,
+    "cfil": 7,
+    "scn": 19,
+    "rdd": 27019,
+    "gui": 270020,
+    "uvs": 7,
+    "mcamlist": 13,
+    "ikdamage": 4,
+    "mcambank": 1,
+    "clip": 27,
+    "chain": 21,
+    "jcns": 11,
+    "rbs": 27,
+    "mcol": 3017,
+    "fbxskel": 3,
+    "cmat": 3,
+    "cdef": 3,
+    "auto": 1,
+    "def": 5,
+    "rmesh": 10008,
+    "rtex": 4,
+    "motfsm": 17,
+    "aimap": 28,
+    "mov": 1,
+    "aimapattr": 28,
+    "fsm": 16,
+    "sst": 3,
+    "ies": 2,
+    "lprb": 3,
+    "prb": 9,
+    "motcam": 7,
+    "msg": 14,
+    "nar": 1,
+    "wcc": 2,
+    "lod": 3,
+    "psop": 1,
+    "sss": 1,
+    "wcja": 3,
+    "wcv": 3,
+    "wcjr": 2,
+    "wcsa": 2,
+    "wel": 11,
+    "wcmo": 3,
+    "wcp": 3,
+    "wcrd": 5,
+    "wcrb": 5,
+    "wcgp": 5,
+    "wcsf": 1,
+    "wss": 2,
+    "wcmsw": 4,
+    "wcsw": 5,
+    "wcmts": 2,
+    "bnk": 2,
+    "pck": 3,
+    "wms": 5,
+    "wpi": 3,
+    "sdf": 1808168797,
+    "gcf": 15,
+    "ncf": 3,
+    "oft": 1,
+    "ift": 1,
+    "ucurve": 27,
+    "fxct": 1,
+    "lfa": 4
+  },
+  "Info": {
+    "bhvt": {
+      "Locales": [],
+      "Version": 30,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "fsmv2": {
+      "Locales": [],
+      "Version": 30,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "motbank": {
+      "Locales": [],
+      "Version": 1,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "motfsm2": {
+      "Locales": [],
+      "Version": 31,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "uvar": {
+      "Locales": [],
+      "Version": 2,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "pfb": {
+      "Locales": [],
+      "Version": 16,
+      "CanHaveX64": true,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "jmap": {
+      "Locales": [],
+      "Version": 10,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "rcol": {
+      "Locales": [],
+      "Version": 10,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "efx": {
+      "Locales": [],
+      "Version": 1769672,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "motlist": {
+      "Locales": [],
+      "Version": 85,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "mmtr": {
+      "Locales": [],
+      "Version": 1808168797,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "mesh": {
+      "Locales": [],
+      "Version": 1808282334,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "tex": {
+      "Locales": [],
+      "Version": 11,
+      "CanHaveX64": true,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "mdf2": {
+      "Locales": [],
+      "Version": 10,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "mot": {
+      "Locales": [],
+      "Version": 65,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "tml": {
+      "Locales": [],
+      "Version": 27,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "clsm": {
+      "Locales": [],
+      "Version": 14,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "cfil": {
+      "Locales": [],
+      "Version": 7,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "scn": {
+      "Locales": [],
+      "Version": 19,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "rdd": {
+      "Locales": [],
+      "Version": 27019,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "gui": {
+      "Locales": [],
+      "Version": 270020,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "uvs": {
+      "Locales": [],
+      "Version": 7,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "mcamlist": {
+      "Locales": [],
+      "Version": 13,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "ikdamage": {
+      "Locales": [],
+      "Version": 4,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "mcambank": {
+      "Locales": [],
+      "Version": 1,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "clip": {
+      "Locales": [],
+      "Version": 27,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "chain": {
+      "Locales": [],
+      "Version": 21,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "jcns": {
+      "Locales": [],
+      "Version": 11,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "rbs": {
+      "Locales": [],
+      "Version": 27,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "mcol": {
+      "Locales": [],
+      "Version": 3017,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "fbxskel": {
+      "Locales": [],
+      "Version": 3,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "cmat": {
+      "Locales": [],
+      "Version": 3,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "cdef": {
+      "Locales": [],
+      "Version": 3,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "auto": {
+      "Locales": [],
+      "Version": 1,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "def": {
+      "Locales": [],
+      "Version": 5,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "rmesh": {
+      "Locales": [],
+      "Version": 10008,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "rtex": {
+      "Locales": [],
+      "Version": 4,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "motfsm": {
+      "Locales": [],
+      "Version": 17,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "aimap": {
+      "Locales": [],
+      "Version": 28,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "mov": {
+      "Locales": [],
+      "Version": 1,
+      "CanHaveX64": true,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "aimapattr": {
+      "Locales": [],
+      "Version": 28,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "fsm": {
+      "Locales": [],
+      "Version": 16,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "sst": {
+      "Locales": [],
+      "Version": 3,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "ies": {
+      "Locales": [],
+      "Version": 2,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "lprb": {
+      "Locales": [],
+      "Version": 3,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "prb": {
+      "Locales": [],
+      "Version": 9,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "motcam": {
+      "Locales": [],
+      "Version": 7,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "msg": {
+      "Locales": [],
+      "Version": 14,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "nar": {
+      "Locales": [],
+      "Version": 1,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "wcc": {
+      "Locales": [],
+      "Version": 2,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "lod": {
+      "Locales": [],
+      "Version": 3,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "psop": {
+      "Locales": [],
+      "Version": 1,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "sss": {
+      "Locales": [],
+      "Version": 1,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "wcja": {
+      "Locales": [],
+      "Version": 3,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "wcv": {
+      "Locales": [],
+      "Version": 3,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "wcjr": {
+      "Locales": [],
+      "Version": 2,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "wcsa": {
+      "Locales": [],
+      "Version": 2,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "wel": {
+      "Locales": [],
+      "Version": 11,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "wcmo": {
+      "Locales": [],
+      "Version": 3,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "wcp": {
+      "Locales": [],
+      "Version": 3,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "wcrd": {
+      "Locales": [],
+      "Version": 5,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "wcrb": {
+      "Locales": [],
+      "Version": 5,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "wcgp": {
+      "Locales": [],
+      "Version": 5,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "wcsf": {
+      "Locales": [],
+      "Version": 1,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "wss": {
+      "Locales": [],
+      "Version": 2,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "wcmsw": {
+      "Locales": [],
+      "Version": 4,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "wcsw": {
+      "Locales": [],
+      "Version": 5,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "wcmts": {
+      "Locales": [],
+      "Version": 2,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "bnk": {
+      "Locales": [
+        "en",
+        "ja"
+      ],
+      "Version": 2,
+      "CanHaveX64": true,
+      "CanNotHaveX64": false,
+      "CanHaveLang": true,
+      "CanNotHaveLang": true
+    },
+    "pck": {
+      "Locales": [
+        "en",
+        "ja"
+      ],
+      "Version": 3,
+      "CanHaveX64": true,
+      "CanNotHaveX64": false,
+      "CanHaveLang": true,
+      "CanNotHaveLang": true
+    },
+    "wms": {
+      "Locales": [],
+      "Version": 5,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "wpi": {
+      "Locales": [],
+      "Version": 3,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "sdf": {
+      "Locales": [],
+      "Version": 1808168797,
+      "CanHaveX64": true,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "gcf": {
+      "Locales": [],
+      "Version": 15,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "ncf": {
+      "Locales": [],
+      "Version": 3,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "oft": {
+      "Locales": [],
+      "Version": 1,
+      "CanHaveX64": true,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "ift": {
+      "Locales": [],
+      "Version": 1,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "11": {
+      "Locales": [],
+      "Version": 0,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "ucurve": {
+      "Locales": [],
+      "Version": 27,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "fxct": {
+      "Locales": [],
+      "Version": 1,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "lfa": {
+      "Locales": [],
+      "Version": 4,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    }
+  }
 }

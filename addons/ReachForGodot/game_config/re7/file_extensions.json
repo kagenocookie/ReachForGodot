@@ -1,71 +1,676 @@
 {
-  "motfsm": 17,
-  "motlist": 60,
-  "fsm": 16,
-  "pfb": 16,
-  "mmtr": 69,
-  "tex": 8,
-  "scn": 18,
-  "aimap": 8,
-  "tml": 18,
-  "ies": 2,
-  "rtex": 4,
-  "mdf2": 6,
-  "mesh": 32,
-  "uvs": 5,
-  "jmap": 8,
-  "uvar": 2,
-  "motbank": 1,
-  "mot": 43,
-  "rcol": 2,
-  "chain": 5,
-  "rdl": 2016100700,
-  "rbd": 2016100700,
-  "terr": 4,
-  "mcol": 2,
-  "prb": 3,
-  "lprb": 2,
-  "msg": 12,
-  "gui": 180014,
-  "filter": 1,
-  "efx": 1179750,
-  "clo": 2016100701,
-  "cfil": 3,
-  "cmat": 1,
-  "cdef": 1,
-  "ncf": 3,
-  "wel": 10,
-  "wcja": 2,
-  "wcta": 2,
-  "wcsa": 2,
-  "wcbk": 3,
-  "wcc": 2,
-  "wcjm": 1,
-  "wcmo": 3,
-  "wcp": 3,
-  "wcrd": 5,
-  "wcrb": 5,
-  "wcgp": 2,
-  "wcsf": 1,
-  "wss": 2,
-  "wcst": 3,
-  "wcms": 2,
-  "wcmsw": 3,
-  "wcsw": 3,
-  "wcswn": 1,
-  "wcmts": 2,
-  "wcv": 2,
-  "wfa": 2,
-  "wid": 2,
-  "wms": 4,
-  "wpi": 3,
-  "sdf": 69,
-  "def": 2,
-  "gcf": 12,
-  "lod": 2,
-  "sss": 1,
-  "oft": 1,
-  "ift": 1,
-  "mcamlist": 7,
-  "fxct": 1
+  "Versions": {
+    "motfsm": 17,
+    "motlist": 60,
+    "fsm": 16,
+    "pfb": 16,
+    "mmtr": 69,
+    "tex": 8,
+    "scn": 18,
+    "aimap": 8,
+    "tml": 18,
+    "ies": 2,
+    "rtex": 4,
+    "mdf2": 6,
+    "mesh": 32,
+    "uvs": 5,
+    "jmap": 8,
+    "uvar": 2,
+    "motbank": 1,
+    "mot": 43,
+    "rcol": 2,
+    "chain": 5,
+    "rdl": 2016100700,
+    "rbd": 2016100700,
+    "terr": 4,
+    "mcol": 2,
+    "prb": 3,
+    "lprb": 2,
+    "msg": 12,
+    "mov": 1,
+    "gui": 180014,
+    "filter": 1,
+    "efx": 1179750,
+    "clo": 2016100701,
+    "cfil": 3,
+    "cmat": 1,
+    "cdef": 1,
+    "ncf": 3,
+    "wel": 10,
+    "wcja": 2,
+    "wcta": 2,
+    "wcsa": 2,
+    "wcbk": 3,
+    "wcc": 2,
+    "wcjm": 1,
+    "wcmo": 3,
+    "wcp": 3,
+    "wcrd": 5,
+    "wcrb": 5,
+    "wcgp": 2,
+    "wcsf": 1,
+    "wss": 2,
+    "wcst": 3,
+    "wcms": 2,
+    "wcmsw": 3,
+    "wcsw": 3,
+    "wcswn": 1,
+    "wcmts": 2,
+    "wcv": 2,
+    "wfa": 2,
+    "bnk": 2,
+    "pck": 3,
+    "wid": 2,
+    "wms": 4,
+    "wpi": 3,
+    "sdf": 69,
+    "def": 2,
+    "gcf": 12,
+    "lod": 2,
+    "sss": 1,
+    "oft": 1,
+    "ift": 1,
+    "mcamlist": 7,
+    "fxct": 1
+  },
+  "Info": {
+    "motfsm": {
+      "Locales": [],
+      "Version": 17,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "motlist": {
+      "Locales": [],
+      "Version": 60,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "fsm": {
+      "Locales": [],
+      "Version": 16,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "pfb": {
+      "Locales": [],
+      "Version": 16,
+      "CanHaveX64": true,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "mmtr": {
+      "Locales": [],
+      "Version": 69,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "tex": {
+      "Locales": [],
+      "Version": 8,
+      "CanHaveX64": true,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "scn": {
+      "Locales": [],
+      "Version": 18,
+      "CanHaveX64": true,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "aimap": {
+      "Locales": [],
+      "Version": 8,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "tml": {
+      "Locales": [],
+      "Version": 18,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "ies": {
+      "Locales": [],
+      "Version": 2,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "rtex": {
+      "Locales": [],
+      "Version": 4,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "mdf2": {
+      "Locales": [],
+      "Version": 6,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "mesh": {
+      "Locales": [],
+      "Version": 32,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "uvs": {
+      "Locales": [],
+      "Version": 5,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "jmap": {
+      "Locales": [],
+      "Version": 8,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "uvar": {
+      "Locales": [],
+      "Version": 2,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "motbank": {
+      "Locales": [],
+      "Version": 1,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "mot": {
+      "Locales": [],
+      "Version": 43,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "rcol": {
+      "Locales": [],
+      "Version": 2,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "chain": {
+      "Locales": [],
+      "Version": 5,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "rdl": {
+      "Locales": [],
+      "Version": 2016100700,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "rbd": {
+      "Locales": [],
+      "Version": 2016100700,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "terr": {
+      "Locales": [],
+      "Version": 4,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "mcol": {
+      "Locales": [],
+      "Version": 2,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "prb": {
+      "Locales": [],
+      "Version": 3,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "lprb": {
+      "Locales": [],
+      "Version": 2,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "msg": {
+      "Locales": [],
+      "Version": 12,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "mov": {
+      "Locales": [],
+      "Version": 1,
+      "CanHaveX64": true,
+      "CanNotHaveX64": false,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "gui": {
+      "Locales": [],
+      "Version": 180014,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "filter": {
+      "Locales": [],
+      "Version": 1,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "efx": {
+      "Locales": [],
+      "Version": 1179750,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "clo": {
+      "Locales": [],
+      "Version": 2016100701,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "cfil": {
+      "Locales": [],
+      "Version": 3,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "cmat": {
+      "Locales": [],
+      "Version": 1,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "cdef": {
+      "Locales": [],
+      "Version": 1,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "ncf": {
+      "Locales": [],
+      "Version": 3,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "wel": {
+      "Locales": [],
+      "Version": 10,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "wcja": {
+      "Locales": [],
+      "Version": 2,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "wcta": {
+      "Locales": [],
+      "Version": 2,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "wcsa": {
+      "Locales": [],
+      "Version": 2,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "wcbk": {
+      "Locales": [],
+      "Version": 3,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "wcc": {
+      "Locales": [],
+      "Version": 2,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "wcjm": {
+      "Locales": [],
+      "Version": 1,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "wcmo": {
+      "Locales": [],
+      "Version": 3,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "wcp": {
+      "Locales": [],
+      "Version": 3,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "wcrd": {
+      "Locales": [],
+      "Version": 5,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "wcrb": {
+      "Locales": [],
+      "Version": 5,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "wcgp": {
+      "Locales": [],
+      "Version": 2,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "wcsf": {
+      "Locales": [],
+      "Version": 1,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "wss": {
+      "Locales": [],
+      "Version": 2,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "wcst": {
+      "Locales": [],
+      "Version": 3,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "wcms": {
+      "Locales": [],
+      "Version": 2,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "wcmsw": {
+      "Locales": [],
+      "Version": 3,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "wcsw": {
+      "Locales": [],
+      "Version": 3,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "wcswn": {
+      "Locales": [],
+      "Version": 1,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "wcmts": {
+      "Locales": [],
+      "Version": 2,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "wcv": {
+      "Locales": [],
+      "Version": 2,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "wfa": {
+      "Locales": [],
+      "Version": 2,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "bnk": {
+      "Locales": [
+        "de",
+        "en",
+        "es",
+        "fr",
+        "it",
+        "ja"
+      ],
+      "Version": 2,
+      "CanHaveX64": true,
+      "CanNotHaveX64": false,
+      "CanHaveLang": true,
+      "CanNotHaveLang": true
+    },
+    "pck": {
+      "Locales": [
+        "de",
+        "en",
+        "es",
+        "fr",
+        "it",
+        "ja"
+      ],
+      "Version": 3,
+      "CanHaveX64": true,
+      "CanNotHaveX64": false,
+      "CanHaveLang": true,
+      "CanNotHaveLang": true
+    },
+    "wid": {
+      "Locales": [],
+      "Version": 2,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "wms": {
+      "Locales": [],
+      "Version": 4,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "wpi": {
+      "Locales": [],
+      "Version": 3,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "sdf": {
+      "Locales": [],
+      "Version": 69,
+      "CanHaveX64": true,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "def": {
+      "Locales": [],
+      "Version": 2,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "gcf": {
+      "Locales": [],
+      "Version": 12,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "lod": {
+      "Locales": [],
+      "Version": 2,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "sss": {
+      "Locales": [],
+      "Version": 1,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "oft": {
+      "Locales": [],
+      "Version": 1,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "ift": {
+      "Locales": [],
+      "Version": 1,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "8": {
+      "Locales": [],
+      "Version": 0,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "mcamlist": {
+      "Locales": [],
+      "Version": 7,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "fxct": {
+      "Locales": [],
+      "Version": 1,
+      "CanHaveX64": false,
+      "CanNotHaveX64": true,
+      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    }
+  }
 }

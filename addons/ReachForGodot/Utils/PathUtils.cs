@@ -1,13 +1,15 @@
 using System.Diagnostics.CodeAnalysis;
+using System.IO.IsolatedStorage;
 using System.Security.AccessControl;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using Godot;
 
 namespace ReaGE;
 
-public static class PathUtils
+public static partial class PathUtils
 {
-    private static readonly Dictionary<SupportedGame, Dictionary<string, int>> extensionVersions = new();
+    private static readonly Dictionary<SupportedGame, FileExtensionCache> extensionInfo = new();
 
     private sealed record FormatDescriptor(string extension, Type resourceType, SupportedFileFormats format);
 
@@ -91,16 +93,55 @@ public static class PathUtils
         return 0;
     }
 
-    private static Dictionary<string, int> GetVersionDict(GamePaths config)
+    private sealed class FileExtensionCache
     {
-        if (!extensionVersions.TryGetValue(config.Game, out var versions)) {
+        public FileExtensionCache() { }
+
+        public Dictionary<string, int> Versions { get; private set; } = new();
+        public Dictionary<string, FileExtensionInfo> Info { get; private set; } = new();
+
+        public FileExtensionCache(Dictionary<string, int> versions)
+        {
+            Versions = versions;
+            Info = versions.ToDictionary(k => k.Key, v => new FileExtensionInfo() { Version = v.Value });
+        }
+
+        public FileExtensionCache(Dictionary<string, FileExtensionInfo> info)
+        {
+            Info = info;
+            Versions = info.ToDictionary(k => k.Key, v => v.Value.Version);
+        }
+    }
+
+    private sealed class FileExtensionInfo
+    {
+        public List<string> Locales { get; set; } = new();
+        public int Version { get; set; }
+        public bool CanHaveX64 { get; set; }
+        public bool CanNotHaveX64 { get; set; }
+        public bool CanHaveLang { get; set; }
+        public bool CanNotHaveLang { get; set; }
+    }
+
+    private static FileExtensionCache GetExtensionInfo(GamePaths config)
+    {
+        if (!extensionInfo.TryGetValue(config.Game, out var info)) {
             if (File.Exists(config.ExtensionVersionsCacheFilepath)) {
                 using var fs = File.OpenRead(config.ExtensionVersionsCacheFilepath);
-                versions = JsonSerializer.Deserialize<Dictionary<string, int>>(fs, TypeCache.jsonOptions);
+                try {
+                    var stored = JsonSerializer.Deserialize<FileExtensionCache>(fs, TypeCache.jsonOptions) ?? new();
+                    info = stored;
+                } catch (Exception) {
+                }
             }
-            extensionVersions[config.Game] = versions ??= new Dictionary<string, int>();
+            extensionInfo[config.Game] = info ??= new FileExtensionCache();
         }
-        return versions;
+        return info;
+    }
+
+    private static Dictionary<string, int> GetVersionDict(GamePaths config)
+    {
+        return GetExtensionInfo(config).Versions;
     }
 
     public static bool TryGetFileExtensionVersion(GamePaths config, string extension, out int version)
@@ -115,12 +156,17 @@ public static class PathUtils
 
     private static void UpdateFileExtension(GamePaths config, string extension, int version)
     {
-        var versions = GetVersionDict(config);
-        versions[extension] = version;
+        var info = GetExtensionInfo(config);
+        info.Versions[extension] = version;
+        SerializeExtensionInfo(config, info);
+    }
+
+    private static void SerializeExtensionInfo(GamePaths config, FileExtensionCache info)
+    {
         var path = config.ExtensionVersionsCacheFilepath;
         Directory.CreateDirectory(path.GetBaseDir());
         using var fs = File.Create(path);
-        JsonSerializer.Serialize(fs, versions, TypeCache.jsonOptions);
+        JsonSerializer.Serialize(fs, info, TypeCache.jsonOptions);
     }
 
     public static int GuessFileVersion(string relativePath, SupportedFileFormats format, AssetConfig config)
@@ -187,6 +233,9 @@ public static class PathUtils
         return $"{filename}.{version}";
     }
 
+    [GeneratedRegex("\\.x64\\.([a-z]{2,})$")]
+    private static partial Regex IsLocalizedFileRegex();
+
     public static void ExtractFileVersionsFromList(SupportedGame game, string listFilepath)
     {
         if (!File.Exists(listFilepath)) {
@@ -195,16 +244,47 @@ public static class PathUtils
         }
         var paths = ReachForGodot.GetPaths(game) ?? new GamePaths(game) { FilelistPath = listFilepath };
         using var file = new StreamReader(File.OpenRead(listFilepath));
+        var extensions = GetExtensionInfo(paths);
         while (!file.EndOfStream) {
             var line = file.ReadLine();
             if (string.IsNullOrEmpty(line)) continue;
 
+            var isLocalized = false;
+            string? locale = null;
+            var hasX64 = false;
+            if (IsLocalizedFileRegex().IsMatch(line)) {
+                hasX64 = true;
+                isLocalized = true;
+                locale = IsLocalizedFileRegex().Match(line).Groups[1].Value;
+                line = line.GetBaseName().GetBaseName();
+            } else if (line.EndsWith("x64")) {
+                hasX64 = true;
+                line = line.GetBaseName();
+            }
+
             var versionStr = line.GetExtension();
             var ext = line.GetBaseName()?.GetExtension();
-            if (!string.IsNullOrEmpty(ext) && !TryGetFileExtensionVersion(paths, ext, out _) && int.TryParse(versionStr, out var version)) {
-                UpdateFileExtension(paths, ext, version);
+            if (!string.IsNullOrEmpty(ext)) {
+                if (!extensions.Info.TryGetValue(ext, out var info)) {
+                    extensions.Info[ext] = info = new FileExtensionInfo();
+                }
+                info.CanHaveX64 = hasX64 || info.CanHaveX64;
+                info.CanNotHaveX64 = !hasX64 || info.CanNotHaveX64;
+                info.CanHaveLang = isLocalized || info.CanHaveLang;
+                info.CanNotHaveLang = !isLocalized || info.CanNotHaveLang;
+                if (locale != null && !info.Locales.Contains(locale)) {
+                    info.Locales.Add(locale);
+                }
+                if (int.TryParse(versionStr, out var version)) {
+                    if (info.Version != 0 && info.Version != version) {
+                        GD.PrintErr($"Warning: updating .{ext} file version from {info.Version} to {version}");
+                    }
+                    info.Version = version;
+                    extensions.Versions[ext] = version;
+                }
             }
         }
+        SerializeExtensionInfo(paths, extensions);
     }
 
     public static string GetFilepathWithoutNativesFolder(string path)
