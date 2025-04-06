@@ -107,7 +107,7 @@ public partial class AssetBrowser : Resource
                     .ToArray();
                 _ = ImportAssetsAsync(importList);
             } else {
-                var success = FileUnpacker.TryExtractCustomFileList(relativeFilepaths.ToArray(), Assets);
+                var success = FileUnpacker.TryExtractCustomFileList(relativeFilepaths, Assets);
                 GD.Print("Extraction finished, success: " + success);
             }
         };

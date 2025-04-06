@@ -169,6 +169,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
     {
         toolMenu.Clear();
         toolMenuDev.Clear();
+        toolMenu.AddItem($"Open packed file browser...", 99);
         foreach (var game in ReachForGodot.GameList) {
             var pathSetting = ChunkPathSetting(game);
             if (!string.IsNullOrEmpty(EditorInterface.Singleton.GetEditorSettings().GetSetting(pathSetting).AsString())) {
@@ -190,9 +191,12 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
 
     private void HandleToolMenu(long id)
     {
-        if (id < 100) {
+        if (id < 99) {
             var game = (SupportedGame)id;
             OpenAssetImporterWindow(game);
+        }
+        if (id == 99) {
+            OpenPackedAssetBrowser(ReachForGodot.AssetConfigs.First(c => c.IsValid));
         }
         if (id == 100) UpgradeObsoleteResources("mdf2");
         if (id == 200) ExtractFileVersions();

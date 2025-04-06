@@ -19,6 +19,7 @@ public partial class FileUnpackerUI : Window
     [Export] public FilePickerPanel? FilePanel { get; set; }
     [Export] public Container? ExtensionButtonsContainer { get; set; }
     [Export] private CheckBox? ImportFilesCheckbox { get; set; }
+    [Export] private OptionButton? GamePicker { get; set; }
     public bool ShouldImportFiles => ImportFilesCheckbox?.ButtonPressed != false;
     public FileListFileSystem? FileSystem { get; set; }
 
@@ -26,7 +27,9 @@ public partial class FileUnpackerUI : Window
     public SupportedGame Game {
         get => _game;
         set {
+            if (_game == value) return;
             _game = value;
+            if (GamePicker != null) GamePicker.Selected = GamePicker.GetItemIndex((int)value);
             ReloadFileLists();
         }
     }
@@ -49,8 +52,24 @@ public partial class FileUnpackerUI : Window
             FilePanel.FileSelected += OnFileSelected;
             FilePanel.FilesSelected += OnFilesSelected;
         }
+        if (GamePicker != null) {
+            GamePicker.Clear();
+            foreach (var game in ReachForGodot.GameList) {
+                if (ReachForGodot.GetAssetConfig(game).IsValid) {
+                    GamePicker.AddItem(game.ToString(), (int)game);
+                }
+            }
+            GamePicker.Selected = GamePicker.GetItemIndex((int)_game);
+        }
+
         FilePanel.FileMode = this.FileMode;
         FilePanel.FileSystem = FileSystem ?? FilePanel.FileSystem;
+    }
+
+    private void OnSelectedGameChanged(int index)
+    {
+        var game = (SupportedGame)(GamePicker!.GetItemId(index));
+        Game = game;
     }
 
     private void ReloadFileLists()
@@ -77,6 +96,14 @@ public partial class FileUnpackerUI : Window
                     SelectedExtensionsChanged();
                 };
                 ExtensionButtonsContainer.AddChild(btn);
+            }
+        }
+        if (FilePanel != null) {
+            FilePanel.FileSystem = FileSystem;
+            if (string.IsNullOrEmpty(FilePanel.CurrentDir)) {
+                FilePanel.RefreshItems();
+            } else {
+                FilePanel.CurrentDir = string.Empty;
             }
         }
     }
