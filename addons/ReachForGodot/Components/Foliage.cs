@@ -16,6 +16,7 @@ public partial class Foliage : REComponent
 
     public override async Task Setup(RszImportType importType)
     {
+        if (importType == RszImportType.Placeholders) return;
         var foliage = GetField(FoliageResourceField).As<FoliageResource>();
         if (foliage == null) return;
 

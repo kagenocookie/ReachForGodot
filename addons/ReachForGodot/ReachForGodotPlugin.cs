@@ -3,6 +3,8 @@ using Godot;
 using RszTool;
 using GC = Godot.Collections;
 using System.Diagnostics;
+using System.Threading.Tasks;
+
 
 #if ENABLE_TESTS
 using Chickensoft.GoDotTest;
@@ -277,7 +279,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
     }
 #endif
 
-    internal void FetchInferrableRszData(AssetConfig config)
+    internal async Task FetchInferrableRszData(AssetConfig config)
     {
         var fileOption = TypeCache.CreateRszFileOptions(config);
         var sourcePath = config.Paths.ChunkPath;
@@ -290,21 +292,30 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
         var rcolTotal = PathUtils.GetFilesByExtensionFromListFile(config.Paths.FilelistPath, PathUtils.AppendFileVersion(".rcol", config), sourcePath).Count();
 
         GD.Print($"Expecting {scnTotal} scn files");
-        var (success, failed) = ExecuteOnAllSourceFiles(config.Game, "scn", (game, fileOption, filepath) => {
+        var conv = new AssetConverter(GodotImportOptions.testImport);
+
+        var (success, failed) = await ExecuteOnAllSourceFiles(config.Game, "scn", async (game, fileOption, filepath) => {
             using var file = new ScnFile(fileOption, new FileHandler(filepath));
             file.Read();
         });
         GD.Print($"Finished {success + failed} scn out of expected {scnTotal}");
 
         GD.Print($"Expecting {pfbTotal} pfb files");
-        (success, failed) = ExecuteOnAllSourceFiles(config.Game, "pfb", (game, fileOption, filepath) => {
+        (success, failed) = await ExecuteOnAllSourceFiles(config.Game, "pfb", async (game, fileOption, filepath) => {
             using var file = new PfbFile(fileOption, new FileHandler(filepath));
             file.Read();
+            file.SetupGameObjects();
+            // the import process will try and autodetect any pfb propertyIds for GameObjectRef fields
+            conv.Game = game;
+            var node = new PrefabNode() { Asset = new AssetReference(PathUtils.FullToRelativePath(filepath, conv.AssetConfig)!) };
+            await conv.Pfb.Import(file, node);
+            conv.Pfb.Clear();
+            node.QueueFree();
         });
         GD.Print($"Finished {success + failed} pfb out of expected {pfbTotal}");
 
         GD.Print($"Expecting {rcolTotal} rcol files");
-        (success, failed) = ExecuteOnAllSourceFiles(config.Game, "rcol", (game, fileOption, filepath) => {
+        (success, failed) = await ExecuteOnAllSourceFiles(config.Game, "rcol", async (game, fileOption, filepath) => {
             using var file = new RcolFile(fileOption, new FileHandler(filepath));
             file.Read();
         });
@@ -337,7 +348,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
         }
     }
 
-    internal static (int successes, int failures) ExecuteOnAllSourceFiles(SupportedGame game, string extension, Action<SupportedGame, RszFileOption, string> action)
+    internal static async Task<(int successes, int failures)> ExecuteOnAllSourceFiles(SupportedGame game, string extension, Func<SupportedGame, RszFileOption, string, Task> action)
     {
         var count = 0;
         var countSuccess = 0;
@@ -347,7 +358,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
             int retryCount = 10;
             do {
                 try {
-                    action(curgame, fileOption, filepath);
+                    await action(curgame, fileOption, filepath);
                     success = true;
                 } catch (RszRetryOpenException) {
                     retryCount--;

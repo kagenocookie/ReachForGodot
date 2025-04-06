@@ -71,9 +71,21 @@ public abstract partial class TestBase : TestClass
         return converter.ExportSync(resource, f) && f.Write() ? f : null;
     }
 
-    protected static void ExecuteFullReadTest(
+    protected static Task ExecuteFullReadTest(
         string extension,
         Action<SupportedGame, RszFileOption, string> action,
+        Dictionary<SupportedGame, int>? expectedFails = null,
+        params SupportedGame[] skipGames)
+    {
+        return ExecuteFullReadTest(extension, (g, o, f) => {
+            action.Invoke(g, o, f);
+            return Task.CompletedTask;
+        }, expectedFails, skipGames);
+    }
+
+    protected static async Task ExecuteFullReadTest(
+        string extension,
+        Func<SupportedGame, RszFileOption, string, Task> action,
         Dictionary<SupportedGame, int>? expectedFails = null,
         params SupportedGame[] skipGames)
     {
@@ -90,7 +102,7 @@ public abstract partial class TestBase : TestClass
                 continue;
             }
 
-            var (successCount, failedCount) = ReachForGodotPlugin.ExecuteOnAllSourceFiles(game, extension, action);
+            var (successCount, failedCount) = await ReachForGodotPlugin.ExecuteOnAllSourceFiles(game, extension, action);
             if (successCount + failedCount == 0) {
                 if (!File.Exists(config.Paths.FilelistPath) || config.Paths.PakFiles.Length == 0) {
                     unconfigured++;

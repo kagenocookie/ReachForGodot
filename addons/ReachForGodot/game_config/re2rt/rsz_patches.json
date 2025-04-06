@@ -2305,7 +2305,7 @@
     "FieldPatches": [
       {
         "Name": "v0",
-        "Type": "Object"
+        "Type": "U32"
       }
     ]
   },
@@ -2881,7 +2881,7 @@
     "FieldPatches": [
       {
         "Name": "v0",
-        "Type": "Object"
+        "Type": "S32"
       },
       {
         "Name": "v13",
@@ -2913,7 +2913,7 @@
     "FieldPatches": [
       {
         "Name": "v1",
-        "Type": "Object"
+        "Type": "S32"
       },
       {
         "Name": "v2",
@@ -3177,7 +3177,7 @@
     "FieldPatches": [
       {
         "Name": "v0",
-        "Type": "Object"
+        "Type": "S32"
       },
       {
         "Name": "v10",
@@ -3369,7 +3369,7 @@
       },
       {
         "Name": "v11",
-        "Type": "Object"
+        "Type": "S32"
       },
       {
         "Name": "v14",
@@ -4229,7 +4229,7 @@
     "FieldPatches": [
       {
         "Name": "v2",
-        "Type": "Object"
+        "Type": "S32"
       },
       {
         "Name": "v3",
@@ -4613,7 +4613,7 @@
     "FieldPatches": [
       {
         "Name": "v0",
-        "Type": "Object"
+        "Type": "S32"
       },
       {
         "Name": "v11",
@@ -4769,7 +4769,7 @@
     "FieldPatches": [
       {
         "Name": "v6",
-        "Type": "Object"
+        "Type": "S32"
       },
       {
         "Name": "v7",

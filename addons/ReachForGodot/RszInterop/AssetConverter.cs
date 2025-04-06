@@ -11,6 +11,7 @@ public class AssetConverter
     {
         get => AssetConfig.Game;
         set {
+            Context.Clear();
             if (value == AssetConfig?.Game) return;
             AssetConfig = ReachForGodot.GetAssetConfig(value);
             _fileOption = null;
@@ -64,17 +65,20 @@ public class AssetConverter
     {
         AssetConfig = config;
         Options = options;
+        Context.ShouldLog = options.logInfo;
     }
     public AssetConverter(SupportedGame game, GodotImportOptions options)
     {
         AssetConfig = ReachForGodot.GetAssetConfig(game);
         Options = options;
+        Context.ShouldLog = options.logInfo;
     }
 
     internal AssetConverter(GodotImportOptions options)
     {
         AssetConfig = null!;
         Options = options;
+        Context.ShouldLog = options.logInfo;
     }
 
     public async Task<bool> ImportAssetAsync(IImportableAsset asset, string sourceFilepath)
@@ -213,6 +217,7 @@ public class AssetConverter
         private DateTime lastStatusUpdateTime;
 
         public bool IsCancelled { get; internal set; }
+        public bool ShouldLog { get; set; }
 
         public void Clear()
         {
@@ -262,6 +267,7 @@ public class AssetConverter
 
         public void UpdateUIStatus()
         {
+            if (!ShouldLog) return;
             var importer = AsyncImporter.Instance;
             var objs = batches
                 .Select(batch => batch.GameObjectCount)

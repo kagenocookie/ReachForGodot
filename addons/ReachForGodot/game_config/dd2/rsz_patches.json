@@ -956,6 +956,10 @@
     "FieldPatches": [
       {
         "Name": "v1",
+        "Type": "S32"
+      },
+      {
+        "Name": "v2",
         "ReplaceName": "Capsule",
         "Type": "Capsule"
       }
@@ -1213,7 +1217,7 @@
     "FieldPatches": [
       {
         "Name": "v0",
-        "Type": "Object"
+        "Type": "S32"
       }
     ]
   },
@@ -2458,11 +2462,11 @@
       },
       {
         "Name": "v60",
-        "Type": "Object"
+        "Type": "S32"
       },
       {
         "Name": "v61",
-        "Type": "Object"
+        "Type": "S32"
       },
       {
         "Name": "v62",
@@ -2574,7 +2578,7 @@
       },
       {
         "Name": "v48",
-        "Type": "Object"
+        "Type": "S32"
       },
       {
         "Name": "v49",
@@ -2666,7 +2670,7 @@
       },
       {
         "Name": "v80",
-        "Type": "Object"
+        "Type": "S32"
       },
       {
         "Name": "v82",
@@ -3062,7 +3066,7 @@
       },
       {
         "Name": "v39",
-        "Type": "Object"
+        "Type": "S32"
       },
       {
         "Name": "v40",

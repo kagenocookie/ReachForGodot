@@ -46,7 +46,7 @@ public partial class AssetConfig : Resource
     private Callable BrowserBtn => Callable.From(() => ReachForGodotPlugin.Instance.OpenPackedAssetBrowser(this));
 
     [ExportToolButton("DEV: Build all RSZ data")]
-    private Callable InferRszData => Callable.From(() => ReachForGodotPlugin.Instance.FetchInferrableRszData(this));
+    private Callable InferRszData => Callable.From(() => { _ = ReachForGodotPlugin.Instance.FetchInferrableRszData(this); });
 
     private void InvokeCallback(Callable callable)
     {

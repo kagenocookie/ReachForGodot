@@ -12,10 +12,10 @@ public partial class TestRcol : TestBase
     public TestRcol(Node testScene) : base(testScene) { }
 
     [Test]
-    public void FullReadTest()
+    public async Task FullReadTest()
     {
         var converter = new AssetConverter(GodotImportOptions.testImport);
-        ExecuteFullReadTest("rcol", (game, fileOption, filepath) => {
+        await ExecuteFullReadTest("rcol", async (game, fileOption, filepath) => {
             converter.Game = game;
             using var file = converter.Rcol.CreateFile(filepath);
             converter.Rcol.LoadFile(file).ShouldBe(true);
@@ -31,7 +31,7 @@ public partial class TestRcol : TestBase
 
             var node = new RcolRootNode() { Asset = new AssetReference(PathUtils.FullToRelativePath(filepath, converter.AssetConfig)!) };
             try {
-                converter.Rcol.Import(file, node);
+                await converter.Rcol.Import(file, node);
                 var sets = node.Sets.ToArray();
 
                 sets.Length.ShouldBe(file.RequestSetInfoList.Count);
@@ -43,7 +43,7 @@ public partial class TestRcol : TestBase
 
                 // export and verify equality with original data
                 using var exportFile = converter.Rcol.CreateFile(new MemoryStream(), file.FileHandler.FileVersion);
-                converter.Rcol.ExportSync(node, exportFile).ShouldBe(true);
+                (await converter.Rcol.Export(node, exportFile)).ShouldBe(true);
                 exportFile.GroupInfoList.Count.ShouldBe(file.GroupInfoList.Count);
                 exportFile.RequestSetInfoList.Count.ShouldBe(file.RequestSetInfoList.Count);
                 exportFile.IgnoreTags.ShouldBeEquivalentTo(file.IgnoreTags);

@@ -23,5 +23,17 @@
       "PropertyId": 393216,
       "AutoDetected": true
     }
+  },
+  "app.ropeway.ChoreographPlayer.ChoreographMotion": {
+    "HideThenPlayed": {
+      "PropertyId": 196610,
+      "AutoDetected": true
+    }
+  },
+  "app.ropeway.gimmick.option.MovieSettings.Param": {
+    "MovieObject": {
+      "PropertyId": 196609,
+      "AutoDetected": true
+    }
   }
 }

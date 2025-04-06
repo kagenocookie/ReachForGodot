@@ -15,6 +15,8 @@ public abstract class RszAssetConverter<TImported, TExported, TResource> : RszTo
 
     protected RszFileOption FileOption => Convert.FileOption;
 
+    protected bool expectDuplicateInstanceReferences = false;
+
     protected REObject CreateOrUpdateObject(RszInstance instance, REObject? obj)
     {
         return obj == null ? CreateOrGetObject(instance) : ApplyObjectValues(obj, instance);
@@ -34,6 +36,8 @@ public abstract class RszAssetConverter<TImported, TExported, TResource> : RszTo
             return obj;
         }
 
+        Debug.Assert(instance.RSZUserData == null, "Attempted to assign userdata to object field");
+
         obj = new REObject(Game, instance.RszClass.name);
         importedObjects[instance] = obj;
         objectSourceInstances[obj] = instance;
@@ -46,6 +50,21 @@ public abstract class RszAssetConverter<TImported, TExported, TResource> : RszTo
         objectSourceInstances[obj] = instance;
         foreach (var field in obj.TypeInfo.Fields) {
             var value = instance.Values[field.FieldIndex];
+            if (!expectDuplicateInstanceReferences && field.RszField.type == RszFieldType.Object) {
+                RszInstance? existing = null;
+                if (field.RszField.array) {
+                    existing = ((List<object>)value).Where(inst => inst is RszInstance index && importedObjects.ContainsKey(index)).FirstOrDefault() as RszInstance;
+                } else {
+                    existing = value as RszInstance;
+                }
+                if (existing != null && importedObjects.TryGetValue(existing, out var imported)) {
+                    GD.PrintErr($"Found duplicate rsz instance reference - likely read error.\nObject {instance} field {field.FieldIndex}/{field.SerializedName}: index {value}");
+                    GD.PrintErr($"Field patch JSON: {{\n\"Name\": \"{field.SerializedName}\",\n\"Type\": \"S32\"\n}}");
+                    obj.SetField(field, imported);
+                    continue;
+                }
+            }
+
             obj.SetField(field, ConvertRszValue(field, value));
         }
 
@@ -118,7 +137,7 @@ public abstract class RszAssetConverter<TImported, TExported, TResource> : RszTo
                 var userdataResource = Importer.FindOrImportResource<UserdataResource>(ud1.Path, Config, WritesEnabled);
                 if (userdataResource?.IsEmpty == true) {
                     userdataResource.Data.ChangeClassname(rsz.RszClass.name);
-                    ResourceSaver.Save(userdataResource);
+                    if (WritesEnabled) ResourceSaver.Save(userdataResource);
                 }
                 return userdataResource ?? new Variant();
             }

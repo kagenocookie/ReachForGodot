@@ -7,6 +7,11 @@ using RszTool;
 
 public class RcolConverter : RszAssetConverter<RcolRootNode, RcolFile, RcolResource>
 {
+    public RcolConverter()
+    {
+        base.expectDuplicateInstanceReferences = true;
+    }
+
     public override RcolResource CreateOrReplaceResourcePlaceholder(AssetReference reference)
     {
         return SetupResource(new RcolResource(), reference);

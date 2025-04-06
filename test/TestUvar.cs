@@ -15,10 +15,10 @@ public partial class TestUvar : TestBase
     public TestUvar(Node testScene) : base(testScene) { }
 
     [Test]
-    public void FullReadTest()
+    public async Task FullReadWriteTest()
     {
         var converter = new AssetConverter(GodotImportOptions.testImport);
-        ExecuteFullReadTest("uvar", async (game, fileOption, filepath) => {
+        await ExecuteFullReadTest("uvar", async (game, fileOption, filepath) => {
             converter.Game = game;
             using var file = converter.Uvar.CreateFile(filepath);
             converter.Uvar.LoadFile(file);

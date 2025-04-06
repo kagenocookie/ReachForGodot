@@ -155,6 +155,7 @@ public class ScnConverter : RszAssetConverter<SceneFolder, ScnFile, PackedScene>
         if (Convert.Options.folders == RszImportType.ForceReimport) {
             target.Clear();
         }
+        // GD.Print("Starting import for scene " + target.Asset?.AssetFilename);
 
         var batch = Convert.CreateFolderBatch(target, null, target.Asset?.AssetFilename);
         Convert.StartBatch(batch);
@@ -243,7 +244,13 @@ public class ScnConverter : RszAssetConverter<SceneFolder, ScnFile, PackedScene>
 
     public Task RegenerateFromSourceFile(SceneFolder folder)
     {
-        using var file = CreateFile(folder.Asset!.FindSourceFile(Config)!);
+        if (folder.Asset == null) return Task.CompletedTask;
+        var source = folder.Asset.FindSourceFile(Config);
+        if (string.IsNullOrEmpty(source)) {
+            GD.PrintErr("Could not find referenced scene file in any known folders: " + folder.Asset.AssetFilename);
+            return Task.CompletedTask;
+        }
+        using var file = CreateFile(source);
         LoadFile(file);
         return Import(file, folder);
     }
@@ -353,7 +360,7 @@ public class ScnConverter : RszAssetConverter<SceneFolder, ScnFile, PackedScene>
                 // keep these as placeholders in whatever scenes contain them
                 return;
             }
-            int nodeCount = -1;
+            int nodeCount = 0;
             var newInstance = scene.Instantiate<SceneFolder>();
             if (!batch.finishedFolders.Contains(folder) && Convert.Options.linkedScenes) {
                 var importPath = folder.Asset?.GetImportFilepath(Config);
@@ -375,11 +382,7 @@ public class ScnConverter : RszAssetConverter<SceneFolder, ScnFile, PackedScene>
             if (folder is SceneFolderProxy proxy) {
                 proxy.ShowLinkedFolder = true; // TODO configurable by import type?
             } else {
-                if (nodeCount == -1) {
-                    // not ideal, but I'm not sure this case can even happen
-                    nodeCount = scene!.Instantiate<SceneFolder>().NodeCount;
-                }
-                if (nodeCount > ReachForGodot.SceneFolderProxyThreshold) {
+                if (nodeCount > ReachForGodot.SceneFolderProxyThreshold && WritesEnabled) {
                     batch.folder = folder.ReplaceWithProxy();
                     // tempInstance = tempInstance.ReplaceWithProxy();
                 } else {

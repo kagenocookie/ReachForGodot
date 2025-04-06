@@ -28,6 +28,9 @@ public static class PathUtils
     {
         var versionDot = filename.LastIndexOf('.');
         if (versionDot == -1) return REFileFormat.Unknown;
+        if (filename[(versionDot + 1)..].SequenceEqual("x64")) {
+            versionDot = filename[0..(filename.Length - 4)].LastIndexOf('.');
+        }
 
         var extDot = filename.Slice(0, versionDot).LastIndexOf('.');
         if (extDot == -1) return new REFileFormat(GetFileFormatFromExtension(filename[(versionDot + 1)..]), -1);
@@ -223,6 +226,18 @@ public static class PathUtils
             path = path.Substring("natives/stm/".Length);
         }
         return path;
+    }
+
+    public static string GetFilepathWithNativesFolder(string path, SupportedGame game)
+    {
+        path = path.Replace('\\', '/');
+        if (path.StartsWith("natives/")) return path;
+
+        if (game is SupportedGame.Unknown or SupportedGame.DevilMayCry5 or SupportedGame.ResidentEvil2 or SupportedGame.ResidentEvil7) {
+            return "natives/x64/" + path;
+        }
+
+        return "natives/stm/" + path;
     }
 
     public static IEnumerable<string> GetFilesByExtensionFromListFile(string? listFilepath, string extension, string? basePath)

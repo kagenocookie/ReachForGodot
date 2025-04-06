@@ -306,7 +306,7 @@
       },
       {
         "Name": "v9",
-        "Type": "Object"
+        "Type": "S32"
       },
       {
         "Name": "v10",
@@ -334,7 +334,7 @@
       },
       {
         "Name": "v17",
-        "Type": "Object"
+        "Type": "S32"
       },
       {
         "Name": "v19",
@@ -2534,15 +2534,15 @@
       },
       {
         "Name": "v96",
-        "Type": "Object"
+        "Type": "S32"
       },
       {
         "Name": "v97",
-        "Type": "Object"
+        "Type": "U32"
       },
       {
         "Name": "v100",
-        "Type": "S32"
+        "Type": "U32"
       },
       {
         "Name": "v102",
@@ -2930,7 +2930,7 @@
       },
       {
         "Name": "v5",
-        "Type": "Object"
+        "Type": "S32"
       },
       {
         "Name": "v6",
@@ -2954,7 +2954,7 @@
       },
       {
         "Name": "v11",
-        "Type": "Object"
+        "Type": "S32"
       },
       {
         "Name": "v12",
@@ -3198,7 +3198,7 @@
       },
       {
         "Name": "v20",
-        "Type": "Object"
+        "Type": "S32"
       },
       {
         "Name": "v21",
@@ -3594,11 +3594,11 @@
     "FieldPatches": [
       {
         "Name": "v0",
-        "Type": "Object"
+        "Type": "S32"
       },
       {
         "Name": "v11",
-        "Type": "Object"
+        "Type": "S32"
       },
       {
         "Name": "v12",
@@ -3726,7 +3726,7 @@
       },
       {
         "Name": "v67",
-        "Type": "Object"
+        "Type": "S32"
       },
       {
         "Name": "v74",
@@ -3818,7 +3818,7 @@
       },
       {
         "Name": "v11",
-        "Type": "Object"
+        "Type": "S32"
       },
       {
         "Name": "v14",
@@ -3974,7 +3974,7 @@
       },
       {
         "Name": "v19",
-        "Type": "Object"
+        "Type": "S32"
       },
       {
         "Name": "v20",
@@ -5146,7 +5146,7 @@
       },
       {
         "Name": "v49",
-        "Type": "Object"
+        "Type": "S32"
       },
       {
         "Name": "v50",
@@ -5202,11 +5202,11 @@
     "FieldPatches": [
       {
         "Name": "v0",
-        "Type": "Object"
+        "Type": "S32"
       },
       {
         "Name": "v1",
-        "Type": "Object"
+        "Type": "S32"
       },
       {
         "Name": "v2",
@@ -5442,7 +5442,7 @@
       },
       {
         "Name": "v50",
-        "Type": "Object"
+        "Type": "S32"
       },
       {
         "Name": "v51",
@@ -5714,7 +5714,7 @@
       },
       {
         "Name": "v28",
-        "Type": "Object"
+        "Type": "S32"
       },
       {
         "Name": "v29",

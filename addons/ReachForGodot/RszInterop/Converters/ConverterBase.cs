@@ -48,7 +48,13 @@ public abstract class ConverterBase<TImported, TExported, TResource>
 
     protected void ErrorLog(string text, object? context = null)
     {
-        if (Convert.Options.logErrors) GD.PrintErr(text, context);
+        if (Convert.Options.logErrors) {
+            if (context != null) {
+                GD.PrintErr(text, context);
+            } else {
+                GD.PrintErr(text);
+            }
+        }
     }
 
     protected PackedScene CreateOrReplaceSceneResource<TRoot>(TRoot root, AssetReference path) where TRoot : Node, IRszContainer, new()

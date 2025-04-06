@@ -24,7 +24,7 @@ public class UserdataConverter : RszAssetConverter<UserdataResource, UserFile, U
                 target.Data.ChangeClassname(instance.RszClass.name);
             }
             ApplyObjectValues(target.Data, instance);
-            ResourceSaver.Save(target);
+            if (WritesEnabled) ResourceSaver.Save(target);
             return Task.FromResult(true);
         }
         return Task.FromResult(true);
