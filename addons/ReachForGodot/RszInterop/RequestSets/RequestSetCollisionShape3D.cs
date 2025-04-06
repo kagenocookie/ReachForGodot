@@ -74,10 +74,23 @@ public partial class RequestSetCollisionShape3D : CollisionShape3D
                 break;
             case RszTool.RcolFile.ShapeType.Aabb:
                 var aabb = shape.As<Aabb>();
+                FixNegativeAabb(ref aabb);
+                if (aabb.Size.X < 0) { aabb.Position = new Vector3(aabb.Position.X + aabb.Size.X, aabb.Position.Y, aabb.Position.Z); }
                 collider.Shape = new BoxShape3D() { Size = aabb.Size };
                 collider.Position = aabb.Position;
                 break;
         }
+    }
+
+    private static void FixNegativeAabb(ref Aabb aabb)
+    {
+        var p = aabb.Position;
+        var s = aabb.Size;
+        if (s.X < 0) { p.X += s.X; s.X = -s.X; }
+        if (s.Y < 0) { p.Y += s.Y; s.Y = -s.Y; }
+        if (s.Z < 0) { p.Z += s.Z; s.Z = -s.Z; }
+        aabb.Position = p;
+        aabb.Size = s;
     }
 
     public static object? Shape3DToRszShape(Shape3D godotShape, Node3D node, RszTool.RcolFile.ShapeType shapeType, SupportedGame game)
