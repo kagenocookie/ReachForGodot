@@ -28,20 +28,22 @@ public static partial class PathUtils
 
     public static REFileFormat GetFileFormat(ReadOnlySpan<char> filename)
     {
-        var versionDot = filename.LastIndexOf('.');
-        if (versionDot == -1) return REFileFormat.Unknown;
-        if (filename[(versionDot + 1)..].SequenceEqual("x64")) {
-            versionDot = filename[0..(filename.Length - 4)].LastIndexOf('.');
+        filename = GetFilenameExtensionWithSuffixes(filename);
+        if (filename.IsEmpty) return REFileFormat.Unknown;
+        // filename: ".mesh" OR ".mesh.123" OR ".sbnk.1.x64" OR ".sbnk.1.x64.en"
+
+        var versionDot = filename.IndexOf('.');
+        if (versionDot == -1) return new REFileFormat(GetFileFormatFromExtension(filename), -1);
+
+        var versionEnd = filename[(versionDot + 1)..].IndexOf('.');
+        if (versionEnd == -1) versionEnd = filename.Length;
+        else versionEnd += versionDot + 1;
+
+        if (!int.TryParse(filename[(versionDot + 1)..versionEnd], out var version)) {
+            return new REFileFormat(GetFileFormatFromExtension(filename), -1);
         }
 
-        var extDot = filename.Slice(0, versionDot).LastIndexOf('.');
-        if (extDot == -1) return new REFileFormat(GetFileFormatFromExtension(filename[(versionDot + 1)..]), -1);
-
-        if (!int.TryParse(filename.Slice(versionDot + 1), out var version)) {
-            return new REFileFormat(GetFileFormatFromExtension(filename[versionDot..]), -1);
-        }
-
-        var fmt = GetFileFormatFromExtension(filename[(extDot + 1)..versionDot]);
+        var fmt = GetFileFormatFromExtension(filename[..versionDot]);
         return new REFileFormat(fmt, version);
     }
 
@@ -65,12 +67,43 @@ public static partial class PathUtils
         return filepath;
     }
 
-    public static string GetFilenameWithoutExtensionOrVersion(string filename)
+    private static int GetFilenameExtensionStartIndex(ReadOnlySpan<char> filename)
     {
-        var versionDot = filename.LastIndexOf('.');
-        if (versionDot == -1 && int.TryParse(filename.AsSpan()[(versionDot + 1)..], out _)) return filename.GetFile().GetBaseName();
+        var dot = filename.LastIndexOf('.');
+        if (dot == -1) return filename.Contains('/') ? -1 : 0;
+        var end = filename.Length;
 
-        return filename.GetFile().GetBaseName().GetBaseName();
+        if (filename[(dot + 1)..].SequenceEqual("x64")) {
+            end = dot;
+            dot = filename[0..^4].LastIndexOf('.');
+        } else if (filename.Length > 10) {
+            // handle e.g. "filename.1.x64.ptbr"
+            var locIndex = filename[^10..].IndexOf(".x64.");
+            if (locIndex != -1) {
+                locIndex = end - 10 + locIndex;
+                end = locIndex;
+                dot = filename[0..locIndex].LastIndexOf('.');
+            }
+        }
+        if (dot != -1 && int.TryParse(filename[(dot + 1)..end], out _)) {
+            dot = filename[..dot].LastIndexOf('.');
+        }
+
+        return dot;
+    }
+
+    public static ReadOnlySpan<char> GetFilenameExtensionWithSuffixes(ReadOnlySpan<char> filename)
+    {
+        var extIndex = GetFilenameExtensionStartIndex(filename);
+        if (extIndex == -1) return filename;
+        return filename[extIndex] == '.' ? filename[(extIndex + 1)..] : filename[extIndex..];
+    }
+
+    public static ReadOnlySpan<char> GetFilenameWithoutExtensionOrVersion(ReadOnlySpan<char> filename)
+    {
+        var extIndex = GetFilenameExtensionStartIndex(filename);
+        if (extIndex == -1) return filename;
+        return filename[extIndex] == '.' ? filename[..extIndex] : filename[..(extIndex + 1)];
     }
 
     public static SupportedFileFormats GetFileFormatFromExtension(ReadOnlySpan<char> extension)
@@ -97,8 +130,8 @@ public static partial class PathUtils
     {
         public FileExtensionCache() { }
 
-        public Dictionary<string, int> Versions { get; private set; } = new();
-        public Dictionary<string, FileExtensionInfo> Info { get; private set; } = new();
+        public Dictionary<string, int> Versions { get; set; } = null!;
+        public Dictionary<string, FileExtensionInfo> Info { get; set; } = null!;
 
         public FileExtensionCache(Dictionary<string, int> versions)
         {
@@ -128,11 +161,7 @@ public static partial class PathUtils
         if (!extensionInfo.TryGetValue(config.Game, out var info)) {
             if (File.Exists(config.ExtensionVersionsCacheFilepath)) {
                 using var fs = File.OpenRead(config.ExtensionVersionsCacheFilepath);
-                try {
-                    var stored = JsonSerializer.Deserialize<FileExtensionCache>(fs, TypeCache.jsonOptions) ?? new();
-                    info = stored;
-                } catch (Exception) {
-                }
+                info = JsonSerializer.Deserialize<FileExtensionCache>(fs, TypeCache.jsonOptions) ?? new();
             }
             extensionInfo[config.Game] = info ??= new FileExtensionCache();
         }
@@ -380,6 +409,42 @@ public static partial class PathUtils
     public static bool IsFilepath(this ReadOnlySpan<char> path) => !Path.GetExtension(path).IsEmpty;
 
     /// <summary>
+    /// Get a list of possible resolved filepaths for a filename - should handle any .x64 or.x64.en suffixes
+    /// </summary>
+    public static IEnumerable<string> GetCandidateFilepaths(string filepath, AssetConfig config)
+    {
+        var basepath = GetFilenameWithoutExtensionOrVersion(filepath);
+        var extensionSpan = filepath[(basepath.Length + 1)..];
+        var extIndex = extensionSpan.IndexOf('.');
+        FileExtensionInfo? extInfo = null;
+        string? ext = null;
+        if (extIndex != -1) {
+            ext = extensionSpan[..extIndex];
+            extInfo = GetExtensionInfo(config.Paths).Info.GetValueOrDefault(ext);
+        }
+
+        var path = GetFilepathWithNativesFolder(basepath.ToString(), config.Game);
+        if (extInfo == null || ext == null) {
+            yield return AppendFileVersion(path, config);
+            yield break;
+        }
+
+        if (extInfo.CanNotHaveX64) {
+            yield return AppendFileVersion($"{path}.{ext}", config);
+        }
+
+        if (extInfo.CanNotHaveLang && extInfo.CanHaveX64) {
+            yield return AppendFileVersion($"{path}.{ext}", config) + ".x64";
+        }
+
+        if (extInfo.CanHaveLang) {
+            foreach (var locale in extInfo.Locales) {
+                yield return AppendFileVersion($"{path}.{ext}", config) + $".x64.{locale}";
+            }
+        }
+    }
+
+    /// <summary>
     /// Search through all known file paths for the game to find the full path to a file.<br/>
     /// Search priority: Override > Chunk path > Additional paths
     /// If file is not found, attempts to extract from PAK files if configured.
@@ -399,17 +464,19 @@ public static partial class PathUtils
             sourceFilePath = sourceFilePath.Substring(1);
         }
 
-        if (!string.IsNullOrEmpty(config.Paths.SourcePathOverride) && File.Exists(Path.Combine(config.Paths.SourcePathOverride, sourceFilePath))) {
-            return Path.Combine(config.Paths.SourcePathOverride, sourceFilePath);
-        }
+        foreach (var candidate in GetCandidateFilepaths(sourceFilePath, config)) {
+            if (!string.IsNullOrEmpty(config.Paths.SourcePathOverride) && File.Exists(Path.Combine(config.Paths.SourcePathOverride, sourceFilePath))) {
+                return Path.Combine(config.Paths.SourcePathOverride, sourceFilePath);
+            }
 
-        if (File.Exists(Path.Combine(config.Paths.ChunkPath, sourceFilePath))) {
-            return Path.Combine(config.Paths.ChunkPath, sourceFilePath);
-        }
+            if (File.Exists(Path.Combine(config.Paths.ChunkPath, sourceFilePath))) {
+                return Path.Combine(config.Paths.ChunkPath, sourceFilePath);
+            }
 
-        foreach (var extra in config.Paths.AdditionalPaths) {
-            if (File.Exists(Path.Combine(extra, sourceFilePath))) {
-                return Path.Combine(extra, sourceFilePath);
+            foreach (var extra in config.Paths.AdditionalPaths) {
+                if (File.Exists(Path.Combine(extra, sourceFilePath))) {
+                    return Path.Combine(extra, sourceFilePath);
+                }
             }
         }
 

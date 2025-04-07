@@ -131,8 +131,12 @@ public partial class FileUnpackerUI : Window
 
     private bool FilterFileByExtension(ReadOnlySpan<char> path)
     {
+        var pathExt = PathUtils.GetFilenameExtensionWithSuffixes(path);
+        int dot = -1;
+        if (pathExt.IsEmpty || (dot = pathExt.IndexOf('.')) == -1) return false;
+        pathExt = pathExt[0..dot];
         foreach (var ext in SelectedExtensions) {
-            if (Path.GetFileNameWithoutExtension(path).EndsWith(ext)) {
+            if (pathExt.SequenceEqual(ext)) {
                 return true;
             }
         }

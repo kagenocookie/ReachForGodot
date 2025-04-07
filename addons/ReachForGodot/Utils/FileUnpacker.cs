@@ -16,9 +16,8 @@ public class FileUnpacker
         if (!attemptedFiles.Add((config.Game, sourceFilePath))) return false;
 
         sourceFilePath = PathUtils.AppendFileVersion(sourceFilePath, config).ToLowerInvariant();
-        var fullFn = PathUtils.GetFilepathWithNativesFolder(sourceFilePath, config.Game);
-        var fullFnX64 = fullFn + ".x64"; // dirty workaround for the occasional fmt.##.x64 files
-        return TryExtractCustomFileList([fullFn, fullFnX64], config);
+        var filepaths = PathUtils.GetCandidateFilepaths(sourceFilePath, config);
+        return TryExtractCustomFileList(filepaths, config);
     }
 
     public static bool TryExtractCustomFileList(IEnumerable<string> files, AssetConfig config)

@@ -59,6 +59,11 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
     private PopupMenu toolMenuDev = null!;
     private AssetBrowser? browser;
 
+    static ReachForGodotPlugin()
+    {
+        System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(TypeCache).TypeHandle);
+    }
+
 #region Backup code
     // TODO: revisit after https://github.com/godotengine/godot/issues/104937 is fixed
     public static bool IsImporting { get; private set; }
@@ -416,7 +421,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
                 if (!hasAttemptedFullExtract && string.IsNullOrEmpty(resolvedFile)) {
                     hasAttemptedFullExtract = true;
                     GD.Print($"Failed to resolve {relativeFilepath}. Attempting unpack of all {curgame} {extension} files if configured");
-                    FileUnpacker.TryExtractFilteredFiles($"\\.{extWithVersion}$", config);
+                    FileUnpacker.TryExtractFilteredFiles($"\\.{extWithVersion}(?:\\.[^\\/]*)?$", config);
 
                     if (PathUtils.FindMissingFiles(extension, config).Any()) {
                         Directory.CreateDirectory(ReachForGodot.UserdataPath);

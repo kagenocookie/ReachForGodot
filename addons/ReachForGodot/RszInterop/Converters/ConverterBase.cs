@@ -59,7 +59,7 @@ public abstract class ConverterBase<TImported, TExported, TResource>
 
     protected PackedScene CreateOrReplaceSceneResource<TRoot>(TRoot root, AssetReference path) where TRoot : Node, IRszContainer, new()
     {
-        var name = PathUtils.GetFilenameWithoutExtensionOrVersion(path.AssetFilename);
+        var name = PathUtils.GetFilenameWithoutExtensionOrVersion(path.AssetFilename).ToString();
         root = SetupRszContainer(root, path);
         root.Name = name;
         var scene = new PackedScene();

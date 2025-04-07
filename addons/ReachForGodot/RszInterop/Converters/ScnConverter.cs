@@ -11,7 +11,7 @@ public class ScnConverter : RszAssetConverter<SceneFolder, ScnFile, PackedScene>
     {
         var scn = new SceneFolder();
         scn.LockNode(true);
-        scn.OriginalName = PathUtils.GetFilenameWithoutExtensionOrVersion(reference);
+        scn.OriginalName = reference.BaseFilename.ToString();
         return CreateOrReplaceSceneResource(scn, reference);
     }
 
