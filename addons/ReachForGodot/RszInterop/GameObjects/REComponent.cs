@@ -1,5 +1,6 @@
 namespace ReaGE;
 
+using System;
 using System.Threading.Tasks;
 using Godot;
 using Godot.Collections;
@@ -27,13 +28,6 @@ public abstract partial class REComponent : REObject, ISerializationListener
     {
     }
 
-    public REComponent Clone(GameObject gameObject)
-    {
-        var clone = (REComponent)Duplicate(true);
-        clone.GameObject = gameObject;
-        return clone;
-    }
-
     public override string ToString() => (GameObject != null ? GameObject.ToString() + ":" : "") + (Classname ?? nameof(REComponent));
 
     public void OnBeforeSerialize()
@@ -59,7 +53,7 @@ public abstract partial class REComponent : REObject, ISerializationListener
 
     protected void EnsureResourceInContainer(REResource resource)
     {
-        var container = GameObject.FindRszOwner();
+        var container = GameObject?.FindRszOwner();
         if (container?.EnsureContainsResource(resource) == true) {
             GD.Print($"Resource {resource.ResourceName} registered in owner {container?.Path ?? Path}");
         }

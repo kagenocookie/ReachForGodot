@@ -424,8 +424,8 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
                     FileUnpacker.TryExtractFilteredFiles($"\\.{extWithVersion}(?:\\.[^\\/]*)?$", config);
 
                     if (PathUtils.FindMissingFiles(extension, config).Any()) {
-                        Directory.CreateDirectory(ReachForGodot.UserdataPath);
-                        var missingFilelistPath = Path.Combine(ReachForGodot.UserdataPath, config.Paths.ShortName + "_missing_files.list");
+                        Directory.CreateDirectory(ReachForGodot.GetUserdataPath(""));
+                        var missingFilelistPath = ReachForGodot.GetUserdataPath(config.Paths.ShortName + "_missing_files.list");
                         File.WriteAllLines(missingFilelistPath, PathUtils.FindMissingFiles(extension, config));
                         GD.PrintErr("List of missing files has been written to " + missingFilelistPath);
                     }

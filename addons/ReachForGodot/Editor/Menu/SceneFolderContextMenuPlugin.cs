@@ -36,12 +36,17 @@ public partial class SceneFolderContextMenuPlugin : EditorContextMenuPlugin
     {
         if (game == SupportedGame.Unknown) return;
 
+        var menu = new PopupMenu();
+        if (targetNode is GameObject gameObject) {
+            menu.AddItem("Create new...", 10000);
+        }
+
         var templates = ObjectTemplateManager.GetAvailableTemplates(ObjectTemplateType.GameObject, game);
         if (templates.Length == 0) return;
 
-        var menu = new PopupMenu();
+        int i = 0;
         foreach (var template in templates) {
-            menu.AddItem(Path.GetFileNameWithoutExtension(template).Capitalize());
+            menu.AddItem(Path.GetFileNameWithoutExtension(template).Capitalize(), i++);
         }
         menu.IdPressed += (id) => HandleTemplateItems(targetNode, id, game);
         AddContextSubmenuItem("Templates", menu, Logo);
@@ -49,10 +54,31 @@ public partial class SceneFolderContextMenuPlugin : EditorContextMenuPlugin
 
     private void HandleTemplateItems(Node parent, long id, SupportedGame game)
     {
-        var templates = ObjectTemplateManager.GetAvailableTemplates(ObjectTemplateType.GameObject, game);
-        var chosenTemplate = templates[id];
+        if (id < 10000) {
+            var templates = ObjectTemplateManager.GetAvailableTemplates(ObjectTemplateType.GameObject, game);
+            var chosenTemplate = templates[id];
 
-        ObjectTemplateManager.InstantiateGameobject(chosenTemplate, parent, EditorInterface.Singleton.GetEditedSceneRoot());
+            var obj = ObjectTemplateManager.InstantiateGameobject(chosenTemplate, parent, EditorInterface.Singleton.GetEditedSceneRoot());
+            obj?.ReSetupComponents();
+        } else if (id == 10000) {
+            // create new
+            var root = new ObjectTemplateRoot();
+            var dupe = ((GameObject)parent).Clone();
+            root.AddChild(dupe);
+            var name = dupe.Name;
+            dupe.Owner = root;
+            var baseOutputPath = ObjectTemplateManager.GetUserTemplateFolder(ObjectTemplateType.GameObject, game) + name;
+            int idx = 0;
+            var outputPath = baseOutputPath + ".tscn";
+            while (ResourceLoader.Exists(outputPath)) {
+                idx++;
+                outputPath = baseOutputPath + idx + ".tscn";
+            }
+            root.Name = name;
+            root.ExtractResources();
+            var scene = root.SaveAsScene(outputPath);
+            EditorInterface.Singleton.SelectFile(scene.ResourcePath);
+        }
     }
 
     private void HandleSceneFolder(SceneFolder scene)

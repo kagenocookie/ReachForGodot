@@ -99,7 +99,7 @@ public static partial class PathUtils
         return filename[extIndex] == '.' ? filename[(extIndex + 1)..] : filename[extIndex..];
     }
 
-    public static ReadOnlySpan<char> GetFilenameWithoutExtensionOrVersion(ReadOnlySpan<char> filename)
+    public static ReadOnlySpan<char> GetFilepathWithoutExtensionOrVersion(ReadOnlySpan<char> filename)
     {
         var extIndex = GetFilenameExtensionStartIndex(filename);
         if (extIndex == -1) return filename;
@@ -413,7 +413,7 @@ public static partial class PathUtils
     /// </summary>
     public static IEnumerable<string> GetCandidateFilepaths(string filepath, AssetConfig config)
     {
-        var basepath = GetFilenameWithoutExtensionOrVersion(filepath);
+        var basepath = GetFilepathWithoutExtensionOrVersion(filepath);
         var extensionSpan = filepath[(basepath.Length + 1)..];
         var extIndex = extensionSpan.IndexOf('.');
         FileExtensionInfo? extInfo = null;

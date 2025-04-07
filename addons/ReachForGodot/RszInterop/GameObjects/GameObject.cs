@@ -71,6 +71,15 @@ public partial class GameObject : Node3D, ISerializationListener, ICloneable
         _components?.Clear();
     }
 
+    public void ReSetupComponents()
+    {
+        if (_components == null) return;
+
+        foreach (var comp in _components) {
+            if (comp != null) comp.Setup(RszImportType.CreateOrReuse);
+        }
+    }
+
     public int GetChildDeduplicationIndex(string name, GameObject? relativeTo)
     {
         int i = 0;
@@ -141,8 +150,7 @@ public partial class GameObject : Node3D, ISerializationListener, ICloneable
     object ICloneable.Clone() => this.Clone();
     public GameObject Clone()
     {
-        var clone = RecursiveClone();
-        return clone;
+        return RecursiveClone();
     }
 
     private GameObject RecursiveClone()
@@ -174,7 +182,7 @@ public partial class GameObject : Node3D, ISerializationListener, ICloneable
         clone.Transform = Transform;
         clone.Components = new Godot.Collections.Array<REComponent>();
         foreach (var comp in Components) {
-            var cloneComp = comp.Clone(clone);
+            var cloneComp = (REComponent)comp.DeepClone();
             clone._components.Add(cloneComp);
             cloneComp.GameObject = clone;
         }

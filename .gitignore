@@ -18,3 +18,4 @@ build/*
 /re2/
 /re4/
 /asset_config*.tres
+/userdata

@@ -1,6 +1,7 @@
 namespace ReaGE;
 
 using System;
+using System.Globalization;
 using System.Runtime.CompilerServices;
 using Godot;
 using Godot.Collections;
@@ -112,6 +113,46 @@ public partial class REObject : Resource
         }
     }
 
+    public REObject DeepClone() => ((REObject)Activator.CreateInstance(GetType())!).DeepCopyFrom<REObject>(this);
+
+    public TObj DeepClone<TObj>() where TObj : REObject, new()
+    {
+        return new TObj().DeepCopyFrom<TObj>(this);
+    }
+
+    protected TObj DeepCopyFrom<TObj>(REObject from) where TObj : REObject, new()
+    {
+        ResourceName = from.ResourceName;
+        Game = from.Game;
+        Classname = from.Classname;
+        foreach (var (key, value) in from.__Data) {
+            if (value.VariantType == Variant.Type.Object) {
+                if (value.As<Resource>() is REObject fieldObj) {
+                    __Data[key] = fieldObj.DeepClone();
+                } else {
+                    __Data[key] = value;
+                }
+            } else if (value.VariantType == Variant.Type.Array) {
+                if (value.AsGodotArray() is Godot.Collections.Array array) {
+                    var newArray = new Godot.Collections.Array();
+                    foreach (var item in array) {
+                        if (item.VariantType == Variant.Type.Object && item.As<Resource>() is REObject itemObj) {
+                            newArray.Add(itemObj.DeepClone());
+                        } else {
+                            newArray.Add(Variant.CreateTakingOwnershipOfDisposableValue(value.CopyNativeVariant()));
+                        }
+                    }
+                    __Data[key] = newArray;
+                } else {
+                    __Data[key] = new Variant();
+                }
+            } else {
+                __Data[key] = Variant.CreateTakingOwnershipOfDisposableValue(value.CopyNativeVariant());
+            }
+        }
+        return (TObj)this;
+    }
+
     public void ShallowCopyFrom(REObject source, params string[] fields)
     {
         Game = source.Game;
@@ -130,6 +171,155 @@ public partial class REObject : Resource
                 }
             } else {
                 __Data[field.SerializedName] = new Variant();
+            }
+        }
+    }
+
+    public void CollectResources(HashSet<REResource> list)
+    {
+        foreach (var res in NestedResources()) {
+            list.Add(res);
+        }
+    }
+
+    public IEnumerable<(StringName, int, REObject)> ChildObjects()
+    {
+        foreach (var (key, value) in __Data) {
+            if (value.VariantType == Variant.Type.Object && value.As<Resource>() is REObject obj) {
+                yield return (key, -1, obj);
+            } else if (value.VariantType == Variant.Type.Array) {
+                var array = value.AsGodotArray();
+                for (var i = 0; i < array.Count; i++) {
+                    Variant item = array[i];
+                    if (item.VariantType == Variant.Type.Object && item.As<Resource>() is REObject obj2) {
+                        yield return (key, i, obj2);
+                    }
+                }
+            }
+        }
+    }
+
+    public IEnumerable<(string, Resource)> GetEngineObjectsWithPaths(string? path = null)
+    {
+        foreach (var (field, i, res) in Resources()) {
+            var fieldkey = i == -1 ? field.ToString() : $"{field}.{i}";
+            var fullpath = path == null ? fieldkey : path + "/" + fieldkey;
+            yield return (fullpath, res);
+        }
+
+        foreach (var (field, i, obj) in ChildObjects()) {
+            var fieldkey = i == -1 ? field.ToString() : $"{field}.{i}";
+            var fullpath = path == null ? fieldkey : path + "/" + fieldkey;
+            yield return (fullpath, obj);
+
+            foreach (var subresult in obj.GetEngineObjectsWithPaths(fullpath)) {
+                yield return subresult;
+            }
+        }
+    }
+
+    public IEnumerable<(StringName, int, REResource)> Resources()
+    {
+        foreach (var (key, value) in __Data) {
+            if (value.VariantType == Variant.Type.Object && value.As<Resource>() is REResource obj) {
+                yield return (key, -1, obj);
+            } else if (value.VariantType == Variant.Type.Array) {
+                var array = value.AsGodotArray();
+                for (var i = 0; i < array.Count; i++) {
+                    Variant item = array[i];
+                    if (value.VariantType == Variant.Type.Object && value.As<Resource>() is REResource obj2) {
+                        yield return (key, i, obj2);
+                    }
+                }
+            }
+        }
+    }
+
+    public IEnumerable<REResource> NestedResources()
+    {
+        foreach (var res in Resources()) {
+            yield return res.Item3;
+        }
+
+        foreach (var childres in ChildObjects().SelectMany(o => o.Item3.NestedResources())) {
+            yield return childres;
+        }
+    }
+
+    public void ClearResources()
+    {
+        foreach (var (key, index, res) in Resources()) {
+            __Data[key] = new Variant();
+        }
+
+        foreach (var obj in ChildObjects()) {
+            obj.Item3.ClearResources();
+        }
+    }
+
+    public void ApplyResources(Dictionary<string, string> fields)
+    {
+        foreach (var (key, index, res) in Resources()) {
+            __Data[key] = new Variant();
+        }
+
+        foreach (var obj in ChildObjects()) {
+            obj.Item3.ApplyResources(fields);
+        }
+    }
+
+    private static readonly char[] PropertyPathChars = { '.', '/', };
+    public (REObject obj, string field, int index) GetFieldByPath(ReadOnlySpan<char> valuePath)
+    {
+        var dotOrSlash = valuePath.IndexOfAny(PropertyPathChars);
+        if (dotOrSlash == -1) {
+            return (this, valuePath.ToString(), -1);
+        }
+
+        var field = valuePath.Slice(0, dotOrSlash).ToString();
+        if (valuePath[dotOrSlash] == '.') {
+            var slashpos = valuePath.IndexOf('/');
+            var index = int.Parse(
+                slashpos == -1 ? valuePath.Slice(dotOrSlash + 1) : valuePath[(dotOrSlash + 1)..slashpos],
+                CultureInfo.InvariantCulture);
+
+            if (index < 0) {
+                // self array field
+                return (this, field, index);
+            }
+
+            if (!__Data.TryGetValue(field, out var arr) || arr.VariantType != Variant.Type.Array || arr.AsGodotArray() is not Godot.Collections.Array array) {
+                if (!TypeInfo.FieldsByName.TryGetValue(field, out var fff) || !fff.RszField.array) {
+                    GD.PrintErr($"Invalid array path - {Classname} field {field} is not an array");
+                    return default;
+                }
+                __Data[field] = array = new Godot.Collections.Array();
+            }
+            if (index < array.Count && array[index].As<REObject>() is REObject child) {
+                // nested object array field
+                return child.GetFieldByPath(valuePath.Slice(dotOrSlash + 1));
+            }
+        } else {
+            // nested plain field
+            if (__Data.TryGetValue(field, out var sub) && sub.As<REObject>() is REObject subObj) {
+                return subObj.GetFieldByPath(valuePath.Slice(dotOrSlash + 1));
+            }
+        }
+        return default;
+    }
+
+    public void SetFieldByPath(ReadOnlySpan<char> valuePath, Variant value)
+    {
+        var (target, field, index) = GetFieldByPath(valuePath);
+        if (target != null) {
+            if (index == -1) {
+                target.__Data[field] = value;
+            } else {
+                var array = target.__Data[field].AsGodotArray();
+                while (array.Count < index) {
+                    array.Add(new Variant());
+                }
+                array[index] = value;
             }
         }
     }

@@ -6,7 +6,7 @@ using Godot.Collections;
 using ReaGE;
 
 [GlobalClass, Tool]
-public partial class ComponentTemplate : Node
+public partial class ComponentTemplate : ObjectTemplateRoot
 {
     [Export] public REComponent? Component { get; set; }
 

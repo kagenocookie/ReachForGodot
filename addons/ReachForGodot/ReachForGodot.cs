@@ -22,7 +22,7 @@ public static class ReachForGodot
         }
     }
 
-    public static string UserdataPath => ProjectSettings.GlobalizePath("res://addons/ReachForGodot/userdata/");
+    public static string GetUserdataPath(string path) => "res://userdata/" + path;
 
     public static bool IncludeMeshMaterial => ReachForGodotPlugin.IncludeMeshMaterial;
     public static int SceneFolderProxyThreshold => ReachForGodotPlugin.SceneFolderProxyThreshold;

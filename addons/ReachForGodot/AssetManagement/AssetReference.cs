@@ -25,9 +25,12 @@ public partial class AssetReference : Resource
         set {_assetFilename = PathUtils.NormalizeResourceFilepath(value); EmitChanged();}
     }
 
-    public ReadOnlySpan<char> BaseFilename => PathUtils.GetFilenameWithoutExtensionOrVersion(_assetFilename);
+    public ReadOnlySpan<char> BaseFilepath => PathUtils.GetFilepathWithoutExtensionOrVersion(_assetFilename);
+    public ReadOnlySpan<char> BaseFilename => Path.GetFileName(PathUtils.GetFilepathWithoutExtensionOrVersion(_assetFilename));
 
     public bool IsEmpty => string.IsNullOrWhiteSpace(_assetFilename);
+
+    public AssetReference Clone() => new AssetReference(_assetFilename);
 
     public bool IsSameAsset(string compare)
     {

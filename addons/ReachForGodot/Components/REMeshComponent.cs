@@ -68,10 +68,10 @@ public partial class REMeshComponent : REComponent, IVisualREComponent
         var r = base._Set(property, value);
         if (MeshField.IsMatch(this, property)) {
             var resource = value.As<MeshResource>();
-            ReinstantiateMesh(resource?.ImportedResource as PackedScene);
+            if (GameObject != null) ReinstantiateMesh(resource?.ImportedResource as PackedScene);
             if (resource != null) EnsureResourceInContainer(resource);
         }
-        if (MaterialField.IsMatch(this, property)) {
+        if (MaterialField.IsMatch(this, property) && value.As<Resource>() != null) {
             EnsureResourceInContainer(value.As<MaterialDefinitionResource>());
         }
         return r;

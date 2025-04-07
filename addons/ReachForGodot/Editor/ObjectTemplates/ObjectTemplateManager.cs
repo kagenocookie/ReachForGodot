@@ -5,39 +5,61 @@ using Godot;
 
 public static class ObjectTemplateManager
 {
-    private static string GetBaseTemplateFolder(ObjectTemplateType type, SupportedGame game)
+    private static string TemplateSubfolder(ObjectTemplateType type, SupportedGame game)
     {
         var templateFolder = type switch {
             ObjectTemplateType.GameObject => "GameObject",
             ObjectTemplateType.Component => "Component",
             _ => "GameObjects",
         };
-        return $"res://addons/ReachForGodot/game_config/{GamePaths.GetShortName(game)}/templates/{templateFolder}";
+        return $"{GamePaths.GetShortName(game)}/templates/{templateFolder}/";
     }
+    public static string GetBaseTemplateFolder(ObjectTemplateType type, SupportedGame game)
+        => $"res://addons/ReachForGodot/game_config/{TemplateSubfolder(type, game)}";
+
+    public static string GetUserTemplateFolder(ObjectTemplateType type, SupportedGame game)
+        => ReachForGodot.GetUserdataPath(TemplateSubfolder(type, game));
 
     public static string[] GetAvailableTemplates(ObjectTemplateType type, SupportedGame game)
     {
-        var folder = GetBaseTemplateFolder(type, game);
+        return GetFilesInFolder(GetUserTemplateFolder(type, game))
+            .Concat(GetFilesInFolder(GetBaseTemplateFolder(type, game)))
+            .ToArray();
+    }
 
+    private static IEnumerable<string> GetFilesInFolder(string folder)
+    {
         var fa = DirAccess.Open(folder);
         if (fa == null) {
             var err = DirAccess.GetOpenError();
             return Array.Empty<string>();
         }
-        return fa.GetFiles().Select(filename => Path.Combine(folder, filename)).ToArray();
+        // ReachForGodot.GetUserdataFolder("templates/GameObject/");
+        return fa.GetFiles().Select(filename => Path.Combine(folder, filename));
     }
 
-    public static void InstantiateGameobject(string chosenTemplate, Node parent, Node owner)
+    public static GameObject? InstantiateGameobject(string chosenTemplate, Node parent, Node owner)
     {
-        var sourceInstance = ResourceLoader.Load<PackedScene>(chosenTemplate).Instantiate<Node>(PackedScene.GenEditState.Instance);
-        if (sourceInstance is not GameObject sourceGameObject) {
-            GD.PrintErr("Invalid game object template - root must be a GameObject: " + chosenTemplate);
-            return;
+        var source = ResourceLoader.Load<PackedScene>(chosenTemplate).Instantiate<Node>(PackedScene.GenEditState.Instance);
+        GameObject? clone = null;
+        if (source is GameObject go) {
+            clone = go.Clone();
+            parent.AddUniqueNamedChild(clone);
+        } else if (source is ObjectTemplateRoot template) {
+            clone = template.GetTarget<GameObject>();
+            template.RemoveChild(clone);
+            clone.Owner = null;
+            parent.AddUniqueNamedChild(clone);
+            template.ApplyProperties(clone);
+            template.QueueFree();
+        }
+        if (clone == null) {
+            GD.PrintErr("Invalid game object template - must be a GameObject: " + chosenTemplate);
+            return null;
         }
 
-        var clone = sourceGameObject.Clone();
-        parent.AddUniqueNamedChild(clone);
         clone.SetRecursiveOwner(owner, clone);
+        return clone;
     }
 
     public static void InstantiateComponent(string chosenTemplate, GameObject target)
