@@ -58,6 +58,12 @@ public abstract class RszToolConverter<TImported, TExported, TResource> : DataCo
         return file.Read();
     }
 
+    protected PackedScene CreateOrReplaceRszSceneResource<TRoot>(TRoot root, AssetReference path) where TRoot : Node, IRszContainer, new()
+    {
+        root = SetupRszContainer(root, path);
+        return CreateOrReplaceSceneResource(root, path);
+    }
+
     public TExported CreateFile(string absoluteFilepath) => CreateFile(new FileHandler(absoluteFilepath));
     public TExported CreateFile(Stream stream, int fileVersion) => CreateFile(new FileHandler(stream) { FileVersion = fileVersion });
 

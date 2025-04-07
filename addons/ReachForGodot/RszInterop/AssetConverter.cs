@@ -108,7 +108,7 @@ public class AssetConverter
                 case SupportedFileFormats.Userdata:
                     return User.ImportFromFile(filepath, asset as UserdataResource);
                 case SupportedFileFormats.Rcol:
-                    return Rcol.ImportFromFile(filepath);
+                    return asset is RcolResource rcolRes ? Rcol.ImportFromFile(rcolRes) : Rcol.ImportFromFile(filepath);
                 case SupportedFileFormats.Foliage:
                     return Fol.ImportFromFile(filepath, asset as FoliageResource);
                 case SupportedFileFormats.Mesh:

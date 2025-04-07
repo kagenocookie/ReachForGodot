@@ -12,7 +12,7 @@ public class ScnConverter : RszAssetConverter<SceneFolder, ScnFile, PackedScene>
         var scn = new SceneFolder();
         scn.LockNode(true);
         scn.OriginalName = reference.BaseFilename.ToString();
-        return CreateOrReplaceSceneResource(scn, reference);
+        return CreateOrReplaceRszSceneResource(scn, reference);
     }
 
     public override SceneFolder? GetResourceImportedObject(PackedScene resource) => resource.Instantiate<SceneFolder>();
@@ -177,7 +177,7 @@ public class ScnConverter : RszAssetConverter<SceneFolder, ScnFile, PackedScene>
 
         Log(" Finished scene tree " + target.Name);
         if (WritesEnabled && !target.IsInsideTree()) {
-            CreateOrReplaceSceneResource(target, target.Asset!);
+            CreateOrReplaceRszSceneResource(target, target.Asset!);
         }
 
         return true;

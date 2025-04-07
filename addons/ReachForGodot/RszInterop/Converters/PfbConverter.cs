@@ -11,7 +11,7 @@ public class PfbConverter : RszAssetConverter<PrefabNode, PfbFile, PackedScene>
     {
         var scn = new PrefabNode();
         scn.OriginalName = reference.BaseFilename.ToString();
-        return CreateOrReplaceSceneResource(scn, reference);
+        return CreateOrReplaceRszSceneResource(scn, reference);
     }
 
     public override PrefabNode? GetResourceImportedObject(PackedScene resource) => resource.Instantiate<PrefabNode>();

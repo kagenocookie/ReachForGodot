@@ -16,7 +16,7 @@ public partial class RcolRootNode : Node, IExportableAsset, IImportableAsset
     public IEnumerable<RequestSetCollisionGroup> Groups => this.FindChild("Groups", false).FindChildrenByType<RequestSetCollisionGroup>();
     public IEnumerable<RequestSetCollider> Sets => this.FindChildrenByType<RequestSetCollider>();
 
-    bool IImportableAsset.IsEmpty => this.Resource?.IsEmpty != false;
+    bool IImportableAsset.IsEmpty => this.GetChildCount() == 0;
 
     public void HideGroupsExcept(RequestSetCollider set)
     {

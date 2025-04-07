@@ -261,6 +261,30 @@ public static class GodotObjectExtensions
         }
     }
 
+    public static PackedScene ToPackedScene(this Node node, bool fixOwners = true)
+    {
+        var scene = new PackedScene();
+        scene.Pack(node);
+        node.SetRecursiveOwner(node);
+        return scene;
+    }
+
+    public static PackedScene SaveAsScene(this Node node, string outputPath)
+    {
+        var scene = ToPackedScene(node);
+        Directory.CreateDirectory(ProjectSettings.GlobalizePath(outputPath.GetBaseDir()));
+        if (ResourceLoader.Exists(outputPath)) {
+            scene.TakeOverPath(outputPath);
+        } else {
+            scene.ResourcePath = outputPath;
+        }
+        var err = ResourceSaver.Save(scene, outputPath);
+        if (err != Error.Ok) {
+            GD.PrintErr("Failed to save scene: " + err);
+        }
+        return scene;
+    }
+
     public static void EmplaceChild(this Node parent, Node previousNode, Node newNode)
     {
         var index = previousNode.GetIndex();
@@ -306,8 +330,9 @@ public static class GodotObjectExtensions
         }
     }
 
-    public static IEnumerable<T> FindChildrenByTypeRecursive<T>(this Node node) where T : class
+    public static IEnumerable<T> FindChildrenByTypeRecursive<T>(this Node node, bool includeSelf = false) where T : class
     {
+        if (includeSelf && node is T nn) yield return nn;
         var count = node.GetChildCount();
         for (int i = 0; i < count; ++i) {
             var child = node.GetChild(i);

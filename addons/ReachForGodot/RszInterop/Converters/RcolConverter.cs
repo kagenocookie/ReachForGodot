@@ -12,6 +12,8 @@ public class RcolConverter : RszAssetConverter<RcolRootNode, RcolFile, RcolResou
         base.expectDuplicateInstanceReferences = true;
     }
 
+    public override RcolRootNode? GetResourceImportedObject(RcolResource resource) => resource.RcolScene?.Instantiate<RcolRootNode>();
+
     public override RcolResource CreateOrReplaceResourcePlaceholder(AssetReference reference)
     {
         return SetupResource(new RcolResource(), reference);
@@ -27,11 +29,22 @@ public class RcolConverter : RszAssetConverter<RcolRootNode, RcolFile, RcolResou
         return Export(resource.Instantiate() as RcolRootNode ?? new RcolRootNode(), target);
     }
 
-    public Task<bool> ImportFromFile(RcolResource target)
+    public async Task<bool> ImportFromFile(RcolResource target)
     {
         var node = target.Instantiate();
-        if (node == null) return Task.FromResult(false);
-        return ImportFromFile(node);
+        if (node == null) {
+            node = new RcolRootNode() {
+                Asset = target.Asset?.Clone(),
+                Name = target.ResourceName ?? Path.GetFileNameWithoutExtension(target.ResourcePath),
+                Game = target.Game,
+            };
+            target.ImportedResource = WritesEnabled ? node.SaveAsScene(PathUtils.GetAssetImportPath(node.Asset?.AssetFilename!, SupportedFileFormats.Rcol, Config)!) : node.ToPackedScene(false);
+        }
+        var success = await ImportFromFile(node);
+        if (success && WritesEnabled && node.Asset != null) {
+            CreateOrReplaceSceneResource(node, node.Asset);
+        }
+        return success;
     }
 
     public override Task<bool> Import(RcolFile file, RcolRootNode target)

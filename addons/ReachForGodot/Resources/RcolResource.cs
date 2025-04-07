@@ -13,10 +13,10 @@ public partial class RcolResource : REResourceProxy, IExportableAsset
     {
     }
 
-    protected override Task<Resource?> Import()
+    protected override async Task<Resource?> Import()
     {
-        CreateImporter().Rcol.ImportFromFile(this);
+        await CreateImporter().Rcol.ImportFromFile(this);
         NotifyPropertyListChanged();
-        return Task.FromResult(ImportedResource);
+        return ImportedResource;
     }
 }
