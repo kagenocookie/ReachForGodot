@@ -139,7 +139,7 @@ public partial class REObject : Resource
                         if (item.VariantType == Variant.Type.Object && item.As<Resource>() is REObject itemObj) {
                             newArray.Add(itemObj.DeepClone());
                         } else {
-                            newArray.Add(Variant.CreateTakingOwnershipOfDisposableValue(value.CopyNativeVariant()));
+                            newArray.Add(Variant.CreateTakingOwnershipOfDisposableValue(item.CopyNativeVariant()));
                         }
                     }
                     __Data[key] = newArray;
