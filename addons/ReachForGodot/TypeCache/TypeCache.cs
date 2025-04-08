@@ -447,7 +447,7 @@ public static partial class TypeCache
                     var desc = GetEnumDescriptor(cache, srcField.original_type);
                     if (desc != null && !desc.IsEmpty) {
                         // use Enum and not EnumSuggestion so we could still add custom values
-                        refield.Hint = PropertyHint.Enum;
+                        refield.Hint = desc.IsFlags ? PropertyHint.Flags : PropertyHint.Enum;
                         refield.HintString = desc.HintstringLabels;
                     }
                 }

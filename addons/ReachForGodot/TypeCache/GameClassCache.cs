@@ -99,46 +99,60 @@ public static partial class TypeCache
             time.Start();
             il2CppCache = new Il2cppCache();
             var baseCacheFile = paths.EnumCacheFilename;
-            var overrideFile = paths.EnumOverridesFilename;
-            if (File.Exists(baseCacheFile)) {
-                if (!File.Exists(paths.Il2cppPath)) {
-                    var success = TryApplyIl2cppCache(il2CppCache, baseCacheFile);
-                    TryApplyIl2cppCache(il2CppCache, overrideFile);
-                    if (!success) {
-                        GD.PrintErr("Failed to load il2cpp cache data from " + baseCacheFile);
-                    }
-                    GD.Print("Loaded previously cached il2cpp data in " + time.Elapsed);
-                    return il2CppCache;
-                }
-
+            if (!File.Exists(baseCacheFile)) {
+                RegenerateIl2cppCache(paths);
+                GD.Print("Regenerated source il2cpp data in " + time.Elapsed);
+            } else {
                 var cacheLastUpdate = File.GetLastWriteTimeUtc(baseCacheFile);
-                var il2cppLastUpdate = File.GetLastWriteTimeUtc(paths.Il2cppPath!);
-                if (il2cppLastUpdate <= cacheLastUpdate) {
-                    var existingCacheWorks = TryApplyIl2cppCache(il2CppCache, baseCacheFile);
-                    TryApplyIl2cppCache(il2CppCache, overrideFile);
-                    GD.Print("Loaded cached il2cpp data in " + time.Elapsed);
-                    if (existingCacheWorks) return il2CppCache;
+                var il2cppLastUpdate = paths.Il2cppPath == null ? DateTime.MinValue : File.GetLastWriteTimeUtc(paths.Il2cppPath!);
+                if (il2cppLastUpdate > cacheLastUpdate) {
+                    RegenerateIl2cppCache(paths);
+                    GD.Print("Regenerated source il2cpp data in " + time.Elapsed);
                 }
             }
+            time.Restart();
 
+            var success = TryApplyIl2cppCache(il2CppCache, baseCacheFile);
+            TryApplyIl2cppCache(il2CppCache, paths.EnumOverridesFilename);
+            if (success) {
+                GD.Print("Loaded cached il2cpp data in " + time.Elapsed);
+            } else {
+                GD.PrintErr("Failed to load il2cpp cache data from " + baseCacheFile);
+            }
+            TryApplyTypePatches(Il2cppCache, paths.TypePatchFilepath);
+            return il2CppCache;
+        }
+
+        private void RegenerateIl2cppCache(GamePaths paths)
+        {
             if (!File.Exists(paths.Il2cppPath)) {
                 GD.PrintErr($"Il2cpp file does not exist, nor do we have a valid cache file for {paths.Game}. Enums and class names won't resolve properly.");
-                return il2CppCache;
+                return;
             }
 
+            il2CppCache ??= new();
             var entries = DeserializeOrNull<REFDumpFormatter.SourceDumpRoot>(paths.Il2cppPath)
-                ?? throw new Exception("File is not a valid dump json file");
+                ?? throw new Exception("File is not a valid il2cpp dump json file");
             il2CppCache.ApplyIl2cppData(entries);
-            GD.Print("Loaded source il2cpp data in " + time.Elapsed);
+            TryApplyTypePatches(Il2cppCache, paths.TypePatchFilepath);
 
+            var baseCacheFile = paths.EnumCacheFilename;
             GD.Print("Updating il2cpp cache... " + baseCacheFile);
             Directory.CreateDirectory(baseCacheFile.GetBaseDir());
             using var outfs = File.Create(baseCacheFile);
             JsonSerializer.Serialize(outfs, il2CppCache.ToCacheData(), jsonOptions);
             outfs.Close();
+        }
 
-            TryApplyIl2cppCache(il2CppCache, overrideFile);
-            return il2CppCache;
+        private bool TryApplyTypePatches(Il2cppCache target, string patchFilename)
+        {
+            if (!File.Exists(patchFilename)) return false;
+
+            if (TryDeserialize<Dictionary<string, TypePatch>>(patchFilename, out var patches)) {
+                target.ApplyPatches(patches);
+                return true;
+            }
+            return false;
         }
 
         private bool TryApplyIl2cppCache(Il2cppCache target, string cacheFilename)

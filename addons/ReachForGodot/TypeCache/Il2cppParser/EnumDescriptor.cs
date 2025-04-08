@@ -15,6 +15,7 @@ public abstract class EnumDescriptor
     public string HintstringLabels => _hintstring ??= string.Join(",", LabelValuePairs);
 
     public bool IsEmpty { get; private set; } = true;
+    public bool IsFlags { get; set; }
 
     public void ParseIl2cppData(ObjectDef item)
     {
@@ -27,6 +28,7 @@ public abstract class EnumDescriptor
         }
 
         IsEmpty = false;
+        IsFlags = GuessIsFlags();
     }
 
     public void ParseCacheData(IEnumerable<EnumCacheItem> pairs)
@@ -38,10 +40,11 @@ public abstract class EnumDescriptor
         IsEmpty = false;
     }
 
+    protected abstract bool GuessIsFlags();
     protected abstract void AddValue(string name, JsonElement elem);
 }
 
-public sealed class EnumDescriptor<T> : EnumDescriptor where T : struct, IBinaryInteger<T>
+public sealed class EnumDescriptor<T> : EnumDescriptor where T : struct, IBinaryInteger<T>, IBitwiseOperators<T, T, T>
 {
     public readonly Dictionary<T, string> ValueToLabels = new();
 
@@ -57,6 +60,40 @@ public sealed class EnumDescriptor<T> : EnumDescriptor where T : struct, IBinary
     private static Func<JsonElement, T>? converter;
 
     protected override IEnumerable<string> LabelValuePairs => ValueToLabels.Select((pair) => $"{pair.Value}:{pair.Key}");
+
+    protected override bool GuessIsFlags()
+    {
+        if (!ValueToLabels.ContainsKey(T.One) || !ValueToLabels.ContainsKey(T.One + T.One)) {
+            return false;
+        }
+        var values = ValueToLabels.Keys.Order().ToArray();
+        T previous = values.First();
+        var isSequential = true;
+        foreach (var v in values.Skip(1)) {
+            if (v == -T.One) continue;
+            if (v == previous + T.One) {
+                previous = v;
+            } else {
+                isSequential = false;
+                break;
+            }
+        }
+        if (isSequential) return false;
+        var pots = values.Where(v => T.IsPow2(v));
+        var maxPot = pots.LastOrDefault();
+        if (maxPot == T.Zero) return false;
+        var all = default(T);
+        foreach (var pot in pots) all += pot;
+
+        var potCount = pots.Count();
+        var max = values.Last();
+        if (max > all) return false;
+
+        foreach (var nonpot in values.Where(n => !T.IsPow2(n))) {
+            if ((nonpot & ~all) != T.Zero) return false;
+        }
+        return max != maxPot && potCount >= 2 || potCount >= 3;
+    }
 
     protected override void AddValue(string name, JsonElement elem)
     {

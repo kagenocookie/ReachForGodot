@@ -7,7 +7,7 @@ using REFDumpFormatter;
 
 public class Il2cppCacheData
 {
-    public static readonly int CurrentCacheVersion = 1;
+    public static readonly int CurrentCacheVersion = 2;
 
     public int CacheVersion { get; set; }
     public Dictionary<string, EnumCacheEntry> Enums { get; set; } = new();
@@ -16,8 +16,14 @@ public class Il2cppCacheData
 
 public class EnumCacheEntry
 {
+    public bool IsFlags { get; set; }
     public string BackingType { get; set; } = string.Empty;
     public IEnumerable<EnumCacheItem> Items { get; set; } = Array.Empty<EnumCacheItem>();
+}
+
+public class TypePatch
+{
+    public bool IsFlagEnum { get; set; }
 }
 
 public record EnumCacheItem(string name, JsonElement value);
@@ -89,9 +95,21 @@ public class Il2cppCache
         }
     }
 
+    public bool ApplyPatches(Dictionary<string, TypePatch> patches)
+    {
+        var changed = false;
+        foreach (var (cls, patch) in patches) {
+            if (patch.IsFlagEnum && enums.TryGetValue(cls, out var enumDesc) && !enumDesc.IsFlags) {
+                enumDesc.IsFlags = true;
+                changed = true;
+            }
+        }
+        return changed;
+    }
+
     private static EnumDescriptor? CreateDescriptor(string backing)
     {
-        if (!descriptorFactory.TryGetValue(backing, out var fac)) {
+        if (!descriptorFactory.TryGetValue(backing, out var factory)) {
             var t = Type.GetType(backing);
             if (t == null) {
                 GD.PrintErr("Invalid cached enum backing type: " + backing);
@@ -99,10 +117,10 @@ public class Il2cppCache
             }
 
             var enumType = typeof(EnumDescriptor<>).MakeGenericType(t!);
-            fac = () => (EnumDescriptor)Activator.CreateInstance(enumType)!;
+            descriptorFactory[backing] = factory = () => (EnumDescriptor)Activator.CreateInstance(enumType)!;
         }
 
-        return fac();
+        return factory();
     }
 
     public void ApplyCacheData(Il2cppCacheData data)
@@ -110,7 +128,10 @@ public class Il2cppCache
         foreach (var (enumName, enumItem) in data.Enums) {
             if (!enums.TryGetValue(enumName, out var enumInstance)) {
                 var descriptor = CreateDescriptor(enumItem.BackingType);
-                descriptor?.ParseCacheData(enumItem.Items);
+                if (descriptor != null) {
+                    descriptor.ParseCacheData(enumItem.Items);
+                    descriptor.IsFlags = enumItem.IsFlags;
+                }
                 enums[enumName] = descriptor ?? EnumDescriptor<ulong>.Default;
             }
         }
@@ -124,6 +145,7 @@ public class Il2cppCache
             var cacheEntry = new EnumCacheEntry();
             cacheEntry.BackingType = entry.BackingType.FullName!;
             cacheEntry.Items = entry.CacheItems;
+            cacheEntry.IsFlags = entry.IsFlags;
             data.Enums.Add(name, cacheEntry);
         }
         data.Subclasses = subclasses;

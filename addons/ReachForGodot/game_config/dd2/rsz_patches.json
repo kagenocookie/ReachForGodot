@@ -5899,6 +5899,11 @@
       {
         "Name": "v1",
         "Type": "Object"
+      },
+      {
+        "Name": "AttackFlag",
+        "OriginalType": "app.AttackUserData.AttackFlagEnum",
+        "Type": "U64"
       }
     ]
   },
