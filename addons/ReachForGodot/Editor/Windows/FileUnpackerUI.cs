@@ -18,9 +18,9 @@ public partial class FileUnpackerUI : Window
     [Export] public FileDialog.FileModeEnum FileMode { get; set; }
     [Export] public FilePickerPanel? FilePanel { get; set; }
     [Export] public Container? ExtensionButtonsContainer { get; set; }
-    [Export] private CheckBox? ImportFilesCheckbox { get; set; }
     [Export] private OptionButton? GamePicker { get; set; }
-    public bool ShouldImportFiles => ImportFilesCheckbox?.ButtonPressed != false;
+    public bool ShouldImportFiles { get; private set; }
+    public bool ForceExtractFiles { get; private set; }
     public FileListFileSystem? FileSystem { get; set; }
 
     private SupportedGame _game;
@@ -110,13 +110,13 @@ public partial class FileUnpackerUI : Window
 
     private void OnFilesSelected(string[] files)
     {
-        ConfirmImport();
+        ImportOnly();
         Hide();
     }
 
     private void OnFileSelected(string file)
     {
-        ConfirmImport();
+        ImportOnly();
         Hide();
     }
 
@@ -157,7 +157,28 @@ public partial class FileUnpackerUI : Window
         Hide();
     }
 
-    private void ConfirmImport()
+    private void ExtractOnly()
+    {
+        ShouldImportFiles = false;
+        ForceExtractFiles = true;
+        ConfirmSelectedFile();
+    }
+
+    private void ImportOnly()
+    {
+        ShouldImportFiles = true;
+        ForceExtractFiles = false;
+        ConfirmSelectedFile();
+    }
+
+    private void ExtractImport()
+    {
+        ShouldImportFiles = true;
+        ForceExtractFiles = false;
+        ConfirmSelectedFile();
+    }
+
+    private void ConfirmSelectedFile()
     {
         var selected = FilePanel?.SelectedFilepaths;
         if (selected == null || !selected.Any()) return;

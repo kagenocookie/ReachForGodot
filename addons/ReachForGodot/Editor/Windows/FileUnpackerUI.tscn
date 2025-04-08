@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://d1la5j3gkcqcf" path="res://addons/CustomFileBrowser/FilePickerPanel.tscn" id="2_ii2h1"]
 [ext_resource type="Script" uid="uid://va46q8at6sls" path="res://addons/CustomFileBrowser/FilePickerColumnSlider.cs" id="3_p1edu"]
 
-[node name="FileUnpacker" type="Window" node_paths=PackedStringArray("FilePanel", "ExtensionButtonsContainer", "ImportFilesCheckbox", "GamePicker")]
+[node name="FileUnpacker" type="Window" node_paths=PackedStringArray("FilePanel", "ExtensionButtonsContainer", "GamePicker")]
 title = "Select a file"
 initial_position = 4
 size = Vector2i(800, 275)
@@ -12,7 +12,6 @@ script = ExtResource("1_682hi")
 FileMode = 1
 FilePanel = NodePath("Panel/VBoxContainer/MarginContainer/HSplitContainer/ScrollContainer/FilePickerPanel")
 ExtensionButtonsContainer = NodePath("Panel/VBoxContainer/MarginContainer/HSplitContainer/VBoxContainer/MarginContainer/FileExtensionFilter/VBoxContainer")
-ImportFilesCheckbox = NodePath("Panel/VBoxContainer/MainButtonContainer/ShouldImport")
 GamePicker = NodePath("Panel/VBoxContainer/MarginContainer/HSplitContainer/VBoxContainer/MarginContainer/FileExtensionFilter/VBoxContainer/GamePicker")
 metadata/_custom_type_script = "uid://bulp4kp1jcnbr"
 
@@ -143,16 +142,15 @@ text = "Extract all filtered"
 
 [node name="BtnExtractSelected" type="Button" parent="Panel/VBoxContainer/MainButtonContainer"]
 layout_mode = 2
-text = "Extract selected files"
+text = "Extract selected"
+
+[node name="BtnExtractImport" type="Button" parent="Panel/VBoxContainer/MainButtonContainer"]
+layout_mode = 2
+text = "Import selected"
 
 [node name="BtnClose" type="Button" parent="Panel/VBoxContainer/MainButtonContainer"]
 layout_mode = 2
 text = "Close"
-
-[node name="ShouldImport" type="CheckBox" parent="Panel/VBoxContainer/MainButtonContainer"]
-layout_mode = 2
-button_pressed = true
-text = "Import extracted files"
 
 [connection signal="close_requested" from="." to="." method="OnCloseRequested"]
 [connection signal="item_selected" from="Panel/VBoxContainer/MarginContainer/HSplitContainer/VBoxContainer/MarginContainer/FileExtensionFilter/VBoxContainer/GamePicker" to="." method="OnSelectedGameChanged"]
@@ -162,7 +160,8 @@ text = "Import extracted files"
 [connection signal="FileSelected" from="Panel/VBoxContainer/MarginContainer/HSplitContainer/ScrollContainer/FilePickerPanel" to="." method="OnFileSelected"]
 [connection signal="FilesSelected" from="Panel/VBoxContainer/MarginContainer/HSplitContainer/ScrollContainer/FilePickerPanel" to="." method="OnFilesSelected"]
 [connection signal="pressed" from="Panel/VBoxContainer/MainButtonContainer/BtnExtractFiltered" to="." method="ExtractFilteredFiles"]
-[connection signal="pressed" from="Panel/VBoxContainer/MainButtonContainer/BtnExtractSelected" to="." method="ConfirmImport"]
+[connection signal="pressed" from="Panel/VBoxContainer/MainButtonContainer/BtnExtractSelected" to="." method="ExtractOnly"]
+[connection signal="pressed" from="Panel/VBoxContainer/MainButtonContainer/BtnExtractImport" to="." method="ExtractImport"]
 [connection signal="pressed" from="Panel/VBoxContainer/MainButtonContainer/BtnClose" to="." method="OnCloseRequested"]
 
 [editable path="Panel/VBoxContainer/MarginContainer/HSplitContainer/ScrollContainer/FilePickerPanel"]
