@@ -302,7 +302,11 @@ public static partial class PathUtils
                 info.CanHaveLang = isLocalized || info.CanHaveLang;
                 info.CanNotHaveLang = !isLocalized || info.CanNotHaveLang;
                 if (locale != null && !info.Locales.Contains(locale)) {
-                    info.Locales.Add(locale);
+                    if (locale == "en") {
+                        info.Locales.Insert(0, locale);
+                    } else {
+                        info.Locales.Add(locale);
+                    }
                 }
                 if (int.TryParse(versionStr, out var version)) {
                     if (info.Version != 0 && info.Version != version) {
