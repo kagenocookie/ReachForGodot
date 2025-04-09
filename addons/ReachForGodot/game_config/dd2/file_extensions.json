@@ -103,14 +103,6 @@
     "eem": 0
   },
   "Info": {
-    "; 269505/272054 (99%)": {
-      "Locales": [],
-      "Version": 0,
-      "CanHaveX64": false,
-      "CanNotHaveX64": true,
-      "CanHaveLang": false,
-      "CanNotHaveLang": true
-    },
     "mot": {
       "Locales": [],
       "Version": 698,
