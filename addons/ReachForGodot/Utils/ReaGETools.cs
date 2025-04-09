@@ -9,17 +9,25 @@ using Shouldly;
 
 public sealed class ResourceFieldFinder : IDisposable
 {
-    private Dictionary<SupportedGame, HashSet<(string cls, string field, string ext, bool)>> dict = new();
+    private Dictionary<SupportedGame, HashSet<(string cls, string field, string ext, bool? shouldBeInResourceList)>> dict = new();
 
     public void DumpFindings(string? suffix)
     {
         foreach (var (game, list) in dict) {
             var sb = new StringBuilder();
-            foreach (var (cls, field, ext, inList) in list.OrderBy(a => new { a.cls, a.field })) {
+            foreach (var (cls, field, ext, inList) in list.OrderBy(a => (a.cls, a.field))) {
                 sb.Append("ext:").Append(ext).Append(" class:").Append(cls).Append(" field:").Append(field).Append(" resourceList:").Append(inList).AppendLine();
             }
             var outFile = suffix == null ? game.ToString() + "_resource_fields.txt" : game.ToString() + "_resource_fields" + suffix + ".txt";
-            File.WriteAllText(ReachForGodot.GetUserdataPath(outFile), sb.ToString());
+            File.WriteAllText(ProjectSettings.GlobalizePath(ReachForGodot.GetUserdataPath(outFile)), sb.ToString());
+        }
+    }
+
+    public void ApplyRszPatches()
+    {
+        foreach (var (game, list) in dict) {
+            var config = ReachForGodot.GetAssetConfig(game);
+            TypeCache.MarkRSZResourceFields(list.Select(item => (item.cls, item.field, item.ext)), config);
         }
     }
 
@@ -33,15 +41,15 @@ public sealed class ResourceFieldFinder : IDisposable
         }
     }
 
-    private void FindResourceFields(List<ResourceInfo> resourceList, RszInstance instance, HashSet<(string, string, string, bool)> resourceFields)
+    private void FindResourceFields(List<ResourceInfo> resourceList, RszInstance instance, HashSet<(string, string, string, bool?)> resourceFields)
     {
         for (var i = 0; i < instance.RszClass.fields.Length; i++) {
             var f = instance.RszClass.fields[i];
             if (f.type is RszFieldType.String or RszFieldType.Resource) {
                 var value = instance.Values[i] as string;
 
-                var isInResourceList = resourceList.Any(r => r.Path?.Equals(value, StringComparison.OrdinalIgnoreCase) == true);
-                if (!isInResourceList && f.type == RszFieldType.String) {
+                var isInResourceList = string.IsNullOrEmpty(value) ? (bool?)null : resourceList.Any(r => r.Path?.Equals(value, StringComparison.OrdinalIgnoreCase) == true);
+                if (isInResourceList != true && f.type == RszFieldType.String) {
                     // do extra checks
                     if (value == null || !value.Contains('/') || !value.Contains('.')) {
                         continue;
@@ -49,10 +57,14 @@ public sealed class ResourceFieldFinder : IDisposable
                 }
 
                 var cls = instance.RszClass.name;
+
+                // better not store these as resources, so we don't require all folders and subfolders to always be imported
+                if (cls == "via.Folder") continue;
+
                 var ext = Path.GetExtension(value);
                 if (string.IsNullOrEmpty(ext)) ext = string.Empty;
                 else ext = ext.Substring(1);
-                resourceFields.Add((cls, $"[{i}]{f.name}", ext, isInResourceList));
+                resourceFields.Add((cls, f.name, ext, isInResourceList));
             }
         }
     }

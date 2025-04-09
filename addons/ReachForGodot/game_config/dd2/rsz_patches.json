@@ -121,8 +121,7 @@
     "FieldPatches": [
       {
         "Name": "_QuestID",
-        "OriginalType": "app.QuestDefine.ID",
-        "Type": "ukn_error"
+        "OriginalType": "app.QuestDefine.ID"
       }
     ]
   },
@@ -149,12 +148,12 @@
       {
         "Name": "v0",
         "ReplaceName": "Mesh",
-        "Type": "ukn_error"
+        "Type": "Resource"
       },
       {
         "Name": "v1",
         "ReplaceName": "Material",
-        "Type": "ukn_error"
+        "Type": "Resource"
       },
       {
         "Name": "v2",
@@ -174,6 +173,16 @@
       {
         "Name": "Materials",
         "Type": "Object"
+      },
+      {
+        "FileFormat": "Mesh",
+        "Name": "Mesh",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "MaterialDefinition",
+        "Name": "Material",
+        "Type": "Resource"
       }
     ]
   },
@@ -181,18 +190,15 @@
     "FieldPatches": [
       {
         "Name": "v2",
-        "ReplaceName": "Position",
-        "Type": "ukn_error"
+        "ReplaceName": "Position"
       },
       {
         "Name": "v3",
-        "ReplaceName": "Rotation",
-        "Type": "ukn_error"
+        "ReplaceName": "Rotation"
       },
       {
         "Name": "v4",
-        "ReplaceName": "Scale",
-        "Type": "ukn_error"
+        "ReplaceName": "Scale"
       }
     ]
   },
@@ -285,10 +291,12 @@
         "Type": "S32"
       },
       {
+        "FileFormat": "Mesh",
         "Name": "Mesh",
         "Type": "Resource"
       },
       {
+        "FileFormat": "MaterialDefinition",
         "Name": "Material",
         "Type": "Resource"
       },
@@ -302,17 +310,21 @@
     "FieldPatches": [
       {
         "Name": "v1",
-        "ReplaceName": "MaterialVariable",
-        "Type": "ukn_error"
+        "ReplaceName": "MaterialVariable"
       },
       {
         "Name": "v3",
         "ReplaceName": "TexturePath",
-        "Type": "ukn_error"
+        "Type": "Resource"
       },
       {
         "Name": "v4",
         "Type": "S32"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "TexturePath",
+        "Type": "Resource"
       }
     ]
   },
@@ -354,6 +366,15 @@
       {
         "Name": "v5",
         "ReplaceName": "CollisionFilter",
+        "Type": "Resource"
+      },
+      {
+        "Name": "v6",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "CollisionFilter",
         "Type": "Resource"
       }
     ]
@@ -452,6 +473,20 @@
       {
         "Name": "v25",
         "Type": "Object"
+      },
+      {
+        "Name": "v16",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "MotionBank",
+        "Name": "v14",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "Uvar",
+        "Name": "v15",
+        "Type": "Resource"
       }
     ]
   },
@@ -480,6 +515,10 @@
       {
         "Name": "v5",
         "Type": "Object"
+      },
+      {
+        "Name": "v6",
+        "Type": "Resource"
       }
     ]
   },
@@ -540,6 +579,11 @@
       {
         "Name": "v26",
         "Type": "F32"
+      },
+      {
+        "FileFormat": "Chain",
+        "Name": "v4",
+        "Type": "Resource"
       }
     ]
   },
@@ -632,6 +676,46 @@
       {
         "Name": "v49",
         "Type": "Object"
+      },
+      {
+        "FileFormat": "MaterialDefinition",
+        "Name": "v48",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "v17",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "v18",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "v19",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "v21",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "v22",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "v20",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "v23",
+        "Type": "Resource"
       }
     ]
   },
@@ -736,6 +820,11 @@
       {
         "Name": "v34",
         "Type": "F32"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "v37",
+        "Type": "Resource"
       }
     ]
   },
@@ -888,6 +977,10 @@
       {
         "Name": "v14",
         "Type": "F32"
+      },
+      {
+        "Name": "v10",
+        "Type": "Resource"
       }
     ]
   },
@@ -904,6 +997,11 @@
       {
         "Name": "v2",
         "ReplaceName": "Mesh",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "MeshCollider",
+        "Name": "Mesh",
         "Type": "Resource"
       }
     ]
@@ -949,6 +1047,10 @@
       {
         "Name": "v12",
         "Type": "S32"
+      },
+      {
+        "Name": "v4",
+        "Type": "Resource"
       }
     ]
   },
@@ -1090,6 +1192,14 @@
       {
         "Name": "v82",
         "Type": "S32"
+      },
+      {
+        "Name": "v26",
+        "Type": "Resource"
+      },
+      {
+        "Name": "v27",
+        "Type": "Resource"
       }
     ]
   },
@@ -1150,6 +1260,11 @@
       {
         "Name": "v25",
         "Type": "S32"
+      },
+      {
+        "FileFormat": "MotionList",
+        "Name": "v6",
+        "Type": "Resource"
       }
     ]
   },
@@ -1182,6 +1297,11 @@
       {
         "Name": "v15",
         "Type": "F32"
+      },
+      {
+        "FileFormat": "MotionFsm2",
+        "Name": "v7",
+        "Type": "Resource"
       }
     ]
   },
@@ -1266,6 +1386,11 @@
       {
         "Name": "v11",
         "Type": "S32"
+      },
+      {
+        "FileFormat": "MotionList",
+        "Name": "v3",
+        "Type": "Resource"
       }
     ]
   },
@@ -1298,6 +1423,10 @@
       {
         "Name": "v3",
         "Type": "F32"
+      },
+      {
+        "Name": "v4",
+        "Type": "Resource"
       }
     ]
   },
@@ -1322,6 +1451,11 @@
       {
         "Name": "v3",
         "Type": "S32"
+      },
+      {
+        "FileFormat": "MotionList",
+        "Name": "v0",
+        "Type": "Resource"
       }
     ]
   },
@@ -1366,6 +1500,11 @@
       {
         "Name": "v19",
         "Type": "F32"
+      },
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "v23",
+        "Type": "Resource"
       }
     ]
   },
@@ -1598,6 +1737,20 @@
       {
         "Name": "v80",
         "Type": "F32"
+      },
+      {
+        "Name": "v5",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "v18",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "v19",
+        "Type": "Resource"
       }
     ]
   },
@@ -1658,6 +1811,10 @@
       {
         "Name": "v29",
         "Type": "F32"
+      },
+      {
+        "Name": "v10",
+        "Type": "Resource"
       }
     ]
   },
@@ -1714,6 +1871,10 @@
       {
         "Name": "v4",
         "Type": "S32"
+      },
+      {
+        "Name": "v0",
+        "Type": "Resource"
       }
     ]
   },
@@ -2022,6 +2183,11 @@
       {
         "Name": "v4",
         "Type": "F32"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "v3",
+        "Type": "Resource"
       }
     ]
   },
@@ -2054,6 +2220,11 @@
       {
         "Name": "v11",
         "Type": "S32"
+      },
+      {
+        "FileFormat": "Timeline",
+        "Name": "v3",
+        "Type": "Resource"
       }
     ]
   },
@@ -2082,6 +2253,16 @@
       {
         "Name": "v9",
         "Type": "S32"
+      },
+      {
+        "FileFormat": "Gui",
+        "Name": "v1",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "RenderTexture",
+        "Name": "v7",
+        "Type": "Resource"
       }
     ]
   },
@@ -2214,6 +2395,10 @@
       {
         "Name": "v9",
         "Type": "S32"
+      },
+      {
+        "Name": "v5",
+        "Type": "Resource"
       }
     ]
   },
@@ -2258,6 +2443,11 @@
       {
         "Name": "v12",
         "ReplaceName": "FoliageData",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "Foliage",
+        "Name": "FoliageData",
         "Type": "Resource"
       }
     ]
@@ -2479,6 +2669,14 @@
       {
         "Name": "v66",
         "Type": "Object"
+      },
+      {
+        "Name": "v55",
+        "Type": "Resource"
+      },
+      {
+        "Name": "v56",
+        "Type": "Resource"
       }
     ]
   },
@@ -2675,6 +2873,21 @@
       {
         "Name": "v82",
         "Type": "Object"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "v10",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "v11",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "v20",
+        "Type": "Resource"
       }
     ]
   },
@@ -2747,6 +2960,11 @@
       {
         "Name": "v16",
         "Type": "Object"
+      },
+      {
+        "FileFormat": "MaterialDefinition",
+        "Name": "v15",
+        "Type": "Resource"
       }
     ]
   },
@@ -2779,6 +2997,10 @@
       {
         "Name": "v10",
         "Type": "F32"
+      },
+      {
+        "Name": "v4",
+        "Type": "Resource"
       }
     ]
   },
@@ -2875,6 +3097,11 @@
       {
         "Name": "v43",
         "Type": "S32"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "v33",
+        "Type": "Resource"
       }
     ]
   },
@@ -2943,6 +3170,11 @@
       {
         "Name": "v27",
         "Type": "F32"
+      },
+      {
+        "FileFormat": "Chain2",
+        "Name": "v4",
+        "Type": "Resource"
       }
     ]
   },
@@ -3119,6 +3351,11 @@
       {
         "Name": "v62",
         "Type": "S32"
+      },
+      {
+        "FileFormat": "RenderTexture",
+        "Name": "v67",
+        "Type": "Resource"
       }
     ]
   },
@@ -3423,6 +3660,10 @@
       {
         "Name": "v76",
         "Type": "S32"
+      },
+      {
+        "Name": "v5",
+        "Type": "Resource"
       }
     ]
   },
@@ -3631,6 +3872,21 @@
       {
         "Name": "v9",
         "Type": "Object"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "v2",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "v3",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "v5",
+        "Type": "Resource"
       }
     ]
   },
@@ -3647,6 +3903,10 @@
       {
         "Name": "v10",
         "Type": "S32"
+      },
+      {
+        "Name": "v4",
+        "Type": "Resource"
       }
     ]
   },
@@ -3799,6 +4059,11 @@
       {
         "Name": "v54",
         "Type": "S32"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "v53",
+        "Type": "Resource"
       }
     ]
   },
@@ -3863,6 +4128,16 @@
       {
         "Name": "v17",
         "Type": "S32"
+      },
+      {
+        "FileFormat": "MotionBank",
+        "Name": "v15",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "Uvar",
+        "Name": "v16",
+        "Type": "Resource"
       }
     ]
   },
@@ -3919,6 +4194,11 @@
       {
         "Name": "v19",
         "Type": "S32"
+      },
+      {
+        "FileFormat": "RenderTexture",
+        "Name": "v17",
+        "Type": "Resource"
       }
     ]
   },
@@ -3963,6 +4243,10 @@
       {
         "Name": "v11",
         "Type": "F32"
+      },
+      {
+        "Name": "v4",
+        "Type": "Resource"
       }
     ]
   },
@@ -3983,6 +4267,15 @@
       {
         "Name": "v19",
         "Type": "S32"
+      },
+      {
+        "Name": "v11",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "MaterialDefinition",
+        "Name": "v12",
+        "Type": "Resource"
       }
     ]
   },
@@ -4003,6 +4296,11 @@
       {
         "Name": "v6",
         "Type": "F32"
+      },
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "v7",
+        "Type": "Resource"
       }
     ]
   },
@@ -4047,6 +4345,11 @@
       {
         "Name": "v27",
         "Type": "S32"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "v13",
+        "Type": "Resource"
       }
     ]
   },
@@ -4271,6 +4574,11 @@
       {
         "Name": "v89",
         "Type": "F32"
+      },
+      {
+        "FileFormat": "MaterialDefinition",
+        "Name": "v48",
+        "Type": "Resource"
       }
     ]
   },
@@ -4331,6 +4639,11 @@
       {
         "Name": "v26",
         "Type": "S32"
+      },
+      {
+        "FileFormat": "RenderTexture",
+        "Name": "v11",
+        "Type": "Resource"
       }
     ]
   },
@@ -4559,6 +4872,34 @@
       {
         "Name": "v70",
         "Type": "S32"
+      },
+      {
+        "Name": "v11",
+        "Type": "Resource"
+      },
+      {
+        "Name": "v12",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "v21",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "v29",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "v35",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "v36",
+        "Type": "Resource"
       }
     ]
   },
@@ -4643,6 +4984,10 @@
       {
         "Name": "v22",
         "Type": "S32"
+      },
+      {
+        "Name": "v1",
+        "Type": "Resource"
       }
     ]
   },
@@ -4843,6 +5188,10 @@
       {
         "Name": "v27",
         "Type": "F32"
+      },
+      {
+        "Name": "v11",
+        "Type": "Resource"
       }
     ]
   },
@@ -4863,6 +5212,26 @@
       {
         "Name": "v19",
         "Type": "S32"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "v1",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "v3",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "v4",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "v6",
+        "Type": "Resource"
       }
     ]
   },
@@ -4911,6 +5280,16 @@
       {
         "Name": "v19",
         "Type": "S32"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "v1",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "v2",
+        "Type": "Resource"
       }
     ]
   },
@@ -4979,6 +5358,10 @@
       {
         "Name": "v11",
         "Type": "S32"
+      },
+      {
+        "Name": "v10",
+        "Type": "Resource"
       }
     ]
   },
@@ -4995,6 +5378,16 @@
       {
         "Name": "v15",
         "Type": "S32"
+      },
+      {
+        "FileFormat": "RenderTexture",
+        "Name": "v11",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "RenderTexture",
+        "Name": "v12",
+        "Type": "Resource"
       }
     ]
   },
@@ -5071,6 +5464,11 @@
       {
         "Name": "v32",
         "Type": "Object"
+      },
+      {
+        "FileFormat": "Efx",
+        "Name": "v1",
+        "Type": "Resource"
       }
     ]
   },
@@ -5147,6 +5545,10 @@
       {
         "Name": "v1",
         "Type": "S32"
+      },
+      {
+        "Name": "v2",
+        "Type": "Resource"
       }
     ]
   },
@@ -5231,6 +5633,10 @@
       {
         "Name": "v21",
         "Type": "F32"
+      },
+      {
+        "Name": "v11",
+        "Type": "Resource"
       }
     ]
   },
@@ -5243,6 +5649,15 @@
       {
         "Name": "v4",
         "Type": "F32"
+      },
+      {
+        "Name": "v1",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "RenderTexture",
+        "Name": "v2",
+        "Type": "Resource"
       }
     ]
   },
@@ -5439,6 +5854,11 @@
       {
         "Name": "v62",
         "Type": "S32"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "v16",
+        "Type": "Resource"
       }
     ]
   },
@@ -5587,6 +6007,16 @@
       {
         "Name": "v55",
         "Type": "S32"
+      },
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "v22",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "v23",
+        "Type": "Resource"
       }
     ]
   },
@@ -5743,6 +6173,16 @@
       {
         "Name": "v6",
         "Type": "S32"
+      },
+      {
+        "FileFormat": "MotionBank",
+        "Name": "v7_MotionBank",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "MotionList",
+        "Name": "v8_MotionList",
+        "Type": "Resource"
       }
     ]
   },
@@ -6072,6 +6512,16 @@
       {
         "Name": "v14",
         "Type": "Object"
+      },
+      {
+        "FileFormat": "RenderTexture",
+        "Name": "v11",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "MaterialDefinition",
+        "Name": "v12",
+        "Type": "Resource"
       }
     ]
   },
@@ -6080,6 +6530,10 @@
       {
         "Name": "v2",
         "Type": "S32"
+      },
+      {
+        "Name": "v4",
+        "Type": "Resource"
       }
     ]
   },
@@ -6405,6 +6859,11 @@
         "Name": "v0",
         "ReplaceName": "File",
         "Type": "Resource"
+      },
+      {
+        "FileFormat": "Rcol",
+        "Name": "File",
+        "Type": "Resource"
       }
     ]
   },
@@ -6412,93 +6871,75 @@
     "FieldPatches": [
       {
         "Name": "STRUCT_EnemyCleanHit_Max",
-        "ReplaceName": "STRUCT_EnemyCleanHit_Max1",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT_EnemyCleanHit_Max1"
       },
       {
         "Name": "STRUCT_EnemyCleanHit_Max",
-        "ReplaceName": "STRUCT_EnemyCleanHit_Max2",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT_EnemyCleanHit_Max2"
       },
       {
         "Name": "STRUCT_EnemyCleanHit_Min",
-        "ReplaceName": "STRUCT_EnemyCleanHit_Min1",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT_EnemyCleanHit_Min1"
       },
       {
         "Name": "STRUCT_EnemyCleanHit_Min",
-        "ReplaceName": "STRUCT_EnemyCleanHit_Min2",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT_EnemyCleanHit_Min2"
       },
       {
         "Name": "STRUCT_EnemyScratch_Max",
-        "ReplaceName": "STRUCT_EnemyScratch_Max1",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT_EnemyScratch_Max1"
       },
       {
         "Name": "STRUCT_EnemyScratch_Max",
-        "ReplaceName": "STRUCT_EnemyScratch_Max2",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT_EnemyScratch_Max2"
       },
       {
         "Name": "STRUCT_EnemyScratch_Min",
-        "ReplaceName": "STRUCT_EnemyScratch_Min1",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT_EnemyScratch_Min1"
       },
       {
         "Name": "STRUCT_EnemyScratch_Min",
-        "ReplaceName": "STRUCT_EnemyScratch_Min2",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT_EnemyScratch_Min2"
       },
       {
         "Name": "STRUCT_Friend_Max",
-        "ReplaceName": "STRUCT_Friend_Max1",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT_Friend_Max1"
       },
       {
         "Name": "STRUCT_Friend_Max",
-        "ReplaceName": "STRUCT_Friend_Max2",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT_Friend_Max2"
       },
       {
         "Name": "STRUCT_Friend_Min",
-        "ReplaceName": "STRUCT_Friend_Min1",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT_Friend_Min1"
       },
       {
         "Name": "STRUCT_Friend_Min",
-        "ReplaceName": "STRUCT_Friend_Min2",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT_Friend_Min2"
       },
       {
         "Name": "STRUCT_EnemyCleanHit_Max",
-        "ReplaceName": "STRUCT_EnemyCleanHit_Max3",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT_EnemyCleanHit_Max3"
       },
       {
         "Name": "STRUCT_EnemyCleanHit_Min",
-        "ReplaceName": "STRUCT_EnemyCleanHit_Min3",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT_EnemyCleanHit_Min3"
       },
       {
         "Name": "STRUCT_EnemyScratch_Max",
-        "ReplaceName": "STRUCT_EnemyScratch_Max3",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT_EnemyScratch_Max3"
       },
       {
         "Name": "STRUCT_EnemyScratch_Min",
-        "ReplaceName": "STRUCT_EnemyScratch_Min3",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT_EnemyScratch_Min3"
       },
       {
         "Name": "STRUCT_Friend_Max",
-        "ReplaceName": "STRUCT_Friend_Max3",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT_Friend_Max3"
       },
       {
         "Name": "STRUCT_Friend_Min",
-        "ReplaceName": "STRUCT_Friend_Min3",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT_Friend_Min3"
       }
     ]
   },
@@ -6506,13 +6947,11 @@
     "FieldPatches": [
       {
         "Name": "u",
-        "ReplaceName": "u1",
-        "Type": "ukn_error"
+        "ReplaceName": "u1"
       },
       {
         "Name": "u",
-        "ReplaceName": "u2",
-        "Type": "ukn_error"
+        "ReplaceName": "u2"
       }
     ]
   },
@@ -6520,23 +6959,19 @@
     "FieldPatches": [
       {
         "Name": "STRUCT_DataContainerID__HasValue",
-        "ReplaceName": "STRUCT_DataContainerID__HasValue1",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT_DataContainerID__HasValue1"
       },
       {
         "Name": "STRUCT_DataContainerID__HasValue",
-        "ReplaceName": "STRUCT_DataContainerID__HasValue2",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT_DataContainerID__HasValue2"
       },
       {
         "Name": "STRUCT_DataContainerID__Value",
-        "ReplaceName": "STRUCT_DataContainerID__Value1",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT_DataContainerID__Value1"
       },
       {
         "Name": "STRUCT_DataContainerID__Value",
-        "ReplaceName": "STRUCT_DataContainerID__Value2",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT_DataContainerID__Value2"
       }
     ]
   },
@@ -6544,23 +6979,19 @@
     "FieldPatches": [
       {
         "Name": "f",
-        "ReplaceName": "f1",
-        "Type": "ukn_error"
+        "ReplaceName": "f1"
       },
       {
         "Name": "f",
-        "ReplaceName": "f2",
-        "Type": "ukn_error"
+        "ReplaceName": "f2"
       },
       {
         "Name": "f",
-        "ReplaceName": "f3",
-        "Type": "ukn_error"
+        "ReplaceName": "f3"
       },
       {
         "Name": "f",
-        "ReplaceName": "f4",
-        "Type": "ukn_error"
+        "ReplaceName": "f4"
       }
     ]
   },
@@ -6568,13 +6999,11 @@
     "FieldPatches": [
       {
         "Name": "InterpolationParam",
-        "ReplaceName": "InterpolationParam1",
-        "Type": "ukn_error"
+        "ReplaceName": "InterpolationParam1"
       },
       {
         "Name": "InterpolationParam",
-        "ReplaceName": "InterpolationParam2",
-        "Type": "ukn_error"
+        "ReplaceName": "InterpolationParam2"
       }
     ]
   },
@@ -6582,33 +7011,27 @@
     "FieldPatches": [
       {
         "Name": "STRUCT_DataContainerID__HasValue",
-        "ReplaceName": "STRUCT_DataContainerID__HasValue1",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT_DataContainerID__HasValue1"
       },
       {
         "Name": "STRUCT_DataContainerID__HasValue",
-        "ReplaceName": "STRUCT_DataContainerID__HasValue2",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT_DataContainerID__HasValue2"
       },
       {
         "Name": "STRUCT_DataContainerID__Value",
-        "ReplaceName": "STRUCT_DataContainerID__Value1",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT_DataContainerID__Value1"
       },
       {
         "Name": "STRUCT_DataContainerID__Value",
-        "ReplaceName": "STRUCT_DataContainerID__Value2",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT_DataContainerID__Value2"
       },
       {
         "Name": "STRUCT_DataContainerID__HasValue",
-        "ReplaceName": "STRUCT_DataContainerID__HasValue3",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT_DataContainerID__HasValue3"
       },
       {
         "Name": "STRUCT_DataContainerID__Value",
-        "ReplaceName": "STRUCT_DataContainerID__Value3",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT_DataContainerID__Value3"
       }
     ]
   },
@@ -6616,48 +7039,39 @@
     "FieldPatches": [
       {
         "Name": "STRUCT__Value_DataContainerID",
-        "ReplaceName": "STRUCT__Value_DataContainerID1",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT__Value_DataContainerID1"
       },
       {
         "Name": "STRUCT__Value_DataContainerID",
-        "ReplaceName": "STRUCT__Value_DataContainerID2",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT__Value_DataContainerID2"
       },
       {
         "Name": "STRUCT__Value_ContainerID",
-        "ReplaceName": "STRUCT__Value_ContainerID1",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT__Value_ContainerID1"
       },
       {
         "Name": "STRUCT__Value_ContainerID",
-        "ReplaceName": "STRUCT__Value_ContainerID2",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT__Value_ContainerID2"
       },
       {
         "Name": "STRUCT__Value_ElementID",
-        "ReplaceName": "STRUCT__Value_ElementID1",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT__Value_ElementID1"
       },
       {
         "Name": "STRUCT__Value_ElementID",
-        "ReplaceName": "STRUCT__Value_ElementID2",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT__Value_ElementID2"
       },
       {
         "Name": "STRUCT__Value_DataContainerID",
-        "ReplaceName": "STRUCT__Value_DataContainerID3",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT__Value_DataContainerID3"
       },
       {
         "Name": "STRUCT__Value_ContainerID",
-        "ReplaceName": "STRUCT__Value_ContainerID3",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT__Value_ContainerID3"
       },
       {
         "Name": "STRUCT__Value_ElementID",
-        "ReplaceName": "STRUCT__Value_ElementID3",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT__Value_ElementID3"
       }
     ]
   },
@@ -6665,48 +7079,39 @@
     "FieldPatches": [
       {
         "Name": "STRUCT__Value_DataContainerID",
-        "ReplaceName": "STRUCT__Value_DataContainerID1",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT__Value_DataContainerID1"
       },
       {
         "Name": "STRUCT__Value_DataContainerID",
-        "ReplaceName": "STRUCT__Value_DataContainerID2",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT__Value_DataContainerID2"
       },
       {
         "Name": "STRUCT__Value_ContainerID",
-        "ReplaceName": "STRUCT__Value_ContainerID1",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT__Value_ContainerID1"
       },
       {
         "Name": "STRUCT__Value_ContainerID",
-        "ReplaceName": "STRUCT__Value_ContainerID2",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT__Value_ContainerID2"
       },
       {
         "Name": "STRUCT__Value_ElementID",
-        "ReplaceName": "STRUCT__Value_ElementID1",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT__Value_ElementID1"
       },
       {
         "Name": "STRUCT__Value_ElementID",
-        "ReplaceName": "STRUCT__Value_ElementID2",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT__Value_ElementID2"
       },
       {
         "Name": "STRUCT__Value_DataContainerID",
-        "ReplaceName": "STRUCT__Value_DataContainerID3",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT__Value_DataContainerID3"
       },
       {
         "Name": "STRUCT__Value_ContainerID",
-        "ReplaceName": "STRUCT__Value_ContainerID3",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT__Value_ContainerID3"
       },
       {
         "Name": "STRUCT__Value_ElementID",
-        "ReplaceName": "STRUCT__Value_ElementID3",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT__Value_ElementID3"
       }
     ]
   },
@@ -6714,13 +7119,11 @@
     "FieldPatches": [
       {
         "Name": "ui",
-        "ReplaceName": "ui1",
-        "Type": "ukn_error"
+        "ReplaceName": "ui1"
       },
       {
         "Name": "ui",
-        "ReplaceName": "ui2",
-        "Type": "ukn_error"
+        "ReplaceName": "ui2"
       }
     ]
   },
@@ -6728,78 +7131,63 @@
     "FieldPatches": [
       {
         "Name": "STRUCT__Value_DataContainerID",
-        "ReplaceName": "STRUCT__Value_DataContainerID1",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT__Value_DataContainerID1"
       },
       {
         "Name": "STRUCT__Value_DataContainerID",
-        "ReplaceName": "STRUCT__Value_DataContainerID2",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT__Value_DataContainerID2"
       },
       {
         "Name": "STRUCT__Value_ContainerID",
-        "ReplaceName": "STRUCT__Value_ContainerID1",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT__Value_ContainerID1"
       },
       {
         "Name": "STRUCT__Value_ContainerID",
-        "ReplaceName": "STRUCT__Value_ContainerID2",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT__Value_ContainerID2"
       },
       {
         "Name": "STRUCT__Value_ElementID",
-        "ReplaceName": "STRUCT__Value_ElementID1",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT__Value_ElementID1"
       },
       {
         "Name": "STRUCT__Value_ElementID",
-        "ReplaceName": "STRUCT__Value_ElementID2",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT__Value_ElementID2"
       },
       {
         "Name": "STRUCT__Value_DataContainerID",
-        "ReplaceName": "STRUCT__Value_DataContainerID3",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT__Value_DataContainerID3"
       },
       {
         "Name": "STRUCT__Value_ContainerID",
-        "ReplaceName": "STRUCT__Value_ContainerID3",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT__Value_ContainerID3"
       },
       {
         "Name": "STRUCT__Value_ElementID",
-        "ReplaceName": "STRUCT__Value_ElementID3",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT__Value_ElementID3"
       },
       {
         "Name": "STRUCT__Value_DataContainerID",
-        "ReplaceName": "STRUCT__Value_DataContainerID4",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT__Value_DataContainerID4"
       },
       {
         "Name": "STRUCT__Value_ContainerID",
-        "ReplaceName": "STRUCT__Value_ContainerID4",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT__Value_ContainerID4"
       },
       {
         "Name": "STRUCT__Value_ElementID",
-        "ReplaceName": "STRUCT__Value_ElementID4",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT__Value_ElementID4"
       },
       {
         "Name": "STRUCT__Value_DataContainerID",
-        "ReplaceName": "STRUCT__Value_DataContainerID5",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT__Value_DataContainerID5"
       },
       {
         "Name": "STRUCT__Value_ContainerID",
-        "ReplaceName": "STRUCT__Value_ContainerID5",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT__Value_ContainerID5"
       },
       {
         "Name": "STRUCT__Value_ElementID",
-        "ReplaceName": "STRUCT__Value_ElementID5",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT__Value_ElementID5"
       }
     ]
   },
@@ -6807,13 +7195,11 @@
     "FieldPatches": [
       {
         "Name": "ui",
-        "ReplaceName": "ui1",
-        "Type": "ukn_error"
+        "ReplaceName": "ui1"
       },
       {
         "Name": "ui",
-        "ReplaceName": "ui2",
-        "Type": "ukn_error"
+        "ReplaceName": "ui2"
       }
     ]
   },
@@ -6821,48 +7207,39 @@
     "FieldPatches": [
       {
         "Name": "STRUCT__Value_DataContainerID",
-        "ReplaceName": "STRUCT__Value_DataContainerID1",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT__Value_DataContainerID1"
       },
       {
         "Name": "STRUCT__Value_DataContainerID",
-        "ReplaceName": "STRUCT__Value_DataContainerID2",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT__Value_DataContainerID2"
       },
       {
         "Name": "STRUCT__Value_ContainerID",
-        "ReplaceName": "STRUCT__Value_ContainerID1",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT__Value_ContainerID1"
       },
       {
         "Name": "STRUCT__Value_ContainerID",
-        "ReplaceName": "STRUCT__Value_ContainerID2",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT__Value_ContainerID2"
       },
       {
         "Name": "STRUCT__Value_ElementID",
-        "ReplaceName": "STRUCT__Value_ElementID1",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT__Value_ElementID1"
       },
       {
         "Name": "STRUCT__Value_ElementID",
-        "ReplaceName": "STRUCT__Value_ElementID2",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT__Value_ElementID2"
       },
       {
         "Name": "STRUCT__Value_DataContainerID",
-        "ReplaceName": "STRUCT__Value_DataContainerID3",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT__Value_DataContainerID3"
       },
       {
         "Name": "STRUCT__Value_ContainerID",
-        "ReplaceName": "STRUCT__Value_ContainerID3",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT__Value_ContainerID3"
       },
       {
         "Name": "STRUCT__Value_ElementID",
-        "ReplaceName": "STRUCT__Value_ElementID3",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT__Value_ElementID3"
       }
     ]
   },
@@ -6870,93 +7247,731 @@
     "FieldPatches": [
       {
         "Name": "STRUCT_EnemyCleanHit_Max",
-        "ReplaceName": "STRUCT_EnemyCleanHit_Max1",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT_EnemyCleanHit_Max1"
       },
       {
         "Name": "STRUCT_EnemyCleanHit_Max",
-        "ReplaceName": "STRUCT_EnemyCleanHit_Max2",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT_EnemyCleanHit_Max2"
       },
       {
         "Name": "STRUCT_EnemyCleanHit_Min",
-        "ReplaceName": "STRUCT_EnemyCleanHit_Min1",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT_EnemyCleanHit_Min1"
       },
       {
         "Name": "STRUCT_EnemyCleanHit_Min",
-        "ReplaceName": "STRUCT_EnemyCleanHit_Min2",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT_EnemyCleanHit_Min2"
       },
       {
         "Name": "STRUCT_EnemyScratch_Max",
-        "ReplaceName": "STRUCT_EnemyScratch_Max1",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT_EnemyScratch_Max1"
       },
       {
         "Name": "STRUCT_EnemyScratch_Max",
-        "ReplaceName": "STRUCT_EnemyScratch_Max2",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT_EnemyScratch_Max2"
       },
       {
         "Name": "STRUCT_EnemyScratch_Min",
-        "ReplaceName": "STRUCT_EnemyScratch_Min1",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT_EnemyScratch_Min1"
       },
       {
         "Name": "STRUCT_EnemyScratch_Min",
-        "ReplaceName": "STRUCT_EnemyScratch_Min2",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT_EnemyScratch_Min2"
       },
       {
         "Name": "STRUCT_Friend_Max",
-        "ReplaceName": "STRUCT_Friend_Max1",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT_Friend_Max1"
       },
       {
         "Name": "STRUCT_Friend_Max",
-        "ReplaceName": "STRUCT_Friend_Max2",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT_Friend_Max2"
       },
       {
         "Name": "STRUCT_Friend_Min",
-        "ReplaceName": "STRUCT_Friend_Min1",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT_Friend_Min1"
       },
       {
         "Name": "STRUCT_Friend_Min",
-        "ReplaceName": "STRUCT_Friend_Min2",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT_Friend_Min2"
       },
       {
         "Name": "STRUCT_EnemyCleanHit_Max",
-        "ReplaceName": "STRUCT_EnemyCleanHit_Max3",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT_EnemyCleanHit_Max3"
       },
       {
         "Name": "STRUCT_EnemyCleanHit_Min",
-        "ReplaceName": "STRUCT_EnemyCleanHit_Min3",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT_EnemyCleanHit_Min3"
       },
       {
         "Name": "STRUCT_EnemyScratch_Max",
-        "ReplaceName": "STRUCT_EnemyScratch_Max3",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT_EnemyScratch_Max3"
       },
       {
         "Name": "STRUCT_EnemyScratch_Min",
-        "ReplaceName": "STRUCT_EnemyScratch_Min3",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT_EnemyScratch_Min3"
       },
       {
         "Name": "STRUCT_Friend_Max",
-        "ReplaceName": "STRUCT_Friend_Max3",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT_Friend_Max3"
       },
       {
         "Name": "STRUCT_Friend_Min",
-        "ReplaceName": "STRUCT_Friend_Min3",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT_Friend_Min3"
+      }
+    ]
+  },
+  "via.Folder": {
+    "FieldPatches": [
+      {
+        "Name": "Path",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "via.Prefab": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Prefab",
+        "Name": "Path",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "via.motion.DummySkeleton": {
+    "FieldPatches": [
+      {
+        "Name": "v0",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "via.character.CollisionShapePresetInfo": {
+    "FieldPatches": [
+      {
+        "Name": "v0",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "via.render.ByteBufferUpdater": {
+    "FieldPatches": [
+      {
+        "FileFormat": "GpuBuffer",
+        "Name": "v0",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "via.physics.SensorTarget": {
+    "FieldPatches": [
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "v2",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.Gm51_341_Sensor": {
+    "FieldPatches": [
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "CollisionFilter",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.FilterParamColorCorrect": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Texture",
+        "Name": "_ColorCube",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.Gm82_067": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Mesh",
+        "Name": "SmallMesh",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "MaterialDefinition",
+        "Name": "SmallMat",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "Mesh",
+        "Name": "BigMesh",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "MaterialDefinition",
+        "Name": "BigMat",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.RenderTargetSetter": {
+    "FieldPatches": [
+      {
+        "FileFormat": "RenderTexture",
+        "Name": "holder",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.FoliageStateController": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Rcol",
+        "Name": "_CharacterColliderAsset",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.Sm81_033": {
+    "FieldPatches": [
+      {
+        "FileFormat": "MaterialDefinition",
+        "Name": "_Resource",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "via.render.IBL": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Texture",
+        "Name": "v1_IBLTextureResource",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.CharacterManager.Parameter": {
+    "FieldPatches": [
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "IKFilterOnObjectCollision",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.MarkerManagerBehavior": {
+    "FieldPatches": [
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "VisionMarkerPawnOnlyFilter",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "VisionMarkerEnemyOnlyFilter",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "VisionMarkerNPCOnlyFilter",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.SensorManagerBehavior": {
+    "FieldPatches": [
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "VisionSensorPawnFilter",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "VisionSensorEnemyFilter",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "VisionSensorNPCFilter",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.NavigationManagerBehavior": {
+    "FieldPatches": [
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "AppObstacleAgentFilterRes",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.CharacterEditManagerBehavior": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Chain",
+        "Name": "_HumanBodyChain",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.SharedByteAddressBufferManagerBehavior.ByteBufferSetting": {
+    "FieldPatches": [
+      {
+        "FileFormat": "GpuBuffer",
+        "Name": "byteBuffer",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.MockupFace": {
+    "FieldPatches": [
+      {
+        "FileFormat": "RenderTexture",
+        "Name": "RTTDummy",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "via.render.LDRImagePlane": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Texture",
+        "Name": "v5_Base",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "v6_Alpha",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.MockupCtrl": {
+    "FieldPatches": [
+      {
+        "FileFormat": "RenderTexture",
+        "Name": "DefaultRTT",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "via.gui.ImageSlideObject": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Texture",
+        "Name": "v3_ResourceHandle",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.DarkTimeZoneMarker": {
+    "FieldPatches": [
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "MarkerFilterRes",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.ui080101DataHolder": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Texture",
+        "Name": "Tex",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.MiniMapTexHolder": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Texture",
+        "Name": "Tex",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.SlopeBodyCorrection2Leg": {
+    "FieldPatches": [
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_CollisionFilter",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.LayerAttributes.MeshMaterialContainer.MeshMaterialData": {
+    "FieldPatches": [
+      {
+        "FileFormat": "MaterialDefinition",
+        "Name": "Material",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.Ch228SetupHairChain": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Chain",
+        "Name": "_ChainResource",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "via.physics.SkinningMeshColliderSet.SkinningMeshInfo": {
+    "FieldPatches": [
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "v1_Filter",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.Ch253000BattleResource": {
+    "FieldPatches": [
+      {
+        "FileFormat": "MotionBank",
+        "Name": "_BattleMotionBank",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.prototype.devBeadsModelSolverSetting": {
+    "FieldPatches": [
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_CollisionFilter",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.prototype.devTailGroundIK": {
+    "FieldPatches": [
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_CollisionFilter",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.HumanCombatResourceHolder.FsmData": {
+    "FieldPatches": [
+      {
+        "FileFormat": "MotionFsm2",
+        "Name": "FullBodyMotionFsmResource",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "MotionFsm2",
+        "Name": "UpperBodyMotionFsmResource",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.HumanCombatResourceHolder.MotionData": {
+    "FieldPatches": [
+      {
+        "FileFormat": "MotionList",
+        "Name": "MotionList",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.PartSwapTextureHolder.MaterialParam": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Texture",
+        "Name": "_Texture",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.PartSwapMeshHolder": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Mesh",
+        "Name": "_Mesh",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.PartSwapMaterialHolder": {
+    "FieldPatches": [
+      {
+        "FileFormat": "MaterialDefinition",
+        "Name": "_Material",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.PartSwapSimpleTextureHolder": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Texture",
+        "Name": "_TextureAsset",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.PartSwapRenderTargetTextureHolder": {
+    "FieldPatches": [
+      {
+        "FileFormat": "RenderTexture",
+        "Name": "_TextureAsset",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.PartSwapChainHolder": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Chain",
+        "Name": "_Chain",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.PartSwapDynamicTextureHolder": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Texture",
+        "Name": "_Texture",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.Ch228SwitchHairCostume": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Mesh",
+        "Name": "_HairMesh",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "MaterialDefinition",
+        "Name": "_HairMaterial",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.PickableEquipItem": {
+    "FieldPatches": [
+      {
+        "FileFormat": "MotionList",
+        "Name": "MotionList",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.Gm50_026": {
+    "FieldPatches": [
+      {
+        "FileFormat": "MotionList",
+        "Name": "_UpperMotionList",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.Gm50_005": {
+    "FieldPatches": [
+      {
+        "FileFormat": "MotionList",
+        "Name": "_UpperMotionList",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.Gm50_010_01": {
+    "FieldPatches": [
+      {
+        "FileFormat": "MotionList",
+        "Name": "_UpperMotionList",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.gm50_096": {
+    "FieldPatches": [
+      {
+        "FileFormat": "MotionList",
+        "Name": "_UpperMotionList",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.gm50_096_01": {
+    "FieldPatches": [
+      {
+        "FileFormat": "MotionList",
+        "Name": "_UpperMotionList",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.gm51_046": {
+    "FieldPatches": [
+      {
+        "FileFormat": "MotionList",
+        "Name": "_UpperMotionList",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.GUICharaEditCtrl": {
+    "FieldPatches": [
+      {
+        "FileFormat": "MotionBank",
+        "Name": "EditFacialMotionBank",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.GUIMenuBg": {
+    "FieldPatches": [
+      {
+        "FileFormat": "MaterialDefinition",
+        "Name": "PlayerIconMaterial",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "MaterialDefinition",
+        "Name": "QuestIconMaterial",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.GUITextureHolder": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Texture",
+        "Name": "_Texture",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.ui06805": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Texture",
+        "Name": "CheckTexResource",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.ui040101_00": {
+    "FieldPatches": [
+      {
+        "FileFormat": "RenderTexture",
+        "Name": "MovieRTT",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.ui040205": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Texture",
+        "Name": "DefaultMaskTexture",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.ui040601_00": {
+    "FieldPatches": [
+      {
+        "FileFormat": "RenderTexture",
+        "Name": "MockupRTT",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.ui041503": {
+    "FieldPatches": [
+      {
+        "FileFormat": "RenderTexture",
+        "Name": "MovieRTT",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.ui060301_00": {
+    "FieldPatches": [
+      {
+        "FileFormat": "RenderTexture",
+        "Name": "MockupRTT",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.ui060601_01": {
+    "FieldPatches": [
+      {
+        "FileFormat": "RenderTexture",
+        "Name": "MovieRTT",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.ui060702": {
+    "FieldPatches": [
+      {
+        "FileFormat": "RenderTexture",
+        "Name": "RTT",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.ui080101": {
+    "FieldPatches": [
+      {
+        "FileFormat": "RenderTexture",
+        "Name": "RTT",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.ItemModelHolder": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Mesh",
+        "Name": "_Mesh",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "MaterialDefinition",
+        "Name": "_Material",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.CutSceneResourceHolder": {
+    "FieldPatches": [
+      {
+        "FileFormat": "MotionBank",
+        "Name": "_PlayerHeadMotionBankHolder",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "MotionBank",
+        "Name": "_PawnHeadMotionBankHolder",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.PauseTopMapTexHolder": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Texture",
+        "Name": "Tex",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.EPVExpertDynamicsData": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Uvar",
+        "Name": "UserVariableResource",
+        "Type": "Resource"
       }
     ]
   }

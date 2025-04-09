@@ -106,6 +106,16 @@
       {
         "Name": "v68",
         "Type": "S32"
+      },
+      {
+        "FileFormat": "Mesh",
+        "Name": "Mesh",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "Mesh",
+        "Name": "Material",
+        "Type": "Resource"
       }
     ]
   },
@@ -211,6 +221,20 @@
       {
         "Name": "v19",
         "Type": "Object"
+      },
+      {
+        "FileFormat": "MotionBank",
+        "Name": "v11",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "Uvar",
+        "Name": "v12",
+        "Type": "Resource"
+      },
+      {
+        "Name": "v13",
+        "Type": "Resource"
       }
     ]
   },
@@ -243,6 +267,10 @@
       {
         "Name": "v12",
         "Type": "S32"
+      },
+      {
+        "Name": "v4",
+        "Type": "Resource"
       }
     ]
   },
@@ -367,6 +395,11 @@
       {
         "Name": "v36",
         "Type": "F32"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "v29",
+        "Type": "Resource"
       }
     ]
   },
@@ -400,6 +433,11 @@
       {
         "Name": "v3",
         "Type": "S32"
+      },
+      {
+        "FileFormat": "MeshCollider",
+        "Name": "Mesh",
+        "Type": "Resource"
       }
     ]
   },
@@ -422,6 +460,15 @@
         "Name": "v2",
         "ReplaceName": "Shape",
         "Type": "Object"
+      },
+      {
+        "Name": "v6",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "CollisionFilter",
+        "Type": "Resource"
       }
     ]
   },
@@ -506,6 +553,11 @@
         "Name": "v12",
         "ReplaceName": "FoliageData",
         "Type": "Resource"
+      },
+      {
+        "FileFormat": "Foliage",
+        "Name": "FoliageData",
+        "Type": "Resource"
       }
     ]
   },
@@ -514,6 +566,16 @@
       {
         "Name": "v2",
         "Type": "Object"
+      },
+      {
+        "FileFormat": "Mesh",
+        "Name": "v0",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "MaterialDefinition",
+        "Name": "v1",
+        "Type": "Resource"
       }
     ]
   },
@@ -570,6 +632,10 @@
       {
         "Name": "v12",
         "Type": "F32"
+      },
+      {
+        "Name": "v8",
+        "Type": "Resource"
       }
     ]
   },
@@ -619,6 +685,16 @@
       {
         "Name": "v10",
         "Type": "S32"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "v1",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "v9",
+        "Type": "Resource"
       }
     ]
   },
@@ -687,6 +763,11 @@
       {
         "Name": "v24",
         "Type": "S32"
+      },
+      {
+        "FileFormat": "MotionList",
+        "Name": "v5",
+        "Type": "Resource"
       }
     ]
   },
@@ -719,6 +800,11 @@
       {
         "Name": "v15",
         "Type": "F32"
+      },
+      {
+        "FileFormat": "MotionFsm2",
+        "Name": "v7",
+        "Type": "Resource"
       }
     ]
   },
@@ -911,6 +997,10 @@
       {
         "Name": "v60",
         "Type": "S32"
+      },
+      {
+        "Name": "v4",
+        "Type": "Resource"
       }
     ]
   },
@@ -923,6 +1013,10 @@
       {
         "Name": "v3",
         "Type": "F32"
+      },
+      {
+        "Name": "v4",
+        "Type": "Resource"
       }
     ]
   },
@@ -979,6 +1073,11 @@
       {
         "Name": "v24",
         "Type": "F32"
+      },
+      {
+        "FileFormat": "Chain",
+        "Name": "v4",
+        "Type": "Resource"
       }
     ]
   },
@@ -987,6 +1086,11 @@
       {
         "Name": "v4",
         "Type": "F32"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "v3",
+        "Type": "Resource"
       }
     ]
   },
@@ -1091,6 +1195,10 @@
       {
         "Name": "v35",
         "Type": "F32"
+      },
+      {
+        "Name": "v15",
+        "Type": "Resource"
       }
     ]
   },
@@ -1139,6 +1247,11 @@
       {
         "Name": "v11",
         "Type": "S32"
+      },
+      {
+        "FileFormat": "MotionList",
+        "Name": "v3",
+        "Type": "Resource"
       }
     ]
   },
@@ -1203,6 +1316,16 @@
       {
         "Name": "v27",
         "Type": "S32"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "v13",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "RenderTexture",
+        "Name": "v12",
+        "Type": "Resource"
       }
     ]
   },
@@ -1215,6 +1338,11 @@
       {
         "Name": "v12",
         "Type": "S32"
+      },
+      {
+        "FileFormat": "Mesh",
+        "Name": "v11",
+        "Type": "Resource"
       }
     ]
   },
@@ -1275,6 +1403,16 @@
       {
         "Name": "v26",
         "Type": "S32"
+      },
+      {
+        "FileFormat": "RenderTexture",
+        "Name": "v11",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "v22",
+        "Type": "Resource"
       }
     ]
   },
@@ -1455,6 +1593,14 @@
       {
         "Name": "v60",
         "Type": "Object"
+      },
+      {
+        "Name": "v50",
+        "Type": "Resource"
+      },
+      {
+        "Name": "v51",
+        "Type": "Resource"
       }
     ]
   },
@@ -1631,6 +1777,11 @@
       {
         "Name": "v16",
         "Type": "Object"
+      },
+      {
+        "FileFormat": "MaterialDefinition",
+        "Name": "v15",
+        "Type": "Resource"
       }
     ]
   },
@@ -1719,6 +1870,41 @@
       {
         "Name": "v48",
         "Type": "Object"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "v13",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "v16",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "v17",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "v19",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "v18",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "v14",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "v15",
+        "Type": "Resource"
       }
     ]
   },
@@ -1751,6 +1937,11 @@
       {
         "Name": "v11",
         "Type": "S32"
+      },
+      {
+        "FileFormat": "Timeline",
+        "Name": "v3",
+        "Type": "Resource"
       }
     ]
   },
@@ -1803,6 +1994,10 @@
       {
         "Name": "v11",
         "Type": "Object"
+      },
+      {
+        "Name": "v8",
+        "Type": "Resource"
       }
     ]
   },
@@ -1843,6 +2038,16 @@
       {
         "Name": "v18",
         "Type": "F32"
+      },
+      {
+        "FileFormat": "LightProbe",
+        "Name": "v2",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "Probe",
+        "Name": "v3",
+        "Type": "Resource"
       }
     ]
   },
@@ -1891,6 +2096,15 @@
       {
         "Name": "v23",
         "Type": "F32"
+      },
+      {
+        "Name": "v11",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "MaterialDefinition",
+        "Name": "v12",
+        "Type": "Resource"
       }
     ]
   },
@@ -1919,6 +2133,16 @@
       {
         "Name": "v9",
         "Type": "S32"
+      },
+      {
+        "FileFormat": "Gui",
+        "Name": "v1",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "RenderTexture",
+        "Name": "v8",
+        "Type": "Resource"
       }
     ]
   },
@@ -1959,6 +2183,21 @@
       {
         "Name": "v18",
         "Type": "F32"
+      },
+      {
+        "FileFormat": "LightProbe",
+        "Name": "v2",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "Probe",
+        "Name": "v3",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "LightProbe",
+        "Name": "v22_SecondaryLightProbes",
+        "Type": "Resource"
       }
     ]
   },
@@ -2187,6 +2426,11 @@
       {
         "Name": "v11",
         "Type": "F32"
+      },
+      {
+        "FileFormat": "Timeline",
+        "Name": "v0",
+        "Type": "Resource"
       }
     ]
   },
@@ -2255,6 +2499,11 @@
       {
         "Name": "v33",
         "Type": "Object"
+      },
+      {
+        "FileFormat": "MaterialDefinition",
+        "Name": "v31",
+        "Type": "Resource"
       }
     ]
   },
@@ -2271,6 +2520,15 @@
       {
         "Name": "v5",
         "Type": "S32"
+      },
+      {
+        "Name": "v1",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "Probe",
+        "Name": "v2",
+        "Type": "Resource"
       }
     ]
   },
@@ -2547,6 +2805,19 @@
       {
         "Name": "v102",
         "Type": "Object"
+      },
+      {
+        "Name": "v11",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "MaterialDefinition",
+        "Name": "v12",
+        "Type": "Resource"
+      },
+      {
+        "Name": "v69",
+        "Type": "Resource"
       }
     ]
   },
@@ -2827,6 +3098,10 @@
       {
         "Name": "v57",
         "Type": "S32"
+      },
+      {
+        "Name": "v47",
+        "Type": "Resource"
       }
     ]
   },
@@ -3035,6 +3310,21 @@
       {
         "Name": "v40",
         "Type": "S32"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "v20",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "v21",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "MaterialDefinition",
+        "Name": "v38",
+        "Type": "Resource"
       }
     ]
   },
@@ -3055,6 +3345,11 @@
       {
         "Name": "v3",
         "Type": "S32"
+      },
+      {
+        "FileFormat": "RenderTexture",
+        "Name": "v2",
+        "Type": "Resource"
       }
     ]
   },
@@ -3139,6 +3434,15 @@
       {
         "Name": "v28",
         "Type": "Object"
+      },
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "v12",
+        "Type": "Resource"
+      },
+      {
+        "Name": "v30",
+        "Type": "Resource"
       }
     ]
   },
@@ -3391,6 +3695,21 @@
       {
         "Name": "v9",
         "Type": "Object"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "v2",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "v3",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "v5",
+        "Type": "Resource"
       }
     ]
   },
@@ -3451,6 +3770,10 @@
       {
         "Name": "v21",
         "Type": "S32"
+      },
+      {
+        "Name": "v11",
+        "Type": "Resource"
       }
     ]
   },
@@ -3575,6 +3898,11 @@
       {
         "Name": "v52",
         "Type": "S32"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "v51",
+        "Type": "Resource"
       }
     ]
   },
@@ -3851,6 +4179,16 @@
       {
         "Name": "v17",
         "Type": "S32"
+      },
+      {
+        "FileFormat": "MotionBank",
+        "Name": "v15",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "Uvar",
+        "Name": "v16",
+        "Type": "Resource"
       }
     ]
   },
@@ -3895,6 +4233,11 @@
       {
         "Name": "v12",
         "Type": "S32"
+      },
+      {
+        "FileFormat": "RenderTexture",
+        "Name": "v10",
+        "Type": "Resource"
       }
     ]
   },
@@ -3923,6 +4266,11 @@
       {
         "Name": "v8",
         "Type": "S32"
+      },
+      {
+        "FileFormat": "Uvar",
+        "Name": "v2",
+        "Type": "Resource"
       }
     ]
   },
@@ -4043,6 +4391,11 @@
       {
         "Name": "v5",
         "Type": "Object"
+      },
+      {
+        "FileFormat": "MaterialDefinition",
+        "Name": "v1",
+        "Type": "Resource"
       }
     ]
   },
@@ -4139,6 +4492,10 @@
       {
         "Name": "v27",
         "Type": "F32"
+      },
+      {
+        "Name": "v8",
+        "Type": "Resource"
       }
     ]
   },
@@ -4203,6 +4560,10 @@
       {
         "Name": "v22",
         "Type": "S32"
+      },
+      {
+        "Name": "v1",
+        "Type": "Resource"
       }
     ]
   },
@@ -4339,6 +4700,11 @@
       {
         "Name": "v19",
         "Type": "F32"
+      },
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "v23",
+        "Type": "Resource"
       }
     ]
   },
@@ -4495,6 +4861,16 @@
       {
         "Name": "v19",
         "Type": "S32"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "v1",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "v2",
+        "Type": "Resource"
       }
     ]
   },
@@ -4547,6 +4923,10 @@
       {
         "Name": "v11",
         "Type": "S32"
+      },
+      {
+        "Name": "v10",
+        "Type": "Resource"
       }
     ]
   },
@@ -4631,6 +5011,10 @@
       {
         "Name": "v31",
         "Type": "S32"
+      },
+      {
+        "Name": "v4",
+        "Type": "Resource"
       }
     ]
   },
@@ -4639,6 +5023,11 @@
       {
         "Name": "v9",
         "Type": "S32"
+      },
+      {
+        "FileFormat": "AiMap",
+        "Name": "v10_Resource",
+        "Type": "Resource"
       }
     ]
   },
@@ -4711,6 +5100,11 @@
       {
         "Name": "v30",
         "Type": "Object"
+      },
+      {
+        "FileFormat": "Efx",
+        "Name": "v1",
+        "Type": "Resource"
       }
     ]
   },
@@ -4871,6 +5265,21 @@
       {
         "Name": "v31",
         "Type": "S32"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "v29",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "RenderTexture",
+        "Name": "v32",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "RenderTexture",
+        "Name": "v33",
+        "Type": "Resource"
       }
     ]
   },
@@ -4959,6 +5368,15 @@
       {
         "Name": "v0",
         "Type": "Object"
+      },
+      {
+        "Name": "v1",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "RenderTexture",
+        "Name": "v2",
+        "Type": "Resource"
       }
     ]
   },
@@ -4987,6 +5405,16 @@
       {
         "Name": "v20",
         "Type": "S32"
+      },
+      {
+        "FileFormat": "Mesh",
+        "Name": "v17",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "MaterialDefinition",
+        "Name": "v18",
+        "Type": "Resource"
       }
     ]
   },
@@ -5159,6 +5587,11 @@
       {
         "Name": "v55",
         "Type": "S32"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "v19",
+        "Type": "Resource"
       }
     ]
   },
@@ -5179,6 +5612,10 @@
       {
         "Name": "v6",
         "Type": "S32"
+      },
+      {
+        "Name": "v1",
+        "Type": "Resource"
       }
     ]
   },
@@ -5195,6 +5632,11 @@
       {
         "Name": "v3",
         "Type": "S32"
+      },
+      {
+        "FileFormat": "MotionList",
+        "Name": "v0",
+        "Type": "Resource"
       }
     ]
   },
@@ -5379,6 +5821,16 @@
       {
         "Name": "v6",
         "Type": "S32"
+      },
+      {
+        "FileFormat": "MotionBank",
+        "Name": "v7_MotionBank",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "MotionList",
+        "Name": "v8_MotionList",
+        "Type": "Resource"
       }
     ]
   },
@@ -5639,6 +6091,16 @@
       {
         "Name": "v13",
         "Type": "S32"
+      },
+      {
+        "FileFormat": "RenderTexture",
+        "Name": "v11",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "MaterialDefinition",
+        "Name": "v12",
+        "Type": "Resource"
       }
     ]
   },
@@ -5743,6 +6205,11 @@
       {
         "Name": "v38",
         "Type": "S32"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "v1",
+        "Type": "Resource"
       }
     ]
   },
@@ -5832,6 +6299,11 @@
         "Name": "v0",
         "ReplaceName": "File",
         "Type": "Resource"
+      },
+      {
+        "FileFormat": "Rcol",
+        "Name": "File",
+        "Type": "Resource"
       }
     ]
   },
@@ -5839,13 +6311,11 @@
     "FieldPatches": [
       {
         "Name": "u",
-        "ReplaceName": "u1",
-        "Type": "ukn_error"
+        "ReplaceName": "u1"
       },
       {
         "Name": "u",
-        "ReplaceName": "u2",
-        "Type": "ukn_error"
+        "ReplaceName": "u2"
       }
     ]
   },
@@ -5853,23 +6323,19 @@
     "FieldPatches": [
       {
         "Name": "f",
-        "ReplaceName": "f1",
-        "Type": "ukn_error"
+        "ReplaceName": "f1"
       },
       {
         "Name": "f",
-        "ReplaceName": "f2",
-        "Type": "ukn_error"
+        "ReplaceName": "f2"
       },
       {
         "Name": "f",
-        "ReplaceName": "f3",
-        "Type": "ukn_error"
+        "ReplaceName": "f3"
       },
       {
         "Name": "f",
-        "ReplaceName": "f4",
-        "Type": "ukn_error"
+        "ReplaceName": "f4"
       }
     ]
   },
@@ -5877,13 +6343,11 @@
     "FieldPatches": [
       {
         "Name": "_Version",
-        "ReplaceName": "_Version1",
-        "Type": "ukn_error"
+        "ReplaceName": "_Version1"
       },
       {
         "Name": "_Version",
-        "ReplaceName": "_Version2",
-        "Type": "ukn_error"
+        "ReplaceName": "_Version2"
       }
     ]
   },
@@ -5891,13 +6355,11 @@
     "FieldPatches": [
       {
         "Name": "_Version",
-        "ReplaceName": "_Version1",
-        "Type": "ukn_error"
+        "ReplaceName": "_Version1"
       },
       {
         "Name": "_Version",
-        "ReplaceName": "_Version2",
-        "Type": "ukn_error"
+        "ReplaceName": "_Version2"
       }
     ]
   },
@@ -5905,13 +6367,11 @@
     "FieldPatches": [
       {
         "Name": "NextState",
-        "ReplaceName": "NextState1",
-        "Type": "ukn_error"
+        "ReplaceName": "NextState1"
       },
       {
         "Name": "NextState",
-        "ReplaceName": "NextState2",
-        "Type": "ukn_error"
+        "ReplaceName": "NextState2"
       }
     ]
   },
@@ -5919,13 +6379,11 @@
     "FieldPatches": [
       {
         "Name": "ui",
-        "ReplaceName": "ui1",
-        "Type": "ukn_error"
+        "ReplaceName": "ui1"
       },
       {
         "Name": "ui",
-        "ReplaceName": "ui2",
-        "Type": "ukn_error"
+        "ReplaceName": "ui2"
       }
     ]
   },
@@ -5933,13 +6391,11 @@
     "FieldPatches": [
       {
         "Name": "ui",
-        "ReplaceName": "ui1",
-        "Type": "ukn_error"
+        "ReplaceName": "ui1"
       },
       {
         "Name": "ui",
-        "ReplaceName": "ui2",
-        "Type": "ukn_error"
+        "ReplaceName": "ui2"
       }
     ]
   },
@@ -5947,13 +6403,11 @@
     "FieldPatches": [
       {
         "Name": "_Version",
-        "ReplaceName": "_Version1",
-        "Type": "ukn_error"
+        "ReplaceName": "_Version1"
       },
       {
         "Name": "_Version",
-        "ReplaceName": "_Version2",
-        "Type": "ukn_error"
+        "ReplaceName": "_Version2"
       }
     ]
   },
@@ -5961,43 +6415,1241 @@
     "FieldPatches": [
       {
         "Name": "STRUCT_Left_Pos",
-        "ReplaceName": "STRUCT_Left_Pos1",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT_Left_Pos1"
       },
       {
         "Name": "STRUCT_Left_Pos",
-        "ReplaceName": "STRUCT_Left_Pos2",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT_Left_Pos2"
       },
       {
         "Name": "STRUCT_Left_Rot",
-        "ReplaceName": "STRUCT_Left_Rot1",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT_Left_Rot1"
       },
       {
         "Name": "STRUCT_Left_Rot",
-        "ReplaceName": "STRUCT_Left_Rot2",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT_Left_Rot2"
       },
       {
         "Name": "STRUCT_Right_Pos",
-        "ReplaceName": "STRUCT_Right_Pos1",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT_Right_Pos1"
       },
       {
         "Name": "STRUCT_Right_Pos",
-        "ReplaceName": "STRUCT_Right_Pos2",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT_Right_Pos2"
       },
       {
         "Name": "STRUCT_Right_Rot",
-        "ReplaceName": "STRUCT_Right_Rot1",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT_Right_Rot1"
       },
       {
         "Name": "STRUCT_Right_Rot",
-        "ReplaceName": "STRUCT_Right_Rot2",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT_Right_Rot2"
+      }
+    ]
+  },
+  "via.Prefab": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Prefab",
+        "Name": "Path",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "via.motion.DummySkeleton": {
+    "FieldPatches": [
+      {
+        "Name": "v0",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "via.motion.CustomSkeleton": {
+    "FieldPatches": [
+      {
+        "Name": "v0",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "via.effect.MeshMaterialEmitter": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Mesh",
+        "Name": "v0",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "MaterialDefinition",
+        "Name": "v1",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "via.render.SDFTextureInfo": {
+    "FieldPatches": [
+      {
+        "Name": "v0",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "via.mlsupport.StyleTransferNetwork": {
+    "FieldPatches": [
+      {
+        "Name": "v0",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "via.Folder": {
+    "FieldPatches": [
+      {
+        "Name": "Path",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "via.timeline.UserCurve": {
+    "FieldPatches": [
+      {
+        "Name": "v0",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.CameraCatalogRegistar.CollisionSetting": {
+    "FieldPatches": [
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_CollisionFilterAsset",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.SoundSpaceAnalyzer.Settings": {
+    "FieldPatches": [
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_CollisionFilter",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.Cp1011CameraCatalogRegister": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Texture",
+        "Name": "_NullWhite",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "_NullBlack",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.TimelineEventMotionManagerBehavior": {
+    "FieldPatches": [
+      {
+        "FileFormat": "MotionFsm2",
+        "Name": "_Fsm",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.MotionJackSupplier.Setting": {
+    "FieldPatches": [
+      {
+        "FileFormat": "MotionFsm2",
+        "Name": "Fsm",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "MotionBank",
+        "Name": "MotionBank",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "via.physics.SkinningMeshColliderSet.SkinningMeshInfo": {
+    "FieldPatches": [
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "v1_Filter",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.posteffect.param.ToneMapping": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Texture",
+        "Name": "_MultiZoneMeteringTexture",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.RTTCameraController": {
+    "FieldPatches": [
+      {
+        "FileFormat": "RenderTexture",
+        "Name": "_RTT",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "via.render.ShellFurParam": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Texture",
+        "Name": "v5_GroomingTexture",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "via.render.IBL": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Texture",
+        "Name": "v1_IBLTextureResource",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "v7_AddBlendIBLTextureResource",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.AttacheCaseSetupController": {
+    "FieldPatches": [
+      {
+        "FileFormat": "RenderTexture",
+        "Name": "_RttHolder",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.posteffect.param.ColorModifier": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Texture",
+        "Name": "_DistortionMask",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "_AffectMask",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "_Overlay",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.posteffect.param.ColorCorrect": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Texture",
+        "Name": "_ColorCube2",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "_ColorCube1",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.posteffect.param.FFTBloom": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Texture",
+        "Name": "_KernelTex",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.CameraCatalogRegistar": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Texture",
+        "Name": "_NullWhite",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "_NullBlack",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.GimmickUtilManagerBehavior": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Uvar",
+        "Name": "JackCommon",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.GmRailCar": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Uvar",
+        "Name": "_PlayerUserVariables",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "Uvar",
+        "Name": "_EnemyUserVariables",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "Uvar",
+        "Name": "_PartnerUserVariables",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.GmJetSki": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Uvar",
+        "Name": "_CrewUserVariables",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.GmMobileCraneDoor": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Uvar",
+        "Name": "_JackEnemyVariables",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.GmInstalledMachineGun.EnemySettings": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Uvar",
+        "Name": "_EnemyUserVariables",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.GmAntiAircraftGun": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Uvar",
+        "Name": "_EnemyUVRHolder",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.Ch1f6z0ArmUpdater": {
+    "FieldPatches": [
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_CollisionFilter",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.Ch1f6z0WaterUpdater": {
+    "FieldPatches": [
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_CollisionFilter",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.GmMiniDemo": {
+    "FieldPatches": [
+      {
+        "FileFormat": "MotionFsm2",
+        "Name": "_FsmPlayer",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "MotionFsm2",
+        "Name": "_FsmNonPlayer",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.GmMiniDemoUserdata": {
+    "FieldPatches": [
+      {
+        "FileFormat": "MotionFsm2",
+        "Name": "_FsmPlayer",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "MotionFsm2",
+        "Name": "_FsmNonPlayer",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "via.render.LDRImagePlane": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Texture",
+        "Name": "v5_Base",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "v6_Alpha",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "via.gui.ImageSlideObject": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Texture",
+        "Name": "v3_ResourceHandle",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.Ch1b5z1BodyUpdater": {
+    "FieldPatches": [
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_NormalCollisionFilter",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_FlyCollisionFilter",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.Ch1c0z0BodyUpdater_CP11": {
+    "FieldPatches": [
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_NormalCollisionFilter",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_FlyCollisionFilter",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.Ch1c0z1BodyUpdater_CP11": {
+    "FieldPatches": [
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_NormalCollisionFilter",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_FlyCollisionFilter",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.Ch1c0z2BodyUpdater_CP11": {
+    "FieldPatches": [
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_NormalCollisionFilter",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_FlyCollisionFilter",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.Ch1c8z0BodyUpdater_AO": {
+    "FieldPatches": [
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_NormalCollisionFilter",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_FlyCollisionFilter",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.Ch1d0z0BodyUpdater_CP11": {
+    "FieldPatches": [
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_NormalCollisionFilter",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.Ch1d1z1BodyUpdater_AO": {
+    "FieldPatches": [
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_NormalCollisionFilter",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_FlyCollisionFilter",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.Ch1d4z0BodyUpdater": {
+    "FieldPatches": [
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_DefaultCollisionFilter",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_TerrainActionCollisionFilter",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.Ch1e0z0BodyUpdater": {
+    "FieldPatches": [
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_NormalCollisionFilter",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_FlyCollisionFilter",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.Ch2a1z0BodyUpdater": {
+    "FieldPatches": [
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "NormalCollision",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "FlyCollision",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.Ch2a3z0BodyUpdater_cp11": {
+    "FieldPatches": [
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "NormalCollision",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "FlyCollision",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.Ch4d7z0BodyUpdater": {
+    "FieldPatches": [
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_NormalCollisionFilter",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_FlyCollisionFilter",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.Ch4f9z0BodyUpdater": {
+    "FieldPatches": [
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_NormalCollisionFilter",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_FlyCollisionFilter",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.Ch4faz0BodyUpdater": {
+    "FieldPatches": [
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_NormalCollisionFilter",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.Ch4faz1BodyUpdater": {
+    "FieldPatches": [
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_NormalCollisionFilter",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.Ch4fbz0BodyUpdater": {
+    "FieldPatches": [
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_NormalCollisionFilter",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_FlyCollisionFilter",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.AttacheCaseSkinResourceHolder": {
+    "FieldPatches": [
+      {
+        "FileFormat": "MaterialDefinition",
+        "Name": "_MeshMaterialResourceHolder",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "Mesh",
+        "Name": "_MeshResourceHolder",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.Ch0a0z0BodyUpdater": {
+    "FieldPatches": [
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "NormalCollision",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "FlyCollision",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.Ch0a1z0BodyUpdater": {
+    "FieldPatches": [
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "NormalCollision",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "FlyCollision",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.Ch1b7z0BodyUpdater": {
+    "FieldPatches": [
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_NormalCollisionFilter",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_FlyCollisionFilter",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_TerrainActionCollisionFilter",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.Ch1c0z0BodyUpdater": {
+    "FieldPatches": [
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_NormalCollisionFilter",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_FlyCollisionFilter",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.Ch1c0z1BodyUpdater": {
+    "FieldPatches": [
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_NormalCollisionFilter",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_FlyCollisionFilter",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.Ch1c0z2BodyUpdater": {
+    "FieldPatches": [
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_NormalCollisionFilter",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_FlyCollisionFilter",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.Ch1c8z0BodyUpdater": {
+    "FieldPatches": [
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_NormalCollisionFilter",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_FlyCollisionFilter",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.Ch1d0z0BodyUpdater": {
+    "FieldPatches": [
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_NormalCollisionFilter",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.Ch1d1z1BodyUpdater": {
+    "FieldPatches": [
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_NormalCollisionFilter",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_FlyCollisionFilter",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.Ch1f0z0BodyUpdater": {
+    "FieldPatches": [
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_NormalCollisionFilter",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_FlyCollisionFilter",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.Ch1f1z0BodyUpdater": {
+    "FieldPatches": [
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_NormalCollisionFilter",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_FlyCollisionFilter",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.Ch1f2z0BodyUpdater": {
+    "FieldPatches": [
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_NormalCollisionFilter",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_FlyCollisionFilter",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.ParentRTTContainer.FixedRTTContainerSetting": {
+    "FieldPatches": [
+      {
+        "FileFormat": "RenderTexture",
+        "Name": "RTT",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.Ch1f7z0BodyUpdater": {
+    "FieldPatches": [
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_NormalCollisionFilter",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_FlyCollisionFilter",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.Ch1f8z0BodyUpdater": {
+    "FieldPatches": [
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_NormalCollisionFilter",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_FlyCollisionFilter",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_TerrainActionCollisionFilter",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.Ch1fcz0BodyUpdater": {
+    "FieldPatches": [
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_NormalCollisionFilter",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_FlyCollisionFilter",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_TerrainActionCollisionFilter",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.Ch1fdz0BodyUpdater": {
+    "FieldPatches": [
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_NormalCollisionFilter",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_FlyCollisionFilter",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_TerrainActionCollisionFilter",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.Ch2a3z0BodyUpdater": {
+    "FieldPatches": [
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "NormalCollision",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "FlyCollision",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.AttacheCaseGridResourceHolder": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Mesh",
+        "Name": "_MeshResourceHolder",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "MaterialDefinition",
+        "Name": "_MeshMaterialResourceHolder",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.AttacheCaseModelResourceHolder": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Mesh",
+        "Name": "_MeshResourceHolder",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.SelectSDRBrightnessMaxGuiBehavior": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Texture",
+        "Name": "_LimitConfigImage",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.SelectSDRBrightnessMinGuiBehavior": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Texture",
+        "Name": "_LimitConfigImage",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.SelectHDRBrightnessMaxGuiBehavior": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Texture",
+        "Name": "_LimitConfigImage",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.StyleTransferBehavior": {
+    "FieldPatches": [
+      {
+        "FileFormat": "RenderTexture",
+        "Name": "_CameraRenderTargetTexture",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.ScopeController": {
+    "FieldPatches": [
+      {
+        "FileFormat": "RenderTexture",
+        "Name": "_ScopeRTT",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "_OpticalScopeReticle",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "_SpecialOpticalScopeReticle",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "_ThermalScopeReticle",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.Ch0zzzzBodyUpdater": {
+    "FieldPatches": [
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "NormalCollision",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "FlyCollision",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.TimelineEventMeshSettings.MeshInfo": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Mesh",
+        "Name": "_Mesh",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "MaterialDefinition",
+        "Name": "_Material",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.Ch1c0z0BodyUpdater_Mercenaries": {
+    "FieldPatches": [
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_NormalCollisionFilter",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_FlyCollisionFilter",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.EnemyMotionBankAttacher": {
+    "FieldPatches": [
+      {
+        "FileFormat": "MotionBank",
+        "Name": "_JackMotionBankResource",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.Ch1c0z0EnemyMotionBankAttacher": {
+    "FieldPatches": [
+      {
+        "FileFormat": "MotionBank",
+        "Name": "_JackMotionBankResource",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.Ch1c0z1BodyUpdater_Mercenaries": {
+    "FieldPatches": [
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_NormalCollisionFilter",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_FlyCollisionFilter",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.Ch1c0z2BodyUpdater_Mercenaries": {
+    "FieldPatches": [
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_NormalCollisionFilter",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_FlyCollisionFilter",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.Ch1c8z0BodyUpdater_Mercenaries": {
+    "FieldPatches": [
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_NormalCollisionFilter",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_FlyCollisionFilter",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.Ch1d0z0BodyUpdater_Mercenaries": {
+    "FieldPatches": [
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_NormalCollisionFilter",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.Ch1d1z1BodyUpdater_Mercenaries": {
+    "FieldPatches": [
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_NormalCollisionFilter",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_FlyCollisionFilter",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.Ch1e0z0BodyUpdater_Mercenaries": {
+    "FieldPatches": [
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_NormalCollisionFilter",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_FlyCollisionFilter",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.Ch3a8z0BodyUpdater": {
+    "FieldPatches": [
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "NormalCollision",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "FlyCollision",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.TimelineEventChainController": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Chain",
+        "Name": "_Asset",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.Ch6i0z0BodyUpdater": {
+    "FieldPatches": [
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "NormalCollision",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "FlyCollision",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.Ch6i1z0BodyUpdater": {
+    "FieldPatches": [
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "NormalCollision",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "FlyCollision",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.Ch6i2z0BodyUpdater": {
+    "FieldPatches": [
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "NormalCollision",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "FlyCollision",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.Ch6i3z0BodyUpdater": {
+    "FieldPatches": [
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "NormalCollision",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "FlyCollision",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.Ch6i5z0BodyUpdater": {
+    "FieldPatches": [
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "NormalCollision",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "FlyCollision",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.Ch7k0z0BodyUpdater": {
+    "FieldPatches": [
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_NormalCollisionFilter",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_FlyCollisionFilter",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.Cp1021RemainingBulletGuiBehavior": {
+    "FieldPatches": [
+      {
+        "FileFormat": "UVSequence",
+        "Name": "_UVSequence",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.Cp1021KnifeHudGuiBehavior": {
+    "FieldPatches": [
+      {
+        "FileFormat": "UVSequence",
+        "Name": "_OverwriteUVSequence",
+        "Type": "Resource"
       }
     ]
   }

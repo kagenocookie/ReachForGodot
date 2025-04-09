@@ -40,6 +40,16 @@
       {
         "Name": "v22",
         "Type": "S32"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "v12",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "RenderTexture",
+        "Name": "v11",
+        "Type": "Resource"
       }
     ]
   },
@@ -52,6 +62,11 @@
       {
         "Name": "v11",
         "Type": "S32"
+      },
+      {
+        "FileFormat": "Mesh",
+        "Name": "v10",
+        "Type": "Resource"
       }
     ]
   },
@@ -132,6 +147,36 @@
       {
         "Name": "v45",
         "Type": "S32"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "v10",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "v13",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "v15",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "v11",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "v12",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "RenderTexture",
+        "Name": "v14",
+        "Type": "Resource"
       }
     ]
   },
@@ -206,6 +251,16 @@
       {
         "Name": "v34",
         "Type": "S32"
+      },
+      {
+        "FileFormat": "Mesh",
+        "Name": "Mesh",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "MaterialDefinition",
+        "Name": "Material",
+        "Type": "Resource"
       }
     ]
   },
@@ -227,6 +282,15 @@
       {
         "Name": "v5",
         "ReplaceName": "CollisionFilter",
+        "Type": "Resource"
+      },
+      {
+        "Name": "v6",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "CollisionFilter",
         "Type": "Resource"
       }
     ]
@@ -501,6 +565,20 @@
       {
         "Name": "v17",
         "Type": "Object"
+      },
+      {
+        "FileFormat": "MotionBank",
+        "Name": "v9",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "Uvar",
+        "Name": "v10",
+        "Type": "Resource"
+      },
+      {
+        "Name": "v11",
+        "Type": "Resource"
       }
     ]
   },
@@ -657,6 +735,10 @@
       {
         "Name": "v56",
         "Type": "S32"
+      },
+      {
+        "Name": "v49",
+        "Type": "Resource"
       }
     ]
   },
@@ -709,6 +791,21 @@
       {
         "Name": "v17",
         "Type": "S32"
+      },
+      {
+        "FileFormat": "MotionBank",
+        "Name": "v15",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "Uvar",
+        "Name": "v16",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "Uvar",
+        "Name": "v2",
+        "Type": "Resource"
       }
     ]
   },
@@ -797,6 +894,11 @@
       {
         "Name": "v8",
         "Type": "S32"
+      },
+      {
+        "FileFormat": "Uvar",
+        "Name": "v2",
+        "Type": "Resource"
       }
     ]
   },
@@ -873,6 +975,11 @@
       {
         "Name": "v24",
         "Type": "S32"
+      },
+      {
+        "FileFormat": "MotionList",
+        "Name": "v5",
+        "Type": "Resource"
       }
     ]
   },
@@ -889,6 +996,11 @@
       {
         "Name": "v3",
         "Type": "S32"
+      },
+      {
+        "FileFormat": "MotionList",
+        "Name": "v0",
+        "Type": "Resource"
       }
     ]
   },
@@ -921,6 +1033,11 @@
       {
         "Name": "v15",
         "Type": "F32"
+      },
+      {
+        "FileFormat": "MotionFsm2",
+        "Name": "v7",
+        "Type": "Resource"
       }
     ]
   },
@@ -933,6 +1050,11 @@
       {
         "Name": "v1",
         "ReplaceName": "Mesh",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "MeshCollider",
+        "Name": "Mesh",
         "Type": "Resource"
       }
     ]
@@ -994,6 +1116,10 @@
       {
         "Name": "v11",
         "Type": "F32"
+      },
+      {
+        "Name": "v7",
+        "Type": "Resource"
       }
     ]
   },
@@ -1088,6 +1214,10 @@
       {
         "Name": "v6",
         "Type": "S32"
+      },
+      {
+        "Name": "v1",
+        "Type": "Resource"
       }
     ]
   },
@@ -1197,6 +1327,10 @@
       {
         "Name": "v33",
         "Type": "S32"
+      },
+      {
+        "Name": "v14",
+        "Type": "Resource"
       }
     ]
   },
@@ -1205,6 +1339,11 @@
       {
         "Name": "v4",
         "Type": "F32"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "v3",
+        "Type": "Resource"
       }
     ]
   },
@@ -1245,6 +1384,11 @@
       {
         "Name": "v8",
         "Type": "S32"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "v1",
+        "Type": "Resource"
       }
     ]
   },
@@ -1289,6 +1433,16 @@
       {
         "Name": "v15",
         "Type": "OBB"
+      },
+      {
+        "FileFormat": "LightProbe",
+        "Name": "v2",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "Probe",
+        "Name": "v3",
+        "Type": "Resource"
       }
     ]
   },
@@ -1313,6 +1467,11 @@
       {
         "Name": "v10",
         "Type": "S32"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "v1",
+        "Type": "Resource"
       }
     ]
   },
@@ -1381,6 +1540,11 @@
       {
         "Name": "v30",
         "Type": "S32"
+      },
+      {
+        "FileFormat": "RenderTexture",
+        "Name": "v11",
+        "Type": "Resource"
       }
     ]
   },
@@ -1561,6 +1725,11 @@
       {
         "Name": "v11",
         "Type": "S32"
+      },
+      {
+        "FileFormat": "Timeline",
+        "Name": "v3",
+        "Type": "Resource"
       }
     ]
   },
@@ -1585,6 +1754,16 @@
       {
         "Name": "v6",
         "Type": "S32"
+      },
+      {
+        "FileFormat": "Gui",
+        "Name": "v1",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "RenderTexture",
+        "Name": "v7",
+        "Type": "Resource"
       }
     ]
   },
@@ -1621,6 +1800,15 @@
       {
         "Name": "v0",
         "Type": "Object"
+      },
+      {
+        "Name": "v1",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "RenderTexture",
+        "Name": "v2",
+        "Type": "Resource"
       }
     ]
   },
@@ -1737,6 +1925,11 @@
       {
         "Name": "v28",
         "Type": "Object"
+      },
+      {
+        "FileFormat": "Efx",
+        "Name": "v1",
+        "Type": "Resource"
       }
     ]
   },
@@ -1818,6 +2011,11 @@
       {
         "Name": "v9",
         "Type": "S32"
+      },
+      {
+        "FileFormat": "AiMap",
+        "Name": "v10",
+        "Type": "Resource"
       }
     ]
   },
@@ -1886,6 +2084,11 @@
       {
         "Name": "v23",
         "Type": "F32"
+      },
+      {
+        "FileFormat": "Chain",
+        "Name": "v4",
+        "Type": "Resource"
       }
     ]
   },
@@ -1962,6 +2165,11 @@
       {
         "Name": "v25",
         "Type": "S32"
+      },
+      {
+        "FileFormat": "RenderTexture",
+        "Name": "v10",
+        "Type": "Resource"
       }
     ]
   },
@@ -2126,6 +2334,16 @@
       {
         "Name": "v70",
         "Type": "S32"
+      },
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "v28",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "v29",
+        "Type": "Resource"
       }
     ]
   },
@@ -2230,6 +2448,11 @@
       {
         "Name": "v2",
         "Type": "S32"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "v3",
+        "Type": "Resource"
       }
     ]
   },
@@ -2350,6 +2573,11 @@
       {
         "Name": "v11",
         "Type": "F32"
+      },
+      {
+        "FileFormat": "Timeline",
+        "Name": "v0",
+        "Type": "Resource"
       }
     ]
   },
@@ -2414,6 +2642,11 @@
       {
         "Name": "v31",
         "Type": "Object"
+      },
+      {
+        "FileFormat": "MaterialDefinition",
+        "Name": "v29",
+        "Type": "Resource"
       }
     ]
   },
@@ -2662,6 +2895,16 @@
       {
         "Name": "v4",
         "Type": "F32"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "v5",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "v6",
+        "Type": "Resource"
       }
     ]
   },
@@ -2682,6 +2925,10 @@
       {
         "Name": "v3",
         "Type": "F32"
+      },
+      {
+        "Name": "v4",
+        "Type": "Resource"
       }
     ]
   },
@@ -2766,6 +3013,11 @@
       {
         "Name": "v28",
         "Type": "Object"
+      },
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "v12",
+        "Type": "Resource"
       }
     ]
   },
@@ -2890,6 +3142,16 @@
       {
         "Name": "v14",
         "Type": "S32"
+      },
+      {
+        "FileFormat": "Mesh",
+        "Name": "v10",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "MaterialDefinition",
+        "Name": "v11",
+        "Type": "Resource"
       }
     ]
   },
@@ -2954,6 +3216,11 @@
       {
         "Name": "v15",
         "Type": "F32"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "v10",
+        "Type": "Resource"
       }
     ]
   },
@@ -3006,6 +3273,21 @@
       {
         "Name": "v9",
         "Type": "Object"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "v2",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "v3",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "v5",
+        "Type": "Resource"
       }
     ]
   },
@@ -3142,6 +3424,11 @@
       {
         "Name": "v37",
         "Type": "S32"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "v36",
+        "Type": "Resource"
       }
     ]
   },
@@ -3506,6 +3793,10 @@
       {
         "Name": "v1",
         "Type": "Object"
+      },
+      {
+        "Name": "v0",
+        "Type": "Resource"
       }
     ]
   },
@@ -3534,6 +3825,11 @@
       {
         "Name": "v6",
         "Type": "F32"
+      },
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "v7",
+        "Type": "Resource"
       }
     ]
   },
@@ -3622,6 +3918,10 @@
       {
         "Name": "v20",
         "Type": "F32"
+      },
+      {
+        "Name": "v7",
+        "Type": "Resource"
       }
     ]
   },
@@ -3686,6 +3986,10 @@
       {
         "Name": "v22",
         "Type": "S32"
+      },
+      {
+        "Name": "v1",
+        "Type": "Resource"
       }
     ]
   },
@@ -3798,6 +4102,11 @@
       {
         "Name": "v19",
         "Type": "F32"
+      },
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "v23",
+        "Type": "Resource"
       }
     ]
   },
@@ -4082,6 +4391,21 @@
       {
         "Name": "v27",
         "Type": "F32"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "v28",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "RenderTexture",
+        "Name": "v29",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "RenderTexture",
+        "Name": "v30",
+        "Type": "Resource"
       }
     ]
   },
@@ -4222,6 +4546,16 @@
       {
         "Name": "v54",
         "Type": "S32"
+      },
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "v25",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "v26",
+        "Type": "Resource"
       }
     ]
   },
@@ -4434,6 +4768,11 @@
       {
         "Name": "v34",
         "Type": "F32"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "v24",
+        "Type": "Resource"
       }
     ]
   },
@@ -4582,6 +4921,16 @@
       {
         "Name": "v55",
         "Type": "S32"
+      },
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "v22",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "v23",
+        "Type": "Resource"
       }
     ]
   },
@@ -4618,6 +4967,11 @@
       {
         "Name": "v11",
         "Type": "S32"
+      },
+      {
+        "FileFormat": "RenderTexture",
+        "Name": "v10",
+        "Type": "Resource"
       }
     ]
   },
@@ -4754,6 +5108,11 @@
       {
         "Name": "v6",
         "Type": "S32"
+      },
+      {
+        "FileFormat": "MotionBank",
+        "Name": "v7",
+        "Type": "Resource"
       }
     ]
   },
@@ -4938,6 +5297,10 @@
       {
         "Name": "v6",
         "Type": "Object"
+      },
+      {
+        "Name": "v3",
+        "Type": "Resource"
       }
     ]
   },
@@ -5264,6 +5627,11 @@
         "Name": "v0",
         "ReplaceName": "File",
         "Type": "Resource"
+      },
+      {
+        "FileFormat": "Rcol",
+        "Name": "File",
+        "Type": "Resource"
       }
     ]
   },
@@ -5271,13 +5639,11 @@
     "FieldPatches": [
       {
         "Name": "u",
-        "ReplaceName": "u1",
-        "Type": "ukn_error"
+        "ReplaceName": "u1"
       },
       {
         "Name": "u",
-        "ReplaceName": "u2",
-        "Type": "ukn_error"
+        "ReplaceName": "u2"
       }
     ]
   },
@@ -5285,23 +5651,19 @@
     "FieldPatches": [
       {
         "Name": "f",
-        "ReplaceName": "f1",
-        "Type": "ukn_error"
+        "ReplaceName": "f1"
       },
       {
         "Name": "f",
-        "ReplaceName": "f2",
-        "Type": "ukn_error"
+        "ReplaceName": "f2"
       },
       {
         "Name": "f",
-        "ReplaceName": "f3",
-        "Type": "ukn_error"
+        "ReplaceName": "f3"
       },
       {
         "Name": "f",
-        "ReplaceName": "f4",
-        "Type": "ukn_error"
+        "ReplaceName": "f4"
       }
     ]
   },
@@ -5309,13 +5671,11 @@
     "FieldPatches": [
       {
         "Name": "STRUCT__Value_Curve",
-        "ReplaceName": "STRUCT__Value_Curve1",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT__Value_Curve1"
       },
       {
         "Name": "STRUCT__Value_Curve",
-        "ReplaceName": "STRUCT__Value_Curve2",
-        "Type": "ukn_error"
+        "ReplaceName": "STRUCT__Value_Curve2"
       }
     ]
   },
@@ -5323,13 +5683,11 @@
     "FieldPatches": [
       {
         "Name": "ui",
-        "ReplaceName": "ui1",
-        "Type": "ukn_error"
+        "ReplaceName": "ui1"
       },
       {
         "Name": "ui",
-        "ReplaceName": "ui2",
-        "Type": "ukn_error"
+        "ReplaceName": "ui2"
       }
     ]
   },
@@ -5337,13 +5695,248 @@
     "FieldPatches": [
       {
         "Name": "ui",
-        "ReplaceName": "ui1",
-        "Type": "ukn_error"
+        "ReplaceName": "ui1"
       },
       {
         "Name": "ui",
-        "ReplaceName": "ui2",
-        "Type": "ukn_error"
+        "ReplaceName": "ui2"
+      }
+    ]
+  },
+  "via.Prefab": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Prefab",
+        "Name": "Path",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "via.wwise.WwiseTargetOperationTrigger": {
+    "FieldPatches": [
+      {
+        "Name": "v1",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "via.motion.DummySkeleton": {
+    "FieldPatches": [
+      {
+        "Name": "v0",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "via.render.Mirror": {
+    "FieldPatches": [
+      {
+        "FileFormat": "RenderTexture",
+        "Name": "v1",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "via.timeline.UserCurve": {
+    "FieldPatches": [
+      {
+        "Name": "v0",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "via.render.SubsurfaceSettings": {
+    "FieldPatches": [
+      {
+        "Name": "v1",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "via.render.ColorCubeElement": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Texture",
+        "Name": "v0",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "via.wwise.WwiseSetStateListParam": {
+    "FieldPatches": [
+      {
+        "Name": "v0",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "via.physics.SensorTarget": {
+    "FieldPatches": [
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "v2",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.ropeway.posteffect.param.ColorCorrect": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Texture",
+        "Name": "ColorCube2",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "ColorCube1",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.ropeway.gui.GUIMaster": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Texture",
+        "Name": "RefBrightnessCheckerTexture",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "UVSequence",
+        "Name": "ItemIconUVSequence",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "UVSequence",
+        "Name": "ItemIconUVSequence_Map",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.ropeway.gui.NewInventoryBehavior": {
+    "FieldPatches": [
+      {
+        "FileFormat": "RenderTexture",
+        "Name": "CaptureTexture",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.ropeway.posteffect.param.ToneMapping": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Texture",
+        "Name": "MultiZoneMeteringTexture",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.ropeway.FigureHolder": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Texture",
+        "Name": "TextureHolder",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.ropeway.gimmick.option.GimmickCircuitPuzzleSettings.PanelModel": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Mesh",
+        "Name": "_Mesh",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "MaterialDefinition",
+        "Name": "_Material",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.ropeway.effect.script.PlayerRTTManager": {
+    "FieldPatches": [
+      {
+        "FileFormat": "RenderTexture",
+        "Name": "RTT4Body",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "RenderTexture",
+        "Name": "RTT4Face",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "RenderTexture",
+        "Name": "RTT4Accessory",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.ropeway.gui.RogueInventoryBehavior": {
+    "FieldPatches": [
+      {
+        "FileFormat": "RenderTexture",
+        "Name": "CaptureTexture",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.ropeway.gimmick.option.OuterDynamicMotionBankSettings.Info": {
+    "FieldPatches": [
+      {
+        "FileFormat": "MotionBank",
+        "Name": "MotionBankResource",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.ropeway.effect.script.RTOperatorController.TRHolder": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Texture",
+        "Name": "Resource",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.ropeway.environment.lifecycle.BorderTerrainManager": {
+    "FieldPatches": [
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "_BorderTerrainFilter",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.ropeway.enemy.EnemyCharacterController": {
+    "FieldPatches": [
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "LiteModeCollisionFiter",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.ropeway.weapon.generator.WarheadMeshHolder": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Mesh",
+        "Name": "WarheadMesh",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "MaterialDefinition",
+        "Name": "WarheadMaterial",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.ropeway.gui.GameSceneLoadingBehavior": {
+    "FieldPatches": [
+      {
+        "FileFormat": "RenderTexture",
+        "Name": "LoadingTextureHolder",
+        "Type": "Resource"
       }
     ]
   }

@@ -25,7 +25,7 @@ public static partial class TypeCache
         private Il2cppCache? il2CppCache;
         public Il2cppCache Il2cppCache => il2CppCache ??= LoadIl2cppData(ReachForGodot.GetAssetConfig(game).Paths);
 
-        private Dictionary<string, RszClassPatch> rszTypePatches = new();
+        private Dictionary<string, EnhancedRszClassPatch> rszTypePatches = new();
 
         public GameClassCache(SupportedGame game)
         {
@@ -41,12 +41,31 @@ public static partial class TypeCache
             return null;
         }
 
-        public RszClassPatch FindOrCreateClassPatch(string classname)
+        public EnhancedRszClassPatch FindOrCreateClassPatch(string classname)
         {
             if (!rszTypePatches.TryGetValue(classname, out var props)) {
                 rszTypePatches[classname] = props = new();
             }
             return props;
+        }
+
+        public bool TryFindClassPatch(string classname, [MaybeNullWhen(false)] out EnhancedRszClassPatch data)
+        {
+            if (rszTypePatches.TryGetValue(classname, out var props)) {
+                data = props;
+                return true;
+            }
+            data = null;
+            return false;
+        }
+
+        public string GetResourceType(string classname, string field)
+        {
+            if (rszTypePatches.TryGetValue(classname, out var props) && props.FieldPatches != null) {
+                var patch = props.FieldPatches.FirstOrDefault(f => f.ReplaceName == field) ?? props.FieldPatches.FirstOrDefault(f => f.Name == field);
+                return patch != null && patch.FileFormat != SupportedFileFormats.Unknown ? PathUtils.GetResourceTypeFromFormat(patch.FileFormat).Name : nameof(REResource);
+            }
+            return nameof(REResource);
         }
 
         public void UpdateRszPatches(AssetConfig config)

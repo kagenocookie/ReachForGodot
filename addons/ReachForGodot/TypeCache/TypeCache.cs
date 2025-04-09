@@ -4,6 +4,7 @@ using System;
 using System.Numerics;
 using System.Reflection;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using Godot;
 using ReaGE.Components.RE2;
 using RszTool;
@@ -22,13 +23,14 @@ public static partial class TypeCache
         };
         InitResourceFormats(typeof(TypeCache).Assembly);
         InitComponents(typeof(TypeCache).Assembly);
+        jsonOptions.Converters.Add(new JsonStringEnumConverter<SupportedFileFormats>(allowIntegerValues: false));
     }
 
     private static readonly Dictionary<SupportedGame, GameClassCache> allCacheData = new();
 
     public static readonly JsonSerializerOptions jsonOptions = new() {
         WriteIndented = true,
-        DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull
+        DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault,
     };
 
     private static readonly Dictionary<SupportedGame, Dictionary<string, Func<GameObject, RszInstance, REComponent?>>> componentFactories = new();
@@ -180,6 +182,54 @@ public static partial class TypeCache
         }
     }
 
+    public static void MarkRSZResourceFields(IEnumerable<(string classname, string field, string resourceExtension)> fields, AssetConfig config)
+    {
+        var cache = GetCacheRoot(config.Game);
+        int changes = 0;
+        foreach (var (cls, field, ext) in fields) {
+            var typeinfo = cache.Parser.GetRSZClass(cls);
+            var rszType = typeinfo?.fields.FirstOrDefault(f => f.name == field);
+            if (rszType != null) {
+                if (rszType.type is not RszFieldType.String and not RszFieldType.Resource) {
+                    GD.PrintErr($"Attempted to change non-string field into resource: {cls} field {field} of type {rszType.type}");
+                    continue;
+                }
+                var fileFormat = PathUtils.GetFileFormatFromExtension(ext);
+                cache.TryFindClassPatch(cls, out var patch);
+                var fieldPatch = patch?.FieldPatches?.FirstOrDefault(f => f.Name == field);
+                var shouldAdd = rszType.type == RszFieldType.String ||
+                    fileFormat != SupportedFileFormats.Unknown && fileFormat != fieldPatch?.FileFormat;
+
+                if (shouldAdd) {
+                    if (patch == null) {
+                        patch = cache.FindOrCreateClassPatch(cls);
+                        fieldPatch = patch.FieldPatches?.FirstOrDefault(f => f.Name == field);
+                    }
+                    if (fieldPatch == null) {
+                        fieldPatch = new EnhancedRszFieldPatch() { Name = field };
+                        patch.FieldPatches = (patch.FieldPatches ?? Array.Empty<EnhancedRszFieldPatch>()).Append(fieldPatch).ToArray();
+                    }
+                    if (fieldPatch.FileFormat != SupportedFileFormats.Unknown && fieldPatch.FileFormat != fileFormat) {
+                        // handle conflicts
+                        if (fileFormat is SupportedFileFormats.Texture or SupportedFileFormats.RenderTexture && fieldPatch.FileFormat is SupportedFileFormats.Texture or SupportedFileFormats.RenderTexture) {
+                            fileFormat = SupportedFileFormats.Texture;
+                        } else {
+                            GD.PrintErr($"Warning: Resource type conflict on field {cls} {field}: {fieldPatch.FileFormat} and {fileFormat}. Manually verify please.");
+                        }
+                    }
+                    fieldPatch.FileFormat = fileFormat;
+                    fieldPatch.Type = RszFieldType.Resource;
+                    changes++;
+                }
+            }
+        }
+
+        if (changes > 0) {
+            cache.UpdateRszPatches(config);
+            GD.Print($"Updating RSZ inferred resource fields in type cache with {changes} changes");
+        }
+    }
+
     public static void StoreInferredRszTypes(IEnumerable<RszClass> classlist, AssetConfig config)
     {
         var cache = GetCacheRoot(config.Game);
@@ -195,7 +245,7 @@ public static partial class TypeCache
 
                 var entry = props.FieldPatches?.FirstOrDefault(patch => patch.Name == f.name || patch.ReplaceName == f.name);
                 if (entry == null) {
-                    entry = new RszFieldPatch() { Name = f.name, Type = f.type };
+                    entry = new EnhancedRszFieldPatch() { Name = f.name, Type = f.type };
                     props.FieldPatches = props.FieldPatches == null ? [entry] : props.FieldPatches.Append(entry).ToArray();
                     changes++;
                     RebuildSingleFieldCache(cache, cls.name, f.name);
@@ -279,11 +329,11 @@ public static partial class TypeCache
                             var props = root.FindOrCreateClassPatch(cls.name);
                             var patch = props.FieldPatches?.FirstOrDefault(fp => fp.Name == field.RszField.name);
                             if (patch == null) {
-                                patch = new RszFieldPatch() {
+                                patch = new EnhancedRszFieldPatch() {
                                     Name = field.RszField.name,
                                     Type = field.RszField.type,
                                 };
-                                props.FieldPatches = (props.FieldPatches ?? Array.Empty<RszFieldPatch>()).Append(patch).ToArray();
+                                props.FieldPatches = (props.FieldPatches ?? Array.Empty<EnhancedRszFieldPatch>()).Append(patch).ToArray();
                             }
                             patch.ReplaceName = accessor.preferredName;
                             field.RszField.name = accessor.preferredName;
@@ -413,7 +463,7 @@ public static partial class TypeCache
                 case RszFieldType.Resource:
                     refield.VariantType = Variant.Type.Array;
                     refield.Hint = PropertyHint.TypeString;
-                    refield.HintString = $"{(int)Variant.Type.Object}/{(int)PropertyHint.ResourceType}:{nameof(REResource)}";
+                    refield.HintString = $"{(int)Variant.Type.Object}/{(int)PropertyHint.ResourceType}:{cache.GetResourceType(refield.RszField.name, refield.SerializedName)}";
                     return;
                 case RszFieldType.Data:
                     refield.VariantType = Variant.Type.Array;
@@ -595,7 +645,7 @@ public static partial class TypeCache
                 ResourceHint(refield, nameof(Line));
                 break;
             case RszFieldType.Resource:
-                ResourceHint(refield, nameof(REResource));
+                ResourceHint(refield, cache.GetResourceType(refield.RszField.name, refield.SerializedName));
                 break;
             default:
                 refield.VariantType = Variant.Type.Nil;
@@ -636,4 +686,18 @@ public class PrefabGameObjectRefProperty
 {
     public int PropertyId { get; set; }
     public bool? AutoDetected { get; set; }
+}
+
+public class EnhancedRszClassPatch : RszClassPatch
+{
+    private EnhancedRszFieldPatch[]? _fieldPatches;
+    public new EnhancedRszFieldPatch[]? FieldPatches {
+        get => _fieldPatches;
+        set => base.FieldPatches = _fieldPatches = value;
+    }
+}
+
+public class EnhancedRszFieldPatch : RszFieldPatch
+{
+    public SupportedFileFormats FileFormat { get; set; }
 }
