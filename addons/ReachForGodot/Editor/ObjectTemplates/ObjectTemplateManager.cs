@@ -35,7 +35,7 @@ public static class ObjectTemplateManager
             return Array.Empty<string>();
         }
         // ReachForGodot.GetUserdataFolder("templates/GameObject/");
-        return fa.GetFiles().Select(filename => Path.Combine(folder, filename));
+        return fa.GetFiles().Where(f => f.EndsWith(".tscn")).Select(filename => Path.Combine(folder, filename));
     }
 
     public static GameObject? InstantiateGameobject(string chosenTemplate, Node parent, Node owner)

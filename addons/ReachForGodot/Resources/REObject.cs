@@ -284,8 +284,8 @@ public partial class REObject : Resource
                 CultureInfo.InvariantCulture);
 
             if (index < 0) {
-                // self array field
-                return (this, field, index);
+                // invalid index
+                return default;
             }
 
             if (!__Data.TryGetValue(field, out var arr) || arr.VariantType != Variant.Type.Array || arr.AsGodotArray() is not Godot.Collections.Array array) {
@@ -297,7 +297,11 @@ public partial class REObject : Resource
             }
             if (index < array.Count && array[index].As<REObject>() is REObject child) {
                 // nested object array field
-                return child.GetFieldByPath(valuePath.Slice(dotOrSlash + 1));
+                if (slashpos == -1) {
+                    return (this, field, index);
+                } else {
+                    return child.GetFieldByPath(valuePath.Slice(slashpos + 1));
+                }
             }
         } else {
             // nested plain field
