@@ -12,11 +12,32 @@ public partial class CompositeMeshComponent : REComponent, IVisualREComponent
     private Node3D? meshNode;
     private int childCount = 0;
 
-    private static readonly REFieldAccessor MeshGroupsField = new REFieldAccessor("MeshGroups").Conditions("MeshGroups", "v15");
+    private static readonly REFieldAccessor InstanceGroups = new REFieldAccessor("InstanceGroups").NameOrConditions(f => f.FirstOrDefault(x => x.RszField.array));
+
+    [REObjectFieldTarget("via.render.CompositeMeshInstanceGroup")]
+    private static readonly REFieldAccessor GroupMesh = new REFieldAccessor("Mesh").NameOrConditions(f => f.FirstOrDefault(x => x.RszField.type is RszFieldType.Resource));
+
+    [REObjectFieldTarget("via.render.CompositeMeshInstanceGroup")]
+    private static readonly REFieldAccessor GroupMaterial = new REFieldAccessor("Material").NameOrConditions(f => f.Where(x => x.RszField.type is RszFieldType.Resource).Skip(1).FirstOrDefault());
+
+    /// <summary>
+    /// via.render.CompositeMeshTransformController[]
+    /// </summary>
+    [REObjectFieldTarget("via.render.CompositeMeshInstanceGroup")]
+    private static readonly REFieldAccessor GroupTransforms = new REFieldAccessor("Transforms").NameOrConditions(f => f.FirstOrDefault(x => x.RszField.array));
+
+    [REObjectFieldTarget("via.render.CompositeMeshTransformController")]
+    private static readonly REFieldAccessor ControllerPosition = new REFieldAccessor("Position").NameOrConditions(f => f.Where(x => x.RszField.type is RszFieldType.Vec4).FirstOrDefault());
+
+    [REObjectFieldTarget("via.render.CompositeMeshTransformController")]
+    private static readonly REFieldAccessor ControllerRotation = new REFieldAccessor("Rotation").NameOrConditions(f => f.Where(x => x.RszField.type is RszFieldType.Vec4).Skip(1).FirstOrDefault());
+
+    [REObjectFieldTarget("via.render.CompositeMeshTransformController")]
+    private static readonly REFieldAccessor ControllerScale = new REFieldAccessor("Scale").NameOrConditions(f => f.Where(x => x.RszField.type is RszFieldType.Vec4).Skip(2).FirstOrDefault());
 
     public Node3D? GetOrFindMeshNode() => meshNode ??= GameObject.FindChildWhere<Node3D>(child => child is not ReaGE.GameObject && child.Name == "__CompositeMesh");
     private Godot.Collections.Array<REObject>? FindStoredMeshGroups()
-        => TryGetFieldValue(MeshGroupsField.Get(this), out var groups) ? groups.AsGodotArray<REObject>() : null;
+        => TryGetFieldValue(InstanceGroups.Get(this), out var groups) ? groups.AsGodotArray<REObject>() : null;
 
     public override void OnDestroy()
     {
@@ -42,13 +63,11 @@ public partial class CompositeMeshComponent : REComponent, IVisualREComponent
         var groups = FindStoredMeshGroups();
         if (groups != null) {
             foreach (var mg in groups) {
-                if (mg.TryGetFieldValue(mg.TypeInfo.Fields[0], out var filename) && filename.AsString() is string meshFilename && !string.IsNullOrEmpty(meshFilename)) {
-                    var transform = mg.GetField(mg.TypeInfo.GetFieldOrFallback("Transform", s => s.RszField.type == RszFieldType.String));
-                    if (transform.VariantType == Variant.Type.Nil) {
-                        GD.Print("Could not find composite mesh group transform");
-                    } else {
-                        tasks.Add(InstantiateSubmeshes(meshFilename, (transform.AsGodotArray<REObject>())));
-                    }
+                var mesh = mg.GetField(GroupMesh).As<MeshResource>();
+                // var mat = mg.GetField(GroupMaterial).As<MaterialDefinitionResource>();
+                var transforms = mg.GetField(GroupTransforms).AsGodotArray<REObject>();
+                if (mesh != null && transforms != null) {
+                    tasks.Add(InstantiateSubmeshes(mesh, transforms));
                 }
             }
         }
@@ -62,14 +81,12 @@ public partial class CompositeMeshComponent : REComponent, IVisualREComponent
         await Task.WhenAll(tasks);
     }
 
-    private async Task InstantiateSubmeshes(string meshFilename, IEnumerable<REObject>? transforms)
+    private async Task InstantiateSubmeshes(MeshResource? mr, IEnumerable<REObject>? transforms)
     {
         Debug.Assert(meshNode != null);
         Debug.Assert(transforms != null);
 
-        REField? pos = null, rot = null, scale = null;
-
-        if (Importer.FindOrImportResource<MeshResource>(meshFilename, ReachForGodot.GetAssetConfig(GameObject.Game)) is MeshResource mr) {
+        if (mr != null) {
             var (tk, res) = await mr.Import(false).ContinueWith(static (t) => (t, t.IsCompletedSuccessfully ? t.Result : null));
             if (tk.IsCanceled) return;
 
@@ -88,16 +105,10 @@ public partial class CompositeMeshComponent : REComponent, IVisualREComponent
 
             int i = 0;
             foreach (var tr in transforms) {
-                pos ??= tr.TypeInfo.GetFieldOrFallback("Position", f => f.FieldIndex == 2);
-                rot ??= tr.TypeInfo.GetFieldOrFallback("Rotation", f => f.FieldIndex == 2);
-                scale ??= tr.TypeInfo.GetFieldOrFallback("Scale", f => f.FieldIndex == 2);
                 mm.SetInstanceTransform(i++, RETransformComponent.Vector4x3ToTransform(
-                    tr.GetField(pos).AsVector4(),
-                    tr.GetField(rot).AsVector4(),
-                    tr.GetField(scale).AsVector4()
-                    // (System.Numerics.Vector4)tr.Values[2],
-                    // (System.Numerics.Vector4)tr.Values[3],
-                    // (System.Numerics.Vector4)tr.Values[4]
+                    tr.GetField(ControllerPosition).AsVector4(),
+                    tr.GetField(ControllerRotation).AsVector4(),
+                    tr.GetField(ControllerScale).AsVector4()
                 ));
             }
 
@@ -112,7 +123,7 @@ public partial class CompositeMeshComponent : REComponent, IVisualREComponent
         var groups = FindStoredMeshGroups();
         if (groups != null) {
             foreach (var mg in groups) {
-                var transforms = mg.GetField(mg.TypeInfo.GetFieldOrFallback("Transform", s => s.RszField.type == RszFieldType.String)).AsGodotArray<REObject>();
+                var transforms = mg.GetField(GroupTransforms).AsGodotArray<REObject>();
                 foreach (var tr in transforms) {
                     var posfield = tr.TypeInfo.GetFieldOrFallback("Position", f => f.FieldIndex == 2);
                     var origin = tr.GetField(posfield).AsVector4().ToVector3();

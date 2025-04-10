@@ -218,7 +218,12 @@ public static partial class TypeCache
                         }
                     }
                     fieldPatch.FileFormat = fileFormat;
-                    fieldPatch.Type = RszFieldType.Resource;
+                    if (fileFormat is SupportedFileFormats.Scene or SupportedFileFormats.Prefab) {
+                        // leave these as string
+                        fieldPatch.Type = RszFieldType.String;
+                    } else {
+                        fieldPatch.Type = RszFieldType.Resource;
+                    }
                     changes++;
                 }
             }
@@ -318,29 +323,27 @@ public static partial class TypeCache
     private static ClassInfo GenerateObjectCache(GameClassCache root, RszClass cls)
     {
         var cache = new ClassInfo(cls, GenerateFields(cls, root), root.GetClassProps(cls.name));
-        if (root.fieldOverrides.TryGetValue(cls.name, out var yes) == true) {
-            foreach (var accessor in yes) {
-                if (accessor.HasOverrides) {
-                    var field = accessor.Get(root.game, cache);
-                    if (field != null) {
-                        accessor.Invoke(field);
-                        var prop = cache.PropertyList.First(dict => dict["name"].AsString() == field.SerializedName);
-                        if (field.RszField.name != accessor.preferredName) {
-                            var props = root.FindOrCreateClassPatch(cls.name);
-                            var patch = props.FieldPatches?.FirstOrDefault(fp => fp.Name == field.RszField.name);
-                            if (patch == null) {
-                                patch = new EnhancedRszFieldPatch() {
-                                    Name = field.RszField.name,
-                                    Type = field.RszField.type,
-                                };
-                                props.FieldPatches = (props.FieldPatches ?? Array.Empty<EnhancedRszFieldPatch>()).Append(patch).ToArray();
-                            }
-                            patch.ReplaceName = accessor.preferredName;
-                            field.RszField.name = accessor.preferredName;
-                            root.UpdateRszPatches(ReachForGodot.GetAssetConfig(root.game));
+        if (root.fieldOverrides.TryGetValue(cls.name, out var list) == true) {
+            foreach (var accessor in list) {
+                var field = accessor.Get(root.game, cache);
+                if (field != null) {
+                    accessor.Invoke(field);
+                    var prop = cache.PropertyList.First(dict => dict["name"].AsString() == field.SerializedName);
+                    if (field.RszField.name != accessor.preferredName) {
+                        var props = root.FindOrCreateClassPatch(cls.name);
+                        var patch = props.FieldPatches?.FirstOrDefault(fp => fp.Name == field.RszField.name);
+                        if (patch == null) {
+                            patch = new EnhancedRszFieldPatch() {
+                                Name = field.RszField.name,
+                                Type = field.RszField.type,
+                            };
+                            props.FieldPatches = (props.FieldPatches ?? Array.Empty<EnhancedRszFieldPatch>()).Append(patch).ToArray();
                         }
-                        cache.UpdateFieldProperty(field, prop);
+                        patch.ReplaceName = accessor.preferredName;
+                        field.RszField.name = accessor.preferredName;
+                        root.UpdateRszPatches(ReachForGodot.GetAssetConfig(root.game));
                     }
+                    cache.UpdateFieldProperty(field, prop);
                 }
             }
         }
@@ -368,7 +371,6 @@ public static partial class TypeCache
         foreach (var field in type.GetFields(BindingFlags.Public|BindingFlags.NonPublic|BindingFlags.Static)) {
             if (field.FieldType == typeof(REFieldAccessor)) {
                 var accessor = (REFieldAccessor)field.GetValue(null)!;
-                if (!accessor.HasOverrides) continue;
 
                 var curclass = classname;
                 if (field.GetCustomAttribute<REObjectFieldTargetAttribute>() is REObjectFieldTargetAttribute overrideAttr) {

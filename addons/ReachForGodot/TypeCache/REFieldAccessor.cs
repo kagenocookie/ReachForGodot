@@ -10,12 +10,18 @@ public class REFieldAccessor
     private REFieldCondition[] conditions = Array.Empty<REFieldCondition>();
     private Dictionary<SupportedGame, REField?> _cache = new(1);
     public event Action<REField>? Override;
-    public bool HasOverrides => Override != null;
+    public bool HasAdditionalOverrides => Override != null;
 
     public REFieldAccessor(string name)
     {
         preferredName = name;
         conditions = [name];
+    }
+
+    public REFieldAccessor NameOrConditions(params REFieldConditionFunc[] conditions)
+    {
+        this.conditions = new REFieldCondition[]{ preferredName }.Concat(conditions.Select(a => new REFieldCondition(a))).ToArray();
+        return this;
     }
 
     public REFieldAccessor Conditions(params REFieldConditionFunc[] conditions)

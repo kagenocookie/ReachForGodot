@@ -106,8 +106,8 @@ public class PfbConverter : RszAssetConverter<PrefabNode, PfbFile, PackedScene>
                             pfb.RSZ!.AddToObjectTable(dataInst);
                         }
 
-                        var refEntry = new StructModel<PfbFile.GameObjectRefInfo>() {
-                            Data = new PfbFile.GameObjectRefInfo() {
+                        var refEntry = new StructModel<RszTool.Pfb.PfbGameObjectRefInfo>() {
+                            Data = new RszTool.Pfb.PfbGameObjectRefInfo() {
                                 objectId = (uint)dataInst.ObjectTableIndex,
                                 arrayIndex = arrayIndex,
                                 propertyId = propInfo.PropertyId,
@@ -147,8 +147,8 @@ public class PfbConverter : RszAssetConverter<PrefabNode, PfbFile, PackedScene>
 
     private static void AddPfbGameObject(int objectId, PfbFile file, int componentCount, int parentId)
     {
-        file.GameObjectInfoList.Add(new StructModel<PfbFile.GameObjectInfo>() {
-            Data = new PfbFile.GameObjectInfo() {
+        file.GameObjectInfoList.Add(new StructModel<RszTool.Pfb.PfbGameObjectInfo>() {
+            Data = new RszTool.Pfb.PfbGameObjectInfo() {
                 objectId = objectId,
                 parentId = parentId,
                 componentCount = componentCount,
@@ -168,7 +168,7 @@ public class PfbConverter : RszAssetConverter<PrefabNode, PfbFile, PackedScene>
         }
 
         target.Prefab = target.Asset.AssetFilename;
-        var rootGOs = file.GameObjectDatas!.OrderBy(o => o.Instance!.Index);
+        var rootGOs = file.GameObjects!.OrderBy(o => o.Instance!.Index);
         Debug.Assert(rootGOs.Count() <= 1, "WTF Capcom?? Guess we doing multiple PFB roots now");
         foreach (var gameObj in rootGOs) {
             target.OriginalName = gameObj.Name ?? target.Name;

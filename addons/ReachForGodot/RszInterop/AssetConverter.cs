@@ -202,7 +202,7 @@ public class AssetConverter
     public void EndBatch(IBatchContext batch) => Context.EndBatch(batch);
     public GameObjectBatch CreatePrefabBatch(PrefabNode root, string? note) => Context.CreatePrefabBatch(root, note);
     public GameObjectBatch CreateGameObjectBatch(string? note) => Context.CreateGameObjectBatch(note);
-    public FolderBatch CreateFolderBatch(SceneFolder folder, ScnFile.FolderData? data, string? note) => Context.CreateFolderBatch(folder, data, note);
+    public FolderBatch CreateFolderBatch(SceneFolder folder, RszTool.Scn.ScnFolderData? data, string? note) => Context.CreateFolderBatch(folder, data, note);
 
 #region Import context, batching
     public sealed class ImportContext
@@ -258,7 +258,7 @@ public class AssetConverter
             return batch;
         }
 
-        public FolderBatch CreateFolderBatch(SceneFolder folder, ScnFile.FolderData? data, string? note)
+        public FolderBatch CreateFolderBatch(SceneFolder folder, RszTool.Scn.ScnFolderData? data, string? note)
         {
             var batch = new FolderBatch(this, folder, note) { scnData = data };
             QueueBatch(batch);
@@ -361,7 +361,7 @@ public class AssetConverter
         }
     }
 
-    private sealed record PrefabQueueParams(PackedScene prefab, IGameObjectData data, RszImportType importType, Node? parentNode, GameObject? parent = null, int dedupeIndex = 0);
+    private sealed record PrefabQueueParams(PackedScene prefab, IGameObject data, RszImportType importType, Node? parentNode, GameObject? parent = null, int dedupeIndex = 0);
 
     public sealed class FolderBatch : IBatchContext
     {
@@ -370,7 +370,7 @@ public class AssetConverter
         public readonly List<FolderBatch> folders = new();
         public readonly List<GameObjectBatch> gameObjects = new List<GameObjectBatch>();
         public readonly HashSet<SceneFolder> finishedFolders = new();
-        public ScnFile.FolderData? scnData;
+        public RszTool.Scn.ScnFolderData? scnData;
         public SceneFolder folder;
         private readonly string? note;
         private readonly ImportContext ctx;

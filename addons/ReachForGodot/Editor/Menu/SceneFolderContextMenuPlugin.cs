@@ -42,7 +42,6 @@ public partial class SceneFolderContextMenuPlugin : EditorContextMenuPlugin
         }
 
         var templates = ObjectTemplateManager.GetAvailableTemplates(ObjectTemplateType.GameObject, game);
-        if (templates.Length == 0) return;
 
         int i = 0;
         foreach (var template in templates) {

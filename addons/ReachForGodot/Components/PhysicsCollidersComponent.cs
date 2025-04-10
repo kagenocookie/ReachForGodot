@@ -118,19 +118,19 @@ public partial class PhysicsCollidersComponent : REComponent, IVisualREComponent
                     case BoxShape3D box:
                         if (child.IsInsideTree() ? child.GlobalTransform.Basis.IsEqualApprox(Basis.Identity) : child.Name.ToString().Contains("AabbShape")) {
                             GetOrAddShape(Game, "via.physics.AabbShape", colliders, index, out shape, ref showWarning);
-                            RequestSetCollisionShape3D.UpdateSerializedShape(shape, AabbShape, child.Shape, child, RcolFile.ShapeType.Aabb);
+                            RequestSetCollisionShape3D.UpdateSerializedShape(shape, AabbShape, child.Shape, child, RszTool.Rcol.ShapeType.Aabb);
                         } else {
                             GetOrAddShape(Game, "via.physics.BoxShape", colliders, index, out shape, ref showWarning);
-                            RequestSetCollisionShape3D.UpdateSerializedShape(shape, BoxShape, child.Shape, child, RcolFile.ShapeType.Box);
+                            RequestSetCollisionShape3D.UpdateSerializedShape(shape, BoxShape, child.Shape, child, RszTool.Rcol.ShapeType.Box);
                         }
                         break;
                     case SphereShape3D sphere:
                         GetOrAddShape(Game, "via.physics.SphereShape", colliders, index, out shape, ref showWarning);
-                        RequestSetCollisionShape3D.UpdateSerializedShape(shape, SphereShape, child.Shape, child, RcolFile.ShapeType.Sphere);
+                        RequestSetCollisionShape3D.UpdateSerializedShape(shape, SphereShape, child.Shape, child, RszTool.Rcol.ShapeType.Sphere);
                         break;
                     case CapsuleShape3D capsule:
                         GetOrAddShape(Game, "via.physics.CapsuleShape", colliders, index, out shape, ref showWarning);
-                        RequestSetCollisionShape3D.UpdateSerializedShape(shape, CapsuleShape, child.Shape, child, RcolFile.ShapeType.Capsule);
+                        RequestSetCollisionShape3D.UpdateSerializedShape(shape, CapsuleShape, child.Shape, child, RszTool.Rcol.ShapeType.Capsule);
                         break;
                     case null:
                         break;
@@ -196,16 +196,16 @@ public partial class PhysicsCollidersComponent : REComponent, IVisualREComponent
                     // collider.Shape = new ConvexPolygonShape3D();
                     break;
                 case "via.physics.SphereShape":
-                    RequestSetCollisionShape3D.ApplyShape(collider, RcolFile.ShapeType.Sphere, shape.GetField(SphereShape));
+                    RequestSetCollisionShape3D.ApplyShape(collider, RszTool.Rcol.ShapeType.Sphere, shape.GetField(SphereShape));
                     break;
                 case "via.physics.BoxShape":
-                    RequestSetCollisionShape3D.ApplyShape(collider, RcolFile.ShapeType.Box, shape.GetField(BoxShape));
+                    RequestSetCollisionShape3D.ApplyShape(collider, RszTool.Rcol.ShapeType.Box, shape.GetField(BoxShape));
                     break;
                 case "via.physics.CapsuleShape":
-                    RequestSetCollisionShape3D.ApplyShape(collider, RcolFile.ShapeType.Capsule, shape.GetField(CapsuleShape));
+                    RequestSetCollisionShape3D.ApplyShape(collider, RszTool.Rcol.ShapeType.Capsule, shape.GetField(CapsuleShape));
                     break;
                 case "via.physics.AabbShape":
-                    RequestSetCollisionShape3D.ApplyShape(collider, RcolFile.ShapeType.Aabb, shape.GetField(AabbShape));
+                    RequestSetCollisionShape3D.ApplyShape(collider, RszTool.Rcol.ShapeType.Aabb, shape.GetField(AabbShape));
                     break;
                 default:
                     GD.Print("Unhandled collider shape " + shape.Classname);

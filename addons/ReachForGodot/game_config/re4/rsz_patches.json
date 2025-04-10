@@ -565,16 +565,19 @@
     "FieldPatches": [
       {
         "Name": "v2",
+        "ReplaceName": "Transforms",
         "Type": "Object"
       },
       {
         "FileFormat": "Mesh",
         "Name": "v0",
+        "ReplaceName": "Mesh",
         "Type": "Resource"
       },
       {
         "FileFormat": "MaterialDefinition",
         "Name": "v1",
+        "ReplaceName": "Material",
         "Type": "Resource"
       }
     ]
@@ -591,6 +594,12 @@
       },
       {
         "Name": "v15",
+        "ReplaceName": "MeshGroups",
+        "Type": "Object"
+      },
+      {
+        "Name": "MeshGroups",
+        "ReplaceName": "InstanceGroups",
         "Type": "Object"
       }
     ]
@@ -6452,7 +6461,7 @@
       {
         "FileFormat": "Prefab",
         "Name": "Path",
-        "Type": "Resource"
+        "Type": "String"
       }
     ]
   },
@@ -6506,7 +6515,7 @@
     "FieldPatches": [
       {
         "Name": "Path",
-        "Type": "Resource"
+        "Type": "String"
       }
     ]
   },
@@ -7650,6 +7659,25 @@
         "FileFormat": "UVSequence",
         "Name": "_OverwriteUVSequence",
         "Type": "Resource"
+      }
+    ]
+  },
+  "via.render.CompositeMeshTransformController": {
+    "FieldPatches": [
+      {
+        "Name": "v2",
+        "ReplaceName": "Position",
+        "Type": "Vec4"
+      },
+      {
+        "Name": "v3",
+        "ReplaceName": "Rotation",
+        "Type": "Vec4"
+      },
+      {
+        "Name": "v4",
+        "ReplaceName": "Scale",
+        "Type": "Vec4"
       }
     ]
   }

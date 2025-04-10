@@ -32,29 +32,29 @@ public partial class TestUvar : TestBase
             GetAllUvars(exported).Count().ShouldBe(GetAllUvars(file).Count());
 
             foreach (var (file_out, file_in) in PairEnumerate(GetAllUvars(exported), GetAllUvars(file))) {
-                file_out.variableCount.ShouldBe(file_in.variableCount);
+                file_out.Header.variableCount.ShouldBe(file_in.Header.variableCount);
                 file_out.Variables.Count.ShouldBe(file_in.Variables.Count);
-                file_out.embedCount.ShouldBe(file_in.embedCount);
-                file_out.EmbeddedData.Count.ShouldBe(file_in.EmbeddedData.Count);
-                file_out.name.ShouldBe(file_in.name);
-                file_out.Hashes.Guids.Length.ShouldBe(file_in.variableCount);
+                file_out.Header.embedCount.ShouldBe(file_in.Header.embedCount);
+                file_out.EmbeddedUVARs.Count.ShouldBe(file_in.EmbeddedUVARs.Count);
+                file_out.Header.name.ShouldBe(file_in.Header.name);
+                file_out.HashData.Guids!.Length.ShouldBe(file_in.Header.variableCount);
 
                 foreach (var (v1, v2) in PairEnumerate(file_out.Variables, file_in.Variables)) {
-                    v1.name.ShouldBe(v2.name);
+                    v1.Name.ShouldBe(v2.Name);
                     v1.nameHash.ShouldBe(v2.nameHash);
                     v1.flags.ShouldBe(v2.flags);
                     v1.guid.ShouldBe(v2.guid);
-                    v1.value.ShouldBeEquivalentTo(v2.value);
-                    (v1.expression == null).ShouldBe(v2.expression == null);
+                    v1.Value.ShouldBeEquivalentTo(v2.Value);
+                    (v1.Expression == null).ShouldBe(v2.Expression == null);
 
-                    if (v1.expression == null) continue;
+                    if (v1.Expression == null) continue;
 
-                    v1.expression.Connections.ShouldBeEquivalentTo(v2.expression!.Connections);
-                    foreach (var (n1, n2) in PairEnumerate(v1.expression.Nodes, v2.expression.Nodes)) {
-                        n1.name.ShouldBe(n2.name);
+                    v1.Expression.Connections.ShouldBeEquivalentTo(v2.Expression!.Connections);
+                    foreach (var (n1, n2) in PairEnumerate(v1.Expression.Nodes, v2.Expression.Nodes)) {
+                        n1.Name.ShouldBe(n2.Name);
                         n1.nodeId.ShouldBe(n2.nodeId);
                         n1.uknCount.ShouldBe(n2.uknCount);
-                        n1.parameters.ShouldBeEquivalentTo(n2.parameters);
+                        n1.Parameters.ShouldBeEquivalentTo(n2.Parameters);
                     }
                 }
             }
@@ -94,10 +94,10 @@ public partial class TestUvar : TestBase
     //         nodevars.OrderBy(a => a.type).Select(a => "- " + a.type + ": \"" + a.val + "\""));
     // }
 
-    private IEnumerable<UvarFile> GetAllUvars(UvarFile file)
+    private IEnumerable<UVarFile> GetAllUvars(UVarFile file)
     {
         yield return file;
-        foreach (var e in file.EmbeddedData.SelectMany(x => GetAllUvars(x))) {
+        foreach (var e in file.EmbeddedUVARs.SelectMany(x => GetAllUvars(x))) {
             yield return e;
         }
     }

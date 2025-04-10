@@ -140,6 +140,11 @@
       {
         "Name": "v13",
         "Type": "S32"
+      },
+      {
+        "Name": "MeshGroups",
+        "ReplaceName": "InstanceGroups",
+        "Type": "Object"
       }
     ]
   },
@@ -172,6 +177,7 @@
       },
       {
         "Name": "Materials",
+        "ReplaceName": "Transforms",
         "Type": "Object"
       },
       {
@@ -7323,7 +7329,7 @@
     "FieldPatches": [
       {
         "Name": "Path",
-        "Type": "Resource"
+        "Type": "String"
       }
     ]
   },
@@ -7332,7 +7338,7 @@
       {
         "FileFormat": "Prefab",
         "Name": "Path",
-        "Type": "Resource"
+        "Type": "String"
       }
     ]
   },

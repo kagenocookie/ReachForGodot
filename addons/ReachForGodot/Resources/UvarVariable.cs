@@ -2,15 +2,14 @@ namespace ReaGE;
 
 using Godot;
 using Godot.Collections;
-using static RszTool.UvarFile;
-using static RszTool.UvarFile.Variable;
+using static RszTool.UVar.Variable;
 
 [GlobalClass, Tool]
 public partial class UvarVariable : Resource
 {
     [Export] public SupportedGame Game { get; set; }
-    [Export] public TypeKind Type { get; set; }
-    [Export] public UvarFlags Flags { get; set; }
+    [Export] public RszTool.UVar.Variable.TypeKind Type { get; set; }
+    [Export] public RszTool.UVar.Variable.UvarFlags Flags { get; set; }
     [Export] public Variant Value { get; set; }
     [Export] public string GuidString { get; set; } = string.Empty;
     [Export] public UvarExpression? Expression { get; set; }
@@ -28,7 +27,7 @@ public partial class UvarVariable : Resource
         base._ValidateProperty(property);
     }
 
-    public static object? VariantToUvar(Variant value, TypeKind type, RszTool.UvarFile.UvarFlags flags) => type switch {
+    public static object? VariantToUvar(Variant value, TypeKind type, UvarFlags flags) => type switch {
         TypeKind.Enum => value.AsInt32(),
         TypeKind.Boolean => value.AsBool(),
         TypeKind.Int8 => ((flags & UvarFlags.IsVec3) != 0) ? value.AsGodotArray<sbyte>().ToArray() : (sbyte)value,
@@ -51,7 +50,7 @@ public partial class UvarVariable : Resource
         _ => throw new Exception("Unhandled UVAR variable type " + type),
     };
 
-    public static Variant UvarVarToVariant(object? value, TypeKind type, RszTool.UvarFile.UvarFlags flags) => value == null ? default : type switch {
+    public static Variant UvarVarToVariant(object? value, TypeKind type, UvarFlags flags) => value == null ? default : type switch {
         TypeKind.Enum => (int)value,
         TypeKind.Boolean => (bool)value,
         TypeKind.Int8 => ((flags & UvarFlags.IsVec3) != 0) ? new Vector3I(((sbyte[])value)[0], ((sbyte[])value)[1], ((sbyte[])value)[2]) : (sbyte)value,
@@ -74,7 +73,7 @@ public partial class UvarVariable : Resource
         _ => throw new Exception("Unhandled UVAR variable type " + type),
     };
 
-    public static Variant.Type UvarVarToVariantType(TypeKind type, RszTool.UvarFile.UvarFlags flags) => type switch {
+    public static Variant.Type UvarVarToVariantType(TypeKind type, UvarFlags flags) => type switch {
         TypeKind.Enum => Variant.Type.Int,
         TypeKind.Boolean => Variant.Type.Bool,
         TypeKind.Int8 => ((flags & UvarFlags.IsVec3) != 0) ? Variant.Type.Vector3I : Variant.Type.Int,

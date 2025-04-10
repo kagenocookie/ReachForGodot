@@ -5708,7 +5708,7 @@
       {
         "FileFormat": "Prefab",
         "Name": "Path",
-        "Type": "Resource"
+        "Type": "String"
       }
     ]
   },
@@ -5725,6 +5725,27 @@
       {
         "Name": "v0",
         "Type": "Resource"
+      }
+    ]
+  },
+  "via.render.CompositeMeshInstanceGroup": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Mesh",
+        "Name": "v0",
+        "ReplaceName": "Mesh",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "MaterialDefinition",
+        "Name": "v1",
+        "ReplaceName": "Material",
+        "Type": "Resource"
+      },
+      {
+        "Name": "v2",
+        "ReplaceName": "Transforms",
+        "Type": "Object"
       }
     ]
   },
@@ -5937,6 +5958,34 @@
         "FileFormat": "RenderTexture",
         "Name": "LoadingTextureHolder",
         "Type": "Resource"
+      }
+    ]
+  },
+  "via.render.CompositeMesh": {
+    "FieldPatches": [
+      {
+        "Name": "v11",
+        "ReplaceName": "InstanceGroups",
+        "Type": "Data"
+      }
+    ]
+  },
+  "via.render.CompositeMeshTransformController": {
+    "FieldPatches": [
+      {
+        "Name": "v1",
+        "ReplaceName": "Position",
+        "Type": "Vec4"
+      },
+      {
+        "Name": "v2",
+        "ReplaceName": "Rotation",
+        "Type": "Vec4"
+      },
+      {
+        "Name": "v3",
+        "ReplaceName": "Scale",
+        "Type": "Vec4"
       }
     ]
   }

@@ -38,7 +38,7 @@ public class ScnConverter : RszAssetConverter<SceneFolder, ScnFile, PackedScene>
 
         foreach (var go in source.ChildObjects) {
             if (go is PrefabNode pfbGo) {
-                file.PrefabInfoList.Add(new ScnFile.PrefabInfo() {
+                file.PrefabInfoList.Add(new RszTool.Scn.ScnPrefabInfo() {
                     Path = pfbGo.Asset?.AssetFilename ?? pfbGo.Prefab,
                     parentId = 0,
                 });
@@ -78,7 +78,7 @@ public class ScnConverter : RszAssetConverter<SceneFolder, ScnFile, PackedScene>
         file.RSZ.InstanceList.Add(folderInstance);
         file.RSZ.AddToObjectTable(folderInstance);
 
-        file.FolderInfoList.Add(new StructModel<ScnFile.FolderInfo>() { Data = new ScnFile.FolderInfo() {
+        file.FolderInfoList.Add(new StructModel<RszTool.Scn.ScnFolderInfo>() { Data = new RszTool.Scn.ScnFolderInfo() {
             objectId = folderInstance.ObjectTableIndex,
             parentId = parentFolderId,
         } });
@@ -130,22 +130,37 @@ public class ScnConverter : RszAssetConverter<SceneFolder, ScnFile, PackedScene>
         if (gameObject is PrefabNode pfbNode && !string.IsNullOrEmpty(pfbNode.Prefab)) {
             pfbIndex = file.PrefabInfoList.FindIndex(pfb => pfb.Path == pfbNode.Prefab);
             if (pfbIndex == -1) {
-                file.PrefabInfoList.Add(new ScnFile.PrefabInfo() {
+                file.PrefabInfoList.Add(new RszTool.Scn.ScnPrefabInfo() {
                     parentId = 0,
                     Path = pfbNode.Prefab,
                 });
             }
         }
 
-        file.GameObjectInfoList.Add(new StructModel<ScnFile.GameObjectInfo>() {
-            Data = new ScnFile.GameObjectInfo() {
+        var info = new RszTool.StructModel<RszTool.Scn.ScnGameObjectInfo>() {
+            Data = new RszTool.Scn.ScnGameObjectInfo() {
                 objectId = objectId,
                 parentId = parentId,
                 componentCount = (short)gameObject.Components.Count,
                 guid = gameObject.ObjectGuid,
                 prefabId = pfbIndex,
             }
+        };
+        file.GameObjectInfoList.Add(info);
+
+        file.GameObjects ??= new();
+        file.GameObjects.Add(new RszTool.Scn.ScnGameObject() {
+            Info = info,
         });
+        // file.GameObjectInfoList.Add(new StructModel<RszTool.Scn.ScnGameObject>() {
+        //     Data = new RszTool.Scn.ScnGameObject() {
+        //         objectId = objectId,
+        //         parentId = parentId,
+        //         componentCount = (short)gameObject.Components.Count,
+        //         guid = gameObject.ObjectGuid,
+        //         prefabId = pfbIndex,
+        //     }
+        // });
     }
 
     public override async Task<bool> Import(ScnFile file, SceneFolder target)
@@ -160,7 +175,7 @@ public class ScnConverter : RszAssetConverter<SceneFolder, ScnFile, PackedScene>
         var batch = Convert.CreateFolderBatch(target, null, target.Asset?.AssetFilename);
         Convert.StartBatch(batch);
         GenerateResources(target, file.ResourceInfoList);
-        PrepareFolderBatch(batch, file.GameObjectDatas!, file.FolderDatas!);
+        PrepareFolderBatch(batch, file.GameObjects!, file.FolderDatas!);
         await AwaitFolderBatch(batch);
         Convert.Context.UpdateUIStatus();
 
@@ -255,7 +270,7 @@ public class ScnConverter : RszAssetConverter<SceneFolder, ScnFile, PackedScene>
         return Import(file, folder);
     }
 
-    private void PrepareFolderBatch(AssetConverter.FolderBatch batch, IEnumerable<ScnFile.GameObjectData> gameobjects, IEnumerable<ScnFile.FolderData> folders)
+    private void PrepareFolderBatch(AssetConverter.FolderBatch batch, IEnumerable<RszTool.Scn.ScnGameObject> gameobjects, IEnumerable<RszTool.Scn.ScnFolderData> folders)
     {
         var dupeDict = new Dictionary<string, int>();
         foreach (var gameObj in gameobjects) {
@@ -286,7 +301,7 @@ public class ScnConverter : RszAssetConverter<SceneFolder, ScnFile, PackedScene>
         }
     }
 
-    private void PrepareSubfolderPlaceholders(SceneFolder root, ScnFile.FolderData folder, SceneFolder parent, AssetConverter.FolderBatch batch, int dedupeIndex)
+    private void PrepareSubfolderPlaceholders(SceneFolder root, RszTool.Scn.ScnFolderData folder, SceneFolder parent, AssetConverter.FolderBatch batch, int dedupeIndex)
     {
         Debug.Assert(folder.Info != null);
         var name = folder.Name ?? "UnnamedFolder";

@@ -232,7 +232,7 @@ public abstract class RszAssetConverter<TImported, TExported, TResource> : RszTo
         var values = instance.Values;
         foreach (var field in target.TypeInfo.Fields) {
             if (!target.TryGetFieldValue(field, out var value)) {
-                values[i++] = RszInstance.CreateNormalObject(field.RszField);
+                values[i++] = field.RszField.array ? new List<object>(0) : RszInstance.CreateNormalObject(field.RszField);
                 continue;
             }
 
@@ -297,7 +297,7 @@ public abstract class RszAssetConverter<TImported, TExported, TResource> : RszTo
         return instance;
     }
 
-    protected void PrepareGameObjectBatch(IGameObjectData data, AssetConverter.GameObjectBatch batch, Node? parentNode, GameObject? parent = null, int dedupeIndex = 0)
+    protected void PrepareGameObjectBatch(IGameObject data, AssetConverter.GameObjectBatch batch, Node? parentNode, GameObject? parent = null, int dedupeIndex = 0)
     {
         var name = data.Name ?? "UnnamedGameObject";
 
@@ -317,7 +317,7 @@ public abstract class RszAssetConverter<TImported, TExported, TResource> : RszTo
 
         string? prefabPath = null;
 
-        if (data is ScnFile.GameObjectData scnData) {
+        if (data is RszTool.Scn.ScnGameObject scnData) {
             // note: some PFB files aren't shipped with the game, hence the CheckResourceExists check
             // presumably they are only used directly within scn files and not instantiated during runtime
             prefabPath = scnData.Prefab?.Path;
@@ -357,7 +357,7 @@ public abstract class RszAssetConverter<TImported, TExported, TResource> : RszTo
         }
         batch.GameObject = gameobj;
 
-        if (data is ScnFile.GameObjectData scnData2) {
+        if (data is RszTool.Scn.ScnGameObject scnData2) {
             var guid = scnData2.Info!.Data.guid;
             gameobj.Uuid = guid.ToString();
             gameObjects[guid] = gameobj;

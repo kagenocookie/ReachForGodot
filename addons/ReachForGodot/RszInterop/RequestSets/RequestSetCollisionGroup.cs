@@ -29,13 +29,13 @@ public partial class RequestSetCollisionGroup : AnimatableBody3D
         set => layerGuid = value.ToString();
     }
 
-    public RcolFile.RcolGroup ToRsz()
+    public RszTool.Rcol.RcolGroup ToRsz()
     {
-        var group = new RcolFile.RcolGroup();
+        var group = new RszTool.Rcol.RcolGroup();
         group.Info.guid = Guid;
-        group.Info.name = Name;
+        group.Info.Name = Name;
         group.Info.MaskBits = CollisionMask;
-        group.Info.MaskGuids = MaskGuids?.Select(c => Guid.Parse(c)).ToArray() ?? Array.Empty<Guid>();
+        group.Info.MaskGuids = MaskGuids?.Select(c => Guid.Parse(c)).ToList() ?? new();
         group.Info.LayerGuid = LayerGuid;
         return group;
     }
