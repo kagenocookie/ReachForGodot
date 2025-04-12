@@ -36,7 +36,7 @@ public class PfbConverter : RszAssetConverter<PrefabNode, PfbFile, PackedScene>
             go.PreExport();
         }
 
-        StoreResources(source.Resources, file.ResourceInfoList);
+        StoreResources(source.Resources, file.ResourceInfoList, true);
         file.RSZ.ClearInstances();
 
         AddGameObject(source, file.RSZ, file, -1);

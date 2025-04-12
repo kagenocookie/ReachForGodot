@@ -49,3 +49,14 @@ public enum SupportedFileFormats
     Probe,
     AiMap,
 }
+
+public static class EnumExtensions
+{
+    public static bool UsesEmbeddedUserdata(this SupportedGame game) => game switch {
+        SupportedGame.DevilMayCry5 => true,
+        SupportedGame.ResidentEvil2 => true,
+        SupportedGame.ResidentEvil3 => true,
+        SupportedGame.ResidentEvil7 => true,
+        _ => false
+    };
+}

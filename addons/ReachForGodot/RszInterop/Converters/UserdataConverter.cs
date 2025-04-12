@@ -32,9 +32,9 @@ public class UserdataConverter : RszAssetConverter<UserdataResource, UserFile, U
 
     public override Task<bool> Export(UserdataResource source, UserFile file)
     {
-        StoreResources(source.Resources, file.ResourceInfoList);
+        StoreResources(source.Resources, file.ResourceInfoList, false);
         file.RSZ.ClearInstances();
-        var instance = ExportREObject(source.Data, file.RSZ, FileOption, file, true);
+        var instance = ExportREObject(source.Data, file.RSZ, FileOption, file);
         file.RSZ.AddToObjectTable(instance);
         return Task.FromResult(true);
     }

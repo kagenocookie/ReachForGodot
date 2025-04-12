@@ -167,6 +167,7 @@ public class Importer
         if (ResourceLoader.Exists(importPath)) {
             newres.TakeOverPath(importPath);
         } else {
+            Directory.CreateDirectory(outputFilePath.GetBaseDir());
             newres.ResourcePath = importPath;
         }
         TrySaveResource(newres, sourceFilePath);
@@ -189,7 +190,6 @@ public class Importer
             relativePath = sourceFilePath;
         }
 
-        Directory.CreateDirectory(outputFilePath.GetBaseDir());
         var newres = resourceTypes.GetValueOrDefault(format) is Type rt ? (REResource)Activator.CreateInstance(rt)! : new REResource();
         newres.Asset = new AssetReference(relativePath);
         newres.Game = config.Game;

@@ -307,7 +307,9 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
         var (success, failed) = await ExecuteOnAllSourceFiles(config.Game, "scn", async (game, fileOption, filepath) => {
             using var file = new ScnFile(fileOption, new FileHandler(filepath));
             file.Read();
+            ReaGETools.FindDuplicateRszObjectInstances(game, file.RSZ, filepath);
             resourceFinder.CheckInstances(game, file.RSZ, file.ResourceInfoList);
+            conv.Context.Clear();
         });
         GD.Print($"Finished {success + failed} scn out of expected {scnTotal}");
 
@@ -317,12 +319,14 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
             file.Read();
             file.SetupGameObjects();
             resourceFinder.CheckInstances(game, file.RSZ, file.ResourceInfoList);
+            ReaGETools.FindDuplicateRszObjectInstances(game, file.RSZ, filepath);
             // the import process will try and autodetect any pfb propertyIds for GameObjectRef fields
             conv.Game = game;
             var node = new PrefabNode() { Asset = new AssetReference(PathUtils.FullToRelativePath(filepath, conv.AssetConfig)!) };
             await conv.Pfb.Import(file, node);
             conv.Pfb.Clear();
             node.QueueFree();
+            conv.Context.Clear();
         });
         GD.Print($"Finished {success + failed} pfb out of expected {pfbTotal}");
         resourceFinder.ApplyRszPatches();

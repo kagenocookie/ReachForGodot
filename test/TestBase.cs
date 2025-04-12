@@ -58,7 +58,7 @@ public abstract partial class TestBase : TestClass
         }
     }
 
-    protected static TExported? ExportToMemory<TImported, TExported, TResource>(
+    protected static async Task<TExported?> ExportToMemory<TImported, TExported, TResource>(
         RszToolConverter<TImported, TExported, TResource> converter,
         TImported resource,
         int fileVersion
@@ -68,7 +68,7 @@ public abstract partial class TestBase : TestClass
         where TResource : Resource
     {
         var f = converter.CreateFile(new FileHandler(new MemoryStream()) { FileVersion = fileVersion });
-        return converter.ExportSync(resource, f) && f.Write() ? f : null;
+        return await converter.Export(resource, f) && f.Write() ? f : null;
     }
 
     protected static Task ExecuteFullReadTest(

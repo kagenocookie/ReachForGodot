@@ -132,6 +132,11 @@ public static partial class TypeCache
             time.Restart();
 
             var success = TryApplyIl2cppCache(il2CppCache, baseCacheFile);
+            if (!success) {
+                RegenerateIl2cppCache(paths);
+                GD.Print("Regenerated source il2cpp data in " + time.Elapsed);
+                success = TryApplyIl2cppCache(il2CppCache, baseCacheFile);
+            }
             TryApplyIl2cppCache(il2CppCache, paths.EnumOverridesFilename);
             if (success) {
                 GD.Print("Loaded cached il2cpp data in " + time.Elapsed);

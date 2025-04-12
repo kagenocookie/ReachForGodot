@@ -24,9 +24,11 @@ public partial class TestPfb : TestBase
             var node = new PrefabNode() { Asset = new AssetReference(PathUtils.FullToRelativePath(filepath, converter.AssetConfig)!) };
             await converter.Pfb.Import(file, node);
             converter.Pfb.Clear();
+            converter.Context.Clear();
             node.QueueFree();
         }, new() {
+            { SupportedGame.ResidentEvil2, 12 },
             { SupportedGame.ResidentEvil2RT, 12 }
-        }, SupportedGame.ResidentEvil2, SupportedGame.DevilMayCry5, SupportedGame.ResidentEvil3, SupportedGame.ResidentEvil7);
+        });
     }
 }

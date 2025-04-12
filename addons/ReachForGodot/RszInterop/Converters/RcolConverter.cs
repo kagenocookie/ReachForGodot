@@ -9,11 +9,6 @@ using RszTool.Rcol;
 
 public class RcolConverter : RszAssetConverter<RcolRootNode, RcolFile, RcolResource>
 {
-    public RcolConverter()
-    {
-        base.expectDuplicateInstanceReferences = true;
-    }
-
     public override RcolRootNode? GetResourceImportedObject(RcolResource resource) => resource.RcolScene?.Instantiate<RcolRootNode>();
 
     public override RcolResource CreateOrReplaceResourcePlaceholder(AssetReference reference)
@@ -207,7 +202,7 @@ public class RcolConverter : RszAssetConverter<RcolRootNode, RcolFile, RcolResou
             set.Info.requestSetIndex = setIndex++;
             set.Info.status = sourceSet.Status;
             if (sourceSet.Data != null) {
-                set.Instance = ExportREObject(sourceSet.Data, file.RSZ, file.Option, file, false);
+                set.Instance = ExportREObject(sourceSet.Data, file.RSZ, file.Option, file);
                 file.RSZ.AddToObjectTable(set.Instance);
                 set.Info.requestSetUserdataIndex = set.Instance.ObjectTableIndex;
                 set.Info.groupUserdataIndexStart = set.Info.requestSetUserdataIndex + 1;
@@ -245,7 +240,7 @@ public class RcolConverter : RszAssetConverter<RcolRootNode, RcolFile, RcolResou
                         srcShapeData = srcShape.Data;
                     }
                     Debug.Assert(srcShapeData != null);
-                    var instance = ExportREObject(srcShapeData, file.RSZ, file.Option, file, false);
+                    var instance = ExportREObject(srcShapeData, file.RSZ, file.Option, file);
                     file.RSZ.AddToObjectTable(instance);
 
                     if (outShape.Instance == null) {
@@ -259,7 +254,7 @@ public class RcolConverter : RszAssetConverter<RcolRootNode, RcolFile, RcolResou
 
                 // fallback in case of group without request sets
                 if (outShape.Instance == null && srcShape.Data != null) {
-                    outShape.Instance = ExportREObject(srcShape.Data, file.RSZ, file.Option, file, false);
+                    outShape.Instance = ExportREObject(srcShape.Data, file.RSZ, file.Option, file);
                     file.RSZ.AddToObjectTable(outShape.Instance);
                     outShape.Info.UserDataIndex = outShape.Instance.ObjectTableIndex;
                 }
@@ -279,7 +274,7 @@ public class RcolConverter : RszAssetConverter<RcolRootNode, RcolFile, RcolResou
             var group = child.ToRsz();
             file.Groups.Add(group);
             if (child.Data != null) {
-                group.Info.UserData = ExportREObject(child.Data, file.RSZ, file.Option, file, false);
+                group.Info.UserData = ExportREObject(child.Data, file.RSZ, file.Option, file);
                 group.Info.UserDataIndex = group.Info.UserData.Index;
             }
 
@@ -310,7 +305,7 @@ public class RcolConverter : RszAssetConverter<RcolRootNode, RcolFile, RcolResou
             set.Info.requestSetIndex = setIndex++;
             set.Info.status = sourceSet.Status;
             if (sourceSet.Data != null) {
-                set.Instance = ExportREObject(sourceSet.Data, file.RSZ, file.Option, file, false);
+                set.Instance = ExportREObject(sourceSet.Data, file.RSZ, file.Option, file);
                 file.RSZ.AddToObjectTable(set.Instance);
                 set.Info.requestSetUserdataIndex = set.Instance.ObjectTableIndex;
                 set.Info.groupUserdataIndexStart = set.Info.requestSetUserdataIndex + 1;
@@ -325,7 +320,7 @@ public class RcolConverter : RszAssetConverter<RcolRootNode, RcolFile, RcolResou
             foreach (var shape in sourceSet.Group.Shapes) {
                 if (!shape.IsExtraShape) {
                     var shapeData = shape.SetDatas?.GetValueOrDefault(sourceSet.ID) ?? new REObject(rcolRoot.Game, "via.physics.RequestSetColliderUserData", true);
-                    var userdata = ExportREObject(shapeData, file.RSZ, file.Option, file, false);
+                    var userdata = ExportREObject(shapeData, file.RSZ, file.Option, file);
                     file.RSZ.AddToObjectTable(userdata);
                     set.ShapeUserdata.Add(userdata);
                 }
@@ -333,7 +328,7 @@ public class RcolConverter : RszAssetConverter<RcolRootNode, RcolFile, RcolResou
 
             // haven't seen this be actually used yet ¯\_(ツ)_/¯
             if (sourceSet.Group.Data != null) {
-                set.Group.Info.UserData = ExportREObject(sourceSet.Group.Data, file.RSZ, file.Option, file, false);
+                set.Group.Info.UserData = ExportREObject(sourceSet.Group.Data, file.RSZ, file.Option, file);
             }
 
             file.RequestSets.Add(set);

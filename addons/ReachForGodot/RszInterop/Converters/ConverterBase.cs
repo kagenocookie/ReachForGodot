@@ -93,14 +93,6 @@ public abstract class DataConverter<TImported, TExported, TResource> : Converter
     public abstract Task<bool> Import(TExported file, TImported target);
     public abstract Task<bool> Export(TImported source, TExported file);
 
-    public bool ExportSync(TImported source, TExported file)
-    {
-        var task = Export(source, file);
-        // note: might lock up in some situations?
-        task.Wait();
-        return task.Result;
-    }
-
     protected static bool PostExport(bool success, string outputFile)
     {
         if (!success && File.Exists(outputFile) && new FileInfo(outputFile).Length == 0) {

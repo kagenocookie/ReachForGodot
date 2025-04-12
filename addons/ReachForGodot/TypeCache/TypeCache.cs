@@ -209,6 +209,7 @@ public static partial class TypeCache
                         fieldPatch = new EnhancedRszFieldPatch() { Name = field };
                         patch.FieldPatches = (patch.FieldPatches ?? Array.Empty<EnhancedRszFieldPatch>()).Append(fieldPatch).ToArray();
                     }
+                    if (fileFormat == SupportedFileFormats.Unknown) fileFormat = fieldPatch.FileFormat;
                     if (fieldPatch.FileFormat != SupportedFileFormats.Unknown && fieldPatch.FileFormat != fileFormat) {
                         // handle conflicts
                         if (fileFormat is SupportedFileFormats.Texture or SupportedFileFormats.RenderTexture && fieldPatch.FileFormat is SupportedFileFormats.Texture or SupportedFileFormats.RenderTexture) {

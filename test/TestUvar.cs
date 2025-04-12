@@ -26,7 +26,7 @@ public partial class TestUvar : TestBase
             var imported = CreateTempResource(converter, converter.Uvar, filepath);
             (await converter.Uvar.Import(file, imported)).ShouldBe(true);
 
-            using var exported = ExportToMemory(converter.Uvar, imported, file.FileHandler.FileVersion);
+            using var exported = await ExportToMemory(converter.Uvar, imported, file.FileHandler.FileVersion);
             exported.ShouldNotBeNull();
 
             GetAllUvars(exported).Count().ShouldBe(GetAllUvars(file).Count());

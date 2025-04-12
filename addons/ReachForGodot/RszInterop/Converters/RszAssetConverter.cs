@@ -2,6 +2,7 @@ namespace ReaGE;
 
 using Godot;
 using RszTool;
+using RszTool.Common;
 
 public abstract class RszAssetConverter<TImported, TExported, TResource> : RszToolConverter<TImported, TExported, TResource>
     where TImported : GodotObject
@@ -14,8 +15,6 @@ public abstract class RszAssetConverter<TImported, TExported, TResource> : RszTo
     protected readonly Dictionary<Guid, GameObject> gameObjects = new();
 
     protected RszFileOption FileOption => Convert.FileOption;
-
-    protected bool expectDuplicateInstanceReferences = false;
 
     protected REObject CreateOrUpdateObject(RszInstance instance, REObject? obj)
     {
@@ -39,9 +38,50 @@ public abstract class RszAssetConverter<TImported, TExported, TResource> : RszTo
         Debug.Assert(instance.RSZUserData == null, "Attempted to assign userdata to object field");
 
         obj = new REObject(Game, instance.RszClass.name);
-        importedObjects[instance] = obj;
         objectSourceInstances[obj] = instance;
         return ApplyObjectValues(obj, instance);
+    }
+
+    protected UserdataResource FindOrCreateEmbeddedUserdata(RSZFile rszFile)
+    {
+        var instance = rszFile.ObjectList[0];
+        var assetPath = instance.Values[0] as string;
+        string? importPath = null;
+        if (!string.IsNullOrEmpty(assetPath)) {
+            // example:  assets:/LevelDesign/Mission/Mission71/RedSeal/SM/M71_RedSealBundleAppear_SM.user.json
+            if (!assetPath.StartsWith("assets:/") || !assetPath.EndsWith(".user.json")) {
+                ErrorLog("Invalid embedded userdata path");
+            } else {
+                importPath = ProjectSettings.LocalizePath(Config.ImportBasePath + assetPath[("assets:/".Length..^(".json".Length))] + ".tres");
+            }
+        }
+
+        if (importPath != null && (Convert.TryGetImportedResource(importPath, out var imported) || ResourceLoader.Exists(importPath) && Convert.Options.userdata < RszImportType.ForceReimport)) {
+            var importedUser = imported as UserdataResource ?? ResourceLoader.Load<UserdataResource>(importPath);
+            Convert.AddResource(importPath, imported);
+            return importedUser;
+        }
+
+        var userdata = new UserdataResource() { Game = Game };
+        var obj = new REObject(Game, instance.RszClass.name);
+        objectSourceInstances[obj] = instance;
+        ApplyObjectValues(obj, instance);
+        userdata.Data = obj;
+
+        if (importPath != null) {
+            Convert.AddResource(importPath, userdata);
+            if (WritesEnabled) {
+                if (ResourceLoader.Exists(importPath)) {
+                    userdata.TakeOverPath(importPath);
+                } else {
+                    Directory.CreateDirectory(ProjectSettings.GlobalizePath(importPath.GetBaseDir()));
+                    userdata.ResourcePath = importPath;
+                }
+                ResourceSaver.Save(userdata);
+            }
+        }
+
+        return userdata;
     }
 
     protected REObject ApplyObjectValues(REObject obj, RszInstance instance)
@@ -50,21 +90,6 @@ public abstract class RszAssetConverter<TImported, TExported, TResource> : RszTo
         objectSourceInstances[obj] = instance;
         foreach (var field in obj.TypeInfo.Fields) {
             var value = instance.Values[field.FieldIndex];
-            if (!expectDuplicateInstanceReferences && field.RszField.type == RszFieldType.Object) {
-                RszInstance? existing = null;
-                if (field.RszField.array) {
-                    existing = ((List<object>)value).Where(inst => inst is RszInstance index && importedObjects.ContainsKey(index)).FirstOrDefault() as RszInstance;
-                } else {
-                    existing = value as RszInstance;
-                }
-                if (existing != null && importedObjects.TryGetValue(existing, out var imported)) {
-                    GD.PrintErr($"Found duplicate rsz instance reference - likely read error.\nObject {instance} field {field.FieldIndex}/{field.SerializedName}: index {value}");
-                    GD.PrintErr($"Field patch JSON: {{\n\"Name\": \"{field.SerializedName}\",\n\"Type\": \"S32\"\n}}");
-                    obj.SetField(field, imported);
-                    continue;
-                }
-            }
-
             obj.SetField(field, ConvertRszValue(field, value));
         }
 
@@ -134,24 +159,36 @@ public abstract class RszAssetConverter<TImported, TExported, TResource> : RszTo
 
         if (rsz.RSZUserData is RSZUserDataInfo ud1) {
             if (!string.IsNullOrEmpty(ud1.Path)) {
-                var userdataResource = Importer.FindOrImportResource<UserdataResource>(ud1.Path, Config, WritesEnabled);
-                if (userdataResource?.IsEmpty == true) {
-                    userdataResource.Data.ChangeClassname(rsz.RszClass.name);
-                    if (WritesEnabled) ResourceSaver.Save(userdataResource);
+                if (Convert.TryGetImportedResource(ud1.Path, out var res)) {
+                    return res;
                 }
-                return userdataResource ?? new Variant();
+                var userdataResource = Importer.FindOrImportResource<UserdataResource>(ud1.Path, Config, WritesEnabled);
+                if (userdataResource != null) {
+                    if (userdataResource.IsEmpty == true) {
+                        userdataResource.Data.ChangeClassname(rsz.RszClass.name);
+                        if (WritesEnabled) ResourceSaver.Save(userdataResource);
+                    }
+
+                    Convert.AddResource(ud1.Path, userdataResource);
+                    return userdataResource;
+                }
+                return new Variant();
             }
         } else if (rsz.RSZUserData is RSZUserDataInfo_TDB_LE_67 ud2) {
-            ErrorLog("Unsupported embedded userdata instance found");
+            if (ud2.EmbeddedRSZ != null) {
+                return FindOrCreateEmbeddedUserdata(ud2.EmbeddedRSZ);
+            } else {
+                ErrorLog("Embedded userdata is null");
+            }
         }
         Debug.Assert(string.IsNullOrEmpty(rsz.RszClass.name));
         return new Variant();
     }
 
-    protected int ConstructUserdataInstance(UserdataResource userdata, RSZFile rsz, RszFileOption fileOption, BaseRszFile container, bool isRoot = false)
+    protected RszInstance ConstructUserdataInstance(UserdataResource userdata, RSZFile rsz, RszFileOption fileOption, BaseRszFile? container, bool isRoot = false)
     {
         if (exportedInstances.TryGetValue(userdata.Data, out var instance)) {
-            return instance.Index;
+            return instance;
         }
         RszClass rszClass;
         rszClass = userdata.Data.TypeInfo.RszClass;
@@ -161,21 +198,55 @@ public abstract class RszAssetConverter<TImported, TExported, TResource> : RszTo
                 throw new ArgumentNullException("Missing root userdata classname " + userdata.Classname);
             }
         }
-        var path = userdata.Asset!.AssetFilename;
-        RSZUserDataInfo? userDataInfo = rsz.RSZUserDataInfoList.FirstOrDefault(u => (u as RSZUserDataInfo)?.Path == path) as RSZUserDataInfo;
-        if (userDataInfo == null) {
-            var fileUserdataList = (container as PfbFile)?.UserdataInfoList ?? (container as ScnFile)?.UserdataInfoList ?? (container as UserFile)?.UserdataInfoList;
-            fileUserdataList!.Add(new UserdataInfo() { CRC = rszClass.crc, typeId = rszClass.typeId, Path = path });
-            userDataInfo = new RSZUserDataInfo() { typeId = rszClass.typeId, Path = path, instanceId = rsz.InstanceList.Count };
-            rsz.RSZUserDataInfoList.Add(userDataInfo);
+        IRSZUserDataInfo userdataInfo;
+        if (Game.UsesEmbeddedUserdata()) {
+            var path = userdata.Data.GetField(0).AsString();
+            var pathHash = MurMur3HashUtils.GetHash(path);
+            var info = rsz.RSZUserDataInfoList.OfType<RSZUserDataInfo_TDB_LE_67>().FirstOrDefault(u => u.jsonPathHash == pathHash);
+            if (info == null) {
+                info = EmbedUserdata(rsz, fileOption, userdata);
+            }
+            userdataInfo = info;
+        } else {
+            var path = userdata.Asset!.AssetFilename;
+            var info = rsz.RSZUserDataInfoList.OfType<RSZUserDataInfo>().FirstOrDefault(u => u.Path == path);
+            if (info == null) {
+                info = new RSZUserDataInfo() { typeId = rszClass.typeId, Path = path, instanceId = rsz.InstanceList.Count };
+                rsz.RSZUserDataInfoList.Add(info);
+
+                var fileUserdataList = (container as PfbFile)?.UserdataInfoList ?? (container as ScnFile)?.UserdataInfoList ?? (container as UserFile)?.UserdataInfoList;
+                fileUserdataList!.Add(new UserdataInfo() { CRC = rszClass.crc, typeId = rszClass.typeId, Path = path });
+            }
+            userdataInfo = info;
         }
 
-        instance = new RszInstance(rszClass, userDataInfo.instanceId, userDataInfo, []);
+        // instance = new RszInstance(rszClass, rsz.InstanceInfoList.Count, userdataInfo, []);
+        instance = new RszInstance(rszClass, userdataInfo.InstanceId, userdataInfo, []);
         instance.Index = rsz.InstanceList.Count;
         rsz.InstanceInfoList.Add(new InstanceInfo() { ClassName = rszClass.name, CRC = rszClass.crc, typeId = rszClass.typeId });
         rsz.InstanceList.Add(instance);
         exportedInstances[userdata.Data] = instance;
-        return instance.Index;
+        return instance;
+    }
+
+    private RSZUserDataInfo_TDB_LE_67 EmbedUserdata(RSZFile parentRsz, RszFileOption fileOption, UserdataResource userdata)
+    {
+        var rszClass = userdata.Data.TypeInfo.RszClass;
+        var embedrsz = new RSZFile(fileOption, parentRsz.FileHandler);
+        embedrsz.ClearInstances();
+        var embedInstance = ExportREObject(userdata.Data, embedrsz, fileOption, null);
+        embedrsz.AddToObjectTable(embedInstance);
+        var exportUserdata = new RSZUserDataInfo_TDB_LE_67() {
+            instanceId = embedInstance.Index,
+            EmbeddedRSZ = embedrsz,
+            ClassName = userdata.Classname,
+            jsonPathHash = MurMur3HashUtils.GetHash(userdata.Data.GetField(0).AsString()),
+            typeId = rszClass.typeId,
+        };
+        parentRsz.RSZUserDataInfoList.Add(exportUserdata);
+        parentRsz.EmbeddedRSZFileList ??= new();
+        parentRsz.EmbeddedRSZFileList.Add(embedrsz);
+        return exportUserdata;
     }
 
     protected void GenerateResources(IRszContainer root, List<ResourceInfo> resourceInfos)
@@ -207,16 +278,16 @@ public abstract class RszAssetConverter<TImported, TExported, TResource> : RszTo
         root.Resources = resources.ToArray();
     }
 
-    protected void StoreResources(REResource[]? resources, List<ResourceInfo> list)
+    protected void StoreResources(REResource[]? resources, List<ResourceInfo> list, bool isPfb)
     {
         if (resources != null) {
             foreach (var res in resources) {
-                list.Add(new ResourceInfo(FileOption.Version) { Path = res.Asset?.AssetFilename });
+                list.Add(new ResourceInfo(FileOption.Version, isPfb) { Path = res.Asset?.AssetFilename });
             }
         }
     }
 
-    protected RszInstance ExportREObject(REObject target, RSZFile rsz, RszFileOption fileOption, BaseRszFile container, bool isRoot = false)
+    protected RszInstance ExportREObject(REObject target, RSZFile rsz, RszFileOption fileOption, BaseRszFile? container)
     {
         if (exportedInstances.TryGetValue(target, out var instance)) {
             return instance;
@@ -358,7 +429,7 @@ public abstract class RszAssetConverter<TImported, TExported, TResource> : RszTo
         batch.GameObject = gameobj;
 
         if (data is RszTool.Scn.ScnGameObject scnData2) {
-            var guid = scnData2.Info!.Data.guid;
+            var guid = scnData2.Info!.guid;
             gameobj.Uuid = guid.ToString();
             gameObjects[guid] = gameobj;
         }

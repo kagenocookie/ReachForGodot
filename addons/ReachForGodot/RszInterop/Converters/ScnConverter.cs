@@ -33,7 +33,7 @@ public class ScnConverter : RszAssetConverter<SceneFolder, ScnFile, PackedScene>
     {
         source.PreExport();
 
-        StoreResources(source.Resources, file.ResourceInfoList);
+        StoreResources(source.Resources, file.ResourceInfoList, false);
         file.RSZ.ClearInstances();
 
         foreach (var go in source.ChildObjects) {
@@ -124,12 +124,13 @@ public class ScnConverter : RszAssetConverter<SceneFolder, ScnFile, PackedScene>
         return instance;
     }
 
-    private static void AddScnGameObject(int objectId, ScnFile file, GameObject gameObject, int parentId)
+    private void AddScnGameObject(int objectId, ScnFile file, GameObject gameObject, int parentId)
     {
         var pfbIndex = -1;
         if (gameObject is PrefabNode pfbNode && !string.IsNullOrEmpty(pfbNode.Prefab)) {
             pfbIndex = file.PrefabInfoList.FindIndex(pfb => pfb.Path == pfbNode.Prefab);
             if (pfbIndex == -1) {
+                pfbIndex = file.PrefabInfoList.Count;
                 file.PrefabInfoList.Add(new RszTool.Scn.ScnPrefabInfo() {
                     parentId = 0,
                     Path = pfbNode.Prefab,
@@ -137,14 +138,13 @@ public class ScnConverter : RszAssetConverter<SceneFolder, ScnFile, PackedScene>
             }
         }
 
-        var info = new RszTool.StructModel<RszTool.Scn.ScnGameObjectInfo>() {
-            Data = new RszTool.Scn.ScnGameObjectInfo() {
-                objectId = objectId,
-                parentId = parentId,
-                componentCount = (short)gameObject.Components.Count,
-                guid = gameObject.ObjectGuid,
-                prefabId = pfbIndex,
-            }
+        var info = new RszTool.Scn.ScnGameObjectInfo() {
+            objectId = objectId,
+            parentId = parentId,
+            componentCount = (short)gameObject.Components.Count,
+            guid = gameObject.ObjectGuid,
+            prefabId = pfbIndex,
+            ukn = Game.UsesEmbeddedUserdata() ? (short)-1 : (short)0, // DMC5 only?
         };
         file.GameObjectInfoList.Add(info);
 
@@ -360,7 +360,7 @@ public class ScnConverter : RszAssetConverter<SceneFolder, ScnFile, PackedScene>
         subfolder.Tag = folder.Instance!.GetFieldValue("Tag") as string;
         subfolder.Update = (byte)folder.Instance!.GetFieldValue("Update")! != 0;
         subfolder.Draw = (byte)folder.Instance!.GetFieldValue("Draw")! != 0;
-        subfolder.Active = (byte)folder.Instance!.GetFieldValue("Active")! != 0;
+        subfolder.Active = (byte)folder.Instance!.GetFieldValue("Select")! != 0;
         subfolder.Data = folder.Instance!.GetFieldValue("Data") as byte[];
     }
 

@@ -223,6 +223,7 @@ public class AssetConverter
         {
             resolvedResources.Clear();
             pendingBatches.Clear();
+            batches.Clear();
         }
 
         public void QueueBatch(IBatchContext batch)
