@@ -1,10 +1,4 @@
 namespace ReaGE;
-
-using System;
-using System.Threading.Tasks;
-using Godot;
-using RszTool;
-
 public class GodotImportOptions
 {
     public static readonly GodotImportOptions placeholderImport = new(RszImportType.Placeholders, RszImportType.Placeholders,  RszImportType.Placeholders, RszImportType.Placeholders);

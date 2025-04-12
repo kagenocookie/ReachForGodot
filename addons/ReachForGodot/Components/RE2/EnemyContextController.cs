@@ -2,7 +2,6 @@ namespace ReaGE.Components.RE2;
 
 using System.Threading.Tasks;
 using Godot;
-using RszTool;
 
 [GlobalClass, Tool, REComponentClass("app.ropeway.EnemyContextController", SupportedGame.ResidentEvil2RT)]
 public partial class EnemyContextController : REComponent

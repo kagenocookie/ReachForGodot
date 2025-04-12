@@ -2,7 +2,6 @@ namespace ReaGE;
 
 using System.Threading.Tasks;
 using Godot;
-using RszTool;
 
 [GlobalClass, Tool]
 public abstract partial class LightComponentBase : REComponent

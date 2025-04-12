@@ -2,7 +2,6 @@ namespace ReaGE;
 
 using System.Threading.Tasks;
 using Godot;
-using RszTool;
 
 [GlobalClass, Tool, ResourceHolder("fol", SupportedFileFormats.Foliage)]
 public partial class FoliageResource : REResource, IExportableAsset, IImportableAsset

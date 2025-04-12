@@ -1,7 +1,4 @@
 namespace ReaGE;
-
-using System.Diagnostics;
-using System.Threading.Tasks;
 using Godot;
 
 [GlobalClass, Tool, Icon("res://addons/ReachForGodot/icons/prefab.png"), ResourceHolder("pfb", SupportedFileFormats.Prefab)]

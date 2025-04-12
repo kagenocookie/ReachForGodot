@@ -1,10 +1,8 @@
 namespace ReaGE;
 
-using System;
 using System.Threading.Tasks;
 using Godot;
 using Godot.Collections;
-using RszTool;
 
 [GlobalClass, Tool]
 public abstract partial class REComponent : REObject, ISerializationListener

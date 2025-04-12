@@ -2,7 +2,6 @@ namespace ReaGE;
 
 using System.Threading.Tasks;
 using Godot;
-using RszTool;
 
 public abstract class ConverterBase<TImported, TExported, TResource>
     where TImported : GodotObject

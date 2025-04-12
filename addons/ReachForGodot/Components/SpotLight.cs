@@ -2,7 +2,6 @@ namespace ReaGE;
 
 using System.Threading.Tasks;
 using Godot;
-using RszTool;
 
 [GlobalClass, Tool, REComponentClass("via.render.SpotLight")]
 public partial class SpotLight : LightComponentBase

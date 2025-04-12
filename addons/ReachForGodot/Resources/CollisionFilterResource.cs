@@ -1,8 +1,6 @@
 namespace ReaGE;
 
-using System.Threading.Tasks;
 using Godot;
-using RszTool;
 
 [GlobalClass, Tool, ResourceHolder("cfil", SupportedFileFormats.CollisionFilter)]
 public partial class CollisionFilterResource : REResource, IImportableAsset

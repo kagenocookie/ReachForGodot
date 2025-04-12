@@ -1,9 +1,7 @@
 namespace ReaGE;
 
-using System;
 using Godot;
 using Godot.Collections;
-using ReaGE;
 
 [GlobalClass, Tool]
 public partial class ComponentTemplate : ObjectTemplateRoot

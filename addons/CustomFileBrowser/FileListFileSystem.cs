@@ -1,6 +1,3 @@
-using Godot;
-using JetBrains.Annotations;
-
 namespace CustomFileBrowser;
 
 public class FileListFileSystem : ICustomFileSystem

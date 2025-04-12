@@ -3,7 +3,6 @@ namespace ReaGE;
 using Godot;
 using Godot.Collections;
 using static RszTool.UVar.NodeParameter;
-using static RszTool.UVarFile;
 
 [GlobalClass, Tool]
 public partial class UvarExpressionNodeParameter : Resource

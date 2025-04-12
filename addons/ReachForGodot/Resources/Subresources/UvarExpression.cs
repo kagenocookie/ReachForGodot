@@ -1,7 +1,6 @@
 namespace ReaGE;
 
 using Godot;
-using Godot.Collections;
 
 [GlobalClass, Tool]
 public partial class UvarExpression : Resource

@@ -1,6 +1,5 @@
 namespace ReaGE;
 
-using System.Threading.Tasks;
 using Godot;
 
 [GlobalClass, Tool, ResourceHolder("user", SupportedFileFormats.Userdata)]

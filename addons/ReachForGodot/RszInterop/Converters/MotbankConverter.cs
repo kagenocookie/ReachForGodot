@@ -1,7 +1,6 @@
 namespace ReaGE;
 
 using System.Threading.Tasks;
-using Godot;
 using RszTool;
 
 public class MotbankConverter : ResourceConverter<MotionBankResource, MotbankFile>

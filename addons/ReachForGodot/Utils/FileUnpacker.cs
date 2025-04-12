@@ -1,6 +1,5 @@
 namespace ReaGE;
 
-using System;
 using System.Diagnostics;
 using Godot;
 

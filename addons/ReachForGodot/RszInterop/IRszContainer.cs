@@ -1,7 +1,4 @@
 namespace ReaGE;
-
-using System.Threading.Tasks;
-
 public interface IAssetPointer
 {
     public SupportedGame Game { get; set; }

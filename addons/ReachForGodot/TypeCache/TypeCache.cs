@@ -6,7 +6,6 @@ using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Godot;
-using ReaGE.Components.RE2;
 using RszTool;
 
 public static partial class TypeCache
