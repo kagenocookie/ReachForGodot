@@ -50,6 +50,9 @@ public class AssetConverter
     private UvarConverter? _uvar;
     public UvarConverter Uvar => _uvar ??= new UvarConverter() { Convert = this };
 
+    private MotbankConverter? _motbank;
+    public MotbankConverter Motbank => _motbank ??= new MotbankConverter() { Convert = this };
+
     private RszFileOption? _fileOption;
     public RszFileOption FileOption => _fileOption ??= TypeCache.CreateRszFileOptions(AssetConfig);
 
@@ -119,6 +122,8 @@ public class AssetConverter
                     return Mdf2.ImportFromFile(filepath, asset as MaterialDefinitionResource);
                 case SupportedFileFormats.Uvar:
                     return Uvar.ImportFromFile(filepath, asset as UvarResource);
+                case SupportedFileFormats.MotionBank:
+                    return Motbank.ImportFromFile(filepath, asset as MotionBankResource);
                 default:
                     GD.PrintErr("Currently unsupported import for resource type " + reres.ResourceType);
                     return Task.FromResult(false);
@@ -159,6 +164,8 @@ public class AssetConverter
                     return Mdf2.ExportToFile((MaterialDefinitionResource)reres, outputPath);
                 case SupportedFileFormats.Uvar:
                     return Uvar.ExportToFile((UvarResource)reres, outputPath);
+                case SupportedFileFormats.MotionBank:
+                    return Motbank.ExportToFile((MotionBankResource)reres, outputPath);
                 default:
                     GD.PrintErr("Currently unsupported export for resource type " + reres.ResourceType);
                     return Task.FromResult(false);
