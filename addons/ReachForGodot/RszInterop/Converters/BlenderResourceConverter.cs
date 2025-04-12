@@ -94,6 +94,7 @@ public abstract class BlenderResourceConverter<TResource, TAsset> : ConverterBas
         var process = Process.Start(new ProcessStartInfo() {
             UseShellExecute = false,
             FileName = blenderPath,
+            WindowStyle = background ? ProcessWindowStyle.Hidden : ProcessWindowStyle.Normal,
             Arguments = background
                 ? $"\"{EmptyBlend}\" --background --python-expr \"{script}\""
                 : $"\"{EmptyBlend}\" --python-expr \"{script}\"",
