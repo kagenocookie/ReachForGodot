@@ -276,14 +276,14 @@ public class ScnConverter : RszAssetConverter<SceneFolder, ScnFile, PackedScene>
         foreach (var gameObj in gameobjects) {
             Debug.Assert(gameObj.Info != null);
 
-            var childName = gameObj.Name ?? "unnamed";
+            var childName = gameObj.Name ?? "";
             if (dupeDict.TryGetValue(childName, out var index)) {
                 dupeDict[childName] = ++index;
             } else {
                 dupeDict[childName] = index = 0;
             }
 
-            var objBatch = Convert.CreateGameObjectBatch(batch.folder.Path + "/" + childName);
+            var objBatch = Convert.CreateGameObjectBatch(batch.folder.Path + "/" + gameObj.Name + index);
             batch.gameObjects.Add(objBatch);
             PrepareGameObjectBatch(gameObj, objBatch, batch.folder, null, index);
         }
@@ -304,7 +304,7 @@ public class ScnConverter : RszAssetConverter<SceneFolder, ScnFile, PackedScene>
     private void PrepareSubfolderPlaceholders(SceneFolder root, RszTool.Scn.ScnFolderData folder, SceneFolder parent, AssetConverter.FolderBatch batch, int dedupeIndex)
     {
         Debug.Assert(folder.Info != null);
-        var name = folder.Name ?? "UnnamedFolder";
+        var name = !string.IsNullOrEmpty(folder.Name) ? folder.Name : "UnnamedFolder";
         var subfolder = parent.GetFolder(name, dedupeIndex);
         if (folder.Instance?.GetFieldValue("Path") is string scnPath && !string.IsNullOrWhiteSpace(scnPath)) {
             var isNew = false;

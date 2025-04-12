@@ -370,7 +370,7 @@ public abstract class RszAssetConverter<TImported, TExported, TResource> : RszTo
 
     protected void PrepareGameObjectBatch(IGameObject data, AssetConverter.GameObjectBatch batch, Node? parentNode, GameObject? parent = null, int dedupeIndex = 0)
     {
-        var name = data.Name ?? "UnnamedGameObject";
+        var name = !string.IsNullOrEmpty(data.Name) ? data.Name : "UnnamedGameObject";
 
         Debug.Assert(data.Instance != null);
 
@@ -452,13 +452,13 @@ public abstract class RszAssetConverter<TImported, TExported, TResource> : RszTo
 
         var dupeDict = new Dictionary<string, int>();
         foreach (var child in data.GetChildren().OrderBy(o => o.Instance!.Index)) {
-            var childName = child.Name ?? "unnamed";
+            var childName = child.Name ?? "";
             if (dupeDict.TryGetValue(childName, out var index)) {
                 dupeDict[childName] = ++index;
             } else {
                 dupeDict[childName] = index = 0;
             }
-            var childBatch = Convert.CreateGameObjectBatch(gameobj.Path + "/" + childName);
+            var childBatch = Convert.CreateGameObjectBatch(gameobj.Path + "/" + childName + index);
             batch.Children.Add(childBatch);
             PrepareGameObjectBatch(child, childBatch, gameobj, gameobj, index);
         }
