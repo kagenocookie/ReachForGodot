@@ -415,6 +415,10 @@
       {
         "Name": "Draw",
         "Type": "Bool"
+      },
+      {
+        "Name": "Timescale",
+        "Type": "F32"
       }
     ]
   },

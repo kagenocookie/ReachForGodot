@@ -18,6 +18,11 @@
         "Name": "v3",
         "ReplaceName": "Draw",
         "Type": "Bool"
+      },
+      {
+        "Name": "v4",
+        "ReplaceName": "Timescale",
+        "Type": "F32"
       }
     ]
   },
@@ -41,7 +46,7 @@
       },
       {
         "Name": "v4",
-        "ReplaceName": "Active"
+        "ReplaceName": "Select"
       },
       {
         "Name": "v5",

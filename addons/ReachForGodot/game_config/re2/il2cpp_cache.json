@@ -1,5 +1,5 @@
 {
-  "CacheVersion": 1,
+  "CacheVersion": 2,
   "Enums": {
     "JsonParser.Phase": {
       "BackingType": "System.Int32",
@@ -56,6 +56,7 @@
       ]
     },
     "System.AttributeTargets": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -391,6 +392,7 @@
       ]
     },
     "System.Globalization.DateTimeStyles": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -604,6 +606,7 @@
       ]
     },
     "System.NumberStyles": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -677,6 +680,7 @@
       ]
     },
     "System.Reflection.BindingFlags": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -762,6 +766,7 @@
       ]
     },
     "System.Reflection.CallingConventions": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -804,6 +809,7 @@
       ]
     },
     "System.Reflection.FieldAttributes": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -885,6 +891,7 @@
       ]
     },
     "System.Reflection.GenericParameterAttributes": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -922,6 +929,7 @@
       ]
     },
     "System.Reflection.MemberTypes": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -963,6 +971,7 @@
       ]
     },
     "System.Reflection.MethodAttributes": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -1113,6 +1122,7 @@
       ]
     },
     "System.Reflection.ParameterAttributes": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -1521,6 +1531,7 @@
       ]
     },
     "System.Threading.ThreadState": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -1566,6 +1577,7 @@
       ]
     },
     "System.TypeCode": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -2405,6 +2417,7 @@
       ]
     },
     "app.ropeway.AttachGroup": {
+      "IsFlags": true,
       "BackingType": "System.UInt32",
       "Items": [
         {
@@ -2834,6 +2847,7 @@
       ]
     },
     "app.ropeway.CharacterDefine.MarkerReactionType": {
+      "IsFlags": true,
       "BackingType": "System.UInt32",
       "Items": [
         {
@@ -2876,6 +2890,7 @@
       ]
     },
     "app.ropeway.CharacterHandler.SkipId": {
+      "IsFlags": true,
       "BackingType": "System.UInt32",
       "Items": [
         {
@@ -3205,6 +3220,7 @@
       ]
     },
     "app.ropeway.CollisionDefine.AttackAttribute": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -3243,6 +3259,7 @@
       ]
     },
     "app.ropeway.CollisionDefine.AttackEnchantAttribute": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -6125,6 +6142,7 @@
       ]
     },
     "app.ropeway.EnemyDefine.NaviMeshAttribute": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -6841,6 +6859,7 @@
       ]
     },
     "app.ropeway.EnvironmentStandbyManager.PauseLoadReason": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -6932,6 +6951,7 @@
       ]
     },
     "app.ropeway.EquipmentDefine.Bullet": {
+      "IsFlags": true,
       "BackingType": "System.UInt32",
       "Items": [
         {
@@ -6993,6 +7013,7 @@
       ]
     },
     "app.ropeway.EquipmentDefine.DisplayControlTarget": {
+      "IsFlags": true,
       "BackingType": "System.UInt32",
       "Items": [
         {
@@ -7232,6 +7253,7 @@
       ]
     },
     "app.ropeway.EquipmentDefine.WeaponParts": {
+      "IsFlags": true,
       "BackingType": "System.UInt32",
       "Items": [
         {
@@ -9465,6 +9487,7 @@
       ]
     },
     "app.ropeway.FourFootLockBitFlag": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -10602,6 +10625,7 @@
       ]
     },
     "app.ropeway.IkLegTrackController.FootBits": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -10972,6 +10996,7 @@
       ]
     },
     "app.ropeway.InputDefine.Kind": {
+      "IsFlags": true,
       "BackingType": "System.UInt64",
       "Items": [
         {
@@ -12259,6 +12284,7 @@
       ]
     },
     "app.ropeway.NoticeType": {
+      "IsFlags": true,
       "BackingType": "System.UInt32",
       "Items": [
         {
@@ -15320,6 +15346,7 @@
       ]
     },
     "app.ropeway.ReNetData.Type": {
+      "IsFlags": true,
       "BackingType": "System.UInt32",
       "Items": [
         {
@@ -16323,6 +16350,7 @@
       ]
     },
     "app.ropeway.SurvivorAssignManager.CastingReason": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -16551,6 +16579,7 @@
       ]
     },
     "app.ropeway.SurvivorDefine.ActionOrder.ActionCategoryBits": {
+      "IsFlags": true,
       "BackingType": "System.UInt32",
       "Items": [
         {
@@ -16572,6 +16601,7 @@
       ]
     },
     "app.ropeway.SurvivorDefine.ActionOrder.Petient": {
+      "IsFlags": true,
       "BackingType": "System.UInt32",
       "Items": [
         {
@@ -16609,6 +16639,7 @@
       ]
     },
     "app.ropeway.SurvivorDefine.ActionOrder.Precede": {
+      "IsFlags": true,
       "BackingType": "System.UInt32",
       "Items": [
         {
@@ -17043,6 +17074,7 @@
       ]
     },
     "app.ropeway.SurvivorDefine.Parts": {
+      "IsFlags": true,
       "BackingType": "System.UInt32",
       "Items": [
         {
@@ -17151,6 +17183,7 @@
       ]
     },
     "app.ropeway.SurvivorDefine.Restriction.Target": {
+      "IsFlags": true,
       "BackingType": "System.UInt32",
       "Items": [
         {
@@ -17351,6 +17384,7 @@
       "Items": []
     },
     "app.ropeway.SurvivorDefine.SurvivorMotionType": {
+      "IsFlags": true,
       "BackingType": "System.UInt32",
       "Items": [
         {
@@ -17943,6 +17977,7 @@
       ]
     },
     "app.ropeway.ThreeFootLockBitFlag": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -18814,6 +18849,7 @@
       ]
     },
     "app.ropeway.WaitCondition.WaitType": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -29416,6 +29452,7 @@
       ]
     },
     "app.ropeway.enemy.em6200.ColliderSkipID": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -33997,6 +34034,7 @@
       ]
     },
     "app.ropeway.enemy.sensor.EnemySensor.SensorKind": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -35377,6 +35415,7 @@
       ]
     },
     "app.ropeway.fsm.OwnerFsmComponentType": {
+      "IsFlags": true,
       "BackingType": "System.UInt32",
       "Items": [
         {
@@ -35606,6 +35645,7 @@
       ]
     },
     "app.ropeway.fsmv2.ExecutePhase": {
+      "IsFlags": true,
       "BackingType": "System.UInt32",
       "Items": [
         {
@@ -35855,6 +35895,7 @@
       ]
     },
     "app.ropeway.fsmv2.OwnerFsmComponentType": {
+      "IsFlags": true,
       "BackingType": "System.UInt32",
       "Items": [
         {
@@ -35944,6 +35985,7 @@
       ]
     },
     "app.ropeway.fsmv2.SetColliderValidation.LayerType": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -39417,6 +39459,7 @@
       ]
     },
     "app.ropeway.gamemastering.Map.AreaFlag": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -41203,6 +41246,7 @@
       ]
     },
     "app.ropeway.gamemastering.MapParts.ID": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -47056,6 +47100,7 @@
       ]
     },
     "app.ropeway.gamemastering.item.DetailCollisionBase.TypeBits": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -48312,6 +48357,7 @@
       ]
     },
     "app.ropeway.gimmick.action.GimmickCustomJackControl.Transition.CheckTransitionType": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -50314,6 +50360,7 @@
       ]
     },
     "app.ropeway.gimmick.action.TriggerKey.ButtonExclusionMask": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -51087,6 +51134,7 @@
       ]
     },
     "app.ropeway.gimmick.option.ObjectStateSettings.ObjectStateInfo.LayerType": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -53971,6 +54019,7 @@
       ]
     },
     "app.ropeway.gui.GUIMaster.GuiInput.LockDir": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -59410,6 +59459,7 @@
       ]
     },
     "app.ropeway.navigation.Definition.Attr0": {
+      "IsFlags": true,
       "BackingType": "System.UInt32",
       "Items": [
         {
@@ -59435,6 +59485,7 @@
       ]
     },
     "app.ropeway.navigation.Definition.Attr1": {
+      "IsFlags": true,
       "BackingType": "System.UInt32",
       "Items": [
         {
@@ -60162,6 +60213,7 @@
       ]
     },
     "app.ropeway.posteffect.SetPostEffectCustom.UseCameraBitFlags": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -60256,6 +60308,7 @@
       ]
     },
     "app.ropeway.posteffect.SetPostEffectParam.UseParamBitFlags": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -61378,6 +61431,7 @@
       ]
     },
     "app.ropeway.survivor.fsmv2.action.SurvivorOrientAction.Source": {
+      "IsFlags": true,
       "BackingType": "System.UInt32",
       "Items": [
         {
@@ -61568,6 +61622,7 @@
       ]
     },
     "app.ropeway.survivor.fsmv2.condition.SurvivorCheckWeaponFsmCondition.CheckWeaponParam.CheckKind": {
+      "IsFlags": true,
       "BackingType": "System.UInt32",
       "Items": [
         {
@@ -64104,6 +64159,7 @@
       ]
     },
     "app.ropeway.weapon.shell.BallisticSettingBase.Performance": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -64882,6 +64938,7 @@
       ]
     },
     "via.AABB.VoronoiId": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -66614,6 +66671,7 @@
       ]
     },
     "via.FsmCategory": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -66751,6 +66809,7 @@
       ]
     },
     "via.Hide": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -66768,6 +66827,7 @@
       ]
     },
     "via.InterpolationFlag": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -68107,6 +68167,7 @@
       ]
     },
     "via.RenderType": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -68469,6 +68530,7 @@
       ]
     },
     "via.ShareServiceCaps": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -68637,6 +68699,7 @@
       ]
     },
     "via.SystemServiceCaps": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -69253,6 +69316,7 @@
       ]
     },
     "via.attribute.FsmCategoryAttribute.Category": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -69528,6 +69592,7 @@
       ]
     },
     "via.behaviortree.Action.MethodImpls": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -69894,6 +69959,7 @@
       ]
     },
     "via.clr.BindingFlags": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -69979,6 +70045,7 @@
       ]
     },
     "via.clr.ElementType": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -70208,6 +70275,7 @@
       ]
     },
     "via.clr.EvalType": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -70311,6 +70379,7 @@
       ]
     },
     "via.clr.FieldFlag": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -71281,6 +71350,7 @@
       ]
     },
     "via.clr.MemberTypes": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -71553,6 +71623,7 @@
       ]
     },
     "via.clr.MethodFlag": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -71638,6 +71709,7 @@
       ]
     },
     "via.clr.MethodImplFlag": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -71715,6 +71787,7 @@
       ]
     },
     "via.clr.MethodSectType": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -71736,6 +71809,7 @@
       ]
     },
     "via.clr.MethodSemanticsFlag": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -71765,6 +71839,7 @@
       ]
     },
     "via.clr.ParamFlag": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -71836,6 +71911,7 @@
       ]
     },
     "via.clr.SignatureModFlag": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -72771,6 +72847,7 @@
       ]
     },
     "via.detail_qt.qt_cell_link_bit": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -74785,6 +74862,7 @@
       ]
     },
     "via.effect.script.GroupFlag": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -76290,6 +76368,7 @@
       ]
     },
     "via.gui.ControlPoint": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -76700,6 +76779,7 @@
       ]
     },
     "via.gui.LetterAlignment": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -76753,6 +76833,7 @@
       ]
     },
     "via.gui.LightGroupBit": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -77054,6 +77135,7 @@
       ]
     },
     "via.gui.PageAlignment": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -77706,6 +77788,7 @@
       ]
     },
     "via.hid.DeviceCaps": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -78152,6 +78235,7 @@
       ]
     },
     "via.hid.GamePadButton": {
+      "IsFlags": true,
       "BackingType": "System.UInt32",
       "Items": [
         {
@@ -78293,6 +78377,7 @@
       ]
     },
     "via.hid.GamePadMotor": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -79464,6 +79549,7 @@
       ]
     },
     "via.hid.MouseButton": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -79501,6 +79587,7 @@
       ]
     },
     "via.hid.NpadConnectionAttribute": {
+      "IsFlags": true,
       "BackingType": "System.UInt32",
       "Items": [
         {
@@ -79639,6 +79726,7 @@
       ]
     },
     "via.hid.NpadStyle": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -80111,6 +80199,7 @@
       ]
     },
     "via.hid.camera.PlayStationCameraConfigType": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -80177,6 +80266,7 @@
       ]
     },
     "via.hid.camera.PlayStationCameraFormatLevel": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -80921,6 +81011,7 @@
       ]
     },
     "via.memory.DebugMode": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -81580,6 +81671,7 @@
       ]
     },
     "via.motion.IkJacobian.Effector.AttributeType": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -81618,6 +81710,7 @@
       ]
     },
     "via.motion.IkJacobian.Link.AxisType": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -82665,6 +82758,7 @@
       ]
     },
     "via.motion.MotionStateFlag": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -83124,6 +83218,7 @@
       ]
     },
     "via.motion.script.MotionExtraData.ContactStatus": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -84828,6 +84923,7 @@
       ]
     },
     "via.network.bson.ElementId": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -85960,6 +86056,7 @@
       ]
     },
     "via.os.FileOptionalAttr": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -86470,6 +86567,7 @@
       ]
     },
     "via.os.http_client.Security": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -87728,6 +87826,7 @@
       ]
     },
     "via.render.ColorWrite": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -88013,6 +88112,7 @@
       ]
     },
     "via.render.DrawMode": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -88071,6 +88171,7 @@
       ]
     },
     "via.render.DsvFlag": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -88291,6 +88392,7 @@
       ]
     },
     "via.render.GraphicsFeatures": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -88736,6 +88838,7 @@
       ]
     },
     "via.render.LightProbes.LightProbesMerge": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -88903,6 +89006,7 @@
       ]
     },
     "via.render.LightVolumeDecal.ValidFlag": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -89578,6 +89682,7 @@
       ]
     },
     "via.render.RenderOutputID": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -89641,6 +89746,7 @@
       ]
     },
     "via.render.RenderTargetOperator.Op": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -91621,6 +91727,7 @@
       ]
     },
     "via.render.UavDimension": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -91675,6 +91782,7 @@
       ]
     },
     "via.render.VolumeDecal.OpacityFlag": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -92592,6 +92700,7 @@
       ]
     },
     "via.render.layer.ShadowCastStrategy": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
@@ -95438,6 +95547,7 @@
       ]
     },
     "via.wwise.ListenerBitMask": {
+      "IsFlags": true,
       "BackingType": "System.Int32",
       "Items": [
         {
