@@ -22,12 +22,12 @@ Should work for any RE engine game, but I can only test what I own
 
 - Dragon's Dogma 2*
 - Resident Evil 2 RT
-- Devil May Cry 5**
-- Resident Evil 2 non-RT** (untested)
+- Devil May Cry 5
+- Resident Evil 2 non-RT
 - Resident Evil 3 non-RT (untested)
 - Resident Evil 3 RT (untested)
 - Resident Evil 4
-- Resident Evil 7 non-RT** (untested)
+- Resident Evil 7 non-RT (untested)
 - Resident Evil 7 RT (untested)
 - Resident Evil 8 (untested)
 - Monster Hunter Rise (untested)
@@ -37,8 +37,6 @@ Should work for any RE engine game, but I can only test what I own
 For the open world games: The scene structure is a mess thanks to how it's structured, slow and tedious to edit, but functional; could be improved with future game-specific tooling additions once the common core functionality is stabilized.
 
 \* Many of the terrain meshes use MPLY format meshes which are currently unsupported by RE Mesh Editor and will therefore be loaded as placeholders
-
-** Partial support: files with embedded userdata do not fully load and therefore won't export correctly either
 
 ## Prerequisites
 - Godot 4.4+ w/ .NET 8.0
@@ -107,7 +105,6 @@ See [the wiki](https://github.com/kagenocookie/ReachForGodot/wiki) for more deta
 - converted DDS textures aren't directly usable from Godot - waiting for Godot to fix DDS support for incomplete mipmaps; there are open pull requests that will likely fix it
 - some PFBs with `via.GameObjectRef` fields might not export correctly by default, as they rely on some arcane propertyId values that don't seem to have any direct correlation with RSZ or class data; some cases can be automated fairly accurately, but otherwise need to be manually reversed out of existing pfbs and defined in `addons/ReachForGodot/game_configs/{game}/pfb_ref_props.json` files. Feel free to make a PR adding more of these entries as you come across them
 - there tends to be some godot/c++ errors spewed out while it's doing mass importing of assets, most of them are safe to ignore
-- pfb/scn files with embedded userdata aren't supported yet (DMC5 and earlier engine versions), I might extend support for those if there's demand
 - while the addon does support multiple games in one project, if you're going to import a lot of data, consider making separate projects, because Godot doesn't scale nicely with lots of files. The first time saving the project after opening (and re-opening) also takes a hot minute because from what I can tell, Godot rechecks _all_ files in the project just in case any of them changed.
 - some scn and pfb files might not import or export quite correctly, as the RE_RSZ jsons don't always contain full and correct data. These values get updated as they get loaded in but can sometimes be wrong as they're mainly guesses. Any overrides are stored in `addons/ReachForGodot/game_configs/{game}/rsz_patches.json` files, can be modified manually for cases when the automation doesn't do a good job. Feel free to make PRs adding more of these overrides, so that eventually we'll have everything mapped out correctly.
 
