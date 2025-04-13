@@ -47,11 +47,11 @@ For the open world games: The scene structure is a mess thanks to how it's struc
 
 ## Setup
 <details>
-<summary>Setup example images</summary>
+<summary>Setup video</summary>
 
-![editor settings](.gdignore/docs/images/editor_settings.png)
-![project settings](.gdignore/docs/images/project_settings.png)
-![tools menu](.gdignore/docs/images/tools_menu.png)
+(note: if you don't have all the assets unpacked, you can use "Open packed file browser" from the menu at 1:00 instead.)
+
+https://github.com/user-attachments/assets/eb170792-2950-46b8-a020-3f5d710d79e1
 
 </details>
 
