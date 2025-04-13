@@ -58,7 +58,7 @@ https://github.com/user-attachments/assets/eb170792-2950-46b8-a020-3f5d710d79e1
 - Create a fresh godot project anywhere
 - Clone or download the `addons/ReachForGodot` folder into it (the file should stay in the same relative folder; the other files in this project are not needed)
 - Next, you need to Build the project with the hammer icon in the top right; if it's not available, go under menu: Project > Tools > C# > Create C# solution
-    - you may need to modify the default .csproj file for it to compile, adding the following inside a <PropertyGroup> entry (or copying the whole csproj contents from this repository):
+    - you may need to modify the default .csproj file for it to compile, adding the following inside a `<PropertyGroup>` entry (or copying the [csproj file contents from here](https://github.com/kagenocookie/ReachForGodot/tree/master/.gdignore/docs/example.csproj)):
         ```xml
         <Nullable>enable</Nullable>
 	    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -91,9 +91,7 @@ See [the wiki](https://github.com/kagenocookie/ReachForGodot/wiki) for more deta
 - You can specify either just the full path, or also add a label for it to make it easier to identify with a | separator, e.g. `my awesome DD2 mod|D:/mods/dd2/awesome_mod/natives/stm/`
 
 ## Planned and potential features
-- enums
-    - flag enums (autodetect flag enums maybe)
-    - support manually overriding enum settings (IsFlags, custom entries)
+- enums: support manually overriding enum settings (IsFlags, custom entries, friendly names)
 - support editing of as many file formats as possible
 - support serializing objects to JSON - for Content Editor integration and for upgrading changes in case of game updates
 - improvements to the packed file browser
@@ -106,7 +104,7 @@ See [the wiki](https://github.com/kagenocookie/ReachForGodot/wiki) for more deta
 - some PFBs with `via.GameObjectRef` fields might not export correctly by default, as they rely on some arcane propertyId values that don't seem to have any direct correlation with RSZ or class data; some cases can be automated fairly accurately, but otherwise need to be manually reversed out of existing pfbs and defined in `addons/ReachForGodot/game_configs/{game}/pfb_ref_props.json` files. Feel free to make a PR adding more of these entries as you come across them
 - there tends to be some godot/c++ errors spewed out while it's doing mass importing of assets, most of them are safe to ignore
 - while the addon does support multiple games in one project, if you're going to import a lot of data, consider making separate projects, because Godot doesn't scale nicely with lots of files. The first time saving the project after opening (and re-opening) also takes a hot minute because from what I can tell, Godot rechecks _all_ files in the project just in case any of them changed.
-- some scn and pfb files might not import or export quite correctly, as the RE_RSZ jsons don't always contain full and correct data. These values get updated as they get loaded in but can sometimes be wrong as they're mainly guesses. Any overrides are stored in `addons/ReachForGodot/game_configs/{game}/rsz_patches.json` files, can be modified manually for cases when the automation doesn't do a good job. Feel free to make PRs adding more of these overrides, so that eventually we'll have everything mapped out correctly.
+- some files might not import or export quite correctly, as the RE_RSZ jsons don't always contain full and correct data. See [support for new games](https://github.com/kagenocookie/ReachForGodot/wiki/Adding-support-for-new-games) for more details in regards to fixing any glaring issues.
 
 ## Credits
 - [NSACloud](https://github.com/NSACloud) - RE Mesh Editor
