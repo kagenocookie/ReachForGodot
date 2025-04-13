@@ -124,6 +124,8 @@ public class AssetConverter
                     return Uvar.ImportFromFile(filepath, asset as UvarResource);
                 case SupportedFileFormats.MotionBank:
                     return Motbank.ImportFromFile(filepath, asset as MotionBankResource);
+                case SupportedFileFormats.CollisionFilter:
+                    return Cfil.ImportFromFile(filepath, asset as CollisionFilterResource);
                 default:
                     GD.PrintErr("Currently unsupported import for resource type " + reres.ResourceType);
                     return Task.FromResult(false);
