@@ -11,7 +11,9 @@ public static class ReachExtensions
         }
         // ignore the owner node and check the hierarchy directly
         // this is to correctly handle objects added to EditableInstance nodes
-        return node.FindNodeInParents<IRszContainer>(p => p.Asset?.IsEmpty == false);
+        return node.FindNodeInParents<IRszContainer>(p => p.Asset?.IsEmpty == false)
+            ?? node as IRszContainer
+            ?? node.FindNodeInParents<IRszContainer>();
     }
 
     public static Node? FindRszOwnerNode(this Node node)

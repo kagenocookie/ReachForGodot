@@ -38,27 +38,29 @@ public static class ObjectTemplateManager
         return fa.GetFiles().Where(f => f.EndsWith(".tscn")).Select(filename => Path.Combine(folder, filename));
     }
 
-    public static GameObject? InstantiateGameobject(string chosenTemplate, Node parent, Node owner)
+    public static GameObject? InstantiateGameobject(string chosenTemplate, Node? parent, Node? owner)
     {
         var source = ResourceLoader.Load<PackedScene>(chosenTemplate).Instantiate<Node>(PackedScene.GenEditState.Instance);
         GameObject? clone = null;
         if (source is GameObject go) {
             clone = go.Clone();
-            parent.AddUniqueNamedChild(clone);
+            parent?.AddUniqueNamedChild(clone);
         } else if (source is ObjectTemplateRoot template) {
             clone = template.GetTarget<GameObject>();
             template.RemoveChild(clone);
             clone.Owner = null;
-            parent.AddUniqueNamedChild(clone);
+            parent?.AddUniqueNamedChild(clone);
             template.ApplyProperties(clone);
             template.QueueFree();
         }
         if (clone == null) {
-            GD.PrintErr("Invalid game object template - must be a GameObject: " + chosenTemplate);
-            return null;
-        }
+                GD.PrintErr("Invalid game object template - must be a GameObject: " + chosenTemplate);
+                return null;
+            }
 
-        clone.SetRecursiveOwner(owner, clone);
+        if (owner != null) {
+            clone.SetRecursiveOwner(owner, clone);
+        }
         return clone;
     }
 

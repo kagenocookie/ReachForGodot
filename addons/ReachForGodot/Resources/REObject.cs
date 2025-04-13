@@ -227,7 +227,7 @@ public partial class REObject : Resource
                 var array = value.AsGodotArray();
                 for (var i = 0; i < array.Count; i++) {
                     Variant item = array[i];
-                    if (value.VariantType == Variant.Type.Object && value.As<Resource>() is REResource obj2) {
+                    if (item.VariantType == Variant.Type.Object && item.As<Resource>() is REResource obj2) {
                         yield return (key, i, obj2);
                     }
                 }
@@ -295,13 +295,12 @@ public partial class REObject : Resource
                 }
                 __Data[field] = array = new Godot.Collections.Array();
             }
+            if (slashpos == -1) {
+                return (this, field, index);
+            }
             if (index < array.Count && array[index].As<REObject>() is REObject child) {
                 // nested object array field
-                if (slashpos == -1) {
-                    return (this, field, index);
-                } else {
-                    return child.GetFieldByPath(valuePath.Slice(slashpos + 1));
-                }
+                return child.GetFieldByPath(valuePath.Slice(slashpos + 1));
             }
         } else {
             // nested plain field
@@ -320,7 +319,7 @@ public partial class REObject : Resource
                 target.__Data[field] = value;
             } else {
                 var array = target.__Data[field].AsGodotArray();
-                while (array.Count < index) {
+                while (array.Count <= index) {
                     array.Add(new Variant());
                 }
                 array[index] = value;

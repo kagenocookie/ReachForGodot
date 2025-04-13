@@ -138,8 +138,9 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
         ];
         foreach (var i in inspectors) AddInspectorPlugin(i);
 
-        contextMenus = new EditorContextMenuPlugin[1];
+        contextMenus = new EditorContextMenuPlugin[2];
         AddContextMenuPlugin(EditorContextMenuPlugin.ContextMenuSlot.SceneTree, contextMenus[0] = new SceneFolderContextMenuPlugin());
+        AddContextMenuPlugin(EditorContextMenuPlugin.ContextMenuSlot.FilesystemCreate, contextMenus[1] = new ReaGECreateMenuPlugin());
 
         gizmos = [new MeshGizmo()];
         foreach (var gizmo in gizmos) AddNode3DGizmoPlugin(gizmo);

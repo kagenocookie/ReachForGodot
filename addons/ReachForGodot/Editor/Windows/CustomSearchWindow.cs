@@ -197,7 +197,7 @@ public partial class CustomSearchWindow : Window
     private static bool SearchGameObjectsByName(CustomSearchWindow self, Node node, out string? summary)
     {
         if (node is GameObject obj && obj.OriginalName.Contains(self.SearchedQuery!, StringComparison.OrdinalIgnoreCase)) {
-            summary = node.Name;
+            summary = obj.ToString();
             return true;
         }
 

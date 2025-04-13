@@ -1,5 +1,6 @@
 namespace ReaGE;
 
+using System.Threading.Tasks;
 using Godot;
 
 [GlobalClass, Tool, Icon("res://addons/ReachForGodot/icons/gear.png")]
@@ -41,11 +42,11 @@ public partial class GameObject : Node3D, ISerializationListener, ICloneable
     public IEnumerable<GameObject> AllChildren => this.FindChildrenByType<GameObject>().SelectMany(c => new[] { c }.Concat(c.AllChildren));
     public IEnumerable<GameObject> AllChildrenIncludingSelf => new[] { this }.Concat(AllChildren);
 
-    public string Path => this is PrefabNode pfb
+    public string Path => this is PrefabNode pfb && (pfb.Asset?.AssetFilename != null || !string.IsNullOrEmpty(SceneFilePath))
             ? pfb.Asset?.AssetFilename ?? SceneFilePath
             : Owner is SceneFolder scn
                 ? $"{scn.Path}:/{scn.GetPathTo(this)}"
-                : Owner is PrefabNode pfbParent
+                : Owner is PrefabNode pfbParent && !string.IsNullOrEmpty(pfbParent.Asset?.AssetFilename)
                     ? $"{pfbParent.Path}:/{pfbParent.GetPathTo(this)}"
                     : Owner != null ? Owner.GetPathTo(this) : Name;
 
@@ -71,12 +72,12 @@ public partial class GameObject : Node3D, ISerializationListener, ICloneable
         _components?.Clear();
     }
 
-    public void ReSetupComponents()
+    public async Task ReSetupComponents()
     {
         if (_components == null) return;
 
         foreach (var comp in _components) {
-            if (comp != null) comp.Setup(RszImportType.CreateOrReuse);
+            if (comp != null) await comp.Setup(RszImportType.CreateOrReuse);
         }
     }
 
