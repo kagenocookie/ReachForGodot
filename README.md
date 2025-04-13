@@ -49,10 +49,9 @@ For the open world games: The scene structure is a mess thanks to how it's struc
 <details>
 <summary>Setup video</summary>
 
-(note: if you don't have all the assets unpacked, you can use "Open packed file browser" from the menu at 1:00 instead.)
+(note: if you don't have all the assets unpacked, you can use "Open packed file browser" from the menu at 0:55 instead.)
 
-https://github.com/user-attachments/assets/eb170792-2950-46b8-a020-3f5d710d79e1
-
+https://github.com/user-attachments/assets/4ac201b6-41ae-46c4-9772-13dbcc10242a
 </details>
 
 - Create a fresh godot project anywhere
