@@ -24,7 +24,7 @@ public partial class CompositeMeshComponent : REComponent, IVisualREComponent
     /// via.render.CompositeMeshTransformController[]
     /// </summary>
     [REObjectFieldTarget("via.render.CompositeMeshInstanceGroup")]
-    private static readonly REFieldAccessor GroupTransforms = new REFieldAccessor("Transforms").NameOrConditions(f => f.FirstOrDefault(x => x.RszField.array));
+    private static readonly REFieldAccessor GroupTransforms = new REFieldAccessor("Transform").NameOrConditions(f => f.FirstOrDefault(x => x.RszField.array));
 
     [REObjectFieldTarget("via.render.CompositeMeshTransformController")]
     private static readonly REFieldAccessor ControllerPosition = new REFieldAccessor("Position").NameOrConditions(f => f.Where(x => x.RszField.type is RszFieldType.Vec4).FirstOrDefault());

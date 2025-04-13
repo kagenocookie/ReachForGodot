@@ -168,16 +168,11 @@
       {
         "Name": "v3",
         "ReplaceName": "Transform",
-        "OriginalType": "via.render.CompositeMeshTransformController",
         "Type": "Object"
       },
       {
         "Name": "Transform",
-        "Type": "Object"
-      },
-      {
-        "Name": "Materials",
-        "ReplaceName": "Transforms",
+        "OriginalType": "via.render.CompositeMeshTransformController",
         "Type": "Object"
       },
       {

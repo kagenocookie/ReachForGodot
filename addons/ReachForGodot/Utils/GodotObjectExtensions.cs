@@ -214,17 +214,33 @@ public static class GodotObjectExtensions
         }
     }
 
+    private static int mainThreadId = -1;
+    public static int MainThreadId
+         => mainThreadId == -1 ? (mainThreadId = System.Environment.CurrentManagedThreadId) : mainThreadId;
+    public static bool IsMainThread => MainThreadId == System.Environment.CurrentManagedThreadId;
+
     public static async Task<T> AddChildAsync<T>(this Node parent, T child, Node? owner) where T : Node
     {
-        if (child.GetParent() != null) {
-            child.CallDeferred(Node.MethodName.Reparent, parent);
+        // am not yet sure if this even works correctly, but haven't gotten any new "not main thread" errors yet either so idk
+        if (!IsMainThread) {
+            if (child.GetParent() != null) {
+                child.CallDeferred(Node.MethodName.Reparent, parent);
+            } else {
+                parent.CallDeferred(Node.MethodName.AddChild, child);
+            }
+            owner ??= parent;
+            child.SetDeferred(Node.PropertyName.Owner, owner);
+            while (child.Owner != owner && child.GetParent() != parent) {
+                await Task.Delay(1);
+            }
         } else {
-            parent.CallDeferred(Node.MethodName.AddChild, child);
-        }
-        owner ??= parent;
-        child.SetDeferred(Node.PropertyName.Owner, owner);
-        while (child.Owner != owner && child.GetParent() != parent) {
-            await Task.Delay(1);
+            if (child.GetParent() != null) {
+                child.Reparent(parent);
+            } else {
+                parent.AddChild(child);
+            }
+            owner ??= parent;
+            child.Owner = owner;
         }
         return child;
     }
