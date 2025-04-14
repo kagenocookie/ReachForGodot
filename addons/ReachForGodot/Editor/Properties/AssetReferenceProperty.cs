@@ -48,7 +48,6 @@ public partial class AssetReferenceProperty : EditorProperty
     private void DoTextChanged(string newText)
     {
         var text = container.GetNode<LineEdit>("%Input");
-        var updatePathBtn = container.GetNode<Button>("%UpdatePathBtn");
         var fixedText = FilepathRegex().Replace(newText, "");
         if (fixedText != text.Text) {
             text.Text = newText = fixedText;

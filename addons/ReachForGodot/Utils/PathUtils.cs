@@ -455,6 +455,7 @@ public static partial class PathUtils
     public static string? FindSourceFilePath(string? sourceFilePath, AssetConfig config, bool autoExtract = true)
     {
         if (Path.IsPathRooted(sourceFilePath)) {
+            sourceFilePath = AppendFileVersion(sourceFilePath, config);
             return File.Exists(sourceFilePath) ? sourceFilePath : null;
         }
 
@@ -610,8 +611,12 @@ public static partial class PathUtils
         if (string.IsNullOrEmpty(importPath)) return null;
 
         var relativePath = importPath.Replace("res://" + config.AssetDirectory, "");
+        if (relativePath.StartsWith("res://")) relativePath = relativePath.Replace("res://", "");
+        if (relativePath.Contains('/') && relativePath[..relativePath.IndexOf('/')].Contains(config.Paths.ShortName, StringComparison.OrdinalIgnoreCase)) {
+            relativePath = relativePath[(relativePath.IndexOf('/') + 1)..];
+        }
         if (relativePath.StartsWith('/')) relativePath = relativePath.Substring(1);
-        return PathUtils.GetFilepathWithoutVersion(relativePath);
+        return GetFilepathWithoutVersion(relativePath);
     }
 
     public static AssetConfig? GuessAssetConfigFromImportPath(string importPath)

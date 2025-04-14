@@ -68,12 +68,16 @@ public partial class AssetImportInspectorPlugin : EditorInspectorPlugin, ISerial
 
             var fileSources = PathUtils.FindFileSourceFolders(importable.Asset?.AssetFilename, ReachForGodot.GetAssetConfig(importable.Game)).ToArray();
             var sourceOption = sourcesContainer.RequireChildByType<OptionButton>();
+            var openSourceBtn = container.GetNode<Button>("%ShowImportSourceBtn");
             if (fileSources.Length > 1) {
                 sourcesContainer.Visible = true;
                 sourceOption.Clear();
                 foreach (var src in fileSources) {
                     sourceOption.AddItem(src.label);
                 }
+                openSourceBtn.Pressed += () => {
+                    FileSystemUtils.ShowFileInExplorer(PathUtils.FindSourceFilePath(Path.Combine(fileSources[sourceOption.Selected], importable.Asset!.AssetFilename), config));
+                };
             } else {
                 sourcesContainer.Visible = false;
             }

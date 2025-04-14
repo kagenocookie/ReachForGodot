@@ -40,3 +40,8 @@ layout_mode = 2
 item_count = 1
 popup/item_0/text = "Placeholder"
 popup/item_0/id = 0
+
+[node name="ShowImportSourceBtn" type="Button" parent="VBoxContainer/ImportSection/ImportSourceContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Show"
