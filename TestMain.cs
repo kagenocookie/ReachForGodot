@@ -1,5 +1,3 @@
-#define ENABLE_TESTS
-
 namespace ReaGE.Tests;
 
 using Godot;

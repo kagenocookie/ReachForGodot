@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using Godot;
 using RszTool;
 using GC = Godot.Collections;
@@ -7,7 +6,7 @@ using System.Threading.Tasks;
 using ReaGE.DevTools;
 
 
-#if ENABLE_TESTS
+#if REAGE_DEV
 using Chickensoft.GoDotTest;
 #endif
 
@@ -57,7 +56,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
 
     private const string DonateButtonText = "Reach for Godot: Donate on Ko-fi";
     private PopupMenu toolMenu = null!;
-    private PopupMenu toolMenuDev = null!;
+    private PopupMenu? toolMenuDev;
     private AssetBrowser? browser;
 
     static ReachForGodotPlugin()
@@ -65,7 +64,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
         System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(TypeCache).TypeHandle);
     }
 
-#region Backup code
+    #region Backup code
     // TODO: revisit after https://github.com/godotengine/godot/issues/104937 is fixed
     public static bool IsImporting { get; private set; }
     // public static List<string> PostImportReimportfiles = new();
@@ -108,7 +107,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
     //         }
     //     }
     // }
-#endregion
+    #endregion
 
     public override void _EnterTree()
     {
@@ -118,9 +117,13 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
         fs.ResourcesReimporting += OnImporting;
         fs.ResourcesReimported += OnStopImporting;
 
-        toolMenu = new PopupMenu() { Title = "RE ENGINE Assets" };
+#if REAGE_DEV
         toolMenuDev = new PopupMenu() { Title = "Reach for Godot Dev" };
         AddToolSubmenuItem(toolMenuDev.Title, toolMenuDev);
+        toolMenuDev.IdPressed += HandleToolMenu;
+#endif
+
+        toolMenu = new PopupMenu() { Title = "RE ENGINE Assets" };
         AddToolSubmenuItem(toolMenu.Title, toolMenu);
         AddToolMenuItem(DonateButtonText, Callable.From(OpenDonationPage));
 
@@ -153,7 +156,6 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
 
         RefreshToolMenu();
         toolMenu.IdPressed += HandleToolMenu;
-        toolMenuDev.IdPressed += HandleToolMenu;
     }
 
     private void OpenDonationPage()
@@ -175,7 +177,6 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
     private void RefreshToolMenu()
     {
         toolMenu.Clear();
-        toolMenuDev.Clear();
         toolMenu.AddItem($"Open packed file browser...", 99);
         foreach (var game in ReachForGodot.GameList) {
             var pathSetting = ChunkPathSetting(game);
@@ -186,8 +187,9 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
 
         toolMenu.AddItem("Upgrade imported resources", 100);
 
+#if REAGE_DEV
+        toolMenuDev.Clear();
         toolMenuDev.AddItem("Extract file format versions from file lists", 200);
-#if ENABLE_TESTS
         var tests = GoTest.Adapter.CreateProvider().GetTestSuites(System.Reflection.Assembly.GetExecutingAssembly());
         int testId = 1000;
         foreach (var test in tests) {
@@ -208,7 +210,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
         if (id == 100) UpgradeObsoleteResources("mdf2");
         if (id == 200) ExtractFileVersions();
 
-#if ENABLE_TESTS
+#if REAGE_DEV
         if (id >= 1000) {
             var tests = GoTest.Adapter.CreateProvider().GetTestSuites(System.Reflection.Assembly.GetExecutingAssembly());
             var test = tests[(int)(id - 1000)];
@@ -278,7 +280,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
         GD.Print("You may need to reopen any scenes referencing the upgraded resources");
     }
 
-#if ENABLE_TESTS
+#if REAGE_DEV
     private static void RunTests(string filter)
     {
         var env = new TestEnvironment(true, false, false, false, false, filter, Array.Empty<string>());
@@ -462,7 +464,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
     public override void _ExitTree()
     {
         RemoveToolMenuItem(toolMenu.Title);
-        RemoveToolMenuItem(toolMenuDev.Title);
+        if (toolMenuDev != null) RemoveToolMenuItem(toolMenuDev.Title);
         RemoveToolMenuItem(DonateButtonText);
         browser = null;
         foreach (var insp in inspectors) RemoveInspectorPlugin(insp);
@@ -571,6 +573,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
     public void OnBeforeSerialize()
     {
         toolMenu.Clear();
+        toolMenuDev?.Clear();
     }
 
     public void OnAfterDeserialize()

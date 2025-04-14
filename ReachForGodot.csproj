@@ -32,6 +32,7 @@
     <DefaultItemExcludes Condition="'$(Configuration)' == 'ExportRelease'">
       $(DefaultItemExcludes);test/**/*;
     </DefaultItemExcludes>
+    <DefineConstants>$(DefineConstants);REAGE_DEV</DefineConstants>
   </PropertyGroup>
   <ItemGroup Condition="'$(Configuration)' == 'Debug' or '$(Configuration)' == 'ExportDebug'">
     <!-- Test dependencies go here! -->

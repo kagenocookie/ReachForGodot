@@ -28,7 +28,6 @@ public partial class TestCfil : TestBase
 
             exportFile.myGuid.ShouldBe(file.myGuid);
             exportFile.Guids.ShouldBeEquivalentTo(file.Guids);
-            res.Free();
         });
     }
 }
