@@ -1,0 +1,14 @@
+[remap]
+
+importer="image"
+type="Image"
+uid="uid://cjt3db4fg8jyt"
+path="res://.godot/imported/Texture.svg-8e5b1301e820ae78d8b607ad49f434e4.image"
+
+[deps]
+
+source_file="res://addons/ReachForGodot/icons/Texture.svg"
+dest_files=["res://.godot/imported/Texture.svg-8e5b1301e820ae78d8b607ad49f434e4.image"]
+
+[params]
+

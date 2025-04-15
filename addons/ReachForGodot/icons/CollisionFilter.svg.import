@@ -1,0 +1,14 @@
+[remap]
+
+importer="image"
+type="Image"
+uid="uid://dbtgcyoat01ts"
+path="res://.godot/imported/CollisionFilter.svg-9f92d573e996030304fc9a5236edabd3.image"
+
+[deps]
+
+source_file="res://addons/ReachForGodot/icons/CollisionFilter.svg"
+dest_files=["res://.godot/imported/CollisionFilter.svg-9f92d573e996030304fc9a5236edabd3.image"]
+
+[params]
+

@@ -53,6 +53,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
     private EditorNode3DGizmoPlugin[] gizmos = Array.Empty<EditorNode3DGizmoPlugin>();
     private EditorSceneFormatImporter[] sceneImporters = Array.Empty<EditorSceneFormatImporter>();
     private EditorImportPlugin[] importers = Array.Empty<EditorImportPlugin>();
+    private EditorResourcePreviewGenerator[] previewGenerators = null!;
 
     private const string DonateButtonText = "Reach for Godot: Donate on Ko-fi";
     private PopupMenu toolMenu = null!;
@@ -151,7 +152,9 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
         // sceneImporters = new EditorSceneFormatImporter[] { };
         foreach (var i in sceneImporters) AddSceneFormatImporterPlugin(i);
 
-        // importers = new EditorImportPlugin[] { };
+        previewGenerators = new [] { new ReaGEPreviewGenerator() };
+        foreach (var gen in previewGenerators) EditorInterface.Singleton.GetResourcePreviewer().AddPreviewGenerator(gen);
+
         foreach (var i in importers) AddImportPlugin(i);
 
         RefreshToolMenu();
@@ -472,6 +475,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
         foreach (var gizmo in gizmos) RemoveNode3DGizmoPlugin(gizmo);
         foreach (var importer in sceneImporters) RemoveSceneFormatImporterPlugin(importer);
         foreach (var importer in importers) RemoveImportPlugin(importer);
+        foreach (var gen in previewGenerators) EditorInterface.Singleton.GetResourcePreviewer().RemovePreviewGenerator(gen);
 
         var fs = EditorInterface.Singleton.GetResourceFilesystem();
         fs.ResourcesReimporting -= OnImporting;

@@ -1,0 +1,14 @@
+[remap]
+
+importer="image"
+type="Image"
+uid="uid://5433vqiy0xfi"
+path="res://.godot/imported/LightProbe.svg-7c12fa7a728901b075777636aaf50cb2.image"
+
+[deps]
+
+source_file="res://addons/ReachForGodot/icons/LightProbe.svg"
+dest_files=["res://.godot/imported/LightProbe.svg-7c12fa7a728901b075777636aaf50cb2.image"]
+
+[params]
+
