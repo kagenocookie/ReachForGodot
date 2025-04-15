@@ -52,7 +52,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
     private EditorContextMenuPlugin[] contextMenus = null!;
     private EditorNode3DGizmoPlugin[] gizmos = Array.Empty<EditorNode3DGizmoPlugin>();
     private EditorSceneFormatImporter[] sceneImporters = Array.Empty<EditorSceneFormatImporter>();
-    private EditorImportPlugin[] importers = Array.Empty<EditorImportPlugin>();
+    private EditorImportPlugin[] importers = null!;
     private EditorResourcePreviewGenerator[] previewGenerators = null!;
 
     private const string DonateButtonText = "Reach for Godot: Donate on Ko-fi";
@@ -155,6 +155,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
         previewGenerators = new [] { new ReaGEPreviewGenerator() };
         foreach (var gen in previewGenerators) EditorInterface.Singleton.GetResourcePreviewer().AddPreviewGenerator(gen);
 
+        importers = new EditorImportPlugin[] { new GameResourceImporter() };
         foreach (var i in importers) AddImportPlugin(i);
 
         RefreshToolMenu();

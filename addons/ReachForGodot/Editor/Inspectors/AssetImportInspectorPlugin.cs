@@ -66,7 +66,10 @@ public partial class AssetImportInspectorPlugin : EditorInspectorPlugin, ISerial
                 lastSelectedImportTypes[mainImportedType] = modes[(int)index].importMode;
             };
 
-            var fileSources = PathUtils.FindFileSourceFolders(importable.Asset?.AssetFilename, ReachForGodot.GetAssetConfig(importable.Game)).ToArray();
+            var fileSources = importable.Asset.AssetFilename.StartsWith("res://")
+                ? [ new LabelledPathSetting(ProjectSettings.GlobalizePath(importable.Asset.AssetFilename)) ]
+                : PathUtils.FindFileSourceFolders(importable.Asset.AssetFilename, ReachForGodot.GetAssetConfig(importable.Game)).ToArray();
+
             var sourceOption = sourcesContainer.RequireChildByType<OptionButton>();
             var openSourceBtn = container.GetNode<Button>("%ShowImportSourceBtn");
             if (fileSources.Length > 1) {
@@ -76,7 +79,11 @@ public partial class AssetImportInspectorPlugin : EditorInspectorPlugin, ISerial
                     sourceOption.AddItem(src.label);
                 }
                 openSourceBtn.Pressed += () => {
-                    FileSystemUtils.ShowFileInExplorer(PathUtils.FindSourceFilePath(Path.Combine(fileSources[sourceOption.Selected], importable.Asset!.AssetFilename), config));
+                    if (Path.IsPathRooted(fileSources[sourceOption.Selected])) {
+                        FileSystemUtils.ShowFileInExplorer(fileSources[sourceOption.Selected]);
+                    } else {
+                        FileSystemUtils.ShowFileInExplorer(PathUtils.FindSourceFilePath(Path.Combine(fileSources[sourceOption.Selected], importable.Asset!.AssetFilename), config));
+                    }
                 };
             } else {
                 sourcesContainer.Visible = false;
@@ -93,10 +100,10 @@ public partial class AssetImportInspectorPlugin : EditorInspectorPlugin, ISerial
                     source = null;
                 }
 
-                config.Paths.SourcePathOverride = source;
+                config.Paths.SourcePathOverride = !Path.IsPathRooted(source) ? source : PathUtils.GetSourceFileBasePath(source, config);
                 try {
                     var options = modes[importType.GetSelectedId()].importMode;
-                    await DoRebuild(importable, options);
+                    await DoRebuild(importable, options, Path.IsPathRooted(source) ? source : null);
                     if (emptyLabel != null && IsInstanceValid(emptyLabel)) emptyLabel.Visible = importable.IsEmpty;
                 } finally {
                     config.Paths.SourcePathOverride = null;
@@ -112,14 +119,14 @@ public partial class AssetImportInspectorPlugin : EditorInspectorPlugin, ISerial
         pluginSerializationFixer.Register((GodotObject)importable, container);
     }
 
-    private async Task DoRebuild(IImportableAsset root, GodotImportOptions options)
+    private async Task DoRebuild(IImportableAsset root, GodotImportOptions options, string? sourceFilepath)
     {
         var sw = new Stopwatch();
         sw.Start();
 
         var config = ReachForGodot.GetAssetConfig(root.Game);
         var converter = new AssetConverter(config, options);
-        var sourceFilepath = PathUtils.FindSourceFilePath(root.Asset?.AssetFilename, config);
+        sourceFilepath ??= PathUtils.FindSourceFilePath(root.Asset?.AssetFilename, config);
         if (sourceFilepath == null) {
             GD.PrintErr("Source file not found");
             return;

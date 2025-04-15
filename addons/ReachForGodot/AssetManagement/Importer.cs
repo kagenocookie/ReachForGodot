@@ -131,13 +131,21 @@ public class Importer
     private static PackedScene? ImportScene(string sourceFilePath, string outputFilePath, AssetConfig config, GodotImportOptions options)
     {
         var converter = new AssetConverter(config, options);
-        return converter.Scn.CreateOrReplaceResourcePlaceholder(new AssetReference(PathUtils.FullToRelativePath(sourceFilePath, config)!));
+        var relative = PathUtils.FullToRelativePath(sourceFilePath, config);
+        if (relative == null && sourceFilePath.StartsWith(ProjectSettings.GlobalizePath("res://"))) {
+            relative = ProjectSettings.LocalizePath(sourceFilePath);
+        }
+        return converter.Scn.CreateOrReplaceResourcePlaceholder(relative != null ? new AssetReference(relative) : new AssetReference());
     }
 
     private static PackedScene? ImportPrefab(string sourceFilePath, string outputFilePath, AssetConfig config, GodotImportOptions options)
     {
         var converter = new AssetConverter(config, options);
-        return converter.Pfb.CreateOrReplaceResourcePlaceholder(new AssetReference(PathUtils.FullToRelativePath(sourceFilePath, config)!));
+        var relative = PathUtils.FullToRelativePath(sourceFilePath, config);
+        if (relative == null && sourceFilePath.StartsWith(ProjectSettings.GlobalizePath("res://"))) {
+            relative = ProjectSettings.LocalizePath(sourceFilePath);
+        }
+        return converter.Pfb.CreateOrReplaceResourcePlaceholder(relative != null ? new AssetReference(relative) : new AssetReference());
     }
 
     public static void QueueFileRescan()

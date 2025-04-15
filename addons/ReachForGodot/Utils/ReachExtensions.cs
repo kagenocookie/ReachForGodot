@@ -20,4 +20,9 @@ public static class ReachExtensions
     {
         return FindRszOwner(node) as Node;
     }
+
+    public static string StringOrDefault(this string? str, string fallback)
+    {
+        return string.IsNullOrEmpty(str) ? fallback : str;
+    }
 }

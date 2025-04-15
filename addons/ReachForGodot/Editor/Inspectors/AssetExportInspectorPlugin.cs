@@ -47,7 +47,7 @@ public partial class AssetExportInspectorPlugin : EditorInspectorPlugin, ISerial
         var selectedIndex = -1;
         int i = 0;
         exportPath.Clear();
-        var paths = config.Paths.AdditionalPaths;
+        var paths = config.Paths.AdditionalPaths.Append(new LabelledPathSetting(config.ImportBasePath, "Current project")).ToArray();
         foreach (var path in paths) {
             exportPath.AddItem(path.DisplayLabel);
             if (path.path == selected?.path) {
@@ -66,7 +66,17 @@ public partial class AssetExportInspectorPlugin : EditorInspectorPlugin, ISerial
         };
         button.Disabled = selectedIndex == -1;
         button.Pressed += () => {
-            if (res.Asset?.IsEmpty != false) {
+            if (res is ImportedResource importedres) {
+                var outputPath = PathUtils.ResolveExportPath(paths[exportPath.Selected], res.Asset, res.Game)
+                    ?? throw new Exception("Could not resolve export path");
+                Directory.CreateDirectory(outputPath.GetBaseDir());
+                File.Copy(ProjectSettings.GlobalizePath(importedres.ResourcePath), outputPath, true);
+                GD.Print("File copied to " + outputPath);
+                UpdateShowButton();
+                return;
+            }
+
+            if (res?.Asset?.IsEmpty != false) {
                 GD.PrintErr("Asset path not defined");
                 return;
             }

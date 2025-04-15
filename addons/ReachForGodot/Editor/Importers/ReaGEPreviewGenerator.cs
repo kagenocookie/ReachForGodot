@@ -1,14 +1,13 @@
 namespace ReaGE;
 
-using System.Threading.Tasks;
 using Godot;
 using Godot.Collections;
 
-/// <summary>
-/// Proxy placeholder resource for resources that are imported directly from the godot filesystem
-/// </summary>
 public partial class ReaGEPreviewGenerator : EditorResourcePreviewGenerator
 {
+    private static Image? _resourceLinkImage;
+    private static Image ResourceLinkImage => _resourceLinkImage ??= ResourceLoader.Load<Image>("res://addons/ReachForGodot/icons/resource_link.png");
+
     public override bool _CanGenerateSmallPreview() => true;
     public override bool _Handles(string type)
     {
@@ -25,6 +24,12 @@ public partial class ReaGEPreviewGenerator : EditorResourcePreviewGenerator
         if (img == null) return null;
 
         if (img.GetSize() != size) img.Resize(size.X, size.Y, Image.Interpolation.Trilinear);
+        if (resource is ImportedResource) {
+            if (ResourceLinkImage.GetFormat() != img.GetFormat()) {
+                ResourceLinkImage.Convert(img.GetFormat());
+            }
+            img.BlendRect(ResourceLinkImage, new Rect2I(0, 0, 64, 64), new Vector2I(0, 0));
+        }
         return ImageTexture.CreateFromImage(img);
     }
 

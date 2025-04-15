@@ -195,6 +195,10 @@ public class AssetConverter
 
     private static string? ResolveExportPath(string? basePath, string? assetPath, SupportedGame game)
     {
+        if (assetPath?.StartsWith("res://") == true) {
+            assetPath = ProjectSettings.GlobalizePath(assetPath);
+        }
+
         if (!Path.IsPathRooted(assetPath)) {
             if (string.IsNullOrEmpty(assetPath) || string.IsNullOrEmpty(basePath)) {
                 return null;

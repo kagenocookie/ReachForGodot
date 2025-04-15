@@ -50,7 +50,7 @@ public static partial class PathUtils
     {
         if (filepath == null) return null;
         if (filepath.StartsWith("res://") == true) {
-            throw new Exception("Can't normalize godot res:// filepath");
+            return filepath;
         }
         return NormalizeFilePath(GetFilepathWithoutVersion(filepath));
     }
@@ -68,7 +68,7 @@ public static partial class PathUtils
     private static int GetFilenameExtensionStartIndex(ReadOnlySpan<char> filename)
     {
         var dot = filename.LastIndexOf('.');
-        if (dot == -1) return filename.Contains('/') ? -1 : 0;
+        if (dot == -1) return filename.IsEmpty || filename.Contains('/') ? -1 : 0;
         var end = filename.Length;
 
         if (filename[(dot + 1)..].SequenceEqual("x64")) {
@@ -115,6 +115,20 @@ public static partial class PathUtils
     public static string? GetFileExtensionFromFormat(SupportedFileFormats format) => formatToDescriptor.GetValueOrDefault(format)?.extension;
     public static Type GetResourceTypeFromFormat(SupportedFileFormats format) => formatToDescriptor.TryGetValue(format, out var desc) ? desc.resourceType : typeof(REResource);
 
+    private static string[]? _fileVersions;
+    public static string[] GetKnownImportableFileVersions()
+    {
+        if (_fileVersions != null) return _fileVersions;
+        _fileVersions = ReachForGodot.ConfiguredGames
+            .Select(game => GetVersionDict(ReachForGodot.GetAssetConfig(game).Paths))
+            .SelectMany(kv => kv
+                .Where(kv => GetFileFormatFromExtension(kv.Key) != SupportedFileFormats.Unknown)
+                .Select(v => v.Value.ToString()))
+            .ToHashSet()
+            .ToArray();
+
+        return _fileVersions;
+    }
     public static int GetFileFormatVersion(SupportedFileFormats format, GamePaths config)
     {
         if (TryGetFileExtensionVersion(config, GetFileExtensionFromFormat(format)!, out var version)) {
@@ -586,6 +600,10 @@ public static partial class PathUtils
             if (fullSourcePath.StartsWith(extra)) {
                 return extra;
             }
+        }
+
+        if (fullSourcePath.StartsWith(config.ImportBasePath)) {
+            return config.ImportBasePath;
         }
 
         var stmroot = fullSourcePath.IndexOf("/stm/", StringComparison.OrdinalIgnoreCase);

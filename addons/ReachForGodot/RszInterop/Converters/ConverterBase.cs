@@ -58,7 +58,7 @@ public abstract class ConverterBase<TImported, TExported, TResource>
 
     protected PackedScene CreateOrReplaceSceneResource<TRoot>(TRoot root, AssetReference path) where TRoot : Node, new()
     {
-        root.Name = path.BaseFilename.ToString();
+        root.Name = path.BaseFilename.ToString().StringOrDefault("Unnamed");
         var scene = root.ToPackedScene(false);
         var importFilepath = path.GetImportFilepath(Config);
         if (importFilepath == null) return scene;

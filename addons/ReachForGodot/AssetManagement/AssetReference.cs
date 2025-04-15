@@ -45,6 +45,11 @@ public partial class AssetReference : Resource
 
     public void OpenSourceFile(SupportedGame game)
     {
+        if (AssetFilename.StartsWith("res://")) {
+            FileSystemUtils.ShowFileInExplorer(ProjectSettings.GlobalizePath(AssetFilename));
+            return;
+        }
+
         if (game == SupportedGame.Unknown) {
             GD.PrintErr("Unknown game for asset " + AssetFilename);
             return;

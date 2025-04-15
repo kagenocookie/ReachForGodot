@@ -25,6 +25,11 @@ public partial class AssetReferenceProperty : EditorProperty
 
     public override void _EnterTree()
     {
+        if (ReadOnly) {
+            lastAsset = GetAsset();
+            AddChild(new LineEdit() { Text = lastAsset?.AssetFilename ?? string.Empty, Editable = false });
+            return;
+        }
         inspectorScene ??= ResourceLoader.Load<PackedScene>("res://addons/ReachForGodot/Editor/Inspectors/AssetReferenceInspectorPlugin.tscn");
         container = inspectorScene.Instantiate<Control>();
         AddChild(container);
@@ -94,7 +99,7 @@ public partial class AssetReferenceProperty : EditorProperty
     {
         var updatePathBtn = container.GetNode<Button>("%UpdatePathBtn");
         var targetAsset = (GetEditedObject() as IAssetPointer)?.Asset;
-        var currentResourcePath = CurrentResourcePath;
+        var currentResourcePath = PathUtils.GetFilepathWithoutVersion(CurrentResourcePath ?? string.Empty);
         var expectedImportPath = targetAsset?.GetImportFilepath(ReachForGodot.GetAssetConfig(Game))?.GetBaseName();
         updatePathBtn.Visible = !string.IsNullOrEmpty(currentResourcePath) && !currentResourcePath.Equals(expectedImportPath, StringComparison.OrdinalIgnoreCase);
     }

@@ -1,0 +1,14 @@
+[remap]
+
+importer="image"
+type="Image"
+uid="uid://dwj48nxm2qi4"
+path="res://.godot/imported/resource_link.png-acbcaf2a6addbfb052c72b18b136d942.image"
+
+[deps]
+
+source_file="res://addons/ReachForGodot/icons/resource_link.png"
+dest_files=["res://.godot/imported/resource_link.png-acbcaf2a6addbfb052c72b18b136d942.image"]
+
+[params]
+
