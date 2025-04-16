@@ -131,7 +131,9 @@ public static partial class PathUtils
     }
     public static int GetFileFormatVersion(SupportedFileFormats format, GamePaths config)
     {
-        if (TryGetFileExtensionVersion(config, GetFileExtensionFromFormat(format)!, out var version)) {
+        var ext = GetFileExtensionFromFormat(format);
+        if (ext == null) return 0;
+        if (TryGetFileExtensionVersion(config, ext, out var version)) {
             return version;
         }
 
@@ -226,7 +228,6 @@ public static partial class PathUtils
             // seems to be safe to ignore, though we may need to handle them when putting the files back
             relativePath = relativePath.Substring(1);
         }
-        // TODO need special handling for file extensions sbnk, spck because they're ".1.x64" or ".1.x64.en"
 
         // see if there's any files at all with the same file ext in whatever dir the file in question is located in
         var dir = RelativeToFullPath(relativePath, config).GetBaseDir();
@@ -635,6 +636,21 @@ public static partial class PathUtils
         }
         if (relativePath.StartsWith('/')) relativePath = relativePath.Substring(1);
         return GetFilepathWithoutVersion(relativePath);
+    }
+
+    public static string? ImportPathToRelativePath(string importPath)
+    {
+        if (string.IsNullOrEmpty(importPath)) return null;
+
+        var globalizedImport = ProjectSettings.GlobalizePath(importPath);
+        foreach (var config in ReachForGodot.AssetConfigs) {
+            if (globalizedImport.StartsWith(config.ImportBasePath)) {
+                return ImportPathToRelativePath(importPath, config);
+            }
+        }
+
+        GD.PrintErr($"Could not resolve asset expected relative filepath, consider moving it into an AssetConfig's import folder.\nPath: {importPath}");
+        return importPath.Replace("res://", "");
     }
 
     public static AssetConfig? GuessAssetConfigFromImportPath(string importPath)

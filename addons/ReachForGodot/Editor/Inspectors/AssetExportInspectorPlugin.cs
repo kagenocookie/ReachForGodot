@@ -47,7 +47,9 @@ public partial class AssetExportInspectorPlugin : EditorInspectorPlugin, ISerial
         var selectedIndex = -1;
         int i = 0;
         exportPath.Clear();
-        var paths = config.Paths.AdditionalPaths.Append(new LabelledPathSetting(config.ImportBasePath, "Current project")).ToArray();
+        var paths = res is ImportedResource
+            ? config.Paths.AdditionalPaths
+            : config.Paths.AdditionalPaths.Append(new LabelledPathSetting(config.ImportBasePath, "Current project")).ToArray();
         foreach (var path in paths) {
             exportPath.AddItem(path.DisplayLabel);
             if (path.path == selected?.path) {

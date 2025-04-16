@@ -24,6 +24,10 @@ public partial class AssetReference : Resource
         get => _assetFilename;
         set {_assetFilename = PathUtils.NormalizeResourceFilepath(value); EmitChanged();}
     }
+    public string ExportedFilename
+        => _assetFilename.StartsWith("res://")
+            ? PathUtils.ImportPathToRelativePath(_assetFilename) ?? _assetFilename
+            : _assetFilename;
 
     public ReadOnlySpan<char> BaseFilepath => PathUtils.GetFilepathWithoutExtensionOrVersion(_assetFilename);
     public ReadOnlySpan<char> BaseFilename => Path.GetFileName(PathUtils.GetFilepathWithoutExtensionOrVersion(_assetFilename));

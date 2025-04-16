@@ -99,11 +99,12 @@ public partial class AssetImportInspectorPlugin : EditorInspectorPlugin, ISerial
                     }
                     source = null;
                 }
+                var isFullPath = Path.IsPathRooted(source) && File.Exists(source);
 
-                config.Paths.SourcePathOverride = !Path.IsPathRooted(source) ? source : PathUtils.GetSourceFileBasePath(source, config);
+                config.Paths.SourcePathOverride = !isFullPath ? PathUtils.GetSourceFileBasePath(source!, config) : source;
                 try {
                     var options = modes[importType.GetSelectedId()].importMode;
-                    await DoRebuild(importable, options, Path.IsPathRooted(source) ? source : null);
+                    await DoRebuild(importable, options, isFullPath ? source : null);
                     if (emptyLabel != null && IsInstanceValid(emptyLabel)) emptyLabel.Visible = importable.IsEmpty;
                 } finally {
                     config.Paths.SourcePathOverride = null;

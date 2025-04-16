@@ -208,7 +208,7 @@ public abstract class RszAssetConverter<TImported, TExported, TResource> : RszTo
             }
             userdataInfo = info;
         } else {
-            var path = userdata.Asset!.AssetFilename;
+            var path = userdata.Asset!.ExportedFilename;
             var info = rsz.RSZUserDataInfoList.OfType<RSZUserDataInfo>().FirstOrDefault(u => u.Path == path);
             if (info == null) {
                 info = new RSZUserDataInfo() { typeId = rszClass.typeId, Path = path, instanceId = rsz.InstanceList.Count };
@@ -282,7 +282,7 @@ public abstract class RszAssetConverter<TImported, TExported, TResource> : RszTo
     {
         if (resources != null) {
             foreach (var res in resources) {
-                list.Add(new ResourceInfo(FileOption.Version, isPfb) { Path = res.Asset?.AssetFilename });
+                list.Add(new ResourceInfo(FileOption.Version, isPfb) { Path = res.Asset?.ExportedFilename });
             }
         }
     }
@@ -342,9 +342,9 @@ public abstract class RszAssetConverter<TImported, TExported, TResource> : RszTo
                     break;
                 case RszFieldType.Resource:
                     if (field.RszField.array) {
-                        values[i++] = value.AsGodotArray<REResource>().Select(obj => obj?.Asset?.AssetFilename ?? string.Empty).ToArray();
+                        values[i++] = value.AsGodotArray<REResource>().Select(obj => obj?.Asset?.ExportedFilename ?? string.Empty).ToArray();
                     } else {
-                        values[i++] = value.As<REResource?>()?.Asset?.AssetFilename ?? string.Empty;
+                        values[i++] = value.As<REResource?>()?.Asset?.ExportedFilename ?? string.Empty;
                     }
                     break;
                 case RszFieldType.GameObjectRef:

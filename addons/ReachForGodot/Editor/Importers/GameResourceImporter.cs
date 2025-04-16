@@ -25,8 +25,10 @@ public partial class GameResourceImporter : EditorImportPlugin
     {
         var configuredGames = ReachForGodot.ConfiguredGames;
         var format = PathUtils.GetFileFormat(path);
-        if (format.version != -1 && format.format != SupportedFileFormats.Unknown && PathUtils.GetResourceTypeFromFormat(format.format) != typeof(REResource)) {
-            configuredGames = configuredGames.Where(game => PathUtils.GetFileFormatVersion(format.format, ReachForGodot.GetAssetConfig(game).Paths) == format.version);
+        if (format.version != -1 && format.format != SupportedFileFormats.Unknown) {
+            var ext = PathUtils.GetFilepathWithoutVersion(path).GetExtension();
+            configuredGames = configuredGames.Where(game =>
+                PathUtils.GuessFileVersion(ext, format.format, ReachForGodot.GetAssetConfig(game)) == format.version);
         }
         var count = configuredGames.Count();
 
@@ -67,11 +69,16 @@ public partial class GameResourceImporter : EditorImportPlugin
         config.Paths.SourcePathOverride = config.AssetDirectory;
         var importedSavePath = $"{savePath}.{_GetSaveExtension()}";
         var globalSource = ProjectSettings.GlobalizePath(sourceFile);
-        var resourceImportPath = format.format is SupportedFileFormats.Scene or SupportedFileFormats.Prefab ? $"{sourceFile}.tscn" : $"{sourceFile}.tres";
+        var godotExt = format.format is SupportedFileFormats.Scene or SupportedFileFormats.Prefab ? "tscn" : "tres";
+        var resourceImportPath =  $"{sourceFile}.{godotExt}";
+        var altResourcePath =  $"{PathUtils.GetFilepathWithoutVersion(sourceFile)}.{godotExt}";
         var relative = PathUtils.ImportPathToRelativePath(sourceFile, config)
             ?? sourceFile;
 
-        if (ResourceLoader.Exists(resourceImportPath) && ResourceLoader.Load<Resource>(resourceImportPath) is Resource resource) {
+        var resource = ResourceLoader.Exists(resourceImportPath) ? ResourceLoader.Load<Resource>(resourceImportPath)
+            : ResourceLoader.Exists(altResourcePath) ? ResourceLoader.Load<Resource>(altResourcePath)
+            : null;
+        if (resource != null) {
             var isOk = false;
             if (resource is REResource existingResource) {
                 isOk = existingResource.Game == config.Game && (existingResource as IImportableAsset)?.IsEmpty == false;
