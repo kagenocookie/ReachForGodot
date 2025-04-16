@@ -35,7 +35,11 @@ public class RcolConverter : RszAssetConverter<RcolRootNode, RcolFile, RcolResou
                 Name = target.ResourceName ?? Path.GetFileNameWithoutExtension(target.ResourcePath),
                 Game = target.Game,
             };
-            target.ImportedResource = WritesEnabled ? node.SaveAsScene(PathUtils.GetAssetImportPath(node.Asset?.AssetFilename!, SupportedFileFormats.Rcol, Config)!) : node.ToPackedScene(false);
+            if (WritesEnabled) {
+                target.ImportedResource = node.SaveAsScene(PathUtils.GetAssetImportPath(node.Asset?.ExportedFilename, SupportedFileFormats.Rcol, Config)!);
+            } else {
+                target.ImportedResource = node.ToPackedScene(false);
+            }
         }
         var success = await ImportFromFile(node);
         if (success && WritesEnabled && node.Asset != null) {
