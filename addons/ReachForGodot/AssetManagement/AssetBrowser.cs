@@ -93,21 +93,23 @@ public partial class AssetBrowser : Resource
         dlg.FileMode = FileDialog.FileModeEnum.OpenFiles;
         dlg.Game = Assets.Game;
         dlg.FilesSelected += (files) => {
-            var tmpConfig = (AssetConfig)Assets.Duplicate();
-            // create a new temp config with no additional paths to ensure we fetch PAK sourced files here and not get distracted by whatever other modded files we may already have
-            // maybe add more action buttons to the file picker UI so we can specify Get original or Get whichever files or Find in project file system
-            tmpConfig.Paths = new GamePaths(tmpConfig.Game, tmpConfig.Paths.ChunkPath, tmpConfig.Paths.Il2cppPath, tmpConfig.Paths.RszJsonPath, tmpConfig.Paths.FilelistPath, Array.Empty<LabelledPathSetting>(), tmpConfig.Paths.PakFiles);
+            var config = ReachForGodot.GetAssetConfig(dlg.Game);
 
             GD.Print($"Attempting to extract from {files.Length} paths...");
             var relativeFilepaths = files
                 .SelectMany(f => !Path.GetExtension(f.AsSpan()).IsEmpty ? [f] : ((ICustomFileSystem)dlg.FileSystem!).GetRecursiveFileList(f));
             if (dlg.ShouldImportFiles) {
+                var tmpConfig = (AssetConfig)config.Duplicate();
+                // create a new temp config with no additional paths to ensure we fetch PAK sourced files here and not get distracted by whatever other modded files we may already have
+                // maybe add more action buttons to the file picker UI so we can specify Get original or Get whichever files or Find in project file system
+                tmpConfig.Paths = new GamePaths(tmpConfig.Game, tmpConfig.Paths.ChunkPath, tmpConfig.Paths.Il2cppPath, tmpConfig.Paths.RszJsonPath, tmpConfig.Paths.FilelistPath, Array.Empty<LabelledPathSetting>(), tmpConfig.Paths.PakFiles);
+
                 var importList = relativeFilepaths
                     .Select(f => PathUtils.FindSourceFilePath(PathUtils.GetFilepathWithoutNativesFolder(f), tmpConfig)!)
                     .ToArray();
                 _ = ImportAssetsAsync(importList);
             } else {
-                var success = FileUnpacker.TryExtractCustomFileList(relativeFilepaths, Assets);
+                var success = FileUnpacker.TryExtractCustomFileList(relativeFilepaths, config);
                 GD.Print("Extraction finished, success: " + success);
             }
         };
