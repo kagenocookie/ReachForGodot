@@ -66,7 +66,6 @@ public partial class GameResourceImporter : EditorImportPlugin
         var format = PathUtils.GetFileFormat(sourceFile);
         if (format.version == -1) return Error.CantResolve;
 
-        config.Paths.SourcePathOverride = config.AssetDirectory;
         var importedSavePath = $"{savePath}.{_GetSaveExtension()}";
         var globalSource = ProjectSettings.GlobalizePath(sourceFile);
         var godotExt = format.format is SupportedFileFormats.Scene or SupportedFileFormats.Prefab ? "tscn" : "tres";
@@ -98,8 +97,10 @@ public partial class GameResourceImporter : EditorImportPlugin
             }
         }
 
+        config.Paths.SourcePathOverride = config.AssetDirectory;
         resource = Importer.Import(globalSource, config, resourceImportPath, false)!;
         if (resource == null) {
+            config.Paths.SourcePathOverride = null;
             return Error.FileNotFound;
         }
         if (resource is REResource engineResource) {
@@ -141,6 +142,7 @@ public partial class GameResourceImporter : EditorImportPlugin
                 });
             }
         }
+        config.Paths.SourcePathOverride = null;
 
         return Error.Ok;
     }
