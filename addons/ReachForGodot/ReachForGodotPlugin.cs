@@ -485,7 +485,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
 
     private void AddSettings()
     {
-        AddEditorSetting(Setting_ImportMeshMaterials, Variant.Type.Bool, false);
+        AddEditorSetting(Setting_ImportMeshMaterials, Variant.Type.Bool, true);
         AddEditorSetting(Setting_SceneFolderProxyThreshold, Variant.Type.Int, 500, PropertyHint.Range, "50,5000,or_greater,hide_slider");
         AddEditorSetting(Setting_FileUnpackerExe, Variant.Type.String, string.Empty, PropertyHint.GlobalFile, "*.exe");
         foreach (var game in ReachForGodot.GameList) {
