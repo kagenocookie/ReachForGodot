@@ -33,6 +33,10 @@ public partial class PhysicsCollidersComponent : REComponent, IVisualREComponent
     private static readonly REFieldAccessor SphereShape = new REFieldAccessor("Sphere").Type(RszFieldType.Sphere).Conditions(
         list => list.FirstOrDefault(f => f.RszField.type == RszFieldType.Sphere || f.RszField.type == RszFieldType.Vec4));
 
+    [REObjectFieldTarget("via.physics.ContinuousSphereShape")]
+    private static readonly REFieldAccessor ContinuousSphereShape = new REFieldAccessor("Sphere").Type(RszFieldType.Sphere).Conditions(
+        list => list.FirstOrDefault(f => f.RszField.type == RszFieldType.Sphere || f.RszField.type == RszFieldType.Vec4));
+
     [REObjectFieldTarget("via.physics.BoxShape")]
     private static readonly REFieldAccessor BoxShape = new REFieldAccessor("Box").Type(RszFieldType.OBB).Conditions(
         list => list.LastOrDefault(f => f.RszField.type == RszFieldType.OBB),
@@ -41,7 +45,12 @@ public partial class PhysicsCollidersComponent : REComponent, IVisualREComponent
     [REObjectFieldTarget("via.physics.CapsuleShape")]
     private static readonly REFieldAccessor CapsuleShape = new REFieldAccessor("Capsule").Type(RszFieldType.Capsule).Conditions(
         list => list.FirstOrDefault(f => f.RszField.type == RszFieldType.Capsule),
-        list => list.LastOrDefault(f => f.RszField.type == RszFieldType.Data && f.RszField.size == 32));
+        list => list.LastOrDefault(f => f.RszField.type == RszFieldType.Data && f.RszField.size == 48));
+
+    [REObjectFieldTarget("via.physics.ContinuousCapsuleShape")]
+    private static readonly REFieldAccessor ContinuousCapsuleShape = new REFieldAccessor("Capsule").Type(RszFieldType.Capsule).Conditions(
+        list => list.FirstOrDefault(f => f.RszField.type == RszFieldType.Capsule),
+        list => list.LastOrDefault(f => f.RszField.type == RszFieldType.Data && f.RszField.size == 48));
 
     [REObjectFieldTarget("via.physics.AabbShape")]
     private static readonly REFieldAccessor AabbShape = new REFieldAccessor("Aabb").Type(RszFieldType.AABB).Conditions(
@@ -52,6 +61,16 @@ public partial class PhysicsCollidersComponent : REComponent, IVisualREComponent
     private static readonly REFieldAccessor MeshShape = new REFieldAccessor("Mesh")
         .Resource<REResource>()
         .Conditions(list => list.FirstOrDefault(f => f.RszField.type is RszFieldType.Resource or RszFieldType.String));
+
+    [REObjectFieldTarget("via.physics.StaticCompoundShape")]
+    private static readonly REFieldAccessor CompoundShapesList = new REFieldAccessor("Shapes")
+        .OriginalType("via.physics.StaticCompoundShape.Instance")
+        .Conditions(list => list.FirstOrDefault(f => f.RszField.array));
+
+    [REObjectFieldTarget("via.physics.StaticCompoundShape.Instance")]
+    private static readonly REFieldAccessor CompoundShapeInstanceShape = new REFieldAccessor("Shapes")
+        .OriginalType("via.physics.Shape")
+        .Conditions(list => list.FirstOrDefault(f => f.RszField.size == 4));
 
     [ExportToolButton("Generate collider nodes")]
     private Callable GenerateColliderNodesBtn => Callable.From(() => { _ = GenerateColliderNodes(); });
@@ -94,7 +113,7 @@ public partial class PhysicsCollidersComponent : REComponent, IVisualREComponent
             var owner = GameObject.FindRszOwnerNode();
             await GameObject.AddChildAsync(colliderRoot, owner);
         }
-        await UpdateColliders();
+        await ImportColliders();
     }
 
     public override void PreExport()
@@ -111,31 +130,34 @@ public partial class PhysicsCollidersComponent : REComponent, IVisualREComponent
             var sub1 = name.IndexOf('_');
             var sub2 = sub1 == -1 ? -1 : name.IndexOf('_', sub1 + 1);
             if (sub2 == -1) continue;
+
             if (int.TryParse(name.AsSpan()[(sub1 + 1)..sub2], CultureInfo.InvariantCulture, out var id)) {
                 var index = id - 1;
                 REObject shape;
+
+                // TODO handle via.physics.StaticCompoundShape
                 switch (child.Shape) {
                     case BoxShape3D box:
                         if (child.IsInsideTree() ? child.GlobalTransform.Basis.IsEqualApprox(Basis.Identity) : child.Name.ToString().Contains("AabbShape")) {
-                            GetOrAddShape(Game, "via.physics.AabbShape", colliders, index, out shape, ref showWarning);
+                            GetOrAddShape(Game, "via.physics.AabbShape", null, colliders, index, out shape, ref showWarning);
                             RequestSetCollisionShape3D.UpdateSerializedShape(shape, AabbShape, child.Shape, child, RszTool.Rcol.ShapeType.Aabb);
                         } else {
-                            GetOrAddShape(Game, "via.physics.BoxShape", colliders, index, out shape, ref showWarning);
+                            GetOrAddShape(Game, "via.physics.BoxShape", null, colliders, index, out shape, ref showWarning);
                             RequestSetCollisionShape3D.UpdateSerializedShape(shape, BoxShape, child.Shape, child, RszTool.Rcol.ShapeType.Box);
                         }
                         break;
                     case SphereShape3D sphere:
-                        GetOrAddShape(Game, "via.physics.SphereShape", colliders, index, out shape, ref showWarning);
+                        GetOrAddShape(Game, "via.physics.SphereShape", "via.physics.ContinuousSphereShape", colliders, index, out shape, ref showWarning);
                         RequestSetCollisionShape3D.UpdateSerializedShape(shape, SphereShape, child.Shape, child, RszTool.Rcol.ShapeType.Sphere);
                         break;
                     case CapsuleShape3D capsule:
-                        GetOrAddShape(Game, "via.physics.CapsuleShape", colliders, index, out shape, ref showWarning);
+                        GetOrAddShape(Game, "via.physics.CapsuleShape", "via.physics.ContinuousCapsuleShape", colliders, index, out shape, ref showWarning);
                         RequestSetCollisionShape3D.UpdateSerializedShape(shape, CapsuleShape, child.Shape, child, RszTool.Rcol.ShapeType.Capsule);
                         break;
                     case null:
                         break;
                     default:
-                        GD.PrintErr("Unsupported collider type " + child.Shape.GetType() + " at " + Path);
+                        GD.PrintErr("Unsupported export for collider type " + child.Shape.GetType() + " at " + Path);
                         break;
                 }
             }
@@ -145,11 +167,11 @@ public partial class PhysicsCollidersComponent : REComponent, IVisualREComponent
             GD.Print("New colliders were created, some additional fields might be unset - please verify: " + Path);
         }
 
-        static void GetOrAddShape(SupportedGame game, string classname, Godot.Collections.Array<REObject> colliders, int index, out REObject shape, ref bool warning)
+        static void GetOrAddShape(SupportedGame game, string classname, string? classname2, Godot.Collections.Array<REObject> colliders, int index, out REObject shape, ref bool warning)
         {
             var collider = index < colliders.Count ? colliders[index] : null;
             shape = collider == null ? new REObject() : collider.GetField(ColliderShapeField).As<REObject>();
-            if (shape == null || shape.Classname != classname) {
+            if (shape == null || shape.Classname != classname && (classname2 == null || shape.Classname != classname2)) {
                 shape = new REObject(game, classname);
                 shape.ResetProperties();
             }
@@ -169,50 +191,78 @@ public partial class PhysicsCollidersComponent : REComponent, IVisualREComponent
         }
     }
 
-    private Task UpdateColliders()
+    private Task ImportColliders()
     {
         Debug.Assert(colliderRoot != null);
         var colliders = GetField(CollidersList).AsGodotArray<REObject>();
         int n = 1;
         foreach (var coll in colliders) {
-            var shape = coll.GetField(ColliderShapeField.Get(coll)).As<REObject>();
-            var basename = "Collider_" + n++ + "_";
-            var collider = colliderRoot.FindChildWhere<CollisionShape3D>(c => c.Name.ToString().StartsWith(basename));
-            if (collider == null) {
-                collider = new CollisionShape3D() { Name = basename + shape?.ClassBaseName };
-                colliderRoot.AddChild(collider);
-            }
-
-            collider.Owner = colliderRoot.Owner;
+            var basename = "Collider_" + n++;
+            var shape = coll.GetField(ColliderShapeField).As<REObject>();
+            CollisionShape3D? collider = FindOrCreateCollider(colliderRoot, basename, shape);
             if (shape == null) {
                 GD.Print("Missing collider shape " + n + " at " + Path);
                 continue;
             }
-            // TODO: DD2 has a BoundingAabb for all shapes in v0 - do we need to modify that too? RE2RT has an s32 instead.
 
-            switch (shape.Classname) {
-                case "via.physics.MeshShape":
-                    // var mcol = shape.GetField(MeshShape).As<REResource>();
-                    // collider.Shape = new ConvexPolygonShape3D();
-                    break;
-                case "via.physics.SphereShape":
-                    RequestSetCollisionShape3D.ApplyShape(collider, RszTool.Rcol.ShapeType.Sphere, shape.GetField(SphereShape));
-                    break;
-                case "via.physics.BoxShape":
-                    RequestSetCollisionShape3D.ApplyShape(collider, RszTool.Rcol.ShapeType.Box, shape.GetField(BoxShape));
-                    break;
-                case "via.physics.CapsuleShape":
-                    RequestSetCollisionShape3D.ApplyShape(collider, RszTool.Rcol.ShapeType.Capsule, shape.GetField(CapsuleShape));
-                    break;
-                case "via.physics.AabbShape":
-                    RequestSetCollisionShape3D.ApplyShape(collider, RszTool.Rcol.ShapeType.Aabb, shape.GetField(AabbShape));
-                    break;
-                default:
-                    GD.Print("Unhandled collider shape " + shape.Classname);
-                    break;
-            }
+            ImportColliderShape(shape, collider);
         }
         return Task.CompletedTask;
+    }
+
+    private CollisionShape3D FindOrCreateCollider(StaticBody3D parent, string basename, REObject? shape)
+    {
+        var collider = parent.FindChildWhere<CollisionShape3D>(c => c.Name.ToString().StartsWith(basename));
+        if (collider == null) {
+            collider = new CollisionShape3D() { Name = basename + "_" + shape?.ClassBaseName };
+            parent.AddChild(collider);
+        }
+
+        collider.Owner = parent.Owner;
+        if (shape != null) {
+            ImportColliderShape(shape, collider);
+        }
+        return collider;
+    }
+
+    private void ImportColliderShape(REObject shape, CollisionShape3D collider)
+    {
+        switch (shape.Classname) {
+            case "via.physics.MeshShape":
+                // var mcol = shape.GetField(MeshShape).As<REResource>();
+                // collider.Shape = new ConvexPolygonShape3D();
+                break;
+            case "via.physics.SphereShape":
+            case "via.physics.ContinuousSphereShape":
+                RequestSetCollisionShape3D.ApplyShape(collider, RszTool.Rcol.ShapeType.Sphere, shape.GetField(SphereShape));
+                break;
+            case "via.physics.BoxShape":
+                RequestSetCollisionShape3D.ApplyShape(collider, RszTool.Rcol.ShapeType.Box, shape.GetField(BoxShape));
+                break;
+            case "via.physics.CapsuleShape":
+            case "via.physics.ContinuousCapsuleShape":
+                RequestSetCollisionShape3D.ApplyShape(collider, RszTool.Rcol.ShapeType.Capsule, shape.GetField(CapsuleShape));
+                break;
+            case "via.physics.AabbShape":
+                RequestSetCollisionShape3D.ApplyShape(collider, RszTool.Rcol.ShapeType.Aabb, shape.GetField(AabbShape));
+                break;
+            case "via.physics.StaticCompoundShape":
+                var shapes = shape.GetField(CompoundShapesList).AsGodotArray<REObject>();
+                var subcount = 0;
+                var basename = collider.Name;
+                foreach (var subshape in shapes.Select(sh => sh.GetField(CompoundShapeInstanceShape).As<REObject>())) {
+                    if (subcount > 0) {
+                        var newcoll = FindOrCreateCollider(collider.GetParent<StaticBody3D>(), basename + "_" + subcount++, subshape);
+                    } else {
+                        collider.Name = basename + "_" + subcount++;
+                        ImportColliderShape(subshape, collider);
+                    }
+                }
+                break;
+            default:
+                GD.Print("Unhandled collider shape " + shape.Classname);
+                break;
+        }
     }
 
     public Aabb GetBounds()
