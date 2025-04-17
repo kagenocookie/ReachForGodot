@@ -357,17 +357,21 @@
       },
       {
         "Name": "v3",
+        "ReplaceName": "FilterInfo"
+      },
+      {
+        "Name": "FilterInfo",
         "OriginalType": "via.physics.FilterInfo",
         "Type": "Object"
       },
       {
         "Name": "v4",
+        "ReplaceName": "Userdata",
         "Type": "Object"
       },
       {
         "Name": "v5",
-        "ReplaceName": "CollisionFilter",
-        "Type": "Resource"
+        "ReplaceName": "CollisionFilter"
       },
       {
         "Name": "v6",
@@ -377,6 +381,11 @@
         "FileFormat": "CollisionFilter",
         "Name": "CollisionFilter",
         "Type": "Resource"
+      },
+      {
+        "Name": "Userdata",
+        "Type": "Object",
+        "OriginalType": "via.physics.UserData"
       }
     ]
   },

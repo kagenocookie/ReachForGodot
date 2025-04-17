@@ -12,6 +12,7 @@ public partial class PhysicsCollidersComponent : REComponent, IVisualREComponent
     private static readonly StringName CollidersNodeName = "__Colliders";
     private static readonly REFieldAccessor CollidersList = new REFieldAccessor("Colliders")
         .Type(RszFieldType.Object)
+        .OriginalType("via.physics.Collider")
         .Conditions((list) => list.FirstOrDefault(f => f.RszField.array && f.RszField.type is not (RszFieldType.String or RszFieldType.Resource))
     );
 
