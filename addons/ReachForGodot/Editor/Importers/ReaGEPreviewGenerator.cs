@@ -19,7 +19,8 @@ public partial class ReaGEPreviewGenerator : EditorResourcePreviewGenerator
         if (resource is not REResource res) return null;
 
         var img = TryLoadImage("res://addons/ReachForGodot/icons/" + res.ResourceType + ".svg", size)
-            ?? TryLoadImage("res://addons/ReachForGodot/icons/" + res.ResourceType + ".png", size);
+            ?? TryLoadImage("res://addons/ReachForGodot/icons/" + res.ResourceType + ".png", size)
+            ?? TryLoadImage("res://addons/ReachForGodot/icons/Generic.svg", size);
 
         if (img == null) return null;
 
