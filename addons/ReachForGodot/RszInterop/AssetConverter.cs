@@ -154,7 +154,7 @@ public class AssetConverter
 
     public Task<bool> ExportAsset(IExportableAsset resource, string exportBasepath)
     {
-        var outputPath = ResolveExportPath(exportBasepath, resource.Asset!.AssetFilename, resource.Game);
+        var outputPath = PathUtils.ResolveExportPath(exportBasepath, resource.Asset!.AssetFilename, resource.Game);
         if (string.IsNullOrEmpty(outputPath)) {
             GD.PrintErr("Invalid empty export filepath");
             return Task.FromResult(false);
@@ -207,24 +207,6 @@ public class AssetConverter
         }
 
         return success;
-    }
-
-    private static string? ResolveExportPath(string? basePath, string? assetPath, SupportedGame game)
-    {
-        if (assetPath?.StartsWith("res://") == true) {
-            assetPath = ProjectSettings.GlobalizePath(assetPath);
-        }
-
-        if (!Path.IsPathRooted(assetPath)) {
-            if (string.IsNullOrEmpty(assetPath) || string.IsNullOrEmpty(basePath)) {
-                return null;
-            }
-
-            assetPath = Path.Combine(basePath, assetPath);
-        }
-
-        var config = ReachForGodot.GetAssetConfig(game) ?? throw new Exception("Missing config for game " + game);
-        return PathUtils.AppendFileVersion(assetPath, config);
     }
 
     public void StartBatch(IBatchContext batch) => Context.StartBatch(batch);

@@ -252,6 +252,7 @@ public static class RszTypeConverter
                 RszFieldType.RangeI => ConvertArray(variant.AsGodotArray<Vector2I>(), static v => v.ToRszRange()),
                 RszFieldType.OBB => ConvertArray(variant.AsGodotArray<OrientedBoundingBox>(), v => v.ToRsz()),
                 RszFieldType.Guid or RszFieldType.Uri => ConvertArray(variant.AsStringArray(), v => Guid.TryParse(v, out var guid) ? guid : Guid.Empty),
+                RszFieldType.AABB => ConvertArray(variant.AsGodotArray<Aabb>(), v => v.ToRsz()),
                 _ => throw new Exception("Unhandled rsz export array type " + valueType),
             };
         }

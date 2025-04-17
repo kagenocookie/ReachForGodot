@@ -39,7 +39,7 @@ public class ScnConverter : RszAssetConverter<SceneFolder, ScnFile, PackedScene>
         foreach (var go in source.ChildObjects) {
             if (go is PrefabNode pfbGo) {
                 file.PrefabInfoList.Add(new RszTool.Scn.ScnPrefabInfo() {
-                    Path = pfbGo.Asset?.AssetFilename ?? pfbGo.Prefab,
+                    Path = pfbGo.Asset?.ExportedFilename ?? pfbGo.Prefab,
                     parentId = 0,
                 });
             }
@@ -83,7 +83,7 @@ public class ScnConverter : RszAssetConverter<SceneFolder, ScnFile, PackedScene>
             parentId = parentFolderId,
         } });
 
-        var linkedSceneFilepath = folder.IsIndependentFolder && folder.Asset != null ? folder.Asset.AssetFilename : string.Empty;
+        var linkedSceneFilepath = folder.IsIndependentFolder && folder.Asset != null ? folder.Asset.ExportedFilename : string.Empty;
         folderInstance.Values[0] = !string.IsNullOrEmpty(folder.OriginalName) ? folder.OriginalName : folder.Name.ToString();
         folderInstance.Values[1] = folder.Tag ?? string.Empty;
         folderInstance.Values[2] = folder.Update ? (byte)1 : (byte)0;
@@ -291,10 +291,11 @@ public class ScnConverter : RszAssetConverter<SceneFolder, ScnFile, PackedScene>
 
         foreach (var folder in folders) {
             Debug.Assert(folder.Info != null);
-            if (dupeDict.TryGetValue(batch.folder.Name, out var index)) {
-                dupeDict[batch.folder.Name] = ++index;
+            var folderName = folder.Name ?? "";
+            if (dupeDict.TryGetValue(folderName, out var index)) {
+                dupeDict[folderName] = ++index;
             } else {
-                dupeDict[batch.folder.Name] = index = 0;
+                dupeDict[folderName] = index = 0;
             }
 
             PrepareSubfolderPlaceholders(batch.folder, folder, batch.folder, batch, index);

@@ -507,6 +507,18 @@ public static partial class PathUtils
 
     public static string? ResolveExportPath(string? basePath, string? assetPath, SupportedGame game)
     {
+        if (assetPath?.StartsWith("res://") == true) {
+            if (basePath == null || basePath.StartsWith(ProjectSettings.LocalizePath("res://"))) {
+                assetPath = ProjectSettings.GlobalizePath(assetPath);
+            } else {
+                var assetBase = PathUtils.GuessAssetConfigFromImportPath(assetPath);
+                assetPath = ProjectSettings.GlobalizePath(assetPath);
+                if (assetBase != null) {
+                    assetPath = assetPath.Replace(assetBase.ImportBasePath, "");
+                }
+            }
+        }
+
         if (!Path.IsPathRooted(assetPath)) {
             if (string.IsNullOrEmpty(assetPath) || string.IsNullOrEmpty(basePath)) {
                 return null;
@@ -516,7 +528,7 @@ public static partial class PathUtils
         }
 
         var config = ReachForGodot.GetAssetConfig(game) ?? throw new Exception("Missing config for game " + game);
-        return AppendFileVersion(assetPath, config);
+        return PathUtils.AppendFileVersion(assetPath, config);
     }
 
     /// <summary>

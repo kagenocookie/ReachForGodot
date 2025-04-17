@@ -39,7 +39,7 @@ public interface IRszContainer : IExportableAsset
 
     public bool EnsureContainsResource(REResource resource)
     {
-        var path = resource.Asset?.AssetFilename;
+        var path = resource.Asset?.ExportedFilename;
         if (string.IsNullOrEmpty(path)) return false;
         if (Resources == null) {
             Resources = new[] { resource };

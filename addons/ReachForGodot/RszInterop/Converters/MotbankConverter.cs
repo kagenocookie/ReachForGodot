@@ -30,7 +30,7 @@ public class MotbankConverter : ResourceConverter<MotionBankResource, MotbankFil
 
     public override Task<bool> Export(MotionBankResource source, MotbankFile file)
     {
-        file.UvarPath = source.Uvar?.Asset?.AssetFilename ?? string.Empty;
+        file.UvarPath = source.Uvar?.Asset?.ExportedFilename ?? string.Empty;
         if (source.MotionList == null) {
             file.motlistCount = 0;
             file.MotlistItems.Clear();
@@ -44,7 +44,7 @@ public class MotbankConverter : ResourceConverter<MotionBankResource, MotbankFil
             exportItem.BankID = importItem.BankID;
             exportItem.BankType = importItem.BankType;
             exportItem.BankTypeMaskBits = importItem.BankTypeMaskBits;
-            exportItem.Path = importItem.Motion?.Asset?.AssetFilename ?? string.Empty;
+            exportItem.Path = importItem.Motion?.Asset?.ExportedFilename ?? string.Empty;
             file.MotlistItems.Add(exportItem);
         }
 

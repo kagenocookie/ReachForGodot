@@ -81,7 +81,7 @@ public class MdfConverter : RszAssetConverter<MaterialDefinitionResource, MdfFil
             var mat = source.Materials[i];
             var matData = new MdfFile.MatData(new MdfFile.MatHeader(FileOption.Version) {
                 matName = mat.MaterialName,
-                mmtrPath = mat.MasterMaterial?.Asset?.AssetFilename,
+                mmtrPath = mat.MasterMaterial?.Asset?.ExportedFilename,
                 paramCount = mat.Params?.Values?.Count ?? 0,
                 texCount = mat.Textures?.Count ?? 0,
                 alphaFlags = (
@@ -100,7 +100,7 @@ public class MdfConverter : RszAssetConverter<MaterialDefinitionResource, MdfFil
                         texType = name,
                         asciiHash = MurMur3HashUtils.GetAsciiHash(name),
                         hash = MurMur3HashUtils.GetHash(name),
-                        texPath = tex.Asset?.AssetFilename
+                        texPath = tex.Asset?.ExportedFilename
                     });
                 }
             }
@@ -135,7 +135,7 @@ public class MdfConverter : RszAssetConverter<MaterialDefinitionResource, MdfFil
                         continue;
                     }
 
-                    matData.GpbfHeaders.Add((new MdfFile.GpbfHeader(name), new MdfFile.GpbfHeader() { name = resource.Asset.AssetFilename, asciiHash = 1 }));
+                    matData.GpbfHeaders.Add((new MdfFile.GpbfHeader(name), new MdfFile.GpbfHeader() { name = resource.Asset.ExportedFilename, asciiHash = 1 }));
                 }
             }
         }
