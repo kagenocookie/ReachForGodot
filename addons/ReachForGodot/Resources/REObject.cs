@@ -418,6 +418,13 @@ public partial class REObject : Resource
     protected ClassInfo SetupTypeInfo(string cls)
     {
         cache = TypeCache.GetClassInfo(Game, cls);
+        UpdateFieldTypes();
+        return cache;
+    }
+
+    public void UpdateFieldTypes()
+    {
+        cache ??= TypeCache.GetClassInfo(Game, Classname!);
         foreach (var (key, value) in __Data) {
             if (value.VariantType == Variant.Type.Object) {
                 if (cache.FieldsByName.TryGetValue(key, out var field) && field.RszField.type is RszFieldType.Object or RszFieldType.UserData && value.As<Resource>() is Resource res) {
@@ -443,7 +450,6 @@ public partial class REObject : Resource
                 }
             }
         }
-        return cache;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

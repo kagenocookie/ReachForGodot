@@ -40,6 +40,7 @@ public partial class REObjectClassProperty : HBoxContainer
         if (res == null) {
             return;
         }
+        res.UpdateFieldTypes();
 
         string? baseclass = field?.RszField.original_type;
         if (string.IsNullOrEmpty(baseclass)) {
