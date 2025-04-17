@@ -32,6 +32,8 @@ public enum SupportedFileFormats
     MotionList,
     MotionBank,
     CollisionFilter,
+    CollisionDefinition,
+    CollisionMaterial,
     Foliage,
     MasterMaterial,
     GpuBuffer,

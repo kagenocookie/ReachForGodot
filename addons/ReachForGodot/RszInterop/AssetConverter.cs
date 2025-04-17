@@ -32,8 +32,14 @@ public class AssetConverter
     private UserdataConverter? _user;
     public UserdataConverter User => _user ??= new UserdataConverter() { Convert = this };
 
+    private CdefConverter? _cdef;
+    public CdefConverter Cdef => _cdef ??= new CdefConverter() { Convert = this };
+
     private CfilConverter? _cfil;
     public CfilConverter Cfil => _cfil ??= new CfilConverter() { Convert = this };
+
+    private CmatConverter? _cmat;
+    public CmatConverter Cmat => _cmat ??= new CmatConverter() { Convert = this };
 
     private FoliageConverter? _fol;
     public FoliageConverter Fol => _fol ??= new FoliageConverter() { Convert = this };
@@ -124,8 +130,12 @@ public class AssetConverter
                     return Uvar.ImportFromFile(filepath, asset as UvarResource);
                 case SupportedFileFormats.MotionBank:
                     return Motbank.ImportFromFile(filepath, asset as MotionBankResource);
+                case SupportedFileFormats.CollisionDefinition:
+                    return Cdef.ImportFromFile(filepath, asset as CollisionDefinitionResource);
                 case SupportedFileFormats.CollisionFilter:
                     return Cfil.ImportFromFile(filepath, asset as CollisionFilterResource);
+                case SupportedFileFormats.CollisionMaterial:
+                    return Cmat.ImportFromFile(filepath, asset as CollisionMaterialResource);
                 default:
                     GD.PrintErr("Currently unsupported import for resource type " + reres.ResourceType);
                     return Task.FromResult(false);
@@ -168,6 +178,12 @@ public class AssetConverter
                     return Uvar.ExportToFile((UvarResource)reres, outputPath);
                 case SupportedFileFormats.MotionBank:
                     return Motbank.ExportToFile((MotionBankResource)reres, outputPath);
+                case SupportedFileFormats.CollisionDefinition:
+                    return Cdef.ExportToFile((CollisionDefinitionResource)reres, outputPath);
+                case SupportedFileFormats.CollisionFilter:
+                    return Cfil.ExportToFile((CollisionFilterResource)reres, outputPath);
+                case SupportedFileFormats.CollisionMaterial:
+                    return Cmat.ExportToFile((CollisionMaterialResource)reres, outputPath);
                 default:
                     GD.PrintErr("Currently unsupported export for resource type " + reres.ResourceType);
                     return Task.FromResult(false);

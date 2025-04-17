@@ -12,15 +12,15 @@ public class CfilConverter : ResourceConverter<CollisionFilterResource, CfilFile
 
     public override Task<bool> Import(CfilFile file, CollisionFilterResource target)
     {
-        target.Uuid = file.myGuid.ToString();
-        target.CollisionGuids = file.Guids?.Select(g => g.ToString()).ToArray();
+        target.Layer = file.LayerGuid.ToString();
+        target.MaskGuids = file.Masks ?? Array.Empty<Guid>();
         return Task.FromResult(true);
     }
 
     public override Task<bool> Export(CollisionFilterResource source, CfilFile file)
     {
-        file.myGuid = Guid.TryParse(source.Uuid, out var guid) ? guid : Guid.Empty;
-        file.Guids = source.CollisionGuids?.Select(g => Guid.TryParse(g, out var guid) ? guid : Guid.Empty).ToArray() ?? Array.Empty<Guid>();
+        file.LayerGuid = Guid.TryParse(source.Layer, out var guid) ? guid : Guid.Empty;
+        file.Masks = source.MaskGuids;
         return Task.FromResult(true);
     }
 }

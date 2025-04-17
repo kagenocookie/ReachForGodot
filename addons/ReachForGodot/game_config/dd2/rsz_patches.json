@@ -2375,6 +2375,7 @@
       },
       {
         "Name": "v2",
+        "ReplaceName": "Shapes",
         "Type": "Object"
       }
     ]
@@ -7977,6 +7978,33 @@
         "FileFormat": "Uvar",
         "Name": "UserVariableResource",
         "Type": "Resource"
+      }
+    ]
+  },
+  "via.physics.ContinuousSphereShape": {
+    "FieldPatches": [
+      {
+        "Name": "v2",
+        "ReplaceName": "Sphere",
+        "Type": "Sphere"
+      }
+    ]
+  },
+  "via.physics.ContinuousCapsuleShape": {
+    "FieldPatches": [
+      {
+        "Name": "v2",
+        "ReplaceName": "Capsule",
+        "Type": "Capsule"
+      }
+    ]
+  },
+  "via.physics.StaticCompoundShape.Instance": {
+    "FieldPatches": [
+      {
+        "Name": "v0_Shape",
+        "ReplaceName": "Shapes",
+        "Type": "Object"
       }
     ]
   }

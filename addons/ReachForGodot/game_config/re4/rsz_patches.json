@@ -1493,6 +1493,7 @@
       },
       {
         "Name": "v1",
+        "ReplaceName": "Shapes",
         "Type": "Object"
       }
     ]
@@ -7682,6 +7683,24 @@
         "Name": "v4",
         "ReplaceName": "Scale",
         "Type": "Vec4"
+      }
+    ]
+  },
+  "via.physics.ContinuousSphereShape": {
+    "FieldPatches": [
+      {
+        "Name": "v1",
+        "ReplaceName": "Sphere",
+        "Type": "Sphere"
+      }
+    ]
+  },
+  "via.physics.ContinuousCapsuleShape": {
+    "FieldPatches": [
+      {
+        "Name": "v1",
+        "ReplaceName": "Capsule",
+        "Type": "Capsule"
       }
     ]
   }

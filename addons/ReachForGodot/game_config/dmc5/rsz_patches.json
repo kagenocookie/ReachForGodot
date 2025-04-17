@@ -2664,6 +2664,11 @@
       {
         "Name": "v0",
         "Type": "S32"
+      },
+      {
+        "Name": "v1",
+        "ReplaceName": "Sphere",
+        "Type": "Sphere"
       }
     ]
   },
@@ -3178,6 +3183,7 @@
     "FieldPatches": [
       {
         "Name": "v0",
+        "ReplaceName": "Shapes",
         "Type": "Object"
       },
       {
@@ -3198,6 +3204,7 @@
       },
       {
         "Name": "v1",
+        "ReplaceName": "Shapes",
         "Type": "Object"
       }
     ]
@@ -5874,6 +5881,15 @@
       {
         "Name": "v36",
         "Type": "S32"
+      }
+    ]
+  },
+  "via.physics.ContinuousCapsuleShape": {
+    "FieldPatches": [
+      {
+        "Name": "v1",
+        "ReplaceName": "Capsule",
+        "Type": "Capsule"
       }
     ]
   }

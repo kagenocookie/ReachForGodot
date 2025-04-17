@@ -22,7 +22,9 @@ public class TextureConverter : BlenderResourceConverter<TextureResource, Textur
 
         return ExecuteBlenderScript(script, true).ContinueWith((t) => {
             if (t.IsCompletedSuccessfully && File.Exists(convertedFilepath)) {
-                File.Move(convertedFilepath, outputPath, true);
+                if (convertedFilepath != outputPath) {
+                    File.Move(convertedFilepath, outputPath, true);
+                }
                 QueueFileRescan();
                 return true;
             } else {
