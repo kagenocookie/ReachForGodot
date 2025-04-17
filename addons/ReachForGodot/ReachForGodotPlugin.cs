@@ -528,10 +528,10 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
             var paks = settings.GetSetting(PakFilepathSetting(game)).AsStringArray();
 
             if (string.IsNullOrWhiteSpace(pathChunks)) {
-                ReachForGodot.SetConfiguration(game, null, null);
+                ReachForGodot.SetPaths(game, null);
             } else {
                 pathChunks = PathUtils.NormalizeSourceFolderPath(pathChunks);
-                ReachForGodot.SetConfiguration(game, null, new GamePaths(game, pathChunks, pathIl2cpp, pathRsz, pathFilelist, additional, paks));
+                ReachForGodot.SetPaths(game, new GamePaths(game, pathChunks, pathIl2cpp, pathRsz, pathFilelist, additional, paks));
             }
         }
         RefreshToolMenu();

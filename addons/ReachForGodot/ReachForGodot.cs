@@ -8,7 +8,8 @@ public static class ReachForGodot
     public static readonly SupportedGame[] GameList = Enum.GetValues<SupportedGame>().Where(n => n != SupportedGame.Unknown).ToArray();
     public static readonly string[] GameNames = Enum.GetNames<SupportedGame>().Where(n => n != SupportedGame.Unknown.ToString()).ToArray();
 
-    private static readonly Dictionary<SupportedGame, (AssetConfig? config, GamePaths? paths)> assetConfigData = new();
+    private static readonly Dictionary<SupportedGame, AssetConfig> assetConfigs = new();
+    private static readonly Dictionary<SupportedGame, GamePaths> gamePaths = new();
     public static IEnumerable<AssetConfig> AssetConfigs => GetAllAssetConfigs();
     public static IEnumerable<SupportedGame> ConfiguredGames => AssetConfigs.Where(c => c.IsValid).Select(c => c.Game);
     private static bool didFullConfigScan = false;
@@ -33,60 +34,51 @@ public static class ReachForGodot
 
     public static GamePaths? GetPaths(SupportedGame game)
     {
-        if (assetConfigData.Count == 0) ReloadSettings();
-        return assetConfigData.TryGetValue(game, out var data) ? data.paths : null;
+        if (assetConfigs.Count == 0) ReloadSettings();
+        return gamePaths.GetValueOrDefault(game);
     }
 
     public static AssetConfig GetAssetConfig(SupportedGame game)
     {
-        if (assetConfigData.Count == 0) ReloadSettings();
+        if (assetConfigs.Count == 0) ReloadSettings();
         if (game == SupportedGame.Unknown) return AssetConfig.DefaultInstance;
 
-        if (assetConfigData.TryGetValue(game, out var data)) {
-            if (data.config != null) {
-                return data.config;
-            }
+        if (assetConfigs.TryGetValue(game, out var config)) {
+            return config;
         }
+        var paths = gamePaths.GetValueOrDefault(game);
 
-        var gameShortname = data.paths?.ShortName ?? GamePaths.GetShortName(game);
+        var gameShortname = paths?.ShortName ?? GamePaths.GetShortName(game);
         var defaultResourcePath = "res://asset_config_" + gameShortname + ".tres";
         if (ResourceLoader.Exists(defaultResourcePath)) {
-            data.config = ResourceLoader.Load<AssetConfig>(defaultResourcePath);
+            config = ResourceLoader.Load<AssetConfig>(defaultResourcePath);
+            if (config != null) {
+                return assetConfigs[game] = config;
+            }
         } else {
             foreach (var cfg in FindAllAssetConfigs()) {
                 if (cfg.Game == game) {
-                    data.config = cfg;
-                    break;
+                    return assetConfigs[game] = cfg;
                 }
             }
         }
 
-        if (data.config == null) {
-            data.config = new AssetConfig() { ResourcePath = defaultResourcePath, AssetDirectory = gameShortname + "/", Game = game };
-            ResourceSaver.Save(data.config);
-        }
+        config = new AssetConfig() { ResourcePath = defaultResourcePath, AssetDirectory = gameShortname + "/", Game = game };
+        ResourceSaver.Save(config);
+        assetConfigs[game] = config;
 
-        if (data.paths != null) {
-            assetConfigData[game] = data;
-        }
-
-        return data.config;
+        return config;
     }
 
-    private static IEnumerable<AssetConfig> GetAllAssetConfigs()
+    private static Dictionary<SupportedGame, AssetConfig>.ValueCollection GetAllAssetConfigs()
     {
         if (!didFullConfigScan) {
             didFullConfigScan = true;
             foreach (var newcfg in FindAllAssetConfigs()) {
-                if (!assetConfigData.TryGetValue(newcfg.Game, out var existing)) {
-                    existing = (newcfg, null);
-                } else {
-                    existing = (newcfg, existing.paths);
-                }
-                assetConfigData[newcfg.Game] = existing;
+                assetConfigs[newcfg.Game] = newcfg;
             }
         }
-        return assetConfigData.Values.Where(ac => ac.config != null).Select(ac => ac.config!);
+        return assetConfigs.Values;
     }
 
     private static IEnumerable<AssetConfig> FindAllAssetConfigs()
@@ -111,12 +103,14 @@ public static class ReachForGodot
         ReachForGodotPlugin.ReloadSettings();
     }
 
-    public static void SetConfiguration(SupportedGame game, AssetConfig? config, GamePaths? paths)
+    public static void SetPaths(SupportedGame game, GamePaths? paths)
     {
         if (paths == null) {
-            assetConfigData.Remove(game);
+            if (gamePaths.Remove(game)) {
+                GD.Print("Removing path config for " + game);
+            }
         } else {
-            assetConfigData[game] = (config, paths!);
+            gamePaths[game] = paths;
         }
     }
 #else
