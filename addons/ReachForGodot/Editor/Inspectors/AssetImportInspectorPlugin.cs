@@ -101,7 +101,9 @@ public partial class AssetImportInspectorPlugin : EditorInspectorPlugin, ISerial
                 }
                 var isFullPath = Path.IsPathRooted(source) && File.Exists(source);
 
-                config.Paths.SourcePathOverride = !isFullPath ? PathUtils.GetSourceFileBasePath(source!, config) : source;
+                if (!isFullPath) {
+                    config.Paths.SourcePathOverride = PathUtils.GetSourceFileBasePath(source!, config);
+                }
                 try {
                     var options = modes[importType.GetSelectedId()].importMode;
                     await DoRebuild(importable, options, isFullPath ? source : null);

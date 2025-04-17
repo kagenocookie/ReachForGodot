@@ -20,11 +20,11 @@ public partial class ObjectTemplateRoot : Node
             var nodePath = root.GetPathTo(gameobj);
             foreach (var comp in gameobj.Components) {
                 foreach (var (path, obj) in comp.GetEngineObjectsWithPaths()) {
-                    if (obj is REResource res && !string.IsNullOrEmpty(res.Asset?.AssetFilename)) {
+                    if (obj is REResource res && !string.IsNullOrEmpty(res.Asset?.ExportedFilename)) {
                         if (!ResourceProperties.TryGetValue(nodePath, out var nodeDict)) {
                             ResourceProperties[nodePath] = nodeDict = new();
                         }
-                        nodeDict[comp.Classname + ":" + path] = res.Asset.AssetFilename;
+                        nodeDict[comp.Classname + ":" + path] = res.Asset.ExportedFilename;
                     }
                 }
                 comp.ClearResources();
