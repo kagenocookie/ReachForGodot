@@ -60,7 +60,7 @@ public partial class RequestSetCollisionShape3D : CollisionShape3D
                 obb.extent.X = Mathf.Max(0.001f, Mathf.Abs(obb.extent.X));
                 obb.extent.Y = Mathf.Max(0.001f, Mathf.Abs(obb.extent.Y));
                 obb.extent.Z = Mathf.Max(0.001f, Mathf.Abs(obb.extent.Z));
-                collider.Shape = new BoxShape3D() { Size = obb.extent };
+                collider.Shape = new BoxShape3D() { Size = obb.extent * 2 };
                 collider.Transform = (Transform3D)obb.coord;
                 break;
             case RszTool.Rcol.ShapeType.Capsule:
@@ -133,7 +133,7 @@ public partial class RequestSetCollisionShape3D : CollisionShape3D
             case RszTool.Rcol.ShapeType.Box:
                 var obb = obj.GetField(accessor).As<OrientedBoundingBox>();
                 var box2 = (BoxShape3D)godotShape;
-                obb.extent = box2.Size;
+                obb.extent = box2.Size / 2;
                 obb.coord = new Projection(node.Transform);
                 obj.SetField(accessor, obb);
                 break;
