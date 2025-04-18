@@ -51,29 +51,45 @@ public sealed class ResourceFieldFinder : IDisposable
     private void FindResourceFields(List<ResourceInfo> resourceList, RszInstance instance, ResourceList resourceFields)
     {
         for (var i = 0; i < instance.RszClass.fields.Length; i++) {
-            var f = instance.RszClass.fields[i];
-            if (f.type is RszFieldType.String or RszFieldType.Resource) {
-                var value = instance.Values[i] as string;
-                if (string.IsNullOrEmpty(value)) continue;
-                var cls = instance.RszClass.name;
-
-                var seemsLikePath = value != null && value.Contains('/') && value.Contains('.');
-                if (!seemsLikePath) {
-                    resourceFields.nonResources.Add((cls, f.name));
-                    continue;
+            var field = instance.RszClass.fields[i];
+            if (field.type is RszFieldType.String or RszFieldType.Resource) {
+                if (instance.Values[i] is string value) {
+                    CheckStringForResource(resourceList, instance, resourceFields, field, value);
+                } else if (instance.Values[i] is List<object> list && list.FirstOrDefault() is string) {
+                    foreach (var element in list.OfType<string>()) {
+                        if (CheckStringForResource(resourceList, instance, resourceFields, field, element)) {
+                            break;
+                        }
+                    }
                 }
-
-                var isInResourceList = string.IsNullOrEmpty(value) ? (bool?)null : resourceList.Any(r => r.Path?.Equals(value, StringComparison.OrdinalIgnoreCase) == true);
-
-                // better not store these as resources, so we don't require all folders and subfolders to always be imported
-                if (cls == "via.Folder" || cls == "via.Prefab") continue;
-
-                var ext = Path.GetExtension(value);
-                if (string.IsNullOrEmpty(ext)) ext = string.Empty;
-                else ext = ext.Substring(1);
-                resourceFields.resources.Add((cls, f.name, ext, isInResourceList));
             }
         }
+    }
+
+    private static bool CheckStringForResource(List<ResourceInfo> resourceList, RszInstance instance, ResourceList resourceFields, RszField field, string? value)
+    {
+        if (string.IsNullOrEmpty(value)) return false;
+        var cls = instance.RszClass.name;
+        if (resourceFields.nonResources.Contains((cls, field.name))) return false;
+
+        var seemsLikePath = value != null && value.Contains('/') && value.Contains('.');
+        if (!seemsLikePath) {
+            // there are fields that can seem like paths (e.g. developer comments) but turns out aren't, this will cross those out
+            resourceFields.nonResources.Add((cls, field.name));
+            return false;
+        }
+
+        var isInResourceList = string.IsNullOrEmpty(value) ? (bool?)null : resourceList.Any(r => r.Path?.Equals(value, StringComparison.OrdinalIgnoreCase) == true);
+
+        // better not store these as resources, so we don't require all folders and subfolders to always be imported
+        if (cls == "via.Folder" || cls == "via.Prefab") return false;
+
+        var ext = Path.GetExtension(value);
+        if (string.IsNullOrEmpty(ext)) ext = string.Empty;
+        else ext = ext.Substring(1);
+        resourceFields.resources.Add((cls, field.name, ext, isInResourceList));
+
+        return true;
     }
 
     public void Dispose()

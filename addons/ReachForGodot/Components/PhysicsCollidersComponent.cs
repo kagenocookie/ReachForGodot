@@ -60,7 +60,7 @@ public partial class PhysicsCollidersComponent : REComponent, IVisualREComponent
 
     [REObjectFieldTarget("via.physics.MeshShape")]
     private static readonly REFieldAccessor MeshShape = new REFieldAccessor("Mesh")
-        .Resource<REResource>()
+        .Resource<MeshResource>()
         .Conditions(list => list.FirstOrDefault(f => f.RszField.type is RszFieldType.Resource or RszFieldType.String));
 
     [REObjectFieldTarget("via.physics.StaticCompoundShape")]
