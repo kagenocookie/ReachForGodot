@@ -101,7 +101,6 @@ public class PfbConverter : RszAssetConverter<PrefabNode, PfbFile, PackedScene>
                             continue;
                         }
 
-                        // if (propInfo.AddToObjectTable && dataInst.ObjectTableIndex == -1) {
                         if (dataInst.ObjectTableIndex == -1) {
                             pfb.RSZ!.AddToObjectTable(dataInst);
                         }

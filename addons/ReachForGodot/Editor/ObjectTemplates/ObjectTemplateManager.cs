@@ -81,6 +81,7 @@ public static class ObjectTemplateManager
             target.AddComponent(new REComponentPlaceholder());
             return;
         }
+        template.ApplyProperties(newComponent, ".");
 
         target.AddOrReplaceComponent(newComponent.Classname, newComponent);
         target.NotifyPropertyListChanged();

@@ -38,7 +38,8 @@ public partial class SceneFolderContextMenuPlugin : EditorContextMenuPlugin
 
         var menu = new PopupMenu();
         if (targetNode is GameObject gameObject) {
-            menu.AddItem("Create new...", 10000);
+            menu.AddItem("Create new GameObject template...", 10000);
+            menu.AddItem("Create new component templates", 10001);
         }
 
         var templates = ObjectTemplateManager.GetAvailableTemplates(ObjectTemplateType.GameObject, game);
@@ -66,18 +67,38 @@ public partial class SceneFolderContextMenuPlugin : EditorContextMenuPlugin
             root.AddChild(dupe);
             var name = dupe.Name;
             dupe.Owner = root;
-            var baseOutputPath = ObjectTemplateManager.GetUserTemplateFolder(ObjectTemplateType.GameObject, game) + name;
-            int idx = 0;
-            var outputPath = baseOutputPath + ".tscn";
-            while (ResourceLoader.Exists(outputPath)) {
-                idx++;
-                outputPath = baseOutputPath + idx + ".tscn";
-            }
+            var outputPath = CreateNewOutputPath(ObjectTemplateManager.GetUserTemplateFolder(ObjectTemplateType.GameObject, game) + name, ".tscn");
             root.Name = name;
-            root.ExtractResources();
+            root.ExtractGameObjectResources();
             var scene = root.SaveAsScene(outputPath);
             EditorInterface.Singleton.SelectFile(scene.ResourcePath);
+        } else if (id == 10001 && parent is GameObject owner) {
+            foreach (var comp in owner.Components) {
+                if (comp.Classname == "via.Transform") continue;
+
+                var root = new ComponentTemplate();
+                root.Component = (REComponent)comp.DeepClone();
+                root.ExtractSelfResources(".");
+                var name = owner.OriginalName + "_" + comp.ClassBaseName;
+                root.Name = name;
+                var outputPath = CreateNewOutputPath(ObjectTemplateManager.GetUserTemplateFolder(ObjectTemplateType.Component, game) + name, ".tscn");
+                root.SaveAsScene(outputPath);
+                GD.Print("Created component template: " + outputPath);
+            }
+            GD.Print("Feel free to delete any of the newly created templates that you don't need");
         }
+    }
+
+    private static string CreateNewOutputPath(string basePath, string extension)
+    {
+        var baseOutputPath = basePath;
+        int idx = 0;
+        var outputPath = baseOutputPath + extension;
+        while (ResourceLoader.Exists(outputPath)) {
+            idx++;
+            outputPath = baseOutputPath + idx + extension;
+        }
+        return outputPath;
     }
 
     private void HandleSceneFolder(SceneFolder scene)
