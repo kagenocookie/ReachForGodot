@@ -1,0 +1,93 @@
+[gd_scene load_steps=4 format=3 uid="uid://3cgcnfde4i2s"]
+
+[ext_resource type="Script" uid="uid://dnr6p6wk1ckry" path="res://addons/ReachForGodot/Editor/ObjectTemplates/ComponentTemplate.cs" id="1_i5msl"]
+[ext_resource type="Script" uid="uid://drdexacu7ucsc" path="res://addons/ReachForGodot/Components/REMeshComponent.cs" id="2_fba5p"]
+
+[sub_resource type="Resource" id="Resource_w3bhk"]
+script = ExtResource("2_fba5p")
+Game = 7
+Classname = "via.render.Mesh"
+__Data = Dictionary[StringName, Variant]({
+&"Material": null,
+&"Mesh": null,
+&"v0": 3,
+&"v1": 1,
+&"v10": 30,
+&"v11": 2,
+&"v12": 2,
+&"v13": 2,
+&"v14": 2,
+&"v15": 0,
+&"v16": 1,
+&"v17": 0,
+&"v18": 1,
+&"v19": 1,
+&"v20": 0,
+&"v21": 0,
+&"v22": 0,
+&"v23": 1,
+&"v24": 1,
+&"v25": 0,
+&"v26": 1,
+&"v27": 0,
+&"v28": 0,
+&"v29": 0,
+&"v30": 0,
+&"v31": 0,
+&"v32": 0,
+&"v33": 0,
+&"v34": 0,
+&"v35": 1,
+&"v36": 3,
+&"v37": 0,
+&"v38": 0,
+&"v39": 7,
+&"v4": 1,
+&"v40": [],
+&"v41": 0,
+&"v42": 0,
+&"v43": 0,
+&"v44": 0,
+&"v45": 10,
+&"v46": 1,
+&"v47": 1,
+&"v48": 0,
+&"v49": 0,
+&"v5": 1.0,
+&"v50": 0,
+&"v51": 0,
+&"v52": "00000000-0000-0000-0000-000000000000",
+&"v53": 0,
+&"v54": Vector2(0, 0),
+&"v55": 0,
+&"v56": 0,
+&"v57": 0,
+&"v58": Vector2(0, 0),
+&"v59": -1,
+&"v6": 0,
+&"v60": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+&"v61": 0,
+&"v62": 1,
+&"v63": 0,
+&"v64": 0,
+&"v65": 0,
+&"v66": 0,
+&"v67": 1,
+&"v68": [],
+&"v69": 0,
+&"v7": "00000000-0000-0000-0000-000000000000",
+&"v70": 0,
+&"v71": 0,
+&"v8": 0.25,
+&"v9": 2
+})
+
+[node name="sm23_503_02_Mesh" type="Node"]
+script = ExtResource("1_i5msl")
+Component = SubResource("Resource_w3bhk")
+ResourceProperties = Dictionary[String, Dictionary]({
+".": Dictionary[String, String]({
+"Material": "_Chainsaw/Environment/sm/sm2X/sm23/sm23_503/sm23_503_02_Mat.mdf2",
+"Mesh": "_Chainsaw/Environment/sm/sm2X/sm23/sm23_503/sm23_503_02.mesh"
+})
+})

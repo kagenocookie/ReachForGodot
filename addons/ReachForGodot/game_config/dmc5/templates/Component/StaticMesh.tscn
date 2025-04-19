@@ -1,0 +1,66 @@
+[gd_scene load_steps=4 format=3 uid="uid://cphk0442gi8nn"]
+
+[ext_resource type="Script" uid="uid://dnr6p6wk1ckry" path="res://addons/ReachForGodot/Editor/ObjectTemplates/ComponentTemplate.cs" id="1_61kwt"]
+[ext_resource type="Script" uid="uid://drdexacu7ucsc" path="res://addons/ReachForGodot/Components/REMeshComponent.cs" id="2_n0koo"]
+
+[sub_resource type="Resource" id="Resource_swsk8"]
+script = ExtResource("2_n0koo")
+Game = 2
+Classname = "via.render.Mesh"
+__Data = Dictionary[StringName, Variant]({
+&"Material": null,
+&"Mesh": null,
+&"RenderInFront": false,
+&"isEnabled": 1,
+&"v0": 1,
+&"v10": 1,
+&"v12": 0,
+&"v13": 0,
+&"v14": 0,
+&"v15": 0,
+&"v16": 0,
+&"v17": 0,
+&"v18": 0,
+&"v19": 0,
+&"v2": 0,
+&"v22": 3,
+&"v23": 10,
+&"v24": 0,
+&"v25": 0,
+&"v26": "00000000-0000-0000-0000-000000000000",
+&"v27": 0,
+&"v28": Vector2(0, 0),
+&"v29": 0,
+&"v3": 0,
+&"v30": 0,
+&"v31": 0,
+&"v32": Vector2(0, 0),
+&"v33": 0,
+&"v34": 0,
+&"v35": 0,
+&"v36": 0,
+&"v37": 0,
+&"v38": 0,
+&"v39": [],
+&"v4": 0,
+&"v40": 0,
+&"v41": 0,
+&"v42": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+&"v43": 1,
+&"v44": 0,
+&"v5": 1,
+&"v6": 1,
+&"v7": 1,
+&"v8": 1,
+&"v9": 1
+})
+
+[node name="sm0382_nhbdoor_03_B_Mesh" type="Node"]
+script = ExtResource("1_61kwt")
+Component = SubResource("Resource_swsk8")
+ResourceProperties = Dictionary[String, Dictionary]({
+".": Dictionary[String, String]({
+"Material": "Props/mesh/sm0382_nhbdoor_03/sm0382_nhbdoor_03_mat.mdf2",
+"Mesh": "Props/mesh/sm0382_nhbdoor_03/sm0382_nhbdoor_03.mesh"
+})
+})

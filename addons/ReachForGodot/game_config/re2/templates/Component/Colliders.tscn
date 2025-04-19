@@ -1,0 +1,76 @@
+[gd_scene load_steps=9 format=3 uid="uid://cc7yeu802e0r3"]
+
+[ext_resource type="Script" uid="uid://dnr6p6wk1ckry" path="res://addons/ReachForGodot/Editor/ObjectTemplates/ComponentTemplate.cs" id="1_7bloq"]
+[ext_resource type="Script" uid="uid://c4kswq21tieab" path="res://addons/ReachForGodot/Resources/REObject.cs" id="2_ml2gv"]
+[ext_resource type="Script" uid="uid://djo55wbalxc40" path="res://addons/ReachForGodot/Components/PhysicsCollidersComponent.cs" id="3_johfr"]
+
+[sub_resource type="Resource" id="Resource_nafmg"]
+resource_name = "AabbShape"
+script = ExtResource("2_ml2gv")
+Game = 3
+Classname = "via.physics.AabbShape"
+__Data = Dictionary[StringName, Variant]({
+&"Aabb": AABB(-5, 0, -5, 10, 1, 10),
+&"v0": 0
+})
+
+[sub_resource type="Resource" id="Resource_7eudp"]
+resource_name = "FilterInfo"
+script = ExtResource("2_ml2gv")
+Game = 3
+Classname = "via.physics.FilterInfo"
+__Data = Dictionary[StringName, Variant]({
+&"v0": 0,
+&"v1": 0,
+&"v2": 0,
+&"v3": 0,
+&"v4": -1
+})
+
+[sub_resource type="Resource" id="Resource_0eru3"]
+resource_name = "LoadCollisionType"
+script = ExtResource("2_ml2gv")
+Game = 3
+Classname = "app.ropeway.LoadCollisionType"
+__Data = Dictionary[StringName, Variant]({
+&"type": 0
+})
+
+[sub_resource type="Resource" id="Resource_ogypx"]
+resource_name = "Collider"
+script = ExtResource("2_ml2gv")
+Game = 3
+Classname = "via.physics.Collider"
+__Data = Dictionary[StringName, Variant]({
+&"CollisionFilter": null,
+&"Shape": SubResource("Resource_nafmg"),
+&"v0": 1,
+&"v1": 1,
+&"v3": SubResource("Resource_7eudp"),
+&"v4": SubResource("Resource_0eru3"),
+&"v6": null,
+&"v7": "",
+&"v8": ""
+})
+
+[sub_resource type="Resource" id="Resource_c4bl1"]
+script = ExtResource("3_johfr")
+Game = 3
+Classname = "via.physics.Colliders"
+__Data = Dictionary[StringName, Variant]({
+&"Colliders": [SubResource("Resource_ogypx")],
+&"v0": 1,
+&"v1": 1,
+&"v2": 1,
+&"v3": [],
+&"v4": 1
+})
+
+[node name="LocationLoader_Colliders" type="Node"]
+script = ExtResource("1_7bloq")
+Component = SubResource("Resource_c4bl1")
+ResourceProperties = Dictionary[String, Dictionary]({
+".": Dictionary[String, String]({
+"Colliders.0/CollisionFilter": "ObjectRoot/Collision/SceneLoad/LocationLoadReceiver.cfil"
+})
+})

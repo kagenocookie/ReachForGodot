@@ -1,0 +1,80 @@
+[gd_scene load_steps=11 format=3 uid="uid://cfdqaftdc607m"]
+
+[ext_resource type="Script" uid="uid://dnr6p6wk1ckry" path="res://addons/ReachForGodot/Editor/ObjectTemplates/ComponentTemplate.cs" id="1_rg24r"]
+[ext_resource type="Script" uid="uid://c55yvji6n5y7k" path="res://addons/ReachForGodot/RszInterop/RszStructs/OrientedBoundingBox.cs" id="2_38v75"]
+[ext_resource type="Script" uid="uid://c4kswq21tieab" path="res://addons/ReachForGodot/Resources/REObject.cs" id="2_t7hlc"]
+[ext_resource type="Script" uid="uid://djo55wbalxc40" path="res://addons/ReachForGodot/Components/PhysicsCollidersComponent.cs" id="3_xxpu0"]
+
+[sub_resource type="Resource" id="Resource_j8pd1"]
+script = ExtResource("2_38v75")
+coord = Projection(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0)
+extent = Vector3(1, 1, 1)
+
+[sub_resource type="Resource" id="Resource_duylu"]
+resource_name = "BoxShape"
+script = ExtResource("2_t7hlc")
+Game = 7
+Classname = "via.physics.BoxShape"
+__Data = Dictionary[StringName, Variant]({
+&"Box": SubResource("Resource_j8pd1"),
+&"v0": 0
+})
+
+[sub_resource type="Resource" id="Resource_gdips"]
+resource_name = "FilterInfo"
+script = ExtResource("2_t7hlc")
+Game = 7
+Classname = "via.physics.FilterInfo"
+__Data = Dictionary[StringName, Variant]({
+&"v0": 9,
+&"v1": 6557,
+&"v2": 0,
+&"v3": 0,
+&"v4": 1
+})
+
+[sub_resource type="Resource" id="Resource_m6csd"]
+resource_name = "UserData"
+script = ExtResource("2_t7hlc")
+Game = 7
+Classname = "via.physics.UserData"
+__Data = Dictionary[StringName, Variant]({})
+
+[sub_resource type="Resource" id="Resource_un5k0"]
+resource_name = "Collider"
+script = ExtResource("2_t7hlc")
+Game = 7
+Classname = "via.physics.Collider"
+__Data = Dictionary[StringName, Variant]({
+&"CollisionFilter": null,
+&"Shape": SubResource("Resource_duylu"),
+&"v0": 1,
+&"v1": 1,
+&"v3": SubResource("Resource_gdips"),
+&"v4": SubResource("Resource_m6csd"),
+&"v6": null,
+&"v7": "",
+&"v8": ""
+})
+
+[sub_resource type="Resource" id="Resource_q58k4"]
+script = ExtResource("3_xxpu0")
+Game = 7
+Classname = "via.physics.Colliders"
+__Data = Dictionary[StringName, Variant]({
+&"Colliders": [SubResource("Resource_un5k0")],
+&"v0": 1,
+&"v1": 1,
+&"v2": 1,
+&"v3": [],
+&"v4": 1
+})
+
+[node name="sm23_503_02_Colliders" type="Node"]
+script = ExtResource("1_rg24r")
+Component = SubResource("Resource_q58k4")
+ResourceProperties = Dictionary[String, Dictionary]({
+".": Dictionary[String, String]({
+"Colliders.0/CollisionFilter": "_Chainsaw/Config/Physics/Filter/EffectDefault.cfil"
+})
+})
