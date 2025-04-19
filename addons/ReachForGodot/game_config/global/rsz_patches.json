@@ -82,15 +82,28 @@
     "FieldPatches": [
       {
         "Name": "v0",
-        "Type": "S32"
+        "Type": "U32",
+        "ReplaceName": "Layer"
       },
       {
         "Name": "v1",
-        "Type": "S32"
+        "Type": "U32",
+        "ReplaceName": "Group"
+      },
+      {
+        "Name": "v2",
+        "Type": "U32",
+        "ReplaceName": "SubGroup"
+      },
+      {
+        "Name": "v3",
+        "Type": "U32",
+				"ReplaceName": "IgnoreSubGroup"
       },
       {
         "Name": "v4",
-        "Type": "S32"
+        "Type": "U32",
+        "ReplaceName": "MaskBits"
       }
     ]
   },

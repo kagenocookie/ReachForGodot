@@ -285,6 +285,7 @@
         "Type": "Resource"
       },
       {
+        "FileFormat": "CollisionMaterial",
         "Name": "v6",
         "Type": "Resource"
       },
@@ -905,10 +906,6 @@
   "via.GameObject": {
     "FieldPatches": [
       {
-        "Name": "v4",
-        "Type": "F32"
-      },
-      {
         "Name": "Update",
         "Type": "Bool"
       },
@@ -1066,24 +1063,24 @@
   "via.physics.FilterInfo": {
     "FieldPatches": [
       {
-        "Name": "v2",
-        "Type": "S32"
+        "Name": "Layer",
+        "Type": "U32"
       },
       {
-        "Name": "v3",
-        "Type": "S32"
+        "Name": "Group",
+        "Type": "U32"
       },
       {
-        "Name": "v0",
-        "Type": "S32"
+        "Name": "SubGroup",
+        "Type": "U32"
       },
       {
-        "Name": "v1",
-        "Type": "S32"
+        "Name": "IgnoreSubGroup",
+        "Type": "U32"
       },
       {
-        "Name": "v4",
-        "Type": "S32"
+        "Name": "MaskBits",
+        "Type": "U32"
       }
     ]
   },
@@ -1356,6 +1353,10 @@
       {
         "Name": "v1",
         "Type": "S32"
+      },
+      {
+        "Name": "v4",
+        "Type": "Resource"
       }
     ]
   },
@@ -4322,6 +4323,10 @@
       {
         "Name": "v5",
         "Type": "S32"
+      },
+      {
+        "Name": "v6",
+        "Type": "Resource"
       }
     ]
   },
@@ -5822,6 +5827,11 @@
         "FileFormat": "Texture",
         "Name": "ColorCube1",
         "Type": "Resource"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "ColorCubeElement",
+        "Type": "Resource"
       }
     ]
   },
@@ -6006,6 +6016,153 @@
         "Name": "v1",
         "ReplaceName": "Sphere",
         "Type": "Sphere"
+      }
+    ]
+  },
+  "via.gui.AdditionalMessage": {
+    "FieldPatches": [
+      {
+        "Name": "v0",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.ropeway.WwiseContainerApp": {
+    "FieldPatches": [
+      {
+        "Name": "v1",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "via.effect.script.EPVStandardData.Element": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Efx",
+        "Name": "v0",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.ropeway.RTTHolder": {
+    "FieldPatches": [
+      {
+        "FileFormat": "RenderTexture",
+        "Name": "RTTs",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.ropeway.gui.TextureHolder": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Texture",
+        "Name": "TextureAssetList",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "UVSequence",
+        "Name": "UVSequenceAssetList",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.ropeway.effect.script.EPVExpertBiteData.EPVExpertBiteElement": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Efx",
+        "Name": "v0",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.ropeway.effect.script.EPVExpertDamageEffectData.EPVExpertDamageEffectElement": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Efx",
+        "Name": "v0",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.ropeway.effect.script.EPVExpertDestructedBodyEffectData.EPVExpertDestructedBodyEffectDataElement": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Efx",
+        "Name": "v0",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.ropeway.EPVExpertDragBloodEffectData.EPVExpertDragBloodEffectDataElement": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Efx",
+        "Name": "v0",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.ropeway.effect.script.EPVExpertObjectLandingCustomData.EPVExpertObjectLandingCustomElement": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Efx",
+        "Name": "v0",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "via.effect.script.EPVExpertAutoData.AutoDataElement": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Efx",
+        "Name": "v0",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "via.effect.script.EPVExpertExplosionData.ExplosionElement": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Efx",
+        "Name": "v0",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "via.effect.script.EPVExpertDestructionData.DestructionElement": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Efx",
+        "Name": "v0",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "via.effect.script.EPVExpertFootLandingData.FootStepElement": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Efx",
+        "Name": "v0",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.ropeway.effect.script.EPVExpertMuzzleFlashCustomData.MuzzleFlashElement": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Efx",
+        "Name": "v0",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.ropeway.effect.script.EPVExpertStandWaveData.EPVExpertStandWaveElement": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Efx",
+        "Name": "v0",
+        "Type": "Resource"
       }
     ]
   }

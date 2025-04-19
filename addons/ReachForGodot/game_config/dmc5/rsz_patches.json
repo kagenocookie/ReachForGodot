@@ -121,6 +121,7 @@
         "Type": "Resource"
       },
       {
+        "FileFormat": "CollisionMaterial",
         "Name": "v6",
         "Type": "Resource"
       }
@@ -208,24 +209,24 @@
   "via.physics.FilterInfo": {
     "FieldPatches": [
       {
-        "Name": "v0",
-        "Type": "S32"
+        "Name": "Layer",
+        "Type": "U32"
       },
       {
-        "Name": "v1",
-        "Type": "S32"
+        "Name": "Group",
+        "Type": "U32"
       },
       {
-        "Name": "v4",
-        "Type": "S32"
+        "Name": "SubGroup",
+        "Type": "U32"
       },
       {
-        "Name": "v2",
-        "Type": "S32"
+        "Name": "IgnoreSubGroup",
+        "Type": "U32"
       },
       {
-        "Name": "v3",
-        "Type": "S32"
+        "Name": "MaskBits",
+        "Type": "U32"
       }
     ]
   },
@@ -5497,6 +5498,10 @@
       {
         "Name": "v3",
         "Type": "S32"
+      },
+      {
+        "Name": "v4",
+        "Type": "Resource"
       }
     ]
   },
@@ -5890,6 +5895,219 @@
         "Name": "v1",
         "ReplaceName": "Capsule",
         "Type": "Capsule"
+      }
+    ]
+  },
+  "app.WwiseContainerApp": {
+    "FieldPatches": [
+      {
+        "Name": "v1",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "via.effect.script.EPVStandardData.Element": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Efx",
+        "Name": "v0",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "via.dynamics.RigidBodyMeshSet": {
+    "FieldPatches": [
+      {
+        "Name": "v1",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "via.gui.AdditionalMessage": {
+    "FieldPatches": [
+      {
+        "Name": "v0",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.RenderTargetManager": {
+    "FieldPatches": [
+      {
+        "FileFormat": "RenderTexture",
+        "Name": "FreeEnemyDamageRenderTargetList",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.Em0000": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Chain",
+        "Name": "ChainPreset",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "via.userdata.AdditionalGlobalUserData": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Uvar",
+        "Name": "v0",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.MasterMaterialHolder": {
+    "FieldPatches": [
+      {
+        "FileFormat": "MasterMaterial",
+        "Name": "Materials",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "via.effect.script.EPVExpertFootLandingData.FootStepElement": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Efx",
+        "Name": "v0",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "via.effect.script.EPVExpertPhysicsData.PhysicsElement": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Efx",
+        "Name": "v0",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "via.effect.script.EPVExpertCharacterFaustHatData.ChararFaustHatElement": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Efx",
+        "Name": "v0",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "via.effect.script.EPVExpertCharacterAppearData.ChararAppearElement": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Efx",
+        "Name": "v0",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "via.effect.script.EPVExpertCharacterDieData.ChararDieElement": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Efx",
+        "Name": "v0",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "via.effect.script.EPVExpertCharacterEnemyDTData.CharacterEnemyDTElement": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Efx",
+        "Name": "v0",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "via.effect.script.EPVExpertCharacterDyingData.ChararDyingElement": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Efx",
+        "Name": "v0",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "via.effect.script.EPVExpertEnemyRecoverData.EnemyRecoverElement": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Efx",
+        "Name": "v0",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "via.effect.script.EPVExpertCharacterHitData.CharaHitElement": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Efx",
+        "Name": "v0",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "via.effect.script.EPVExpertTerrainHitData.TerrainHitElement": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Efx",
+        "Name": "v0",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "via.effect.script.EPVExpertCharacterDamageData.ChararDamageElement": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Efx",
+        "Name": "v0",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "via.effect.script.EPVExpertAutoData.AutoDataElement": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Efx",
+        "Name": "v0",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "via.effect.script.EPVExpertPlayerStateData.PlayerStateElement": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Efx",
+        "Name": "v0",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "via.effect.script.EPVExpertMuzzleFlashDataCustom.MuzzleFlashElementCustom": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Efx",
+        "Name": "v0",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "via.effect.script.EPVExpertDestructionData.DestructionElement": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Efx",
+        "Name": "v0",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "via.effect.script.EPVExpertSetModelDamageData.SetModelDamageElement": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Efx",
+        "Name": "v0",
+        "Type": "Resource"
       }
     ]
   }

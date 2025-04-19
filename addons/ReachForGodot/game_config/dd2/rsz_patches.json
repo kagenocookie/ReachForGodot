@@ -357,7 +357,8 @@
       },
       {
         "Name": "v3",
-        "ReplaceName": "FilterInfo"
+        "ReplaceName": "FilterInfo",
+        "Type": "Object"
       },
       {
         "Name": "FilterInfo",
@@ -371,9 +372,11 @@
       },
       {
         "Name": "v5",
-        "ReplaceName": "CollisionFilter"
+        "ReplaceName": "CollisionFilter",
+        "Type": "Resource"
       },
       {
+        "FileFormat": "CollisionMaterial",
         "Name": "v6",
         "Type": "Resource"
       },
@@ -384,8 +387,8 @@
       },
       {
         "Name": "Userdata",
-        "Type": "Object",
-        "OriginalType": "via.physics.UserData"
+        "OriginalType": "via.physics.UserData",
+        "Type": "Object"
       }
     ]
   },
@@ -408,10 +411,6 @@
   },
   "via.GameObject": {
     "FieldPatches": [
-      {
-        "Name": "v4",
-        "Type": "F32"
-      },
       {
         "Name": "Update",
         "Type": "Bool"
@@ -863,24 +862,24 @@
   "via.physics.FilterInfo": {
     "FieldPatches": [
       {
-        "Name": "v0",
-        "Type": "S32"
+        "Name": "Layer",
+        "Type": "U32"
       },
       {
-        "Name": "v1",
-        "Type": "S32"
+        "Name": "Group",
+        "Type": "U32"
       },
       {
-        "Name": "v2",
-        "Type": "S32"
+        "Name": "SubGroup",
+        "Type": "U32"
       },
       {
-        "Name": "v3",
-        "Type": "S32"
+        "Name": "IgnoreSubGroup",
+        "Type": "U32"
       },
       {
-        "Name": "v4",
-        "Type": "S32"
+        "Name": "MaskBits",
+        "Type": "U32"
       }
     ]
   },
@@ -947,6 +946,10 @@
       {
         "Name": "v4",
         "Type": "S32"
+      },
+      {
+        "Name": "v6",
+        "Type": "Resource"
       }
     ]
   },
@@ -7543,6 +7546,11 @@
         "FileFormat": "RenderTexture",
         "Name": "RTTDummy",
         "Type": "Resource"
+      },
+      {
+        "FileFormat": "RenderTexture",
+        "Name": "RTTList",
+        "Type": "Resource"
       }
     ]
   },
@@ -7837,6 +7845,11 @@
         "FileFormat": "MotionBank",
         "Name": "EditFacialMotionBank",
         "Type": "Resource"
+      },
+      {
+        "FileFormat": "RenderTexture",
+        "Name": "RTTs",
+        "Type": "Resource"
       }
     ]
   },
@@ -7850,6 +7863,11 @@
       {
         "FileFormat": "MaterialDefinition",
         "Name": "QuestIconMaterial",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "MaterialDefinition",
+        "Name": "MarkerIconMaterial",
         "Type": "Resource"
       }
     ]
@@ -8014,6 +8032,222 @@
         "Name": "v0_Shape",
         "ReplaceName": "Shapes",
         "Type": "Object"
+      }
+    ]
+  },
+  "via.effect.script.EPVStandardData.Element": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Efx",
+        "Name": "v0",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.GimmickManagerBehavior": {
+    "FieldPatches": [
+      {
+        "FileFormat": "CollisionFilter",
+        "Name": "CollisionFilters",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "via.effect.script.EventEffectDataElement": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Efx",
+        "Name": "v0",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.PartSwapDynamicMultiTextureHolder": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Texture",
+        "Name": "_Textures",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.GUIMaskPainter": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Texture",
+        "Name": "TexResList",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.ui041706": {
+    "FieldPatches": [
+      {
+        "FileFormat": "RenderTexture",
+        "Name": "MockupRTTList",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.EPVExpertCharacterDamageData.CharacterDamageElement": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Efx",
+        "Name": "v0",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.EPVExpertCharacterDamageSubSurfaceData.CharacterDamageSubSurfaceElement": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Efx",
+        "Name": "v0",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.EPVExpertCharacterDamageElementalData.EPVExpertCharacterDamageElementalElement": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Efx",
+        "Name": "v0",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.EPVExpertDamagedTrailData.EPVExpertDamagedTrailDataElement": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Efx",
+        "Name": "v0",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.EPVExpertFootLandingTowerData.FootStepElement": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Efx",
+        "Name": "v0",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.EPVExpertCharacterGuardData.CharacterGuardElement": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Efx",
+        "Name": "v0",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.EPVExpertCharacterHitData.CharacterHitElement": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Efx",
+        "Name": "v0",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.EPVExpertBodyEffectData.EPVExpertBodyEffectElement": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Efx",
+        "Name": "v0",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.EPVExpertCharaMoveWaterSplashData.EPVExpertCharaMoveWaterSplashElement": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Efx",
+        "Name": "v0",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.EPVExpertDrowningData.EPVExpertDrowningElement": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Efx",
+        "Name": "v0",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.EPVExpertWaterSplashData.EPVExpertWaterSplashElement": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Efx",
+        "Name": "v0",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.EPVExpertAimThrowData.AimThrowElement": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Efx",
+        "Name": "v0",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.EPVExpertSatelliteData.Element": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Efx",
+        "Name": "v0",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.EPVExpertMonsterSpellData.EPVExpertMonsterSpellDataElement": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Efx",
+        "Name": "v0",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.EPVExpertRegionHitData.EPVExpertRegionHitDataElement": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Efx",
+        "Name": "v0",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.EPVExpertDynamicsData.DynamicsElement": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Efx",
+        "Name": "v0",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "via.effect.script.EPVExpertAutoData.AutoDataElement": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Efx",
+        "Name": "v0",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "app.EPVExpertGimmickCommonData.GimmickCommonElement": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Efx",
+        "Name": "v0",
+        "Type": "Resource"
       }
     ]
   }

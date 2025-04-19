@@ -2,10 +2,6 @@
   "via.GameObject": {
     "FieldPatches": [
       {
-        "Name": "v4",
-        "Type": "F32"
-      },
-      {
         "Name": "Update",
         "Type": "Bool"
       },
@@ -281,24 +277,24 @@
   "via.physics.FilterInfo": {
     "FieldPatches": [
       {
-        "Name": "v1",
-        "Type": "S32"
+        "Name": "Layer",
+        "Type": "U32"
       },
       {
-        "Name": "v0",
-        "Type": "S32"
+        "Name": "Group",
+        "Type": "U32"
       },
       {
-        "Name": "v2",
-        "Type": "S32"
+        "Name": "SubGroup",
+        "Type": "U32"
       },
       {
-        "Name": "v3",
-        "Type": "S32"
+        "Name": "IgnoreSubGroup",
+        "Type": "U32"
       },
       {
-        "Name": "v4",
-        "Type": "S32"
+        "Name": "MaskBits",
+        "Type": "U32"
       }
     ]
   },
@@ -466,6 +462,7 @@
         "Type": "Object"
       },
       {
+        "FileFormat": "CollisionMaterial",
         "Name": "v6",
         "Type": "Resource"
       },
@@ -524,6 +521,10 @@
       {
         "Name": "v4",
         "Type": "S32"
+      },
+      {
+        "Name": "v5",
+        "Type": "Resource"
       }
     ]
   },
@@ -582,6 +583,16 @@
         "FileFormat": "MaterialDefinition",
         "Name": "v1",
         "ReplaceName": "Material",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "Mesh",
+        "Name": "Mesh",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "MaterialDefinition",
+        "Name": "Material",
         "Type": "Resource"
       }
     ]
@@ -3363,6 +3374,11 @@
       {
         "FileFormat": "RenderTexture",
         "Name": "v2",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "RenderTexture",
+        "Name": "v1",
         "Type": "Resource"
       }
     ]
@@ -6676,6 +6692,11 @@
         "FileFormat": "Texture",
         "Name": "_ColorCube1",
         "Type": "Resource"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "_ColorCubeElement",
+        "Type": "Resource"
       }
     ]
   },
@@ -7701,6 +7722,128 @@
         "Name": "v1",
         "ReplaceName": "Capsule",
         "Type": "Capsule"
+      }
+    ]
+  },
+  "via.physics.StaticCompoundShape.Instance": {
+    "FieldPatches": [
+      {
+        "Name": "v0_Shape",
+        "ReplaceName": "Shapes",
+        "Type": "Object"
+      }
+    ]
+  },
+  "via.effect.script.EPVStandardData.Element": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Efx",
+        "Name": "v0",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.TextureHolder": {
+    "FieldPatches": [
+      {
+        "FileFormat": "UVSequence",
+        "Name": "UVSequenceAssetList",
+        "Type": "Resource"
+      },
+      {
+        "FileFormat": "Texture",
+        "Name": "TextureAssetList",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.EPVExpertDamageEffectElement": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Efx",
+        "Name": "v0",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.EPVExpertStandWaveData.EPVExpertStandWaveElement": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Efx",
+        "Name": "v0",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.EPVExpertAutoFootStepData.FootStepDataElement": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Efx",
+        "Name": "v0",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.EPVExpertObjectLandingCustomData.Element": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Efx",
+        "Name": "v0",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.EPVExpertAttackLandingCustomData.Element": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Efx",
+        "Name": "v0",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "via.effect.script.EPVExpertAutoData.AutoDataElement": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Efx",
+        "Name": "v0",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.EPVExpertMuzzleFlashCustomData.Element": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Efx",
+        "Name": "v0",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "chainsaw.BonusMenuGuiBehavior": {
+    "FieldPatches": [
+      {
+        "FileFormat": "UVSequence",
+        "Name": "_UVSequenceAssetList",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "via.effect.script.EPVExpertAutoIsLandingData.AutoIsLandingElement": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Efx",
+        "Name": "v0",
+        "Type": "Resource"
+      }
+    ]
+  },
+  "via.effect.script.EPVExpertMuzzleFlashData.MuzzleFlashElement": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Efx",
+        "Name": "v0",
+        "Type": "Resource"
       }
     ]
   }
