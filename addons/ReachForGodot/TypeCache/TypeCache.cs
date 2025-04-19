@@ -564,8 +564,14 @@ public static partial class TypeCache
                 ResourceHint(refield, nameof(GameObjectRef));
                 break;
             case RszFieldType.Guid:
-            case RszFieldType.Uri:
                 refield.VariantType = Variant.Type.String;
+                break;
+            case RszFieldType.Uri:
+                if (srcField.original_type.Contains("via.GameObjectRef")) {
+                    ResourceHint(refield, nameof(GameObjectRef));
+                } else {
+                    refield.VariantType = Variant.Type.String;
+                }
                 break;
             case RszFieldType.Color:
                 refield.VariantType = Variant.Type.Color;

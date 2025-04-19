@@ -17,7 +17,7 @@ public partial class GameObjectRef : Resource
 #if TOOLS
             if (value != null && value != _path) {
                 var sourceNode = EditorInterface.Singleton.GetSelection().GetSelectedNodes().FirstOrDefault();
-                if (sourceNode != null) {
+                if (sourceNode != null && sourceNode.FindNodeInParents<SceneFolder>() != null) {
                     guid = sourceNode?.GetNodeOrNull<GameObject>(value)?.Uuid ?? Guid.Empty.ToString();
                 }
             }

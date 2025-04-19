@@ -134,7 +134,7 @@ public abstract class RszAssetConverter<TImported, TExported, TResource> : RszTo
                     return new Variant();
                 }
             default:
-                return RszTypeConverter.FromRszValueSingleValue(field.RszField.type, value, Game);
+                return RszTypeConverter.FromRszValueSingleValue(field.RszField.type, value, Game, field.RszField.original_type);
         }
     }
 
@@ -514,7 +514,7 @@ public abstract class RszAssetConverter<TImported, TExported, TResource> : RszTo
     protected void RecurseSetupGameObjectReferenceGuids(REObject data, REComponent component, Node root)
     {
         foreach (var field in data.TypeInfo.Fields) {
-            if (field.RszField.type == RszFieldType.GameObjectRef) {
+            if (field.RszField.IsGameObjectRef()) {
                 if (!exportedInstances.TryGetValue(data, out var dataInst)) {
                     GD.PrintErr($"Could not resolve GameObjectRef source instance for field {field.SerializedName} in {component.Path}");
                     continue;

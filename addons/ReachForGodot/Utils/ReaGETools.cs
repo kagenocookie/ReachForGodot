@@ -98,6 +98,44 @@ public sealed class ResourceFieldFinder : IDisposable
     }
 }
 
+public static class GameObjectRefResolver
+{
+    public static void CheckInstances(SupportedGame game, PfbFile pfb)
+    {
+        foreach (var refinfo in pfb.GameObjectRefInfoList) {
+            var src = pfb.RSZ.ObjectList[(int)refinfo.Data.objectId];
+            var refFields = src.RszClass.fields.Where(f => f.IsGameObjectRef()).ToArray();
+
+            var cache = TypeCache.GetClassInfo(game, src.RszClass.name);
+            var propInfoDict = cache.PfbRefs;
+            if (propInfoDict?.Count == refFields.Length) {
+                // already resolved
+                continue;
+            }
+
+            var propInfo = propInfoDict?.GetValueOrDefault(src.RszClass.name);
+            var refValues = pfb.GameObjectRefInfoList.Where(rf =>
+                rf.Data.objectId == src.ObjectTableIndex &&
+                (rf.Data.arrayIndex == 0 || 1 == pfb.GameObjectRefInfoList.Count(rf2 => rf2.Data.objectId == src.ObjectTableIndex))
+            ).OrderBy(b => b.Data.propertyId);
+
+            if (refFields.Length == refValues.Count()) {
+                propInfoDict = new();
+                int i = 0;
+                foreach (var propId in refValues.Select(r => r.Data.propertyId)) {
+                    var refField = refFields[i++];
+                    var prop = new PrefabGameObjectRefProperty() { PropertyId = propId, AutoDetected = true };
+                    propInfoDict[refField.name] = prop;
+                    GD.Print($"Auto-detected GameObjectRef property {src.RszClass.name} {refField.name} as propertyId {propId}.");
+                }
+                TypeCache.UpdatePfbGameObjectRefCache(game, src.RszClass.name, propInfoDict);
+            } else {
+                GD.PrintErr($"Failed to resolve GameObjectRef properties in class {src.RszClass.name}.");
+            }
+        }
+    }
+}
+
 public static class BinaryTools
 {
     public static bool CompareBinaryFiles(string file1, string file2)

@@ -3,6 +3,7 @@ namespace ReaGE;
 using System;
 using System.Threading.Tasks;
 using Godot;
+using ReaGE.DevTools;
 using RszTool;
 
 public class PfbConverter : RszAssetConverter<PrefabNode, PfbFile, PackedScene>
@@ -195,28 +196,12 @@ public class PfbConverter : RszAssetConverter<PrefabNode, PfbFile, PackedScene>
         var cache = TypeCache.GetClassInfo(Game, obj.Classname!);
         var propInfoDict = cache.PfbRefs;
         if (!propInfoDict.TryGetValue(field.SerializedName, out var propInfo)) {
-            var refValues = file.GameObjectRefInfoList.Where(rr => rr.Data.objectId == idx && rr.Data.arrayIndex == 0).OrderBy(b => b.Data.propertyId);
-            var refFields = obj.TypeInfo.Fields.Where(f => f.RszField.type == RszFieldType.GameObjectRef).OrderBy(f => f.FieldIndex);
-            if (refFields.Count() == refValues.Count()) {
-                // these cases _should_ be trivially inferrable by field order
-                propInfoDict = new();
-                int i = 0;
-                foreach (var propId in refValues.Select(r => r.Data.propertyId)) {
-                    var refField = refFields.ElementAt(i++);
-                    var prop = new PrefabGameObjectRefProperty() { PropertyId = propId, AutoDetected = true };
-                    propInfoDict[refField.SerializedName] = prop;
-                    if (refField == field) {
-                        propInfo = prop;
-                    }
-                    ErrorLog("Auto-detected GameObjectRef property " + refField.SerializedName + " as propertyId " + propId + ". It may be wrong, but hopefully not.");
-                }
-                TypeCache.UpdatePfbGameObjectRefCache(Game, obj.Classname!, propInfoDict);
-                Debug.Assert(propInfo != null);
-            } else {
+            GameObjectRefResolver.CheckInstances(Game, file);
+            if (!propInfoDict.TryGetValue(field.SerializedName, out propInfo)) {
                 // if any refs from this object do not have a known property Id; this way we only print error if we actually found an unmapped ref
                 if (file.GameObjectRefInfoList.Any(info => info.Data.objectId == idx
                     && !propInfoDict.Values.Any(entry => entry.PropertyId == info.Data.propertyId))) {
-                    ErrorLog("Found undeclared GameObjectRef property " + field.SerializedName + " in class " + obj.Classname + ". If the field had an actual value, it won't be imported correctly.");
+                    ErrorLog($"Found unknown GameObjectRef property {field.SerializedName} in class {obj.Classname}. It might not be imported correctly.");
                 }
                 return default;
             }
@@ -245,7 +230,7 @@ public class PfbConverter : RszAssetConverter<PrefabNode, PfbFile, PackedScene>
             return default;
         }
 
-        return new GameObjectRef(targetGameobj.Uuid, component.GameObject.GetPathTo(targetGameobj));
+        return new GameObjectRef(targetGameobj.ObjectGuid == Guid.Empty ? (Guid)instance.Values[field.FieldIndex] : targetGameobj.ObjectGuid, component.GameObject.GetPathTo(targetGameobj));
     }
 
     private void ReconstructPfbGameObjectRefs(PfbFile file, REObject obj, REComponent component, GameObject root, int arrayIndex = 0)

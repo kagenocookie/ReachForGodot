@@ -100,7 +100,7 @@ public class RcolConverter : RszAssetConverter<RcolRootNode, RcolFile, RcolResou
                 shapeNode.RcolShapeType = srcShape.Info.shapeType;
                 if (srcShape.shape != null) {
                     var fieldType = RequestSetCollisionShape3D.GetShapeFieldType(srcShape.Info.shapeType);
-                    RequestSetCollisionShape3D.ApplyShape(shapeNode, srcShape.Info.shapeType, RszTypeConverter.FromRszValueSingleValue(fieldType, srcShape.shape, Game));
+                    RequestSetCollisionShape3D.ApplyShape(shapeNode, srcShape.Info.shapeType, RszTypeConverter.FromRszValueSingleValue(fieldType, srcShape.shape, Game, null));
                 }
                 group.AddUniqueNamedChild(shapeNode);
                 shapeNode.Owner = target;
@@ -122,7 +122,7 @@ public class RcolConverter : RszAssetConverter<RcolRootNode, RcolFile, RcolResou
                 shapeNode.RcolShapeType = srcShape.Info.shapeType;
                 if (srcShape.shape != null) {
                     var fieldType = RequestSetCollisionShape3D.GetShapeFieldType(srcShape.Info.shapeType);
-                    RequestSetCollisionShape3D.ApplyShape(shapeNode, srcShape.Info.shapeType, RszTypeConverter.FromRszValueSingleValue(fieldType, srcShape.shape, Game));
+                    RequestSetCollisionShape3D.ApplyShape(shapeNode, srcShape.Info.shapeType, RszTypeConverter.FromRszValueSingleValue(fieldType, srcShape.shape, Game, null));
                 }
                 group.AddUniqueNamedChild(shapeNode);
                 shapeNode.Owner = target;

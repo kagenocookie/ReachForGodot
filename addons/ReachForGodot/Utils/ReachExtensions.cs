@@ -1,4 +1,5 @@
 using Godot;
+using RszTool;
 
 namespace ReaGE;
 
@@ -32,5 +33,10 @@ public static class ReachExtensions
         if (root != null && (root == target || root.IsAncestorOf(target))) {
             EditorInterface.Singleton.MarkSceneAsUnsaved();
         }
+    }
+
+    public static bool IsGameObjectRef(this RszField field)
+    {
+        return field.type == RszFieldType.GameObjectRef || field.type == RszFieldType.Uri && field.original_type.Contains("via.GameObjectRef");
     }
 }

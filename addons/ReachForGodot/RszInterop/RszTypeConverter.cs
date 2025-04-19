@@ -32,11 +32,11 @@ public static class RszTypeConverter
             var type = value.GetType();
             if (type.IsArray) {
                 foreach (var item in (object[])value) {
-                    newArray.Add(FromRszValueSingleValue(field.RszField.type, item, game));
+                    newArray.Add(FromRszValueSingleValue(field.RszField.type, item, game, field.RszField.original_type));
                 }
             } else if (type.IsGenericType && type.GetGenericTypeDefinition() == baseList) {
                 foreach (var item in ((IList<object>)value)) {
-                    newArray.Add(FromRszValueSingleValue(field.RszField.type, item, game));
+                    newArray.Add(FromRszValueSingleValue(field.RszField.type, item, game, field.RszField.original_type));
                 }
             } else {
                 GD.Print("Unhandled array type " + type.FullName);
@@ -44,10 +44,10 @@ public static class RszTypeConverter
             return newArray;
         }
 
-        return FromRszValueSingleValue(field.RszField.type, value, game);
+        return FromRszValueSingleValue(field.RszField.type, value, game, field.RszField.original_type);
     }
 
-    public static Variant FromRszValueSingleValue(RszFieldType type, object value, SupportedGame game)
+    public static Variant FromRszValueSingleValue(RszFieldType type, object value, SupportedGame game, string? originalType)
     {
         switch (type) {
             case RszFieldType.Resource:
@@ -164,8 +164,9 @@ public static class RszTypeConverter
             case RszFieldType.Color:
                 return new Godot.Color(((RszTool.via.Color)value).rgba);
             case RszFieldType.Guid:
-            case RszFieldType.Uri:
                 return ((Guid)value).ToString();
+            case RszFieldType.Uri:
+                return originalType?.Contains("via.GameObjectRef") == true ? new GameObjectRef((Guid)value) : ((Guid)value).ToString();
             case RszFieldType.GameObjectRef:
                 return new GameObjectRef((Guid)value);
             case RszFieldType.AABB:
@@ -310,7 +311,10 @@ public static class RszTypeConverter
             RszFieldType.Uint4 => (RszTool.via.Uint4)variant.AsVector4I().ToRszU(),
             RszFieldType.OBB => variant.As<OrientedBoundingBox>().ToRsz(),
             RszFieldType.AABB => (RszTool.via.AABB)variant.AsAabb().ToRsz(),
-            RszFieldType.Guid or RszFieldType.Uri => Guid.TryParse(variant.AsString(), out var guid) ? guid : Guid.Empty,
+            RszFieldType.Guid => Guid.TryParse(variant.AsString(), out var guid) ? guid : Guid.Empty,
+            RszFieldType.Uri => variant.VariantType == Variant.Type.String
+                ? Guid.TryParse(variant.AsString(), out var guid) ? guid : Guid.Empty
+                : variant.As<GameObjectRef>().TargetGuid,
             RszFieldType.GameObjectRef => variant.As<GameObjectRef>().TargetGuid,
             RszFieldType.Color => (RszTool.via.Color)variant.AsColor().ToRsz(),
             RszFieldType.Range => (RszTool.via.Range)variant.AsVector2().ToRszRange(),
