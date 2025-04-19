@@ -62,8 +62,9 @@ public partial class GameObjectInspectorPlugin : EditorInspectorPlugin, ISeriali
                 var id = templateComponentBtn.GetItemId((int)index);
                 if (id == 99999) return;
                 var chosen = templateList[id];
-                ObjectTemplateManager.InstantiateComponent(chosen, target);
+                var comp = ObjectTemplateManager.InstantiateComponent(chosen, target);
                 templateComponentBtn.Selected = 0;
+                comp?.Setup(RszImportType.CreateOrReuse);
             };
         }
         AddCustomControl(root);

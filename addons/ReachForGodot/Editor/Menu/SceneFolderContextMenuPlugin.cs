@@ -73,6 +73,7 @@ public partial class SceneFolderContextMenuPlugin : EditorContextMenuPlugin
             var scene = root.SaveAsScene(outputPath);
             EditorInterface.Singleton.SelectFile(scene.ResourcePath);
         } else if (id == 10001 && parent is GameObject owner) {
+            string? firstComponentPath = null;
             foreach (var comp in owner.Components) {
                 if (comp.Classname == "via.Transform") continue;
 
@@ -83,9 +84,15 @@ public partial class SceneFolderContextMenuPlugin : EditorContextMenuPlugin
                 root.Name = name;
                 var outputPath = CreateNewOutputPath(ObjectTemplateManager.GetUserTemplateFolder(ObjectTemplateType.Component, game) + name, ".tscn");
                 root.SaveAsScene(outputPath);
+                firstComponentPath ??= outputPath;
                 GD.Print("Created component template: " + outputPath);
             }
-            GD.Print("Feel free to delete any of the newly created templates that you don't need");
+            if (firstComponentPath != null) {
+                GD.Print("Feel free to delete any of the newly created templates that you don't need");
+                EditorInterface.Singleton.SelectFile(firstComponentPath);
+            } else {
+                GD.Print("GameObject has no templateable components");
+            }
         }
     }
 

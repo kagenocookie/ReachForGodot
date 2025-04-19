@@ -64,28 +64,31 @@ public static class ObjectTemplateManager
         return clone;
     }
 
-    public static void InstantiateComponent(string chosenTemplate, GameObject target)
+    public static REComponent? InstantiateComponent(string chosenTemplate, GameObject target)
     {
         var sourceInstance = ResourceLoader.Load<PackedScene>(chosenTemplate).Instantiate<Node>(PackedScene.GenEditState.Instance);
         if (sourceInstance is not ComponentTemplate template) {
             GD.PrintErr("Invalid game object template - root must be a GameObject: " + chosenTemplate);
-            return;
+            return null;
         }
 
         var newComponent = template.Component?.Duplicate() as REComponent;
         if (newComponent == null) {
             GD.PrintErr("Component template is empty: " + chosenTemplate);
-            return;
+            return null;
         }
         if (string.IsNullOrEmpty(newComponent.Classname)) {
-            target.AddComponent(new REComponentPlaceholder());
-            return;
+            target.AddComponent(newComponent = new REComponentPlaceholder());
+            return newComponent;
         }
+
         template.ApplyProperties(newComponent, ".");
 
         target.AddOrReplaceComponent(newComponent.Classname, newComponent);
         target.NotifyPropertyListChanged();
+        target.MarkSceneChangedIfChildOfActiveScene();
         GD.Print("Added component " + newComponent.Classname);
+        return newComponent;
     }
 }
 

@@ -25,4 +25,12 @@ public static class ReachExtensions
     {
         return string.IsNullOrEmpty(str) ? fallback : str;
     }
+
+    public static void MarkSceneChangedIfChildOfActiveScene(this Node target)
+    {
+        var root = EditorInterface.Singleton.GetEditedSceneRoot();
+        if (root != null && (root == target || root.IsAncestorOf(target))) {
+            EditorInterface.Singleton.MarkSceneAsUnsaved();
+        }
+    }
 }

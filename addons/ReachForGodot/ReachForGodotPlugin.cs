@@ -192,12 +192,12 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
         toolMenu.AddItem("Upgrade imported resources", 100);
 
 #if REAGE_DEV
-        toolMenuDev.Clear();
-        toolMenuDev.AddItem("Extract file format versions from file lists", 200);
+        toolMenuDev?.Clear();
+        toolMenuDev?.AddItem("Extract file format versions from file lists", 200);
         var tests = GoTest.Adapter.CreateProvider().GetTestSuites(System.Reflection.Assembly.GetExecutingAssembly());
         int testId = 1000;
         foreach (var test in tests) {
-            toolMenuDev.AddItem("Test: " + (test.Name.StartsWith("Test") ? test.Name.Substring(4) : test.Name), testId++);
+            toolMenuDev?.AddItem("Test: " + (test.Name.StartsWith("Test") ? test.Name.Substring(4) : test.Name), testId++);
         }
 #endif
     }
