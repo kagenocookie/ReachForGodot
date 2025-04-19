@@ -72,7 +72,7 @@ public partial class AssetBrowser : Resource
             _dialog.FileMode = FileDialog.FileModeEnum.OpenFiles;
             _dialog.CurrentPath = basepath;
             // _dialog.FileSelected += ImportAssetSync;
-            _dialog.FilesSelected += (files) => _ = ImportAssetsAsync(files);
+            _dialog.FilesSelected += (files) => _ = ImportAssetsAsync(files, Assets);
         }
 
         _dialog.Show();
@@ -93,13 +93,13 @@ public partial class AssetBrowser : Resource
         dlg.FileMode = FileDialog.FileModeEnum.OpenFiles;
         dlg.Game = Assets.Game;
         dlg.FilesSelected += (files) => {
-            var config = ReachForGodot.GetAssetConfig(dlg.Game);
+            Assets = ReachForGodot.GetAssetConfig(dlg.Game);
 
             GD.Print($"Attempting to extract from {files.Length} paths...");
             var relativeFilepaths = files
                 .SelectMany(f => !Path.GetExtension(f.AsSpan()).IsEmpty ? [f] : ((ICustomFileSystem)dlg.FileSystem!).GetRecursiveFileList(f));
             if (dlg.ShouldImportFiles) {
-                var tmpConfig = (AssetConfig)config.Duplicate();
+                var tmpConfig = (AssetConfig)Assets.Duplicate();
                 // create a new temp config with no additional paths to ensure we fetch PAK sourced files here and not get distracted by whatever other modded files we may already have
                 // maybe add more action buttons to the file picker UI so we can specify Get original or Get whichever files or Find in project file system
                 tmpConfig.Paths = new GamePaths(tmpConfig.Game, tmpConfig.Paths.ChunkPath, tmpConfig.Paths.Il2cppPath, tmpConfig.Paths.RszJsonPath, tmpConfig.Paths.FilelistPath, Array.Empty<LabelledPathSetting>(), tmpConfig.Paths.PakFiles);
@@ -107,9 +107,9 @@ public partial class AssetBrowser : Resource
                 var importList = relativeFilepaths
                     .Select(f => PathUtils.FindSourceFilePath(PathUtils.GetFilepathWithoutNativesFolder(f), tmpConfig)!)
                     .ToArray();
-                _ = ImportAssetsAsync(importList);
+                _ = ImportAssetsAsync(importList, tmpConfig);
             } else {
-                var success = FileUnpacker.TryExtractCustomFileList(relativeFilepaths, config);
+                var success = FileUnpacker.TryExtractCustomFileList(relativeFilepaths, Assets);
                 GD.Print("Extraction finished, success: " + success);
             }
         };
@@ -118,16 +118,15 @@ public partial class AssetBrowser : Resource
         dlg.Show();
     }
 
-    private async Task ImportAssetsAsync(string[] files)
+    private static async Task ImportAssetsAsync(string[] files, AssetConfig config)
     {
-        Debug.Assert(Assets != null);
         if (files.Length == 0) {
             GD.PrintErr("Empty import file list");
             return;
         }
 
-        await ImportMultipleAssets(files);
-        var importPaths = files.Select(f => PathUtils.GetLocalizedImportPath(f, Assets));
+        await ImportMultipleAssets(files, config);
+        var importPaths = files.Select(f => PathUtils.GetLocalizedImportPath(f, config));
         GD.Print("Files imported to:\n" + string.Join('\n', importPaths));
 
         if (importPaths.FirstOrDefault(x => x != null) is string str && ResourceLoader.Exists(str)) {
@@ -140,38 +139,36 @@ public partial class AssetBrowser : Resource
         }
     }
 
-    private Task ImportMultipleAssets(string[] files)
+    private static Task ImportMultipleAssets(string[] files, AssetConfig config)
     {
-        Debug.Assert(Assets != null);
-        return Task.WhenAll(files.Select(ImportSingleAsset));
+        return Task.WhenAll(files.Select(f => ImportSingleAsset(f, config)));
     }
 
-    private bool ImportByRelativePath(string file)
+    private static bool ImportByRelativePath(string file, AssetConfig config)
     {
-        Debug.Assert(Assets != null);
         var sourcePath = PathUtils.GetFilepathWithoutNativesFolder(file);
-        var resolvedPath = PathUtils.FindSourceFilePath(sourcePath, Assets);
+        var resolvedPath = PathUtils.FindSourceFilePath(sourcePath, config);
         if (resolvedPath != null) {
-            return Importer.Import(sourcePath, Assets) != null;
+            return Importer.Import(sourcePath, config) != null;
         }
         return false;
     }
 
-    private async Task ImportSingleAsset(string file)
+    private static async Task ImportSingleAsset(string file, AssetConfig config)
     {
-        Debug.Assert(Assets != null);
-        if (!file.StartsWith(Assets.Paths.ChunkPath)) {
-            Assets.Paths.SourcePathOverride = PathUtils.GetSourceFileBasePath(file, Assets);
+        Debug.Assert(config != null);
+        if (!file.StartsWith(config.Paths.ChunkPath)) {
+            config.Paths.SourcePathOverride = PathUtils.GetSourceFileBasePath(file, config);
         }
         try {
-            var res = Importer.Import(file, Assets);
+            var res = Importer.Import(file, config);
             if (res is REResourceProxy resp) {
                 await resp.Import(true);
             } else if (res is UserdataResource ud) {
                 ud.Reimport();
             }
         } finally {
-            Assets.Paths.SourcePathOverride = null;
+            config.Paths.SourcePathOverride = null;
         }
     }
 }

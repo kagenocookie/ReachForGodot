@@ -209,7 +209,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
             OpenAssetImporterWindow(game);
         }
         if (id == 99) {
-            OpenPackedAssetBrowser(ReachForGodot.AssetConfigs.First(c => c.IsValid));
+            OpenPackedAssetBrowser();
         }
         if (id == 100) UpgradeObsoleteResources("mdf2");
         if (id == 200) ExtractFileVersions();
@@ -241,10 +241,10 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
         browser.CallDeferred(AssetBrowser.MethodName.ShowNativeFilePicker);
     }
 
-    public void OpenPackedAssetBrowser(AssetConfig config)
+    public void OpenPackedAssetBrowser(AssetConfig? config = null)
     {
         browser ??= new AssetBrowser();
-        browser.Assets = config;
+        browser.Assets = config ?? browser.Assets ?? ReachForGodot.AssetConfigs.First(c => c.IsValid);
         browser.CallDeferred(AssetBrowser.MethodName.ShowFileBrowser);
     }
 
