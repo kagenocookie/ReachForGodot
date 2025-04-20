@@ -36,7 +36,7 @@ public partial class ItemPositions : REComponent
 
 	private async Task<MeshResource?> ExtractMeshFromPfb(string pfbPath)
 	{
-		var pfb = Importer.FindOrImportResource<PackedScene>(pfbPath, ReachForGodot.GetAssetConfig(Game));
+		var pfb = Importer.FindOrImportAsset<PackedScene>(pfbPath, ReachForGodot.GetAssetConfig(Game));
 
 		var root = pfb?.Instantiate<PrefabNode>();
 		if (root == null) return null;

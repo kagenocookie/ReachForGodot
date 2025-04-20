@@ -47,7 +47,7 @@ public interface IRszContainer : IExportableAsset
         }
 
         foreach (var res in Resources) {
-            if (res == resource) return false;
+            if (true == res.Asset?.ExportedFilename.Equals(path, StringComparison.OrdinalIgnoreCase)) return false;
         }
 
         Resources = Resources.Append(resource).ToArray();

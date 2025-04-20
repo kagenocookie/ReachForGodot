@@ -110,8 +110,10 @@
   "via.Prefab": {
     "FieldPatches": [
       {
+        "FileFormat": "Prefab",
         "Name": "v1",
-        "ReplaceName": "Path"
+        "ReplaceName": "Path",
+        "Type": "Resource"
       }
     ]
   }

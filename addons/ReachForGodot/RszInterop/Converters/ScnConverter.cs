@@ -5,18 +5,8 @@ using System.Threading.Tasks;
 using Godot;
 using RszTool;
 
-public class ScnConverter : RszAssetConverter<SceneFolder, ScnFile, PackedScene>
+public class ScnConverter : SceneRszAssetConverter<SceneFolder, SceneResource, ScnFile>
 {
-    public override PackedScene CreateOrReplaceResourcePlaceholder(AssetReference reference)
-    {
-        var scn = new SceneFolder();
-        scn.LockNode(true);
-        scn.OriginalName = reference.BaseFilename.ToString();
-        return CreateOrReplaceRszSceneResource(scn, reference);
-    }
-
-    public override SceneFolder? GetResourceImportedObject(PackedScene resource) => resource.Instantiate<SceneFolder>();
-
     public override bool LoadFile(ScnFile file)
     {
         if (!file.Read()) return false;
@@ -29,9 +19,22 @@ public class ScnConverter : RszAssetConverter<SceneFolder, ScnFile, PackedScene>
         return new ScnFile(Convert.FileOption, fileHandler);
     }
 
+    protected override void PreCreateScenePlaceholder(SceneFolder node)
+    {
+        node.LockNode(true);
+    }
+
     public override Task<bool> Export(SceneFolder source, ScnFile file)
     {
         source.PreExport();
+
+        foreach (var f in source.GetAllSubfoldersIncludingSelfOwnedBy(source)) {
+            foreach (var go in f.ChildObjects) {
+                foreach (var child in go.GetAllChildrenIncludingSelfOwnedBy(source)) {
+                    AddMissingResourceInfos(go, source);
+                }
+            }
+        }
 
         StoreResources(source.Resources, file.ResourceInfoList, false);
         file.RSZ.ClearInstances();
@@ -176,7 +179,7 @@ public class ScnConverter : RszAssetConverter<SceneFolder, ScnFile, PackedScene>
         Convert.StartBatch(batch);
         GenerateResources(target, file.ResourceInfoList);
         PrepareFolderBatch(batch, file.GameObjects!, file.FolderDatas!);
-        await AwaitFolderBatch(batch);
+        await AwaitFolderBatch(batch, true);
         Convert.Context.UpdateUIStatus();
 
         target.RecalculateBounds(true);
@@ -310,7 +313,8 @@ public class ScnConverter : RszAssetConverter<SceneFolder, ScnFile, PackedScene>
         if (folder.Instance?.GetFieldValue("Path") is string scnPath && !string.IsNullOrWhiteSpace(scnPath)) {
             var isNew = false;
             if (subfolder == null) {
-                subfolder = new SceneFolder() { Name = name, OriginalName = name, Asset = new AssetReference(scnPath), Game = Game };
+                subfolder = Importer.FindOrImportAsset<PackedScene>(scnPath, Config)?.Instantiate<SceneFolder>()
+                    ?? new SceneFolder() { Name = name, OriginalName = name, Asset = new AssetReference(scnPath), Game = Game };
                 subfolder.LockNode(true);
                 if (parent.GetNodeOrNull(name) != null) {
                     subfolder.Name = name + "__folder";
@@ -324,20 +328,9 @@ public class ScnConverter : RszAssetConverter<SceneFolder, ScnFile, PackedScene>
 
             var skipImport = (Convert.Options.folders == RszImportType.Placeholders || !isNew && Convert.Options.folders == RszImportType.CreateOrReuse);
             if (!skipImport) {
-                // if (Convert.Options.linkedScenes) {
-                    (subfolder as SceneFolderProxy)?.UnloadScene();
-                    var newBatch = Convert.CreateFolderBatch(subfolder, folder, scnPath);
-                    batch.folders.Add(newBatch);
-                // } else {
-                //     // only instantiate if already exists
-                //     var replScene = Importer.FindOrImportResource<PackedScene>(scnPath, Config, WritesEnabled);
-                //     if (replScene != null) {
-                //         replScene.Instantiate<SceneFolder>();
-
-                //         newInstance.CopyDataFrom(replScene.Instantiate<SceneFolder>());
-
-                //     }
-                // }
+                (subfolder as SceneFolderProxy)?.UnloadScene();
+                var newBatch = Convert.CreateFolderBatch(subfolder, folder, scnPath);
+                batch.folders.Add(newBatch);
             }
         } else {
             if (subfolder == null) {
@@ -365,21 +358,22 @@ public class ScnConverter : RszAssetConverter<SceneFolder, ScnFile, PackedScene>
         subfolder.Data = folder.Instance!.GetFieldValue("Data") as byte[];
     }
 
-    private async Task AwaitFolderBatch(AssetConverter.FolderBatch batch)
+    private async Task AwaitFolderBatch(AssetConverter.FolderBatch batch, bool isRoot)
     {
         Convert.StartBatch(batch);
         await Convert.Context.MaybeYield();
 
         var folder = batch.folder;
-        if (folder.Owner != null && folder.Asset?.IsEmpty == false) {
+        if (!isRoot && folder.Asset?.IsEmpty == false) {
             var folderName = folder.OriginalName;
             var scene = (folder as SceneFolderProxy)?.Contents
                 ?? (!string.IsNullOrEmpty(folder.SceneFilePath)
                     ? ResourceLoader.Load<PackedScene>(folder.SceneFilePath)
-                    : Importer.FindOrImportResource<PackedScene>(folder.Asset.AssetFilename, Config, WritesEnabled));
+                    : Importer.FindOrImportAsset<PackedScene>(folder.Asset.AssetFilename, Config, WritesEnabled));
             if (scene == null) {
                 // not every scene is shipped (specific case: RE2 Location/RPD/Level_199)
                 // keep these as placeholders in whatever scenes contain them
+                Convert.EndBatch(batch);
                 return;
             }
             int nodeCount = 0;
@@ -416,7 +410,7 @@ public class ScnConverter : RszAssetConverter<SceneFolder, ScnFile, PackedScene>
         await batch.AwaitGameObjects(Convert);
         for (var i = 0; i < batch.folders.Count; i++) {
             AssetConverter.FolderBatch subfolder = batch.folders[i];
-            await AwaitFolderBatch(subfolder);
+            await AwaitFolderBatch(subfolder, false);
             batch.FinishedFolderCount++;
         }
 

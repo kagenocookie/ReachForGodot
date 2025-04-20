@@ -114,10 +114,14 @@ public class AssetConverter
     {
         if (asset is REResource reres) {
             switch (reres.ResourceType) {
-                case SupportedFileFormats.Userdata:
-                    return User.ImportFromFile(filepath, asset as UserdataResource);
+                case SupportedFileFormats.Scene:
+                    return asset is SceneResource scnRes ? Scn.ImportFromFile(scnRes) : Scn.ImportFromFile(filepath);
+                case SupportedFileFormats.Prefab:
+                    return asset is PrefabResource pfbRes ? Pfb.ImportFromFile(pfbRes) : Pfb.ImportFromFile(filepath);
                 case SupportedFileFormats.Rcol:
                     return asset is RcolResource rcolRes ? Rcol.ImportFromFile(rcolRes) : Rcol.ImportFromFile(filepath);
+                case SupportedFileFormats.Userdata:
+                    return User.ImportFromFile(filepath, asset as UserdataResource);
                 case SupportedFileFormats.Foliage:
                     return Fol.ImportFromFile(filepath, asset as FoliageResource);
                 case SupportedFileFormats.Mesh:
@@ -166,10 +170,14 @@ public class AssetConverter
         Context.Clear();
         if (resource is REResource reres) {
             switch (reres.ResourceType) {
-                case SupportedFileFormats.Userdata:
-                    return User.ExportToFile((UserdataResource)reres, outputPath);
+                case SupportedFileFormats.Scene:
+                    return Scn.ExportToFile(((SceneResource)reres).Instantiate()!, outputPath);
+                case SupportedFileFormats.Prefab:
+                    return Pfb.ExportToFile(((PrefabResource)reres).Instantiate()!, outputPath);
                 case SupportedFileFormats.Rcol:
                     return Rcol.ExportToFile(((RcolResource)reres).Instantiate()!, outputPath);
+                case SupportedFileFormats.Userdata:
+                    return User.ExportToFile((UserdataResource)reres, outputPath);
                 case SupportedFileFormats.Foliage:
                     return Fol.ExportToFile((FoliageResource)reres, outputPath);
                 case SupportedFileFormats.MaterialDefinition:

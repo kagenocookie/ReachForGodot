@@ -72,16 +72,15 @@ public partial class SceneFolderInspectorPlugin : EditorInspectorPlugin, ISerial
                     }
 
                     var importPath = instanceScene.Asset.GetImportFilepath(ReachForGodot.GetAssetConfig(instanceScene.Game));
+                    if (importPath == null) {
+                        GD.PrintErr("Could not determine filepath");
+                        return;
+                    }
 
                     var res = ResourceLoader.Exists(importPath) ? ResourceLoader.Load<PackedScene>(importPath) : new PackedScene();
                     instanceScene.SetRecursiveOwner(instanceScene, instanceScene.Owner);
                     res.Pack(instanceScene);
-                    if (string.IsNullOrEmpty(res.ResourcePath)) {
-                        res.ResourcePath = importPath;
-                    } else {
-                        res.TakeOverPath(importPath);
-                    }
-                    ResourceSaver.Save(res);
+                    res.SaveOrReplaceResource(importPath);
                     GD.Print("Updated scene resource: " + importPath);
                 };
             } else {

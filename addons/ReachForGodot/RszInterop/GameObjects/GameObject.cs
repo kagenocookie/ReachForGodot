@@ -95,6 +95,19 @@ public partial class GameObject : Node3D, ISerializationListener, ICloneable
         return i;
     }
 
+    public IEnumerable<GameObject> GetAllChildrenIncludingSelfOwnedBy(Node owner)
+    {
+        if (Owner == owner) yield return this;
+        foreach (var child in AllChildren) {
+            if (child.Owner == owner) {
+                yield return child;
+                foreach (var child2 in child.GetAllChildrenIncludingSelfOwnedBy(owner)) {
+                    yield return child2;
+                }
+            }
+        }
+    }
+
     public GameObject? GetChild(string name, int deduplicationIndex)
     {
         var dupesFound = 0;

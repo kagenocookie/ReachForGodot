@@ -5161,5 +5161,14 @@
         "Type": "Resource"
       }
     ]
+  },
+  "via.Prefab": {
+    "FieldPatches": [
+      {
+        "FileFormat": "Prefab",
+        "Name": "Path",
+        "Type": "Resource"
+      }
+    ]
   }
 }

@@ -21,4 +21,37 @@ public static class EditorExtensions
         undo.AddDoProperty(target, property, after);
         undo.CommitAction();
     }
+
+    public static PackedScene ToPackedScene(this Node node, bool fixOwners = true)
+    {
+        var scene = new PackedScene();
+        scene.Pack(node);
+        node.SetRecursiveOwner(node);
+        return scene;
+    }
+
+    public static PackedScene SaveAsScene(this Node node, string outputPath)
+    {
+        var scene = ToPackedScene(node);
+        var err = scene.SaveOrReplaceResource(outputPath);
+        if (err != Error.Ok) {
+            GD.PrintErr("Failed to save scene: " + err);
+        }
+        return scene;
+    }
+
+    public static Error SaveOrReplaceResource(this Resource resource, string importFilepath)
+    {
+        if (ResourceLoader.Exists(importFilepath)) {
+            resource.TakeOverPath(importFilepath);
+        } else {
+            Directory.CreateDirectory(ProjectSettings.GlobalizePath(importFilepath).GetBaseDir());
+            resource.ResourcePath = importFilepath;
+        }
+        var status = ResourceSaver.Save(resource);
+        if (status != Error.Ok) {
+            GD.PrintErr("Failed to save resource: " + status);
+        }
+        return status;
+    }
 }

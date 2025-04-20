@@ -68,22 +68,21 @@ public partial class GameResourceImporter : EditorImportPlugin
 
         var importedSavePath = $"{savePath}.{_GetSaveExtension()}";
         var globalSource = ProjectSettings.GlobalizePath(sourceFile);
-        var godotExt = format.format is SupportedFileFormats.Scene or SupportedFileFormats.Prefab ? "tscn" : "tres";
-        var resourceImportPath =  $"{sourceFile}.{godotExt}";
-        var altResourcePath =  $"{PathUtils.GetFilepathWithoutVersion(sourceFile)}.{godotExt}";
+        var resourceImportPath = $"{PathUtils.GetFilepathWithoutVersion(sourceFile)}.tres";
+        var altResourcePath = $"{sourceFile}.tres";
         var relative = PathUtils.ImportPathToRelativePath(sourceFile, config)
             ?? sourceFile;
 
-        var resource = ResourceLoader.Exists(resourceImportPath) ? ResourceLoader.Load<Resource>(resourceImportPath)
-            : ResourceLoader.Exists(altResourcePath) ? ResourceLoader.Load<Resource>(altResourcePath)
+        var resource = ResourceLoader.Exists(resourceImportPath) ? ResourceLoader.Load<REResource>(resourceImportPath)
+            : ResourceLoader.Exists(altResourcePath) ? ResourceLoader.Load<REResource>(altResourcePath)
             : null;
         if (resource != null) {
             var isOk = false;
-            if (resource is REResource existingResource) {
-                isOk = existingResource.Game == config.Game && (existingResource as IImportableAsset)?.IsEmpty == false;
-            } else if (resource is PackedScene pack) {
+            if (resource is REResourceProxy proxy && proxy.ImportedResource is PackedScene pack) {
                 // should we really instantiate for this, or just trust that it's correct?
                 isOk = pack.Instantiate<IAssetPointer>()?.Game == config.Game;
+            } else {
+                isOk = resource.Game == config.Game && (resource as IImportableAsset)?.IsEmpty == false;
             }
             if (isOk) {
                 var replace = new ImportedResource() {
@@ -98,27 +97,22 @@ public partial class GameResourceImporter : EditorImportPlugin
         }
 
         config.Paths.SourcePathOverride = config.AssetDirectory;
-        resource = Importer.Import(globalSource, config, resourceImportPath, false)!;
+        resource = Importer.ImportResource(globalSource, config, resourceImportPath, false)!;
         if (resource == null) {
             config.Paths.SourcePathOverride = null;
             return Error.FileNotFound;
         }
-        if (resource is REResource engineResource) {
-            engineResource.Asset ??= new();
-            engineResource.Asset.AssetFilename = sourceFile;
-        } else if (resource is PackedScene packed) {
+        if (resource is REResourceProxy proxy1 && proxy1.ImportedResource is PackedScene packed) {
             var root = packed.Instantiate<IAssetPointer>();
             root.Asset ??= new();
             root.Asset.AssetFilename = sourceFile;
             packed.Pack((Node)root);
+        } else {
+            resource.Asset ??= new();
+            resource.Asset.AssetFilename = sourceFile;
         }
 
-        if (ResourceLoader.Exists(resourceImportPath)) {
-            resource.TakeOverPath(resourceImportPath);
-        } else {
-            resource.ResourcePath = resourceImportPath;
-        }
-        ResourceSaver.Save(resource, resourceImportPath);
+        resource.SaveOrReplaceResource(resourceImportPath);
 
         var imported = new ImportedResource() {
             FileFormat = format.format,
@@ -128,16 +122,15 @@ public partial class GameResourceImporter : EditorImportPlugin
         };
         ResourceSaver.Save(imported, importedSavePath);
 
-        if (ShouldImportContent(format.format))  {
+        if (ShouldImportContent(format.format)) {
             var converter = new AssetConverter(config.Game, GodotImportOptions.directImport);
-            var importable = (resource as PackedScene)?.Instantiate<IImportableAsset>() ?? resource as IImportableAsset;
+
+            var asset = (resource as REResourceProxy)?.ImportedResource as PackedScene ?? resource as Resource;
+            var importable = (asset as PackedScene)?.Instantiate<IImportableAsset>() ?? resource as IImportableAsset;
             if (importable != null) {
                 _ = converter.ImportAsset(importable, globalSource).ContinueWith(t => {
                     if (t.IsCompletedSuccessfully) {
-                        if (resource is PackedScene packed) {
-                            packed.Pack((Node)importable);
-                        }
-                        ResourceSaver.Save(resource);
+                        ResourceSaver.Save(asset);
                     }
                 });
             }

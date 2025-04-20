@@ -33,7 +33,7 @@ public abstract class RszToolConverter<TImported, TExported, TResource> : DataCo
         if (!LoadFile(file)) return false;
 
         if (imported == null) {
-            var resource = Importer.FindOrImportResource<TResource>(sourcePath, Config, WritesEnabled);
+            var resource = Importer.FindOrImportAsset<TResource>(sourcePath, Config, WritesEnabled);
             if (resource == null) {
                 GD.PrintErr("Resource could not be created: " + sourcePath);
                 return false;
@@ -46,11 +46,6 @@ public abstract class RszToolConverter<TImported, TExported, TResource> : DataCo
         // TODO save imported resource
         Clear();
         return true;
-    }
-
-    public virtual void SaveAsset(TImported imported)
-    {
-        // SaveOrReplaceResource<TImported>(imported, )
     }
 
     public virtual bool LoadFile(TExported file)

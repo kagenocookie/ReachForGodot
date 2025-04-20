@@ -5724,7 +5724,7 @@
       {
         "FileFormat": "Prefab",
         "Name": "Path",
-        "Type": "String"
+        "Type": "Resource"
       }
     ]
   },

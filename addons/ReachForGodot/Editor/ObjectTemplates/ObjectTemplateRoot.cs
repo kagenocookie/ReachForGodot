@@ -61,7 +61,7 @@ public partial class ObjectTemplateRoot : Node
         var config = ReachForGodot.GetAssetConfig(component.Game);
 
         foreach (var (path, resourcePath) in props) {
-            var resource = Importer.FindOrImportResource<Resource>(resourcePath, config);
+            var resource = Importer.FindOrImportResource<REResource>(resourcePath, config);
             if (resource == null) {
                 GD.PrintErr("Stored template resource not found: " + path);
                 continue;
@@ -92,7 +92,7 @@ public partial class ObjectTemplateRoot : Node
                 var comp = gameobj.GetComponent(cls);
                 if (comp == null) continue;
 
-                var resource = Importer.FindOrImportResource<Resource>(resourcePath, config);
+                var resource = Importer.FindOrImportResource<REResource>(resourcePath, config);
                 if (resource == null) {
                     GD.PrintErr("Stored template resource not found: " + resourcePath);
                     continue;

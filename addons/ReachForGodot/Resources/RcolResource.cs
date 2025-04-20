@@ -19,4 +19,9 @@ public partial class RcolResource : REResourceProxy, IExportableAsset
         NotifyPropertyListChanged();
         return ImportedResource;
     }
+
+    public override Resource? GetOrCreatePlaceholder(GodotImportOptions options)
+    {
+        return ImportedResource ??= CreateImporter(options).Rcol.CreateScenePlaceholder(this);
+    }
 }

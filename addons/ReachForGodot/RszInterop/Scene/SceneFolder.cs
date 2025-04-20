@@ -18,6 +18,8 @@ public partial class SceneFolder : Node3D, IRszContainer, IImportableAsset
     [Export] public string? OriginalName { get; set; }
     [Export] public Aabb KnownBounds { get; set; }
 
+    public SceneResource? Resource => Importer.FindOrImportResource<SceneResource>(Asset, ReachForGodot.GetAssetConfig(Game), !string.IsNullOrEmpty(SceneFilePath));
+
     public bool IsEmpty => GetChildCount() == 0;
     public bool IsIndependentFolder => !string.IsNullOrEmpty(Asset?.AssetFilename);
 
@@ -136,6 +138,19 @@ public partial class SceneFolder : Node3D, IRszContainer, IImportableAsset
         }
 
         return null;
+    }
+
+    public IEnumerable<SceneFolder> GetAllSubfoldersIncludingSelfOwnedBy(Node owner)
+    {
+        if (Owner == owner) yield return this;
+        foreach (var child in AllSubfolders) {
+            if (child.Owner == owner) {
+                yield return child;
+                foreach (var child2 in child.GetAllSubfoldersIncludingSelfOwnedBy(owner)) {
+                    yield return child2;
+                }
+            }
+        }
     }
 
     public void CopyDataFrom(SceneFolder source)

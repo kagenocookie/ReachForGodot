@@ -60,7 +60,7 @@ public abstract class ConverterBase<TImported, TExported, TResource>
     {
         root.Name = path.BaseFilename.ToString().StringOrDefault("Unnamed");
         var scene = root.ToPackedScene(false);
-        var importFilepath = path.GetImportFilepath(Config);
+        var importFilepath = PathUtils.GetAssetImportPath(path.AssetFilename, PathUtils.GetFileFormat(path.AssetFilename).format, Config);
         if (importFilepath == null) return scene;
 
         return Convert.Options.allowWriting ? SaveOrReplaceResource(scene, importFilepath) : scene;
@@ -68,19 +68,14 @@ public abstract class ConverterBase<TImported, TExported, TResource>
 
     protected TRes SaveOrReplaceResource<TRes>(TRes newResource, string importFilepath) where TRes : Resource
     {
-        if (ResourceLoader.Exists(importFilepath)) {
-            newResource.TakeOverPath(importFilepath);
-        } else {
-            Directory.CreateDirectory(ProjectSettings.GlobalizePath(importFilepath.GetBaseDir()));
-            newResource.ResourcePath = importFilepath;
-        }
         Log("Saving resource " + importFilepath);
-        var status = ResourceSaver.Save(newResource);
-        if (status != Error.Ok) {
+        Convert.AddResource(importFilepath, newResource);
+        var status = newResource.SaveOrReplaceResource(importFilepath);
+        if (status == Error.Ok) {
+            Importer.QueueFileRescan();
+        } else {
             ErrorLog($"Failed to save resource {importFilepath}:\n{status}");
         }
-        Convert.AddResource(importFilepath, newResource);
-        Importer.QueueFileRescan();
         return newResource;
     }
 }

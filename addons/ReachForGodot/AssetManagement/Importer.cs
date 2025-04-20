@@ -38,23 +38,6 @@ public class Importer
         throw new Exception("Unknown asset resource reference " + resourceFilepath);
     }
 
-    public static bool EnsureResourceImported(string? sourceFile, AssetConfig config)
-    {
-        if (string.IsNullOrEmpty(sourceFile)) {
-            return false;
-        }
-
-        var importPath = PathUtils.GetLocalizedImportPath(sourceFile, config);
-        if (!ResourceLoader.Exists(importPath)) {
-            var sourcePath = PathUtils.FindSourceFilePath(sourceFile, config);
-            if (sourcePath == null) return false;
-            Importer.Import(sourcePath, config, importPath);
-            return true;
-        }
-
-        return true;
-    }
-
     public static bool CheckResourceExists(string sourceFile, AssetConfig config, bool tryExtract = true)
     {
         if (string.IsNullOrEmpty(sourceFile)) {
@@ -69,9 +52,25 @@ public class Importer
     }
 
     /// <summary>
+    /// Get the corresponding asset of a resource. This should be either equal to the input REResource instance for data resources, or any of Godot's normal resources like PackedScene, mesh, texture, audio files
+    /// </summary>
+    public static T? FindOrImportAsset<T>(string? chunkRelativeFilepath, AssetConfig config, bool saveAssetToFilesystem = true) where T : Resource
+    {
+        var resource = FindOrImportResource<REResource>(chunkRelativeFilepath, config, saveAssetToFilesystem);
+        var asset = resource?.GetAsset<T>();
+        if (asset != null) return asset;
+
+        if (resource is REResourceProxy proxy) {
+            return proxy.GetOrCreatePlaceholder(saveAssetToFilesystem ? writeImport : nowriteImport) as T;
+        }
+
+        return null;
+    }
+
+    /// <summary>
     /// Fetch an existing resource, or if it doesn't exist yet, create a placeholder resource for it.
     /// </summary>
-    public static T? FindOrImportResource<T>(string? chunkRelativeFilepath, AssetConfig config, bool saveAssetToFilesystem = true) where T : Resource
+    public static T? FindOrImportResource<T>(string? chunkRelativeFilepath, AssetConfig config, bool saveAssetToFilesystem = true) where T : REResource
     {
         if (string.IsNullOrEmpty(chunkRelativeFilepath)) {
             GD.PrintErr("Empty import path for resource " + typeof(T) + ": " + chunkRelativeFilepath);
@@ -96,12 +95,12 @@ public class Importer
 
         var sourcePath = PathUtils.FindSourceFilePath(chunkRelativeFilepath, config, saveAssetToFilesystem);
         if (sourcePath == null) {
-            return Importer.Import(PathUtils.RelativeToFullPath(chunkRelativeFilepath, config), config, importPath, saveAssetToFilesystem) as T;
+            return Importer.ImportResource(PathUtils.RelativeToFullPath(chunkRelativeFilepath, config), config, importPath, saveAssetToFilesystem) as T;
         }
-        return Importer.Import(sourcePath, config, importPath, saveAssetToFilesystem) as T;
+        return Importer.ImportResource(sourcePath, config, importPath, saveAssetToFilesystem) as T;
     }
 
-    public static Resource? Import(string sourceFilePath, AssetConfig config, string? importFilepath = null, bool saveAssetToFilesystem = true)
+    public static REResource? ImportResource(string sourceFilePath, AssetConfig config, string? importFilepath = null, bool saveAssetToFilesystem = true)
     {
         importFilepath ??= PathUtils.GetLocalizedImportPath(sourceFilePath, config);
         if (string.IsNullOrEmpty(importFilepath)) return null;
@@ -118,34 +117,13 @@ public class Importer
         }
         var options = saveAssetToFilesystem && resolvedPath != null ? writeImport : nowriteImport;
 
-        switch (format) {
-            case SupportedFileFormats.Scene:
-                return ImportScene(resolvedPath ?? sourceFilePath, outputFilePath, config, options);
-            case SupportedFileFormats.Prefab:
-                return ImportPrefab(resolvedPath ?? sourceFilePath, outputFilePath, config, options);
-            default:
-                return ImportResource(format, resolvedPath ?? sourceFilePath, outputFilePath, config, options);
-        }
-    }
+        sourceFilePath = resolvedPath ?? sourceFilePath;
+        var newres = CreateResource(format, sourceFilePath, outputFilePath, config);
+        if (newres == null || !options.allowWriting) return newres;
 
-    private static PackedScene? ImportScene(string sourceFilePath, string outputFilePath, AssetConfig config, GodotImportOptions options)
-    {
-        var converter = new AssetConverter(config, options);
-        var relative = PathUtils.FullToRelativePath(sourceFilePath, config);
-        if (relative == null && sourceFilePath.StartsWith(ProjectSettings.GlobalizePath("res://"))) {
-            relative = ProjectSettings.LocalizePath(sourceFilePath);
-        }
-        return converter.Scn.CreateOrReplaceResourcePlaceholder(relative != null ? new AssetReference(relative) : new AssetReference());
-    }
-
-    private static PackedScene? ImportPrefab(string sourceFilePath, string outputFilePath, AssetConfig config, GodotImportOptions options)
-    {
-        var converter = new AssetConverter(config, options);
-        var relative = PathUtils.FullToRelativePath(sourceFilePath, config);
-        if (relative == null && sourceFilePath.StartsWith(ProjectSettings.GlobalizePath("res://"))) {
-            relative = ProjectSettings.LocalizePath(sourceFilePath);
-        }
-        return converter.Pfb.CreateOrReplaceResourcePlaceholder(relative != null ? new AssetReference(relative) : new AssetReference());
+        var importPath = ProjectSettings.LocalizePath(outputFilePath);
+        newres.SaveOrReplaceResource(importPath);
+        return newres;
     }
 
     public static void QueueFileRescan()
@@ -160,22 +138,6 @@ public class Importer
         // var fs = EditorInterface.Singleton.GetResourceFilesystem();
         // fs.CallDeferred(EditorFileSystem.MethodName.UpdateFile, file);
         // fs.CallDeferred(EditorFileSystem.MethodName.ReimportFiles, new Godot.Collections.Array<string>(new[] { file }));
-    }
-
-    private static REResource? ImportResource(SupportedFileFormats format, string sourceFilePath, string outputFilePath, AssetConfig config, GodotImportOptions options)
-    {
-        var newres = CreateResource(format, sourceFilePath, outputFilePath, config);
-        if (newres == null || !options.allowWriting) return newres;
-
-        var importPath = ProjectSettings.LocalizePath(outputFilePath);
-        if (ResourceLoader.Exists(importPath)) {
-            newres.TakeOverPath(importPath);
-        } else {
-            Directory.CreateDirectory(outputFilePath.GetBaseDir());
-            newres.ResourcePath = importPath;
-        }
-        TrySaveResource(newres, sourceFilePath);
-        return newres;
     }
 
     private static void TrySaveResource(Resource res, string? filepath)
@@ -197,7 +159,9 @@ public class Importer
         var newres = resourceTypes.GetValueOrDefault(format) is Type rt ? (REResource)Activator.CreateInstance(rt)! : new REResource();
         newres.Asset = new AssetReference(relativePath);
         newres.Game = config.Game;
-        newres.ResourceName = PathUtils.GetFilepathWithoutVersion(relativePath).GetFile();
+        newres.ResourceName = newres.ResourceType is SupportedFileFormats.Prefab or SupportedFileFormats.Scene or SupportedFileFormats.Rcol
+            ? newres.Asset.BaseFilename.ToString()
+            : PathUtils.GetFilepathWithoutVersion(relativePath).GetFile();
 
         return newres;
     }

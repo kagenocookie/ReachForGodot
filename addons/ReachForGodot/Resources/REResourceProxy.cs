@@ -25,5 +25,7 @@ public partial class REResourceProxy : REResource, IImportableAsset
         return ImportedResource = await Import();
     }
 
+    public virtual Resource? GetOrCreatePlaceholder(GodotImportOptions options) => ImportedResource;
+
     protected virtual Task<Resource?> Import() => Task.FromResult((Resource?)null);
 }

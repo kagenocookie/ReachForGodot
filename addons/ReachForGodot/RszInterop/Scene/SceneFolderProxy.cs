@@ -16,7 +16,7 @@ public partial class SceneFolderProxy : SceneFolder
     private PackedScene? _contentScene { get; set; }
     public SceneFolder? RealFolder { get; private set; }
     public PackedScene? Contents => _contentScene ??=
-        (Asset == null ? null : Importer.FindOrImportResource<PackedScene>(Asset.AssetFilename, ReachForGodot.GetAssetConfig(Game)));
+        (Asset == null ? null : Importer.FindOrImportAsset<PackedScene>(Asset.AssetFilename, ReachForGodot.GetAssetConfig(Game)));
 
     private void ChangeEnabled(bool value)
     {
@@ -58,7 +58,7 @@ public partial class SceneFolderProxy : SceneFolder
 
         if (_contentScene == null) {
             if (Asset == null) return;
-            _contentScene = Importer.FindOrImportResource<PackedScene>(Asset.AssetFilename, ReachForGodot.GetAssetConfig(Game));
+            _contentScene = Importer.FindOrImportAsset<PackedScene>(Asset.AssetFilename, ReachForGodot.GetAssetConfig(Game));
             if (_contentScene == null) {
                 GD.PrintErr("Not found proxy source scene " + Asset.AssetFilename);
                 return;

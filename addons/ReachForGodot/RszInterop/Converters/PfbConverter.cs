@@ -6,17 +6,8 @@ using Godot;
 using ReaGE.DevTools;
 using RszTool;
 
-public class PfbConverter : RszAssetConverter<PrefabNode, PfbFile, PackedScene>
+public class PfbConverter : SceneRszAssetConverter<PrefabNode, PrefabResource, PfbFile>
 {
-    public override PackedScene CreateOrReplaceResourcePlaceholder(AssetReference reference)
-    {
-        var scn = new PrefabNode();
-        scn.OriginalName = reference.BaseFilename.ToString().StringOrDefault("Unnamed");
-        return CreateOrReplaceRszSceneResource(scn, reference);
-    }
-
-    public override PrefabNode? GetResourceImportedObject(PackedScene resource) => resource.Instantiate<PrefabNode>();
-
     public override PfbFile CreateFile(FileHandler fileHandler)
     {
         return new PfbFile(Convert.FileOption, fileHandler);
@@ -33,8 +24,9 @@ public class PfbConverter : RszAssetConverter<PrefabNode, PfbFile, PackedScene>
     {
         var fileOption = TypeCache.CreateRszFileOptions(Config);
 
-        foreach (var go in source.Children) {
-            go.PreExport();
+        source.PreExport();
+        foreach (var go in source.AllChildrenIncludingSelf) {
+            AddMissingResourceInfos(go, source);
         }
 
         StoreResources(source.Resources, file.ResourceInfoList, true);

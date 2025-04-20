@@ -243,21 +243,19 @@ public static partial class PathUtils
         return -1;
     }
 
-    public static string? GetLocalizedImportPath(string fullSourcePath, AssetConfig config)
+    public static string? GetLocalizedImportPath(string sourcePath, AssetConfig config)
     {
-        var path = FullOrRelativePathToImportPath(fullSourcePath, GetFileFormat(fullSourcePath).format, config, true);
-        if (string.IsNullOrEmpty(path)) return null;
-
-        return ProjectSettings.LocalizePath(path);
+        var path = FullOrRelativePathToImportPath(sourcePath, GetFileFormat(sourcePath).format, config, true);
+        return string.IsNullOrEmpty(path) ? null : path;
     }
 
     /// <summary>
     /// Gets the path that a resource's asset file will get imported to. This is the mesh/texture/audio/other linked resource, and not the main resource file.
     /// </summary>
-    public static string? GetAssetImportPath(string? fullSourcePath, SupportedFileFormats format, AssetConfig config)
+    public static string? GetAssetImportPath(string? sourcePath, SupportedFileFormats format, AssetConfig config)
     {
-        if (fullSourcePath == null) return null;
-        return ProjectSettings.LocalizePath(FullOrRelativePathToImportPath(fullSourcePath, format, config, false));
+        if (sourcePath == null) return null;
+        return FullOrRelativePathToImportPath(sourcePath, format, config, false);
     }
 
     public static string AppendFileVersion(string filename, AssetConfig config)
@@ -681,24 +679,26 @@ public static partial class PathUtils
         var relativePath = Path.IsPathRooted(sourcePath) ? FullToRelativePath(sourcePath, config) : sourcePath;
         if (relativePath == null) return null;
 
-        relativePath = GetFilepathWithoutVersion(relativePath);
+        sourcePath = GetFilepathWithoutVersion(relativePath);
 
-        var targetPath = Path.Combine(config.AssetDirectory, relativePath);
-
-        switch (fmt) {
-            case SupportedFileFormats.Mesh:
-                return targetPath + (resource ? ".tres" : ".glb");
-            case SupportedFileFormats.Texture:
-                return targetPath + (resource ? ".tres" : ".dds");
-            case SupportedFileFormats.Rcol:
-                return targetPath + (resource ? ".tres" : ".tscn");
-            case SupportedFileFormats.Scene:
-            case SupportedFileFormats.Prefab:
-                return targetPath + ".tscn";
-            case SupportedFileFormats.Userdata:
-                return targetPath + ".tres";
-            default:
-                return targetPath + ".tres";
+        if (!sourcePath.StartsWith("res://")) {
+            sourcePath =  ProjectSettings.LocalizePath(Path.Combine(config.AssetDirectory, sourcePath));
         }
+        if (!resource) {
+            switch (fmt) {
+                case SupportedFileFormats.Mesh:
+                    return sourcePath + ".glb";
+                case SupportedFileFormats.Texture:
+                    return sourcePath + ".dds";
+                case SupportedFileFormats.Rcol:
+                case SupportedFileFormats.Scene:
+                case SupportedFileFormats.Prefab:
+                    return sourcePath + ".tscn";
+                default:
+                    return sourcePath + ".tres";
+            }
+        }
+
+        return sourcePath + ".tres";
     }
 }

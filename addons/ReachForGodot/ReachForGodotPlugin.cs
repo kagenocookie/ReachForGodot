@@ -254,14 +254,14 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
             (current) => current.GetType() == typeof(REResource) &&
             PathUtils.GetFileFormatFromExtension(Path.GetExtension(Path.GetFileNameWithoutExtension(current.ResourcePath.AsSpan())).Slice(1)) != SupportedFileFormats.Unknown)
         ) {
-            Importer.Import(current.Asset!.AssetFilename, ReachForGodot.GetAssetConfig(current.Game), file);
+            Importer.ImportResource(current.Asset!.AssetFilename, ReachForGodot.GetAssetConfig(current.Game), file);
         }
     }
 
     private void UpgradeResources<TResource>(string extension) where TResource : REResource, new()
     {
         foreach (var (file, current) in FindUpgradeableResources($"*.{extension}.tres", (current) => current is not TResource || current.ResourceType == SupportedFileFormats.Unknown)) {
-            Importer.Import(current.Asset!.AssetFilename, ReachForGodot.GetAssetConfig(current.Game), file);
+            Importer.ImportResource(current.Asset!.AssetFilename, ReachForGodot.GetAssetConfig(current.Game), file);
         }
     }
 

@@ -79,7 +79,7 @@ public partial class AssetImportInspectorPlugin : EditorInspectorPlugin, ISerial
                     sourceOption.AddItem(src.label);
                 }
                 openSourceBtn.Pressed += () => {
-                    if (Path.IsPathRooted(fileSources[sourceOption.Selected])) {
+                    if (Path.IsPathRooted(fileSources[sourceOption.Selected]) && File.Exists(fileSources[sourceOption.Selected])) {
                         FileSystemUtils.ShowFileInExplorer(fileSources[sourceOption.Selected]);
                     } else {
                         FileSystemUtils.ShowFileInExplorer(PathUtils.FindSourceFilePath(Path.Combine(fileSources[sourceOption.Selected], importable.Asset!.AssetFilename), config));
@@ -140,7 +140,6 @@ public partial class AssetImportInspectorPlugin : EditorInspectorPlugin, ISerial
             if (scn.GetParent() is SceneFolderProxy parentProxy) {
                 root = scn = parentProxy;
             }
-            var sourceIsInstance = false;
             if (scn is SceneFolderProxy proxy) {
                 var realScene = proxy.Contents;
                 scn = realScene!.Instantiate<SceneFolder>();
@@ -151,19 +150,19 @@ public partial class AssetImportInspectorPlugin : EditorInspectorPlugin, ISerial
                     return;
                 }
 
-                var linkedScene = Importer.FindOrImportResource<PackedScene>(scn.Asset.AssetFilename, config);
+                var linkedScene = Importer.FindOrImportAsset<PackedScene>(scn.Asset.AssetFilename, config);
                 var newScn = linkedScene!.Instantiate<SceneFolder>();
                 scn.GetParent().EmplaceChild(scn, newScn);
                 scn = newScn;
             }
             asset = scn;
-            if (sourceIsInstance) {
-                EditorInterface.Singleton.EditNode(scn);
-            }
         }
 
         try {
             await converter.ImportAssetAsync(asset, sourceFilepath);
+            if (asset is Node node) {
+                EditorInterface.Singleton.EditNode(node);
+            }
             GD.Print("Resource reimport finished in " + sw.Elapsed);
             if (root is SceneFolderProxy proxy) {
                 if (proxy.ShowLinkedFolder) {

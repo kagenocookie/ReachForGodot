@@ -82,7 +82,7 @@ public sealed class ResourceFieldFinder : IDisposable
         var isInResourceList = string.IsNullOrEmpty(value) ? (bool?)null : resourceList.Any(r => r.Path?.Equals(value, StringComparison.OrdinalIgnoreCase) == true);
 
         // better not store these as resources, so we don't require all folders and subfolders to always be imported
-        if (cls == "via.Folder" || cls == "via.Prefab") return false;
+        if (cls == "via.Folder") return false;
 
         var ext = Path.GetExtension(value);
         if (string.IsNullOrEmpty(ext)) ext = string.Empty;

@@ -149,7 +149,7 @@ public partial class AssetBrowser : Resource
         var sourcePath = PathUtils.GetFilepathWithoutNativesFolder(file);
         var resolvedPath = PathUtils.FindSourceFilePath(sourcePath, config);
         if (resolvedPath != null) {
-            return Importer.Import(sourcePath, config) != null;
+            return Importer.ImportResource(sourcePath, config) != null;
         }
         return false;
     }
@@ -161,7 +161,7 @@ public partial class AssetBrowser : Resource
             config.Paths.SourcePathOverride = PathUtils.GetSourceFileBasePath(file, config);
         }
         try {
-            var res = Importer.Import(file, config);
+            var res = Importer.ImportResource(file, config);
             if (res is REResourceProxy resp) {
                 await resp.Import(true);
             } else if (res is UserdataResource ud) {

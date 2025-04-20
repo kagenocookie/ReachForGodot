@@ -71,13 +71,7 @@ public abstract class RszAssetConverter<TImported, TExported, TResource> : RszTo
         if (importPath != null) {
             Convert.AddResource(importPath, userdata);
             if (WritesEnabled) {
-                if (ResourceLoader.Exists(importPath)) {
-                    userdata.TakeOverPath(importPath);
-                } else {
-                    Directory.CreateDirectory(ProjectSettings.GlobalizePath(importPath.GetBaseDir()));
-                    userdata.ResourcePath = importPath;
-                }
-                ResourceSaver.Save(userdata);
+                userdata.SaveOrReplaceResource(importPath);
             }
         }
 
@@ -127,7 +121,7 @@ public abstract class RszAssetConverter<TImported, TExported, TResource> : RszTo
                     if (Convert.TryGetImportedResource(str, out var res)) {
                         return res;
                     }
-                    res = Importer.FindOrImportResource<Resource>(str, Config, WritesEnabled)!;
+                    res = Importer.FindOrImportResource<REResource>(str, Config, WritesEnabled)!;
                     Convert.AddResource(str, res);
                     return res;
                 } else {
@@ -254,23 +248,13 @@ public abstract class RszAssetConverter<TImported, TExported, TResource> : RszTo
         var resources = new List<REResource>(resourceInfos.Count);
         foreach (var res in resourceInfos) {
             if (!string.IsNullOrWhiteSpace(res.Path)) {
-                var resource = Importer.FindOrImportResource<Resource>(res.Path, Config, WritesEnabled);
-                if (resource == null) {
-                    resources.Add(new REResource() {
+                var resource = Importer.FindOrImportResource<REResource>(res.Path, Config, WritesEnabled)
+                    ?? new REResource() {
                         Asset = new AssetReference(res.Path),
                         Game = Game,
                         ResourceName = res.Path.GetFile()
-                    });
-                } else if (resource is REResource reres) {
-                    resources.Add(reres);
-                } else {
-                    resources.Add(new REResourceProxy() {
-                        Asset = new AssetReference(res.Path),
-                        ImportedResource = resource,
-                        Game = Game,
-                        ResourceName = res.Path.GetFile()
-                    });
-                }
+                    };
+                resources.Add(resource);
             } else {
                 Log("Found a resource with null path: " + resources.Count);
             }
@@ -283,6 +267,17 @@ public abstract class RszAssetConverter<TImported, TExported, TResource> : RszTo
         if (resources != null) {
             foreach (var res in resources) {
                 list.Add(new ResourceInfo(FileOption.Version, isPfb) { Path = res.Asset?.ExportedFilename });
+            }
+        }
+    }
+
+    protected static void AddMissingResourceInfos(GameObject gameObject, IRszContainer source)
+    {
+        foreach (var comp in gameObject.Components) {
+            foreach (var res in comp.NestedResources()) {
+                if (res is not UserdataResource && source.EnsureContainsResource(res)) {
+                    GD.Print("Added missing resource to resources list: " + res.Asset?.AssetFilename);
+                }
             }
         }
     }
@@ -394,7 +389,7 @@ public abstract class RszAssetConverter<TImported, TExported, TResource> : RszTo
             prefabPath = scnData.Prefab?.Path;
             if (!string.IsNullOrEmpty(prefabPath) && Importer.CheckResourceExists(prefabPath, Config, false)) {
                 var importFilepath = PathUtils.GetLocalizedImportPath(prefabPath, Config)!;
-                if (!Convert.HasImportedResource(importFilepath) && Importer.FindOrImportResource<PackedScene>(prefabPath, Config, WritesEnabled) is PackedScene packedPfb) {
+                if (!Convert.HasImportedResource(importFilepath) && Importer.FindOrImportAsset<PackedScene>(prefabPath, Config, WritesEnabled) is PackedScene packedPfb) {
                     if (Convert.Options.prefabs == RszImportType.Placeholders) {
                         var pfbInstance = packedPfb.Instantiate<PrefabNode>(PackedScene.GenEditState.Instance);
                         pfbInstance.Name = name;
@@ -403,8 +398,6 @@ public abstract class RszAssetConverter<TImported, TExported, TResource> : RszTo
                         }
                         return;
                     }
-                    // TODO do we still need this?
-                    // batch.prefabData = new PrefabQueueParams(packedPfb, data, importType, parentNode, parent, dedupeIndex);
                     return;
                 }
             }

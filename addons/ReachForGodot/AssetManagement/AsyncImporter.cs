@@ -258,7 +258,7 @@ public partial class AsyncImporter : Window
             while (fs.IsScanning()) {
                 await Task.Delay(25, cancellationTokenSource.Token);
             }
-            // a bit of extra delay to give the user a chance to cancel and for the import to hopefully finish
+            // a bit of extra delay to give the user a chance to cancel and for the import to hopefully _actually_ finish
             await Task.Delay(250, cancellationTokenSource.Token);
         }
 
@@ -287,10 +287,26 @@ public partial class AsyncImporter : Window
             return null;
         }
 
+        var fileExistsMs = 0;
+        var hasRetriedScan = false;
         while (!ResourceLoader.Exists(queueItem.importFilename)) {
             await Task.Delay(50, token);
             if (queueItem.state == ImportState.Failed) {
                 return null;
+            }
+            if (File.Exists(ProjectSettings.GlobalizePath(queueItem.importFilename))) {
+                fileExistsMs += 50;
+                if (fileExistsMs > 5000) {
+                    if (!hasRetriedScan && !ReachForGodotPlugin.IsImporting && !EditorInterface.Singleton.GetResourceFilesystem().IsScanning()) {
+                        Importer.QueueFileRescan();
+                        hasRetriedScan = true;
+                        fileExistsMs = 0;
+                    } else if (hasRetriedScan && fileExistsMs > 30_000) {
+                        // give up at this point, it's clearly stuck somehow
+                        GD.PrintErr("Asset import timed out, skipping: " + queueItem.importFilename);
+                        return null;
+                    }
+                }
             }
         }
         Resource? res = null;
