@@ -12,6 +12,7 @@ public static class ReachForGodot
     private static readonly Dictionary<SupportedGame, GamePaths> gamePaths = new();
     public static IEnumerable<AssetConfig> AssetConfigs => GetAllAssetConfigs();
     public static IEnumerable<SupportedGame> ConfiguredGames => AssetConfigs.Where(c => c.IsValid).Select(c => c.Game);
+    public static IEnumerable<SupportedGame> PathSetupGames => gamePaths.Keys;
     private static bool didFullConfigScan = false;
 
     public static string? BlenderPath {

@@ -181,6 +181,9 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
     private void RefreshToolMenu()
     {
         toolMenu.Clear();
+        if (ReachForGodot.ConfiguredGames.Count() != ReachForGodot.PathSetupGames.Count()) {
+            toolMenu.AddItem("Create missing asset import configs", 101);
+        }
         toolMenu.AddItem($"Open packed file browser...", 99);
         foreach (var game in ReachForGodot.GameList) {
             var pathSetting = ChunkPathSetting(game);
@@ -212,6 +215,10 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
             OpenPackedAssetBrowser();
         }
         if (id == 100) UpgradeObsoleteResources("mdf2");
+        if (id == 101) {
+            foreach (var game in ReachForGodot.PathSetupGames) ReachForGodot.GetAssetConfig(game);
+            RefreshToolMenu();
+        }
         if (id == 200) ExtractFileVersions();
 
 #if REAGE_DEV
