@@ -1,0 +1,24 @@
+{
+  "DisplayLabels": [
+    {
+      "name": "Less or equal",
+      "value": 1
+    },
+    {
+      "name": "Less than",
+      "value": 0
+    },
+    {
+      "name": "Greater or equal",
+      "value": 4
+    },
+    {
+      "name": "Greater than",
+      "value": 5
+    },
+    {
+      "name": "Not Equal",
+      "value": 3
+    }
+  ]
+}

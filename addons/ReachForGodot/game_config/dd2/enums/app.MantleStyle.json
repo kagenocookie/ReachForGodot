@@ -1,0 +1,424 @@
+{
+  "DisplayLabels": [
+    {
+      "name": "MantleStyle 31040 Backpack01",
+      "value": 31040
+    },
+    {
+      "name": "MantleStyle 31041 Backpack02",
+      "value": 31041
+    },
+    {
+      "name": "Mantle_001 General\u0027s Mantle #1545181358",
+      "value": 1545181358
+    },
+    {
+      "name": "Mantle_002 Soft Neck Wrap #3731632523",
+      "value": 3731632523
+    },
+    {
+      "name": "Mantle_003 Windbreaking Cloak #3629660905",
+      "value": 3629660905
+    },
+    {
+      "name": "Mantle_004 Heraldic Cape #2844610830",
+      "value": 2844610830
+    },
+    {
+      "name": "Mantle_005 Lupine Cape #3170413215",
+      "value": 3170413215
+    },
+    {
+      "name": "Mantle_006 Homespun Cloak #1361386740",
+      "value": 1361386740
+    },
+    {
+      "name": "Mantle_007 Vermundian Cloak #765271210",
+      "value": 765271210
+    },
+    {
+      "name": "Mantle_008 Dashing Capelet #1202822868",
+      "value": 1202822868
+    },
+    {
+      "name": "Mantle_009 Hide Cape #3987381937",
+      "value": 3987381937
+    },
+    {
+      "name": "Mantle_011 Voyager\u0027s Cape #1332467130",
+      "value": 1332467130
+    },
+    {
+      "name": "Mantle_012 Guerco Peafowl Feathercloak #1902571002",
+      "value": 1902571002
+    },
+    {
+      "name": "Mantle_017 Saurianscale Cape #3020709859",
+      "value": 3020709859
+    },
+    {
+      "name": "Mantle_019 Linen Cloak #2475659373",
+      "value": 2475659373
+    },
+    {
+      "name": "Mantle_020 Legacy Cloak #4209086058",
+      "value": 4209086058
+    },
+    {
+      "name": "Mantle_021 Commander\u0027s Mantle #31875621",
+      "value": 31875621
+    },
+    {
+      "name": "Mantle_035 Feathered Shawl #662691062",
+      "value": 662691062
+    },
+    {
+      "name": "Mantle_036 Ceremonial Cape #394380485",
+      "value": 394380485
+    },
+    {
+      "name": "Mantle_037 Velvet Cape #1087445482",
+      "value": 1087445482
+    },
+    {
+      "name": "Mantle_038 Shadewalker\u0027s Neck Wrap #3699205045",
+      "value": 3699205045
+    },
+    {
+      "name": "Mantle_042 Admiral\u0027s Mantle #1150269783",
+      "value": 1150269783
+    },
+    {
+      "name": "Mantle_047 Pioneer\u0027s Cape #2672073866",
+      "value": 2672073866
+    },
+    {
+      "name": "Mantle_048 Saint Idreum\u0027s Stole #225550997",
+      "value": 225550997
+    },
+    {
+      "name": "Mantle_051 Sentinel\u0027s Shoulder Cape #1532245726",
+      "value": 1532245726
+    },
+    {
+      "name": "Mantle_2000 #2940747786",
+      "value": 2940747786
+    },
+    {
+      "name": "Mantle_2001 #2792256808",
+      "value": 2792256808
+    },
+    {
+      "name": "Mantle_2020 #2121295033",
+      "value": 2121295033
+    },
+    {
+      "name": "Mantle_2040 #2832798868",
+      "value": 2832798868
+    },
+    {
+      "name": "Mantle_2041 #3920542309",
+      "value": 3920542309
+    },
+    {
+      "name": "Mantle_2042 #2527455575",
+      "value": 2527455575
+    },
+    {
+      "name": "Mantle_2043 #3064779476",
+      "value": 3064779476
+    },
+    {
+      "name": "Mantle_205 Expeditioner\u0027s Cloak #4136242155",
+      "value": 4136242155
+    },
+    {
+      "name": "Mantle_2120 #1370548738",
+      "value": 1370548738
+    },
+    {
+      "name": "Mantle_2121 #3989238514",
+      "value": 3989238514
+    },
+    {
+      "name": "Mantle_2140 #115877382",
+      "value": 115877382
+    },
+    {
+      "name": "Mantle_2141 #3565715425",
+      "value": 3565715425
+    },
+    {
+      "name": "Mantle_2142 #486610327",
+      "value": 486610327
+    },
+    {
+      "name": "Mantle_2145 #1228109509",
+      "value": 1228109509
+    },
+    {
+      "name": "Mantle_2146 #1533731742",
+      "value": 1533731742
+    },
+    {
+      "name": "Mantle_2180 #3009726066",
+      "value": 3009726066
+    },
+    {
+      "name": "Mantle_2181 #2813819153",
+      "value": 2813819153
+    },
+    {
+      "name": "Mantle_2240 #1713582422",
+      "value": 1713582422
+    },
+    {
+      "name": "Mantle_2300 #2420550061",
+      "value": 2420550061
+    },
+    {
+      "name": "Mantle_2301 #477231817",
+      "value": 477231817
+    },
+    {
+      "name": "Mantle_2302 #1994006808",
+      "value": 1994006808
+    },
+    {
+      "name": "Mantle_2320 #767019237",
+      "value": 767019237
+    },
+    {
+      "name": "Mantle_2380 #147701604",
+      "value": 147701604
+    },
+    {
+      "name": "Mantle_2381 #1524824930",
+      "value": 1524824930
+    },
+    {
+      "name": "Mantle_2440 #3532491058",
+      "value": 3532491058
+    },
+    {
+      "name": "Mantle_270 #2578437295",
+      "value": 2578437295
+    },
+    {
+      "name": "Mantle_300 Monarch\u0027s Mantle #1710622446",
+      "value": 1710622446
+    },
+    {
+      "name": "Mantle_301 Comforting Neck Wrap #524209220",
+      "value": 524209220
+    },
+    {
+      "name": "Mantle_3010 #3333242190",
+      "value": 3333242190
+    },
+    {
+      "name": "Mantle_302 Waterfowl Cloak #1263738831",
+      "value": 1263738831
+    },
+    {
+      "name": "Mantle_303 Philosopher\u0027s Cape #3713679776",
+      "value": 3713679776
+    },
+    {
+      "name": "Mantle_3030 #3206188821",
+      "value": 3206188821
+    },
+    {
+      "name": "Mantle_304 Redwolf Cape #879080864",
+      "value": 879080864
+    },
+    {
+      "name": "Mantle_305 Hollow Cape #448993987",
+      "value": 448993987
+    },
+    {
+      "name": "Mantle_3050 #712395354",
+      "value": 712395354
+    },
+    {
+      "name": "Mantle_306 Fair Cloak #3636419889",
+      "value": 3636419889
+    },
+    {
+      "name": "Mantle_3060 #1877988859",
+      "value": 1877988859
+    },
+    {
+      "name": "Mantle_307 Warbler Capelet #3682116343",
+      "value": 3682116343
+    },
+    {
+      "name": "Mantle_3070 #2059037973",
+      "value": 2059037973
+    },
+    {
+      "name": "Mantle_308 Moonhowl Cape #1591049836",
+      "value": 1591049836
+    },
+    {
+      "name": "Mantle_309 Glorious Cape #4006351984",
+      "value": 4006351984
+    },
+    {
+      "name": "Mantle_3090 #2373936071",
+      "value": 2373936071
+    },
+    {
+      "name": "Mantle_310 Murky Grouse Feathercloak #3808834190",
+      "value": 3808834190
+    },
+    {
+      "name": "Mantle_311 Drakescale Cape #180447156",
+      "value": 180447156
+    },
+    {
+      "name": "Mantle_312 Legend\u0027s Mantle #3216656410",
+      "value": 3216656410
+    },
+    {
+      "name": "Mantle_313 Ascendant Cloak #1602661940",
+      "value": 1602661940
+    },
+    {
+      "name": "Mantle_3130 #3704557421",
+      "value": 3704557421
+    },
+    {
+      "name": "Mantle_314 Champion\u0027s Mantle #3237056753",
+      "value": 3237056753
+    },
+    {
+      "name": "Mantle_315 Azure Shawl #1069105914",
+      "value": 1069105914
+    },
+    {
+      "name": "Mantle_316 Kindred Cape #1076451600",
+      "value": 1076451600
+    },
+    {
+      "name": "Mantle_317 Wayfarer\u0027s Cape #3119812592",
+      "value": 3119812592
+    },
+    {
+      "name": "Mantle_3170 #2242296228",
+      "value": 2242296228
+    },
+    {
+      "name": "Mantle_318 Abyssinal Neck Wrap #3783820309",
+      "value": 3783820309
+    },
+    {
+      "name": "Mantle_319 Uniter\u0027s Mantle #4129873054",
+      "value": 4129873054
+    },
+    {
+      "name": "Mantle_320 Imperial Shoulder Cape #1823924985",
+      "value": 1823924985
+    },
+    {
+      "name": "Mantle_321 Duty\u0027s Mantle #3666570498",
+      "value": 3666570498
+    },
+    {
+      "name": "Mantle_322 Regal Cloak #320210544",
+      "value": 320210544
+    },
+    {
+      "name": "Mantle_3220 #4152161288",
+      "value": 4152161288
+    },
+    {
+      "name": "Mantle_323 Wyrmhunter\u0027s Cloak #1875708673",
+      "value": 1875708673
+    },
+    {
+      "name": "Mantle_3230 #4177503819",
+      "value": 4177503819
+    },
+    {
+      "name": "Mantle_324 Wyrmwing Cape #3167980471",
+      "value": 3167980471
+    },
+    {
+      "name": "Mantle_3260 #3171192856",
+      "value": 3171192856
+    },
+    {
+      "name": "Mantle_3270 #1370268040",
+      "value": 1370268040
+    },
+    {
+      "name": "Mantle_3280 #1382625488",
+      "value": 1382625488
+    },
+    {
+      "name": "Mantle_3290 #3284139794",
+      "value": 3284139794
+    },
+    {
+      "name": "Mantle_3300 #1281063176",
+      "value": 1281063176
+    },
+    {
+      "name": "Mantle_3310 #1656604990",
+      "value": 1656604990
+    },
+    {
+      "name": "Mantle_3320 #968919301",
+      "value": 968919301
+    },
+    {
+      "name": "Mantle_3330 #472644284",
+      "value": 472644284
+    },
+    {
+      "name": "Mantle_3350 #2940619273",
+      "value": 2940619273
+    },
+    {
+      "name": "Mantle_4040 #1262641651",
+      "value": 1262641651
+    },
+    {
+      "name": "Mantle_4050 #3378231042",
+      "value": 3378231042
+    },
+    {
+      "name": "Mantle_4070 #2664977091",
+      "value": 2664977091
+    },
+    {
+      "name": "Mantle_4080 #1879704992",
+      "value": 1879704992
+    },
+    {
+      "name": "Mantle_4090 #1304714299",
+      "value": 1304714299
+    },
+    {
+      "name": "Mantle_4120 #4065946845",
+      "value": 4065946845
+    },
+    {
+      "name": "Mantle_4150 #3962151890",
+      "value": 3962151890
+    },
+    {
+      "name": "Mantle_4160 #3550749971",
+      "value": 3550749971
+    },
+    {
+      "name": "Mantle_4180 #4070457934",
+      "value": 4070457934
+    },
+    {
+      "name": "Mantle_809 #3583561786",
+      "value": 3583561786
+    }
+  ]
+}

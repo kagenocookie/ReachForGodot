@@ -7962,6 +7962,22 @@
       }
     ]
   },
+  "app.ItemShopBuyParam": {
+    "FieldPatches": [
+      {
+        "Name": "_ItemId",
+        "OriginalType": "app.ItemIDEnum"
+      }
+    ]
+  },
+  "app.ItemShopSellParam": {
+    "FieldPatches": [
+      {
+        "Name": "_ItemId",
+        "OriginalType": "app.ItemIDEnum"
+      }
+    ]
+  },
   "app.ItemModelHolder": {
     "FieldPatches": [
       {

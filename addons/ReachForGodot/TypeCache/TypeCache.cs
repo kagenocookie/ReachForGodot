@@ -310,6 +310,9 @@ public static partial class TypeCache
         return data;
     }
 
+    public static EnumDescriptor GetEnumDescriptor(SupportedGame game, string classname)
+        => GetEnumDescriptor(GetCacheRoot(game), classname);
+
     private static EnumDescriptor GetEnumDescriptor(GameClassCache cache, string classname)
     {
         var il2cpp = cache.Il2cppCache;

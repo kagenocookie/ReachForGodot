@@ -1,0 +1,44 @@
+{
+  "DisplayLabels": [
+    {
+      "name": "Job01 - Fighter",
+      "value": 1
+    },
+    {
+      "name": "Job02 - Archer",
+      "value": 2
+    },
+    {
+      "name": "Job03 - Mage",
+      "value": 3
+    },
+    {
+      "name": "Job04 - Thief",
+      "value": 4
+    },
+    {
+      "name": "Job05 - Warrior",
+      "value": 5
+    },
+    {
+      "name": "Job06 - Sorcerer",
+      "value": 6
+    },
+    {
+      "name": "Job07 - Mystic Spearhand",
+      "value": 7
+    },
+    {
+      "name": "Job08 - Magick Archer",
+      "value": 8
+    },
+    {
+      "name": "Job09 - Trickster",
+      "value": 9
+    },
+    {
+      "name": "Job10 - Warfarer",
+      "value": 10
+    }
+  ]
+}

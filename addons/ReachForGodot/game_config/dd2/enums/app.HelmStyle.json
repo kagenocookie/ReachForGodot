@@ -1,0 +1,680 @@
+{
+  "DisplayLabels": [
+    {
+      "name": "Helm_001 Iron Helm #1734445125",
+      "value": 1734445125
+    },
+    {
+      "name": "Helm_002 Aerie\u0027s Watch #3373321829",
+      "value": 3373321829
+    },
+    {
+      "name": "Helm_003 Beseecher\u0027s Hood #2368291441",
+      "value": 2368291441
+    },
+    {
+      "name": "Helm_004 Laurel Circlet #610702722",
+      "value": 610702722
+    },
+    {
+      "name": "Helm_005 Meloirean Cyclops Veil #2077819507",
+      "value": 2077819507
+    },
+    {
+      "name": "Helm_006 Hard-Leather Helm #2864390954",
+      "value": 2864390954
+    },
+    {
+      "name": "Helm_007 Plumed Cap #2814251267",
+      "value": 2814251267
+    },
+    {
+      "name": "Helm_008 Wizard\u0027s Hat #416891502",
+      "value": 416891502
+    },
+    {
+      "name": "Helm_009 Valorous Helm #1707109374",
+      "value": 1707109374
+    },
+    {
+      "name": "Helm_011 Scale Band #852623606",
+      "value": 852623606
+    },
+    {
+      "name": "Helm_012 Gryphic Helm #3061231446",
+      "value": 3061231446
+    },
+    {
+      "name": "Helm_013 Lion-Lord\u0027s Helm #2719168752",
+      "value": 2719168752
+    },
+    {
+      "name": "Helm_014 Ruminant Circlet #567870109",
+      "value": 567870109
+    },
+    {
+      "name": "Helm_015 Fiendish Armet #213586575",
+      "value": 213586575
+    },
+    {
+      "name": "Helm_017 Bishop\u0027s Crown #3576413025",
+      "value": 3576413025
+    },
+    {
+      "name": "Helm_021 Blazing Soul #3933297641",
+      "value": 3933297641
+    },
+    {
+      "name": "Helm_023 Solar Ascension #3637354718",
+      "value": 3637354718
+    },
+    {
+      "name": "Helm_028 Ravager-Lord\u0027s Helm #3117465993",
+      "value": 3117465993
+    },
+    {
+      "name": "Helm_029 Allesian Oxhide Hood #2321389562",
+      "value": 2321389562
+    },
+    {
+      "name": "Helm_030 Decapitator #3707271674",
+      "value": 3707271674
+    },
+    {
+      "name": "Helm_032 Oracular Veil #3948379531",
+      "value": 3948379531
+    },
+    {
+      "name": "Helm_033 Midnight Turban #3210527998",
+      "value": 3210527998
+    },
+    {
+      "name": "Helm_035 Griffin-Feather Hood #1996640775",
+      "value": 1996640775
+    },
+    {
+      "name": "Helm_037 Confidant\u0027s Hood #2733252050",
+      "value": 2733252050
+    },
+    {
+      "name": "Helm_038 Falconian Beak #1381967995",
+      "value": 1381967995
+    },
+    {
+      "name": "Helm_039 Predator\u0027s Maw #251492427",
+      "value": 251492427
+    },
+    {
+      "name": "Helm_041 Subjugator\u0027s Sallet #883047512",
+      "value": 883047512
+    },
+    {
+      "name": "Helm_042 Agamenian Galea #2251922501",
+      "value": 2251922501
+    },
+    {
+      "name": "Helm_045 Sorcerer\u0027s Hood #1692008662",
+      "value": 1692008662
+    },
+    {
+      "name": "Helm_046 Illuminary Crown #4058173523",
+      "value": 4058173523
+    },
+    {
+      "name": "Helm_047 Promethean Hood #2887174466",
+      "value": 2887174466
+    },
+    {
+      "name": "Helm_048 Uncanny Eyes #590148763",
+      "value": 590148763
+    },
+    {
+      "name": "Helm_049 Summoner\u0027s Crown #1160768998",
+      "value": 1160768998
+    },
+    {
+      "name": "Helm_050 Wardancer\u0027s Hat #3028359164",
+      "value": 3028359164
+    },
+    {
+      "name": "Helm_051 Dragon Knight\u0027s Helm #3417598165",
+      "value": 3417598165
+    },
+    {
+      "name": "Helm_056 Beastren Mask #3598672422",
+      "value": 3598672422
+    },
+    {
+      "name": "Helm_057 #2802525129",
+      "value": 2802525129
+    },
+    {
+      "name": "Helm_200 Wanderer\u0027s Hood #3368321790",
+      "value": 3368321790
+    },
+    {
+      "name": "Helm_2000 #3139531470",
+      "value": 3139531470
+    },
+    {
+      "name": "Helm_2001 #2521588385",
+      "value": 2521588385
+    },
+    {
+      "name": "Helm_2002 #1086983708",
+      "value": 1086983708
+    },
+    {
+      "name": "Helm_2003 #3326222116",
+      "value": 3326222116
+    },
+    {
+      "name": "Helm_201 Sentry\u0027s Coif #1096692274",
+      "value": 1096692274
+    },
+    {
+      "name": "Helm_202 Soldier\u0027s Helm #3977553846",
+      "value": 3977553846
+    },
+    {
+      "name": "Helm_2020 #3355311783",
+      "value": 3355311783
+    },
+    {
+      "name": "Helm_2021 #873999958",
+      "value": 873999958
+    },
+    {
+      "name": "Helm_2022 #1576373846",
+      "value": 1576373846
+    },
+    {
+      "name": "Helm_2023 #2820187248",
+      "value": 2820187248
+    },
+    {
+      "name": "Helm_2024 #3663096625",
+      "value": 3663096625
+    },
+    {
+      "name": "Helm_2040 #3072748700",
+      "value": 3072748700
+    },
+    {
+      "name": "Helm_2041 #474366990",
+      "value": 474366990
+    },
+    {
+      "name": "Helm_205 Marcher\u0027s Helm #945292229",
+      "value": 945292229
+    },
+    {
+      "name": "Helm_2060 #1320010156",
+      "value": 1320010156
+    },
+    {
+      "name": "Helm_2061 #1037129886",
+      "value": 1037129886
+    },
+    {
+      "name": "Helm_2062 #2197762898",
+      "value": 2197762898
+    },
+    {
+      "name": "Helm_207 Winged Sallet #2233450320",
+      "value": 2233450320
+    },
+    {
+      "name": "Helm_2080 #2941116264",
+      "value": 2941116264
+    },
+    {
+      "name": "Helm_2081 #1695300705",
+      "value": 1695300705
+    },
+    {
+      "name": "Helm_2082 #2304221948",
+      "value": 2304221948
+    },
+    {
+      "name": "Helm_210 Monarch\u0027s Crown #1356032114",
+      "value": 1356032114
+    },
+    {
+      "name": "Helm_2100 #178111738",
+      "value": 178111738
+    },
+    {
+      "name": "Helm_2101 #3716799948",
+      "value": 3716799948
+    },
+    {
+      "name": "Helm_2102 #1098630642",
+      "value": 1098630642
+    },
+    {
+      "name": "Helm_2103 #1726762346",
+      "value": 1726762346
+    },
+    {
+      "name": "Helm_2104 #629564345",
+      "value": 629564345
+    },
+    {
+      "name": "Helm_2105 #4210800412",
+      "value": 4210800412
+    },
+    {
+      "name": "Helm_211 Gladiator\u0027s Helm #3342241896",
+      "value": 3342241896
+    },
+    {
+      "name": "Helm_212 Howling Hood #2308287799",
+      "value": 2308287799
+    },
+    {
+      "name": "Helm_2120 #1121825200",
+      "value": 1121825200
+    },
+    {
+      "name": "Helm_2121 #4154494638",
+      "value": 4154494638
+    },
+    {
+      "name": "Helm_2122 #3726909180",
+      "value": 3726909180
+    },
+    {
+      "name": "Helm_2123 #1045714586",
+      "value": 1045714586
+    },
+    {
+      "name": "Helm_2140 #497909302",
+      "value": 497909302
+    },
+    {
+      "name": "Helm_2141 #1315317276",
+      "value": 1315317276
+    },
+    {
+      "name": "Helm_2142 #1047179552",
+      "value": 1047179552
+    },
+    {
+      "name": "Helm_2143 #2078299910",
+      "value": 2078299910
+    },
+    {
+      "name": "Helm_2145 #1260310375",
+      "value": 1260310375
+    },
+    {
+      "name": "Helm_2146 #2482472494",
+      "value": 2482472494
+    },
+    {
+      "name": "Helm_2160 #2867117880",
+      "value": 2867117880
+    },
+    {
+      "name": "Helm_2180 #1484801066",
+      "value": 1484801066
+    },
+    {
+      "name": "Helm_221 Friar\u0027s Hood #517740891",
+      "value": 517740891
+    },
+    {
+      "name": "Helm_222 Battahli Turban #2258159369",
+      "value": 2258159369
+    },
+    {
+      "name": "Helm_2220 #642543538",
+      "value": 642543538
+    },
+    {
+      "name": "Helm_2221 #1411223076",
+      "value": 1411223076
+    },
+    {
+      "name": "Helm_2240 #3742548012",
+      "value": 3742548012
+    },
+    {
+      "name": "Helm_225 Crusader\u0027s Helm #3850358598",
+      "value": 3850358598
+    },
+    {
+      "name": "Helm_2260 #2151257460",
+      "value": 2151257460
+    },
+    {
+      "name": "Helm_228 Deadly Nightshade #4056193571",
+      "value": 4056193571
+    },
+    {
+      "name": "Helm_229 Devotee\u0027s Hood #2584086441",
+      "value": 2584086441
+    },
+    {
+      "name": "Helm_2300 #3848846252",
+      "value": 3848846252
+    },
+    {
+      "name": "Helm_2301 #3527449886",
+      "value": 3527449886
+    },
+    {
+      "name": "Helm_2302 #422168832",
+      "value": 422168832
+    },
+    {
+      "name": "Helm_232 Dawn Hood #4117923743",
+      "value": 4117923743
+    },
+    {
+      "name": "Helm_2320 #1507839453",
+      "value": 1507839453
+    },
+    {
+      "name": "Helm_2321 #2640366965",
+      "value": 2640366965
+    },
+    {
+      "name": "Helm_2322 #1268356227",
+      "value": 1268356227
+    },
+    {
+      "name": "Helm_2323 #1404298877",
+      "value": 1404298877
+    },
+    {
+      "name": "Helm_2324 #2101021475",
+      "value": 2101021475
+    },
+    {
+      "name": "Helm_2325 #2048412356",
+      "value": 2048412356
+    },
+    {
+      "name": "Helm_2326 #289933445",
+      "value": 289933445
+    },
+    {
+      "name": "Helm_2340 #1156988293",
+      "value": 1156988293
+    },
+    {
+      "name": "Helm_236 Sage\u0027s Hood #1743905150",
+      "value": 1743905150
+    },
+    {
+      "name": "Helm_237 Cleric\u0027s Hood #4124768932",
+      "value": 4124768932
+    },
+    {
+      "name": "Helm_238 Redstitch Hood #3237945170",
+      "value": 3237945170
+    },
+    {
+      "name": "Helm_2380 #1822224289",
+      "value": 1822224289
+    },
+    {
+      "name": "Helm_2381 #2368971045",
+      "value": 2368971045
+    },
+    {
+      "name": "Helm_2382 #2876490882",
+      "value": 2876490882
+    },
+    {
+      "name": "Helm_2385 #3828066232",
+      "value": 3828066232
+    },
+    {
+      "name": "Helm_2386 #2846043181",
+      "value": 2846043181
+    },
+    {
+      "name": "Helm_2387 #1391975140",
+      "value": 1391975140
+    },
+    {
+      "name": "Helm_242 Witch\u0027s Hat #330637081",
+      "value": 330637081
+    },
+    {
+      "name": "Helm_2420 #3855813544",
+      "value": 3855813544
+    },
+    {
+      "name": "Helm_2421 #1247756683",
+      "value": 1247756683
+    },
+    {
+      "name": "Helm_2440 #2407036752",
+      "value": 2407036752
+    },
+    {
+      "name": "Helm_2441 #4237419481",
+      "value": 4237419481
+    },
+    {
+      "name": "Helm_246 Visage of Ja\u0027Nuwa #781396394",
+      "value": 781396394
+    },
+    {
+      "name": "Helm_2460 #3443026979",
+      "value": 3443026979
+    },
+    {
+      "name": "Helm_247 Veil of Awakening #1384845728",
+      "value": 1384845728
+    },
+    {
+      "name": "Helm_248 Visionary\u0027s Mask #2332581575",
+      "value": 2332581575
+    },
+    {
+      "name": "Helm_249 Doomdove Turban #3494277542",
+      "value": 3494277542
+    },
+    {
+      "name": "Helm_253 Living Altar #2309540576",
+      "value": 2309540576
+    },
+    {
+      "name": "Helm_254 Felt Cap #1450194928",
+      "value": 1450194928
+    },
+    {
+      "name": "Helm_255 Scout\u0027s Hood #1577944532",
+      "value": 1577944532
+    },
+    {
+      "name": "Helm_257 Galewind Helm #2432600049",
+      "value": 2432600049
+    },
+    {
+      "name": "Helm_264 Cavalier Hat #60740664",
+      "value": 60740664
+    },
+    {
+      "name": "Helm_265 Dyed-Cloth Mask #918597985",
+      "value": 918597985
+    },
+    {
+      "name": "Helm_266 Gazer\u0027s Hood #2577160646",
+      "value": 2577160646
+    },
+    {
+      "name": "Helm_267 Unseen Shadow #2097177004",
+      "value": 2097177004
+    },
+    {
+      "name": "Helm_270 #2563411046",
+      "value": 2563411046
+    },
+    {
+      "name": "Helm_273 Hood of Darkness #4271595499",
+      "value": 4271595499
+    },
+    {
+      "name": "Helm_274 #3914772433",
+      "value": 3914772433
+    },
+    {
+      "name": "Helm_275 Mask of Concealment #424865425",
+      "value": 424865425
+    },
+    {
+      "name": "Helm_276 Shrouded Helm #2738613438",
+      "value": 2738613438
+    },
+    {
+      "name": "Helm_277 Crown of Insight #2185799240",
+      "value": 2185799240
+    },
+    {
+      "name": "Helm_278 Ancient Galea #285885707",
+      "value": 285885707
+    },
+    {
+      "name": "Helm_279 Leafshade Hood #3369726827",
+      "value": 3369726827
+    },
+    {
+      "name": "Helm_280 #2311408586",
+      "value": 2311408586
+    },
+    {
+      "name": "Helm_281 #1149775569",
+      "value": 1149775569
+    },
+    {
+      "name": "Helm_285 #1989105715",
+      "value": 1989105715
+    },
+    {
+      "name": "Helm_301 Tail of Simurgh #1766835527",
+      "value": 1766835527
+    },
+    {
+      "name": "Helm_3010 #1694842284",
+      "value": 1694842284
+    },
+    {
+      "name": "Helm_302 Arcane Hat #957690855",
+      "value": 957690855
+    },
+    {
+      "name": "Helm_303 Zodiac Charm #1995840313",
+      "value": 1995840313
+    },
+    {
+      "name": "Helm_3030 #1165016866",
+      "value": 1165016866
+    },
+    {
+      "name": "Helm_304 Serpentine Circlet #495263306",
+      "value": 495263306
+    },
+    {
+      "name": "Helm_305 Twilight Star #2432290587",
+      "value": 2432290587
+    },
+    {
+      "name": "Helm_306 Gnostic Wings #1404779013",
+      "value": 1404779013
+    },
+    {
+      "name": "Helm_307 Hood of Nonentity #3222366514",
+      "value": 3222366514
+    },
+    {
+      "name": "Helm_308 Farseer\u0027s Circlet #1133481787",
+      "value": 1133481787
+    },
+    {
+      "name": "Helm_309 Sergeant\u0027s Armet #1629343203",
+      "value": 1629343203
+    },
+    {
+      "name": "Helm_310 Persecutor\u0027s Horns #389280132",
+      "value": 389280132
+    },
+    {
+      "name": "Helm_3230 #562774889",
+      "value": 562774889
+    },
+    {
+      "name": "Helm_3250 #2991001676",
+      "value": 2991001676
+    },
+    {
+      "name": "Helm_3270 #3356081112",
+      "value": 3356081112
+    },
+    {
+      "name": "Helm_3280 #2721588870",
+      "value": 2721588870
+    },
+    {
+      "name": "Helm_3300 #108593905",
+      "value": 108593905
+    },
+    {
+      "name": "Helm_3420 #2795082493",
+      "value": 2795082493
+    },
+    {
+      "name": "Helm_3430 #249665488",
+      "value": 249665488
+    },
+    {
+      "name": "Helm_4010 #3140652575",
+      "value": 3140652575
+    },
+    {
+      "name": "Helm_4020 #3481229760",
+      "value": 3481229760
+    },
+    {
+      "name": "Helm_4060 #3085369665",
+      "value": 3085369665
+    },
+    {
+      "name": "Helm_4070 #1964183371",
+      "value": 1964183371
+    },
+    {
+      "name": "Helm_409 Sovran\u0027s Crown #1982252045",
+      "value": 1982252045
+    },
+    {
+      "name": "Helm_4090 #2387256860",
+      "value": 2387256860
+    },
+    {
+      "name": "Helm_4110 #1115725619",
+      "value": 1115725619
+    },
+    {
+      "name": "Helm_4150 #2060984219",
+      "value": 2060984219
+    },
+    {
+      "name": "Helm_4160 #2097322970",
+      "value": 2097322970
+    },
+    {
+      "name": "Helm_4170 #23059830",
+      "value": 23059830
+    },
+    {
+      "name": "Helm_4180 #3280578945",
+      "value": 3280578945
+    }
+  ]
+}

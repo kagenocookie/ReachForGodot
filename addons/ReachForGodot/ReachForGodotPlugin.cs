@@ -4,6 +4,7 @@ using GC = Godot.Collections;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using ReaGE.DevTools;
+using ReaGE.ContentEditorIntegration;
 
 
 #if REAGE_DEV
@@ -202,6 +203,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
         foreach (var test in tests) {
             toolMenuDev?.AddItem("Test: " + (test.Name.StartsWith("Test") ? test.Name.Substring(4) : test.Name), testId++);
         }
+        // toolMenuDev?.AddItem("Extract Content Editor enum display labels", 300);
 #endif
     }
 
@@ -221,6 +223,13 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
         }
         if (id == 200) ExtractFileVersions();
 
+        if (id == 300) {
+            foreach (var cfg in ReachForGodot.AssetConfigs.Where(c => c.IsValid)) {
+                if (cfg.Paths.Gamedir == null) continue;
+                var ce = new ContentEditor(cfg, cfg.Paths.Gamedir);
+                ce.ParseDumpedEnumDisplayLabels();
+            }
+        }
 #if REAGE_DEV
         if (id >= 1000) {
             var tests = GoTest.Adapter.CreateProvider().GetTestSuites(System.Reflection.Assembly.GetExecutingAssembly());

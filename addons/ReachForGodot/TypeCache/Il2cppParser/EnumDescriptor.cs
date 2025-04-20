@@ -7,6 +7,7 @@ using REFDumpFormatter;
 public abstract class EnumDescriptor
 {
     public abstract string GetLabel(object value);
+    public abstract string GetLabel(JsonElement value);
     public abstract Type BackingType { get; }
 
     public abstract IEnumerable<EnumCacheItem> CacheItems { get; }
@@ -41,7 +42,7 @@ public abstract class EnumDescriptor
     }
 
     protected abstract bool GuessIsFlags();
-    protected abstract void AddValue(string name, JsonElement elem);
+    public abstract void AddValue(string name, JsonElement elem);
 }
 
 public sealed class EnumDescriptor<T> : EnumDescriptor where T : struct, IBinaryInteger<T>, IBitwiseOperators<T, T, T>
@@ -56,10 +57,17 @@ public sealed class EnumDescriptor<T> : EnumDescriptor where T : struct, IBinary
     private static readonly object DefaultValue = default(T);
 
     public override string GetLabel(object value) => ValueToLabels.TryGetValue((T)value, out var val) ? val : string.Empty;
+    public override string GetLabel(JsonElement value) => GetLabel(Converter(value));
 
     private static Func<JsonElement, T>? converter;
+    private static Func<JsonElement, T> Converter {
+        get {
+            if (converter == null) CreateConverter();
+            return converter!;
+        }
+    }
 
-    protected override IEnumerable<string> LabelValuePairs => ValueToLabels.Select((pair) => $"{pair.Value}:{pair.Key}");
+    protected override IEnumerable<string> LabelValuePairs => ValueToLabels.Select((pair) => $"{pair.Value.Replace(":", "-")}:{pair.Key}");
 
     protected override bool GuessIsFlags()
     {
@@ -95,7 +103,7 @@ public sealed class EnumDescriptor<T> : EnumDescriptor where T : struct, IBinary
         return max != maxPot && potCount >= 2 || potCount >= 3;
     }
 
-    protected override void AddValue(string name, JsonElement elem)
+    public override void AddValue(string name, JsonElement elem)
     {
         if (converter == null) {
             CreateConverter();

@@ -49,7 +49,7 @@ public static class ReachForGodot
         }
         var paths = gamePaths.GetValueOrDefault(game);
 
-        var gameShortname = paths?.ShortName ?? GamePaths.GetShortName(game);
+        var gameShortname = game.ToShortName();
         var defaultResourcePath = "res://asset_config_" + gameShortname + ".tres";
         if (ResourceLoader.Exists(defaultResourcePath)) {
             config = ResourceLoader.Load<AssetConfig>(defaultResourcePath);

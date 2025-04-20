@@ -137,7 +137,7 @@ public static partial class TypeCache
                 GD.Print("Regenerated source il2cpp data in " + time.Elapsed);
                 success = TryApplyIl2cppCache(il2CppCache, baseCacheFile);
             }
-            TryApplyIl2cppCache(il2CppCache, paths.EnumOverridesFilename);
+            TryApplyEnumOverrides(il2CppCache, paths.EnumOverridesDir);
             if (success) {
                 GD.Print("Loaded cached il2cpp data in " + time.Elapsed);
             } else {
@@ -190,6 +190,24 @@ public static partial class TypeCache
                 return true;
             }
             return false;
+        }
+
+        private bool TryApplyEnumOverrides(Il2cppCache target, string sourceDir)
+        {
+            if (!Directory.Exists(sourceDir)) return false;
+
+            var files = Directory.EnumerateFiles(sourceDir, "*.json");
+            foreach (var file in files) {
+                if (TryDeserialize<EnumOverrideRoot>(file, out var root)) {
+                    var classname = Path.GetFileNameWithoutExtension(file);
+                    if (target.enums.TryGetValue(classname, out var enumDesc)) {
+                        if (root.DisplayLabels != null) {
+                            enumDesc.ParseCacheData(root.DisplayLabels);
+                        }
+                    }
+                }
+            }
+            return true;
         }
 
         private T? DeserializeOrNull<T>(string? filepath) where T : class => DeserializeOrNull<T>(filepath, default);

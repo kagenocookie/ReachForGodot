@@ -5,20 +5,20 @@ using Godot;
 
 public static class ObjectTemplateManager
 {
-    private static string TemplateSubfolder(ObjectTemplateType type, SupportedGame game)
+    private static string TemplateSubfolder(ObjectTemplateType type)
     {
         var templateFolder = type switch {
             ObjectTemplateType.GameObject => "GameObject",
             ObjectTemplateType.Component => "Component",
             _ => "GameObjects",
         };
-        return $"{GamePaths.GetShortName(game)}/templates/{templateFolder}/";
+        return $"templates/{templateFolder}/";
     }
     public static string GetBaseTemplateFolder(ObjectTemplateType type, SupportedGame game)
-        => $"res://addons/ReachForGodot/game_config/{TemplateSubfolder(type, game)}";
+        => GamePaths.GetGameConfigPath(game, TemplateSubfolder(type));
 
     public static string GetUserTemplateFolder(ObjectTemplateType type, SupportedGame game)
-        => ReachForGodot.GetUserdataPath(TemplateSubfolder(type, game));
+        => ReachForGodot.GetUserdataPath(TemplateSubfolder(type));
 
     public static string[] GetAvailableTemplates(ObjectTemplateType type, SupportedGame game)
     {

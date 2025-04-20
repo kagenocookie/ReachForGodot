@@ -1,0 +1,3976 @@
+{
+  "DisplayLabels": [
+    {
+      "name": "Item 1 - Apple",
+      "value": 1
+    },
+    {
+      "name": "Item 2 - Ripened Apple",
+      "value": 2
+    },
+    {
+      "name": "Item 3 - Rotten Apple",
+      "value": 3
+    },
+    {
+      "name": "Item 4 - Grapes",
+      "value": 4
+    },
+    {
+      "name": "Item 5 - Ripened Grapes",
+      "value": 5
+    },
+    {
+      "name": "Item 6 - Rotten Grapes",
+      "value": 6
+    },
+    {
+      "name": "Item 7 - Quince",
+      "value": 7
+    },
+    {
+      "name": "Item 8 - Ripened Quince",
+      "value": 8
+    },
+    {
+      "name": "Item 9 - Rotten Quince",
+      "value": 9
+    },
+    {
+      "name": "Item 10 - Fig",
+      "value": 10
+    },
+    {
+      "name": "Item 11 - Ripened Fig",
+      "value": 11
+    },
+    {
+      "name": "Item 12 - Rotten Fig",
+      "value": 12
+    },
+    {
+      "name": "Item 13 - Raspberry",
+      "value": 13
+    },
+    {
+      "name": "Item 14 - Ripened Raspberry",
+      "value": 14
+    },
+    {
+      "name": "Item 15 - Rotten Raspberry",
+      "value": 15
+    },
+    {
+      "name": "Item 16 - Cranberry",
+      "value": 16
+    },
+    {
+      "name": "Item 17 - Ripened Cranberry",
+      "value": 17
+    },
+    {
+      "name": "Item 18 - Rotten Cranberry",
+      "value": 18
+    },
+    {
+      "name": "Item 19 - Blueberry",
+      "value": 19
+    },
+    {
+      "name": "Item 20 - Ripened Blueberry",
+      "value": 20
+    },
+    {
+      "name": "Item 21 - Rotten Blueberry",
+      "value": 21
+    },
+    {
+      "name": "Item 22 - Strawberry",
+      "value": 22
+    },
+    {
+      "name": "Item 23 - Ripened Strawberry",
+      "value": 23
+    },
+    {
+      "name": "Item 24 - Rotten Strawberry",
+      "value": 24
+    },
+    {
+      "name": "Item 25 - Scrag of Beast",
+      "value": 25
+    },
+    {
+      "name": "Item 26 - Aged Scrag of Beast",
+      "value": 26
+    },
+    {
+      "name": "Item 27 - Rotten Scrag of Beast",
+      "value": 27
+    },
+    {
+      "name": "Item 28 - Beast-Steak",
+      "value": 28
+    },
+    {
+      "name": "Item 29 - Aged Beast-Steak",
+      "value": 29
+    },
+    {
+      "name": "Item 30 - Rotten Beast-Steak",
+      "value": 30
+    },
+    {
+      "name": "Item 31 - Shorefish",
+      "value": 31
+    },
+    {
+      "name": "Item 32 - Aged Shorefish",
+      "value": 32
+    },
+    {
+      "name": "Item 33 - Rotten Shorefish",
+      "value": 33
+    },
+    {
+      "name": "Item 34 - Tideswimmer",
+      "value": 34
+    },
+    {
+      "name": "Item 35 - Aged Tideswimmer",
+      "value": 35
+    },
+    {
+      "name": "Item 36 - Rotten Tideswimmer",
+      "value": 36
+    },
+    {
+      "name": "Item 37 - Dried Fruit",
+      "value": 37
+    },
+    {
+      "name": "Item 38 - Fruit Roborant",
+      "value": 38
+    },
+    {
+      "name": "Item 39 - Fine Fruit Roborant",
+      "value": 39
+    },
+    {
+      "name": "Item 40 - Invalid",
+      "value": 40
+    },
+    {
+      "name": "Item 41 - Dried Meat",
+      "value": 41
+    },
+    {
+      "name": "Item 42 - Mincemeat Roborant",
+      "value": 42
+    },
+    {
+      "name": "Item 43 - Fine Mincemeat Roborant",
+      "value": 43
+    },
+    {
+      "name": "Item 44 - Invalid",
+      "value": 44
+    },
+    {
+      "name": "Item 45 - Dried Fish",
+      "value": 45
+    },
+    {
+      "name": "Item 46 - Roe Roborant",
+      "value": 46
+    },
+    {
+      "name": "Item 47 - Fine Roe Roborant",
+      "value": 47
+    },
+    {
+      "name": "Item 48 - Invalid",
+      "value": 48
+    },
+    {
+      "name": "Item 49 - Harspud",
+      "value": 49
+    },
+    {
+      "name": "Item 50 - Ripened Harspud",
+      "value": 50
+    },
+    {
+      "name": "Item 51 - Rotten Harspud",
+      "value": 51
+    },
+    {
+      "name": "Item 52 - Princess Harspud",
+      "value": 52
+    },
+    {
+      "name": "Item 53 - Ripened Princess Harspud",
+      "value": 53
+    },
+    {
+      "name": "Item 54 - Rotten Princess Harspud",
+      "value": 54
+    },
+    {
+      "name": "Item 55 - Dried Spud",
+      "value": 55
+    },
+    {
+      "name": "Item 56 - Harspud Roborant",
+      "value": 56
+    },
+    {
+      "name": "Item 57 - Fine Harspud Roborant",
+      "value": 57
+    },
+    {
+      "name": "Item 58 - Invalid",
+      "value": 58
+    },
+    {
+      "name": "Item 59 - Detoxifying Decoction",
+      "value": 59
+    },
+    {
+      "name": "Item 60 - Waking Powder",
+      "value": 60
+    },
+    {
+      "name": "Item 61 - Quenching Syrup",
+      "value": 61
+    },
+    {
+      "name": "Item 62 - Warming Salve",
+      "value": 62
+    },
+    {
+      "name": "Item 63 - Invalid",
+      "value": 63
+    },
+    {
+      "name": "Item 64 - Sobering Tonic",
+      "value": 64
+    },
+    {
+      "name": "Item 65 - Malleating Elixir",
+      "value": 65
+    },
+    {
+      "name": "Item 66 - Soothing Brew",
+      "value": 66
+    },
+    {
+      "name": "Item 67 - Panacea",
+      "value": 67
+    },
+    {
+      "name": "Item 68 - Parching Concoction",
+      "value": 68
+    },
+    {
+      "name": "Item 69 - Wicking Remedy",
+      "value": 69
+    },
+    {
+      "name": "Item 70 - Allheal Elixir",
+      "value": 70
+    },
+    {
+      "name": "Item 71 - Invalid",
+      "value": 71
+    },
+    {
+      "name": "Item 72 - Stability Extract",
+      "value": 72
+    },
+    {
+      "name": "Item 73 - Savagery Extract",
+      "value": 73
+    },
+    {
+      "name": "Item 74 - Stoutness Extract",
+      "value": 74
+    },
+    {
+      "name": "Item 75 - Invalid",
+      "value": 75
+    },
+    {
+      "name": "Item 76 - Eternal Wakestone",
+      "value": 76
+    },
+    {
+      "name": "Item 77 - Wakestone",
+      "value": 77
+    },
+    {
+      "name": "Item 78 - Wakestone Shard",
+      "value": 78
+    },
+    {
+      "name": "Item 79 - Dragon\u0027s Gaze",
+      "value": 79
+    },
+    {
+      "name": "Item 80 - Ferrystone",
+      "value": 80
+    },
+    {
+      "name": "Item 81 - Portcrystal",
+      "value": 81
+    },
+    {
+      "name": "Item 82 - Invalid",
+      "value": 82
+    },
+    {
+      "name": "Item 83 - Bunch of Flowers",
+      "value": 83
+    },
+    {
+      "name": "Item 84 - Invalid",
+      "value": 84
+    },
+    {
+      "name": "Item 85 - Lantern Oil",
+      "value": 85
+    },
+    {
+      "name": "Item 86 - Lantern (Fueled)",
+      "value": 86
+    },
+    {
+      "name": "Item 87 - Lantern (Half-Full)",
+      "value": 87
+    },
+    {
+      "name": "Item 88 - Lantern (Near-Empty)",
+      "value": 88
+    },
+    {
+      "name": "Item 89 - Lantern (No Fuel)",
+      "value": 89
+    },
+    {
+      "name": "Item 90 - Sealing Phial",
+      "value": 90
+    },
+    {
+      "name": "Item 91 - Sealing Phial (Contains Person)",
+      "value": 91
+    },
+    {
+      "name": "Item 92 - Harpysnare Smoke Beacon",
+      "value": 92
+    },
+    {
+      "name": "Item 93 - 1 G",
+      "value": 93
+    },
+    {
+      "name": "Item 94 - Hunk of Rift Crystal",
+      "value": 94
+    },
+    {
+      "name": "Item 95 - Giant Hunk of Rift Crystal",
+      "value": 95
+    },
+    {
+      "name": "Item 96 - Invalid",
+      "value": 96
+    },
+    {
+      "name": "Item 97 - Invalid",
+      "value": 97
+    },
+    {
+      "name": "Item 98 - Preserved Medusa Head",
+      "value": 98
+    },
+    {
+      "name": "Item 99 - Medusa Head",
+      "value": 99
+    },
+    {
+      "name": "Item 100 - Withered Medusa Head",
+      "value": 100
+    },
+    {
+      "name": "Item 101 - Decayed Medusa Head",
+      "value": 101
+    },
+    {
+      "name": "Item 102 - Modest Camping Kit",
+      "value": 102
+    },
+    {
+      "name": "Item 103 - Mundane Camping Kit",
+      "value": 103
+    },
+    {
+      "name": "Item 104 - Grass-Patterned Camping Kit",
+      "value": 104
+    },
+    {
+      "name": "Item 105 - Sand-Patterned Camping Kit",
+      "value": 105
+    },
+    {
+      "name": "Item 106 - Elite Camping Kit",
+      "value": 106
+    },
+    {
+      "name": "Item 107 - Withered Branches",
+      "value": 107
+    },
+    {
+      "name": "Item 108 - Art of Metamorphosis",
+      "value": 108
+    },
+    {
+      "name": "Item 109 - Invalid",
+      "value": 109
+    },
+    {
+      "name": "Item 110 - Key of Sagacity",
+      "value": 110
+    },
+    {
+      "name": "Item 111 - Invalid",
+      "value": 111
+    },
+    {
+      "name": "Item 112 - Finder\u0027s Token",
+      "value": 112
+    },
+    {
+      "name": "Item 113 - Invalid",
+      "value": 113
+    },
+    {
+      "name": "Item 114 - Exquisite Dried Meat",
+      "value": 114
+    },
+    {
+      "name": "Item 115 - Exquisite Dried Fish",
+      "value": 115
+    },
+    {
+      "name": "Item 116 - Exquisite Dried Spud",
+      "value": 116
+    },
+    {
+      "name": "Item 117 - Woodland Wordsmith\u0027s Tome",
+      "value": 117
+    },
+    {
+      "name": "Item 118 - Chirurgeon\u0027s Tome",
+      "value": 118
+    },
+    {
+      "name": "Item 119 - Logistician\u0027s Tome",
+      "value": 119
+    },
+    {
+      "name": "Item 120 - Hawker\u0027s Tome",
+      "value": 120
+    },
+    {
+      "name": "Item 121 - Forager\u0027s Tome",
+      "value": 121
+    },
+    {
+      "name": "Item 122 - Aphonite\u0027s Tome",
+      "value": 122
+    },
+    {
+      "name": "Item 123 - Explorer\u0027s Camping Kit",
+      "value": 123
+    },
+    {
+      "name": "Item 124 - Invalid",
+      "value": 124
+    },
+    {
+      "name": "Item 125 - Invalid",
+      "value": 125
+    },
+    {
+      "name": "Item 126 - Invalid",
+      "value": 126
+    },
+    {
+      "name": "Item 127 - Invalid",
+      "value": 127
+    },
+    {
+      "name": "Item 128 - Invalid",
+      "value": 128
+    },
+    {
+      "name": "Item 129 - Invalid",
+      "value": 129
+    },
+    {
+      "name": "Item 130 - Invalid",
+      "value": 130
+    },
+    {
+      "name": "Item 131 - Invalid",
+      "value": 131
+    },
+    {
+      "name": "Item 132 - Red Dye",
+      "value": 132
+    },
+    {
+      "name": "Item 133 - Green Dye",
+      "value": 133
+    },
+    {
+      "name": "Item 134 - Blue Dye",
+      "value": 134
+    },
+    {
+      "name": "Item 135 - Yellow Dye",
+      "value": 135
+    },
+    {
+      "name": "Item 136 - Purple Dye",
+      "value": 136
+    },
+    {
+      "name": "Item 137 - Invalid",
+      "value": 137
+    },
+    {
+      "name": "Item 138 - Invalid",
+      "value": 138
+    },
+    {
+      "name": "Item 139 - Invalid",
+      "value": 139
+    },
+    {
+      "name": "Item 140 - Invalid",
+      "value": 140
+    },
+    {
+      "name": "Item 141 - Invalid",
+      "value": 141
+    },
+    {
+      "name": "Item 142 - Invalid",
+      "value": 142
+    },
+    {
+      "name": "Item 143 - Invalid",
+      "value": 143
+    },
+    {
+      "name": "Item 144 - Invalid",
+      "value": 144
+    },
+    {
+      "name": "Item 145 - Invalid",
+      "value": 145
+    },
+    {
+      "name": "Item 146 - Invalid",
+      "value": 146
+    },
+    {
+      "name": "Item 147 - Invalid",
+      "value": 147
+    },
+    {
+      "name": "Item 148 - Invalid",
+      "value": 148
+    },
+    {
+      "name": "Item 149 - Invalid",
+      "value": 149
+    },
+    {
+      "name": "Item 150 - Invalid",
+      "value": 150
+    },
+    {
+      "name": "Item 151 - Invalid",
+      "value": 151
+    },
+    {
+      "name": "Item 152 - Invalid",
+      "value": 152
+    },
+    {
+      "name": "Item 153 - Invalid",
+      "value": 153
+    },
+    {
+      "name": "Item 154 - Invalid",
+      "value": 154
+    },
+    {
+      "name": "Item 155 - Invalid",
+      "value": 155
+    },
+    {
+      "name": "Item 156 - Invalid",
+      "value": 156
+    },
+    {
+      "name": "Item 157 - Invalid",
+      "value": 157
+    },
+    {
+      "name": "Item 158 - Invalid",
+      "value": 158
+    },
+    {
+      "name": "Item 159 - Invalid",
+      "value": 159
+    },
+    {
+      "name": "Item 160 - Invalid",
+      "value": 160
+    },
+    {
+      "name": "Item 161 - Invalid",
+      "value": 161
+    },
+    {
+      "name": "Item 162 - Invalid",
+      "value": 162
+    },
+    {
+      "name": "Item 163 - Invalid",
+      "value": 163
+    },
+    {
+      "name": "Item 164 - Invalid",
+      "value": 164
+    },
+    {
+      "name": "Item 165 - Invalid",
+      "value": 165
+    },
+    {
+      "name": "Item 166 - Blighting Arrow",
+      "value": 166
+    },
+    {
+      "name": "Item 167 - Drenching Arrow",
+      "value": 167
+    },
+    {
+      "name": "Item 168 - Tarring Arrow",
+      "value": 168
+    },
+    {
+      "name": "Item 169 - Explosive Arrow",
+      "value": 169
+    },
+    {
+      "name": "Item 170 - Invalid",
+      "value": 170
+    },
+    {
+      "name": "Item 171 - Invalid",
+      "value": 171
+    },
+    {
+      "name": "Item 172 - Invalid",
+      "value": 172
+    },
+    {
+      "name": "Item 173 - Invalid",
+      "value": 173
+    },
+    {
+      "name": "Item 174 - Unmaking Arrow",
+      "value": 174
+    },
+    {
+      "name": "Item 175 - Emergent Vitality",
+      "value": 175
+    },
+    {
+      "name": "Item 176 - Governing Soul",
+      "value": 176
+    },
+    {
+      "name": "Item 177 - Prescribed Tranquility",
+      "value": 177
+    },
+    {
+      "name": "Item 178 - Threshing Blaze",
+      "value": 178
+    },
+    {
+      "name": "Item 179 - Winter\u0027s Path",
+      "value": 179
+    },
+    {
+      "name": "Item 180 - Fulgurous Lord",
+      "value": 180
+    },
+    {
+      "name": "Item 181 - Igneous Melody",
+      "value": 181
+    },
+    {
+      "name": "Item 182 - Hiemal Euphony",
+      "value": 182
+    },
+    {
+      "name": "Item 183 - Thunderous Concord",
+      "value": 183
+    },
+    {
+      "name": "Item 184 - Greenwarish",
+      "value": 184
+    },
+    {
+      "name": "Item 185 - Moonglow",
+      "value": 185
+    },
+    {
+      "name": "Item 186 - Pitywort",
+      "value": 186
+    },
+    {
+      "name": "Item 187 - Morningtide",
+      "value": 187
+    },
+    {
+      "name": "Item 188 - Invalid",
+      "value": 188
+    },
+    {
+      "name": "Item 189 - Invalid",
+      "value": 189
+    },
+    {
+      "name": "Item 190 - Invalid",
+      "value": 190
+    },
+    {
+      "name": "Item 191 - Grandpetal",
+      "value": 191
+    },
+    {
+      "name": "Item 192 - Goldthistle",
+      "value": 192
+    },
+    {
+      "name": "Item 193 - Syrupwort Leaf",
+      "value": 193
+    },
+    {
+      "name": "Item 194 - Invalid",
+      "value": 194
+    },
+    {
+      "name": "Item 195 - Copper Ore",
+      "value": 195
+    },
+    {
+      "name": "Item 196 - Silver Ore",
+      "value": 196
+    },
+    {
+      "name": "Item 197 - Gold Ore",
+      "value": 197
+    },
+    {
+      "name": "Item 198 - Fuligin Ore",
+      "value": 198
+    },
+    {
+      "name": "Item 199 - Southron Iron",
+      "value": 199
+    },
+    {
+      "name": "Item 200 - Copperstone",
+      "value": 200
+    },
+    {
+      "name": "Item 201 - Whitecobble",
+      "value": 201
+    },
+    {
+      "name": "Item 202 - Sunstone",
+      "value": 202
+    },
+    {
+      "name": "Item 203 - Jagged Bone",
+      "value": 203
+    },
+    {
+      "name": "Item 204 - Beast-Skin",
+      "value": 204
+    },
+    {
+      "name": "Item 205 - Monster Fang",
+      "value": 205
+    },
+    {
+      "name": "Item 206 - Monster Hide",
+      "value": 206
+    },
+    {
+      "name": "Item 207 - Glymercole",
+      "value": 207
+    },
+    {
+      "name": "Item 208 - Goblin Horn",
+      "value": 208
+    },
+    {
+      "name": "Item 209 - Slate-Colored Horn",
+      "value": 209
+    },
+    {
+      "name": "Item 210 - Chopper Horn",
+      "value": 210
+    },
+    {
+      "name": "Item 211 - Knacker Horn",
+      "value": 211
+    },
+    {
+      "name": "Item 212 - Invalid",
+      "value": 212
+    },
+    {
+      "name": "Item 213 - Small Fang",
+      "value": 213
+    },
+    {
+      "name": "Item 214 - Redwolf Fang",
+      "value": 214
+    },
+    {
+      "name": "Item 215 - Pointed Fang",
+      "value": 215
+    },
+    {
+      "name": "Item 216 - Sinister Fang",
+      "value": 216
+    },
+    {
+      "name": "Item 217 - Invalid",
+      "value": 217
+    },
+    {
+      "name": "Item 218 - Invalid",
+      "value": 218
+    },
+    {
+      "name": "Item 219 - Saurian Scale",
+      "value": 219
+    },
+    {
+      "name": "Item 220 - Asp Toxiscale",
+      "value": 220
+    },
+    {
+      "name": "Item 221 - Rattler Rockscale",
+      "value": 221
+    },
+    {
+      "name": "Item 222 - Darkscale",
+      "value": 222
+    },
+    {
+      "name": "Item 223 - Boltscale",
+      "value": 223
+    },
+    {
+      "name": "Item 224 - Invalid",
+      "value": 224
+    },
+    {
+      "name": "Item 225 - Harpy Pinion",
+      "value": 225
+    },
+    {
+      "name": "Item 226 - Poison Pinion",
+      "value": 226
+    },
+    {
+      "name": "Item 227 - Twisted Pinion",
+      "value": 227
+    },
+    {
+      "name": "Item 228 - Spurious Wing",
+      "value": 228
+    },
+    {
+      "name": "Item 229 - Invalid",
+      "value": 229
+    },
+    {
+      "name": "Item 230 - Minotaur Horn",
+      "value": 230
+    },
+    {
+      "name": "Item 231 - Blackened Horn",
+      "value": 231
+    },
+    {
+      "name": "Item 232 - Invalid",
+      "value": 232
+    },
+    {
+      "name": "Item 233 - Putrid Gold Tooth",
+      "value": 233
+    },
+    {
+      "name": "Item 234 - Silver Crown",
+      "value": 234
+    },
+    {
+      "name": "Item 235 - Invalid",
+      "value": 235
+    },
+    {
+      "name": "Item 236 - Miasmite",
+      "value": 236
+    },
+    {
+      "name": "Item 237 - Astracite",
+      "value": 237
+    },
+    {
+      "name": "Item 238 - Eldricite",
+      "value": 238
+    },
+    {
+      "name": "Item 239 - Invalid",
+      "value": 239
+    },
+    {
+      "name": "Item 240 - Black Crystal",
+      "value": 240
+    },
+    {
+      "name": "Item 241 - Invalid",
+      "value": 241
+    },
+    {
+      "name": "Item 242 - Wailing Crystal",
+      "value": 242
+    },
+    {
+      "name": "Item 243 - Invalid",
+      "value": 243
+    },
+    {
+      "name": "Item 244 - Scrap Iron",
+      "value": 244
+    },
+    {
+      "name": "Item 245 - Fell-Lord\u0027s Bone",
+      "value": 245
+    },
+    {
+      "name": "Item 246 - Invalid",
+      "value": 246
+    },
+    {
+      "name": "Item 247 - Greenish Slime",
+      "value": 247
+    },
+    {
+      "name": "Item 248 - Oily Slime",
+      "value": 248
+    },
+    {
+      "name": "Item 249 - Foaming Slime",
+      "value": 249
+    },
+    {
+      "name": "Item 250 - Rugged Bone",
+      "value": 250
+    },
+    {
+      "name": "Item 251 - Misshapen Eye",
+      "value": 251
+    },
+    {
+      "name": "Item 252 - Invalid",
+      "value": 252
+    },
+    {
+      "name": "Item 253 - Invalid",
+      "value": 253
+    },
+    {
+      "name": "Item 254 - Invalid",
+      "value": 254
+    },
+    {
+      "name": "Item 255 - Ogre Spur",
+      "value": 255
+    },
+    {
+      "name": "Item 256 - Ogre Talon",
+      "value": 256
+    },
+    {
+      "name": "Item 257 - Invalid",
+      "value": 257
+    },
+    {
+      "name": "Item 258 - Dappled Ore",
+      "value": 258
+    },
+    {
+      "name": "Item 259 - Magick Medal",
+      "value": 259
+    },
+    {
+      "name": "Item 260 - Electrum",
+      "value": 260
+    },
+    {
+      "name": "Item 261 - Great Griffin Claw",
+      "value": 261
+    },
+    {
+      "name": "Item 262 - Griffin Pinion",
+      "value": 262
+    },
+    {
+      "name": "Item 263 - Invalid",
+      "value": 263
+    },
+    {
+      "name": "Item 264 - Invalid",
+      "value": 264
+    },
+    {
+      "name": "Item 265 - Invalid",
+      "value": 265
+    },
+    {
+      "name": "Item 266 - Freakish Mane",
+      "value": 266
+    },
+    {
+      "name": "Item 267 - Black Freakish Mane",
+      "value": 267
+    },
+    {
+      "name": "Item 268 - Invalid",
+      "value": 268
+    },
+    {
+      "name": "Item 269 - Cursed Dullahan Bone",
+      "value": 269
+    },
+    {
+      "name": "Item 270 - Granite Medusa Bone",
+      "value": 270
+    },
+    {
+      "name": "Item 271 - Invalid",
+      "value": 271
+    },
+    {
+      "name": "Item 272 - Invalid",
+      "value": 272
+    },
+    {
+      "name": "Item 273 - Invalid",
+      "value": 273
+    },
+    {
+      "name": "Item 274 - Invalid",
+      "value": 274
+    },
+    {
+      "name": "Item 275 - Invalid",
+      "value": 275
+    },
+    {
+      "name": "Item 276 - Invalid",
+      "value": 276
+    },
+    {
+      "name": "Item 277 - Dragon Scale",
+      "value": 277
+    },
+    {
+      "name": "Item 278 - Invalid",
+      "value": 278
+    },
+    {
+      "name": "Item 279 - Invalid",
+      "value": 279
+    },
+    {
+      "name": "Item 280 - Invalid",
+      "value": 280
+    },
+    {
+      "name": "Item 281 - Rabbit Pelt",
+      "value": 281
+    },
+    {
+      "name": "Item 282 - Leapworm Skin",
+      "value": 282
+    },
+    {
+      "name": "Item 283 - Spider Venom Sac",
+      "value": 283
+    },
+    {
+      "name": "Item 284 - Invalid",
+      "value": 284
+    },
+    {
+      "name": "Item 285 - Invalid",
+      "value": 285
+    },
+    {
+      "name": "Item 286 - Invalid",
+      "value": 286
+    },
+    {
+      "name": "Item 287 - Soldier\u0027s Code",
+      "value": 287
+    },
+    {
+      "name": "Item 288 - Enchanter\u0027s Almanac",
+      "value": 288
+    },
+    {
+      "name": "Item 289 - Paladin\u0027s Enigmata",
+      "value": 289
+    },
+    {
+      "name": "Item 290 - Pilferer\u0027s Handbook",
+      "value": 290
+    },
+    {
+      "name": "Item 291 - Legend\u0027s Opus",
+      "value": 291
+    },
+    {
+      "name": "Item 292 - Hunter\u0027s Secret",
+      "value": 292
+    },
+    {
+      "name": "Item 293 - Champion\u0027s Fable",
+      "value": 293
+    },
+    {
+      "name": "Item 294 - Myrddin\u0027s Chronicle",
+      "value": 294
+    },
+    {
+      "name": "Item 295 - Conjurer\u0027s Jottings",
+      "value": 295
+    },
+    {
+      "name": "Item 296 - Spellbow\u0027s Paradox",
+      "value": 296
+    },
+    {
+      "name": "Item 297 - Theurgist\u0027s Rite",
+      "value": 297
+    },
+    {
+      "name": "Item 298 - Grandmaster\u0027s Path",
+      "value": 298
+    },
+    {
+      "name": "Item 299 - Invalid",
+      "value": 299
+    },
+    {
+      "name": "Item 300 - Beggar\u0027s Garb",
+      "value": 300
+    },
+    {
+      "name": "Item 301 - Disa\u0027s Letter",
+      "value": 301
+    },
+    {
+      "name": "Item 302 - Rotten Soft-Boiled Egg",
+      "value": 302
+    },
+    {
+      "name": "Item 303 - Small Jewel",
+      "value": 303
+    },
+    {
+      "name": "Item 304 - Platinum Myrmecoleon Card",
+      "value": 304
+    },
+    {
+      "name": "Item 305 - Seeker\u0027s Token",
+      "value": 305
+    },
+    {
+      "name": "Item 306 - Myrmecoleon Card",
+      "value": 306
+    },
+    {
+      "name": "Item 307 - Message from Brant",
+      "value": 307
+    },
+    {
+      "name": "Item 308 - Battahli-Crested Letter",
+      "value": 308
+    },
+    {
+      "name": "Item 309 - Letter to Lord Patrick",
+      "value": 309
+    },
+    {
+      "name": "Item 310 - Missive to the Captain",
+      "value": 310
+    },
+    {
+      "name": "Item 311 - Invalid",
+      "value": 311
+    },
+    {
+      "name": "Item 312 - Castle Floor Plan",
+      "value": 312
+    },
+    {
+      "name": "Item 313 - Invalid",
+      "value": 313
+    },
+    {
+      "name": "Item 314 - Letter to Menella",
+      "value": 314
+    },
+    {
+      "name": "Item 315 - On the Transference of Souls 2",
+      "value": 315
+    },
+    {
+      "name": "Item 316 - Unfinished Letter",
+      "value": 316
+    },
+    {
+      "name": "Item 317 - Makeshift Gaol Key",
+      "value": 317
+    },
+    {
+      "name": "Item 318 - Diminished Godsway",
+      "value": 318
+    },
+    {
+      "name": "Item 319 - Ornate Box",
+      "value": 319
+    },
+    {
+      "name": "Item 320 - Invalid",
+      "value": 320
+    },
+    {
+      "name": "Item 321 - Battahl Residence Permit",
+      "value": 321
+    },
+    {
+      "name": "Item 322 - Arborheart Cutting",
+      "value": 322
+    },
+    {
+      "name": "Item 323 - Letter to Lord Phaesus",
+      "value": 323
+    },
+    {
+      "name": "Item 324 - Exquisite Spectacles",
+      "value": 324
+    },
+    {
+      "name": "Item 325 - Invalid",
+      "value": 325
+    },
+    {
+      "name": "Item 326 - Bribery Investigation Findings",
+      "value": 326
+    },
+    {
+      "name": "Item 327 - Murder Report",
+      "value": 327
+    },
+    {
+      "name": "Item 328 - Invalid",
+      "value": 328
+    },
+    {
+      "name": "Item 329 - Merchant\u0027s Document",
+      "value": 329
+    },
+    {
+      "name": "Item 330 - Labor Requisition Orders",
+      "value": 330
+    },
+    {
+      "name": "Item 331 - Sven\u0027s Ornate Box",
+      "value": 331
+    },
+    {
+      "name": "Item 332 - Glimmercoal",
+      "value": 332
+    },
+    {
+      "name": "Item 333 - Invalid",
+      "value": 333
+    },
+    {
+      "name": "Item 334 - Scalecinder",
+      "value": 334
+    },
+    {
+      "name": "Item 335 - Letter of Request",
+      "value": 335
+    },
+    {
+      "name": "Item 336 - Invalid",
+      "value": 336
+    },
+    {
+      "name": "Item 337 - Invalid",
+      "value": 337
+    },
+    {
+      "name": "Item 338 - Border Entry Permit",
+      "value": 338
+    },
+    {
+      "name": "Item 339 - Beastren Border Entry Permit",
+      "value": 339
+    },
+    {
+      "name": "Item 340 - Invalid",
+      "value": 340
+    },
+    {
+      "name": "Item 341 - Invalid",
+      "value": 341
+    },
+    {
+      "name": "Item 342 - Invalid",
+      "value": 342
+    },
+    {
+      "name": "Item 343 - Invalid",
+      "value": 343
+    },
+    {
+      "name": "Item 344 - Jasper",
+      "value": 344
+    },
+    {
+      "name": "Item 345 - Onyx",
+      "value": 345
+    },
+    {
+      "name": "Item 346 - Tiger Eye",
+      "value": 346
+    },
+    {
+      "name": "Item 347 - Invalid",
+      "value": 347
+    },
+    {
+      "name": "Item 348 - Hallowed Orb",
+      "value": 348
+    },
+    {
+      "name": "Item 349 - Paragon Staff",
+      "value": 349
+    },
+    {
+      "name": "Item 350 - Fruit Wine",
+      "value": 350
+    },
+    {
+      "name": "Item 351 - Dulled Regalia Sword",
+      "value": 351
+    },
+    {
+      "name": "Item 352 - Restored Regalia Sword",
+      "value": 352
+    },
+    {
+      "name": "Item 353 - Letter to Ser Lennart",
+      "value": 353
+    },
+    {
+      "name": "Item 354 - Large Blue Crystal Shard",
+      "value": 354
+    },
+    {
+      "name": "Item 355 - Small Blue Crystal Shard",
+      "value": 355
+    },
+    {
+      "name": "Item 356 - Invalid",
+      "value": 356
+    },
+    {
+      "name": "Item 357 - Dulled Godsbane Blade",
+      "value": 357
+    },
+    {
+      "name": "Item 358 - Invalid",
+      "value": 358
+    },
+    {
+      "name": "Item 359 - Wyrmslife Crystal",
+      "value": 359
+    },
+    {
+      "name": "Item 360 - On the Transference of Souls 1",
+      "value": 360
+    },
+    {
+      "name": "Item 361 - Newt Liqueur",
+      "value": 361
+    },
+    {
+      "name": "Item 362 - Invalid",
+      "value": 362
+    },
+    {
+      "name": "Item 363 - On the Transference of Souls",
+      "value": 363
+    },
+    {
+      "name": "Item 364 - Invalid",
+      "value": 364
+    },
+    {
+      "name": "Item 365 - Jadeite Orb",
+      "value": 365
+    },
+    {
+      "name": "Item 366 - Imitation Jadeite Orb",
+      "value": 366
+    },
+    {
+      "name": "Item 367 - Escort Orders",
+      "value": 367
+    },
+    {
+      "name": "Item 368 - Invalid",
+      "value": 368
+    },
+    {
+      "name": "Item 369 - Moonglint Key",
+      "value": 369
+    },
+    {
+      "name": "Item 370 - Makeshift Vault Key",
+      "value": 370
+    },
+    {
+      "name": "Item 371 - Overseers\u0027 Lodge Key",
+      "value": 371
+    },
+    {
+      "name": "Item 372 - Scrap of Cloth",
+      "value": 372
+    },
+    {
+      "name": "Item 373 - Paragon Staff Replica",
+      "value": 373
+    },
+    {
+      "name": "Item 374 - Gaol Key",
+      "value": 374
+    },
+    {
+      "name": "Item 375 - Saurian Tail",
+      "value": 375
+    },
+    {
+      "name": "Item 376 - Torn Letter",
+      "value": 376
+    },
+    {
+      "name": "Item 377 - Let There Be Light",
+      "value": 377
+    },
+    {
+      "name": "Item 378 - Fulminous Shield",
+      "value": 378
+    },
+    {
+      "name": "Item 379 - Nation\u0027s Death Knell",
+      "value": 379
+    },
+    {
+      "name": "Item 380 - Howling Blizzard",
+      "value": 380
+    },
+    {
+      "name": "Item 381 - Towering Earth",
+      "value": 381
+    },
+    {
+      "name": "Item 382 - Records of Treatment",
+      "value": 382
+    },
+    {
+      "name": "Item 383 - Unlabeled Medicine",
+      "value": 383
+    },
+    {
+      "name": "Item 384 - Invalid",
+      "value": 384
+    },
+    {
+      "name": "Item 385 - Invalid",
+      "value": 385
+    },
+    {
+      "name": "Item 386 - Invalid",
+      "value": 386
+    },
+    {
+      "name": "Item 387 - Invalid",
+      "value": 387
+    },
+    {
+      "name": "Item 388 - Let There Be Lite",
+      "value": 388
+    },
+    {
+      "name": "Item 389 - Fruminous Shield",
+      "value": 389
+    },
+    {
+      "name": "Item 390 - Nation\u0027s Death Knock",
+      "value": 390
+    },
+    {
+      "name": "Item 391 - Hurling Blizzard",
+      "value": 391
+    },
+    {
+      "name": "Item 392 - Lowering Earth",
+      "value": 392
+    },
+    {
+      "name": "Item 393 - Folded Letter",
+      "value": 393
+    },
+    {
+      "name": "Item 394 - Darragh\u0027s Bill of Arrest",
+      "value": 394
+    },
+    {
+      "name": "Item 395 - Provisioner\u0027s Note",
+      "value": 395
+    },
+    {
+      "name": "Item 396 - Mock Mended Regalia Sword",
+      "value": 396
+    },
+    {
+      "name": "Item 397 - Empowered Godsbane Blade",
+      "value": 397
+    },
+    {
+      "name": "Item 398 - Golden Trove Beetle",
+      "value": 398
+    },
+    {
+      "name": "Item 399 - Ancient Battleground Key",
+      "value": 399
+    },
+    {
+      "name": "Item 400 - Kindhearted Rift Incense",
+      "value": 400
+    },
+    {
+      "name": "Item 401 - Calm Rift Incense",
+      "value": 401
+    },
+    {
+      "name": "Item 402 - Simple Rift Incense",
+      "value": 402
+    },
+    {
+      "name": "Item 403 - Straightforward Rift Incense",
+      "value": 403
+    },
+    {
+      "name": "Item 404 - Ambivalent Rift Incense",
+      "value": 404
+    },
+    {
+      "name": "Item 405 - Invalid",
+      "value": 405
+    },
+    {
+      "name": "Item 450 - Wokestone",
+      "value": 450
+    },
+    {
+      "name": "Item 451 - Wokestone Shard",
+      "value": 451
+    },
+    {
+      "name": "Item 452 - Ferristone",
+      "value": 452
+    },
+    {
+      "name": "Item 453 - Partcrystal",
+      "value": 453
+    },
+    {
+      "name": "Item 454 - Ceiling Phial",
+      "value": 454
+    },
+    {
+      "name": "Item 455 - Unmasking Arrow",
+      "value": 455
+    },
+    {
+      "name": "Item 456 - Soldier\u0027s Cord",
+      "value": 456
+    },
+    {
+      "name": "Item 457 - Enchanter\u0027s Alarm",
+      "value": 457
+    },
+    {
+      "name": "Item 458 - Paladin\u0027s Energizer",
+      "value": 458
+    },
+    {
+      "name": "Item 459 - Pesterer\u0027s Handbook",
+      "value": 459
+    },
+    {
+      "name": "Item 460 - Legend\u0027s Hocus",
+      "value": 460
+    },
+    {
+      "name": "Item 461 - Hunter\u0027s Sonnet",
+      "value": 461
+    },
+    {
+      "name": "Item 462 - Champion\u0027s Foible",
+      "value": 462
+    },
+    {
+      "name": "Item 463 - Myrddin\u0027s Cubicle",
+      "value": 463
+    },
+    {
+      "name": "Item 464 - Conjurer\u0027s Jabberings",
+      "value": 464
+    },
+    {
+      "name": "Item 465 - Spellbow\u0027s Parabola",
+      "value": 465
+    },
+    {
+      "name": "Item 466 - Theurgist\u0027s Rote",
+      "value": 466
+    },
+    {
+      "name": "Item 467 - Grandmother\u0027s Path",
+      "value": 467
+    },
+    {
+      "name": "Item 468 - Eternal Wokestone",
+      "value": 468
+    },
+    {
+      "name": "Item 469 - Seeder\u0027s Token",
+      "value": 469
+    },
+    {
+      "name": "Item 470 - On the Transit of Souls 1",
+      "value": 470
+    },
+    {
+      "name": "Item 471 - On the Transit of Souls 2",
+      "value": 471
+    },
+    {
+      "name": "Item 472 - On the Transit of Souls",
+      "value": 472
+    },
+    {
+      "name": "Item 473 - Wormslife Crystal",
+      "value": 473
+    },
+    {
+      "name": "Item 474 - Golden Stove Beetle",
+      "value": 474
+    },
+    {
+      "name": "Item 475 - Key of Mendacity",
+      "value": 475
+    },
+    {
+      "name": "Item 476 - Dragon\u0027s Gauze",
+      "value": 476
+    },
+    {
+      "name": "Item 477 - Wooden Wordsmith\u0027s Tome",
+      "value": 477
+    },
+    {
+      "name": "Item 478 - Surgeon\u0027s Tome",
+      "value": 478
+    },
+    {
+      "name": "Item 479 - Logician\u0027s Tome",
+      "value": 479
+    },
+    {
+      "name": "Item 480 - Gawker\u0027s Tome",
+      "value": 480
+    },
+    {
+      "name": "Item 481 - Forayer\u0027s Tome",
+      "value": 481
+    },
+    {
+      "name": "Item 482 - Aphony\u0027s Tome",
+      "value": 482
+    },
+    {
+      "name": "Item 483 - Invalid",
+      "value": 483
+    },
+    {
+      "name": "Item 484 - Invalid",
+      "value": 484
+    },
+    {
+      "name": "Item 485 - Invalid",
+      "value": 485
+    },
+    {
+      "name": "Item 486 - Invalid",
+      "value": 486
+    },
+    {
+      "name": "Item 487 - Invalid",
+      "value": 487
+    },
+    {
+      "name": "Item 488 - Invalid",
+      "value": 488
+    },
+    {
+      "name": "Item 489 - Invalid",
+      "value": 489
+    },
+    {
+      "name": "Item 490 - Invalid",
+      "value": 490
+    },
+    {
+      "name": "Item 491 - Invalid",
+      "value": 491
+    },
+    {
+      "name": "Item 492 - Invalid",
+      "value": 492
+    },
+    {
+      "name": "Item 493 - Invalid",
+      "value": 493
+    },
+    {
+      "name": "Item 494 - Invalid",
+      "value": 494
+    },
+    {
+      "name": "Item 495 - Invalid",
+      "value": 495
+    },
+    {
+      "name": "Item 496 - Invalid",
+      "value": 496
+    },
+    {
+      "name": "Item 497 - Invalid",
+      "value": 497
+    },
+    {
+      "name": "Item 498 - Invalid",
+      "value": 498
+    },
+    {
+      "name": "Item 499 - Invalid",
+      "value": 499
+    },
+    {
+      "name": "Item 500 - Salubrious Draught",
+      "value": 500
+    },
+    {
+      "name": "Item 501 - Nomad\u0027s Dried Fruit",
+      "value": 501
+    },
+    {
+      "name": "Item 502 - Mighty Roborant",
+      "value": 502
+    },
+    {
+      "name": "Item 503 - Exquisite Roborant",
+      "value": 503
+    },
+    {
+      "name": "Item 504 - Miracle Roborant",
+      "value": 504
+    },
+    {
+      "name": "Item 505 - Sunbloom",
+      "value": 505
+    },
+    {
+      "name": "Item 506 - Invalid",
+      "value": 506
+    },
+    {
+      "name": "Item 507 - Invalid",
+      "value": 507
+    },
+    {
+      "name": "Item 508 - Invalid",
+      "value": 508
+    },
+    {
+      "name": "Item 509 - Invalid",
+      "value": 509
+    },
+    {
+      "name": "Item 510 - Noonbloom",
+      "value": 510
+    },
+    {
+      "name": "Item 511 - Invalid",
+      "value": 511
+    },
+    {
+      "name": "Item 512 - Dried Flower",
+      "value": 512
+    },
+    {
+      "name": "Item 513 - Invalid",
+      "value": 513
+    },
+    {
+      "name": "Item 514 - Invalid",
+      "value": 514
+    },
+    {
+      "name": "Item 515 - Invalid",
+      "value": 515
+    },
+    {
+      "name": "Item 516 - Invalid",
+      "value": 516
+    },
+    {
+      "name": "Item 517 - Invalid",
+      "value": 517
+    },
+    {
+      "name": "Item 518 - Invalid",
+      "value": 518
+    },
+    {
+      "name": "Item 519 - Invalid",
+      "value": 519
+    },
+    {
+      "name": "Item 520 - Hill Beech Bark",
+      "value": 520
+    },
+    {
+      "name": "Item 521 - Cinnamon Bark",
+      "value": 521
+    },
+    {
+      "name": "Item 522 - Invalid",
+      "value": 522
+    },
+    {
+      "name": "Item 523 - Invalid",
+      "value": 523
+    },
+    {
+      "name": "Item 524 - Invalid",
+      "value": 524
+    },
+    {
+      "name": "Item 525 - Invalid",
+      "value": 525
+    },
+    {
+      "name": "Item 526 - Invalid",
+      "value": 526
+    },
+    {
+      "name": "Item 527 - Invalid",
+      "value": 527
+    },
+    {
+      "name": "Item 528 - Invalid",
+      "value": 528
+    },
+    {
+      "name": "Item 529 - Invalid",
+      "value": 529
+    },
+    {
+      "name": "Item 530 - Makeshift Treasure Chest Key",
+      "value": 530
+    },
+    {
+      "name": "Item 531 - Invalid",
+      "value": 531
+    },
+    {
+      "name": "Item 532 - Invalid",
+      "value": 532
+    },
+    {
+      "name": "Item 533 - Invalid",
+      "value": 533
+    },
+    {
+      "name": "Item 534 - Bandit Bill of Arrest",
+      "value": 534
+    },
+    {
+      "name": "Item 600 - Invalid",
+      "value": 600
+    },
+    {
+      "name": "Item 1000 - Trusty Sword",
+      "value": 1000
+    },
+    {
+      "name": "Item 1001 - Iron Sword",
+      "value": 1001
+    },
+    {
+      "name": "Item 1002 - Cutlass",
+      "value": 1002
+    },
+    {
+      "name": "Item 1003 - Broadsword",
+      "value": 1003
+    },
+    {
+      "name": "Item 1004 - Silver Rapier",
+      "value": 1004
+    },
+    {
+      "name": "Item 1005 - Almace",
+      "value": 1005
+    },
+    {
+      "name": "Item 1006 - Stalwart Sword",
+      "value": 1006
+    },
+    {
+      "name": "Item 1007 - Steeled Virtue",
+      "value": 1007
+    },
+    {
+      "name": "Item 1008 - Vermundian Brand",
+      "value": 1008
+    },
+    {
+      "name": "Item 1009 - Carnation",
+      "value": 1009
+    },
+    {
+      "name": "Item 1010 - Dragon\u0027s Dogma",
+      "value": 1010
+    },
+    {
+      "name": "Item 1012 - Battahli Shotel",
+      "value": 1012
+    },
+    {
+      "name": "Item 1013 - Silver Cinquedea",
+      "value": 1013
+    },
+    {
+      "name": "Item 1100 - Bane of Bones",
+      "value": 1100
+    },
+    {
+      "name": "Item 1101 - Molten Fury",
+      "value": 1101
+    },
+    {
+      "name": "Item 1102 - The Exalted",
+      "value": 1102
+    },
+    {
+      "name": "Item 1103 - Threaded Cudgel",
+      "value": 1103
+    },
+    {
+      "name": "Item 1104 - Labyrinthus",
+      "value": 1104
+    },
+    {
+      "name": "Item 1200 - Two-Hander",
+      "value": 1200
+    },
+    {
+      "name": "Item 1201 - Lifetaker",
+      "value": 1201
+    },
+    {
+      "name": "Item 1202 - War Blade",
+      "value": 1202
+    },
+    {
+      "name": "Item 1203 - Flamberge",
+      "value": 1203
+    },
+    {
+      "name": "Item 1204 - Gryphic Victory",
+      "value": 1204
+    },
+    {
+      "name": "Item 1205 - Ogresbane",
+      "value": 1205
+    },
+    {
+      "name": "Item 1206 - Cyclopean Thunder",
+      "value": 1206
+    },
+    {
+      "name": "Item 1207 - Dragon\u0027s Bite",
+      "value": 1207
+    },
+    {
+      "name": "Item 1208 - Wounded Heart",
+      "value": 1208
+    },
+    {
+      "name": "Item 1300 - Steel Urchin",
+      "value": 1300
+    },
+    {
+      "name": "Item 1301 - Eyecrusher",
+      "value": 1301
+    },
+    {
+      "name": "Item 1302 - Cinderspine",
+      "value": 1302
+    },
+    {
+      "name": "Item 1303 - Dragon\u0027s Flight",
+      "value": 1303
+    },
+    {
+      "name": "Item 1304 - Black Matter",
+      "value": 1304
+    },
+    {
+      "name": "Item 1400 - Criteria",
+      "value": 1400
+    },
+    {
+      "name": "Item 1401 - Throatcutters",
+      "value": 1401
+    },
+    {
+      "name": "Item 1402 - Signs of Valor",
+      "value": 1402
+    },
+    {
+      "name": "Item 1403 - Stilettos",
+      "value": 1403
+    },
+    {
+      "name": "Item 1404 - Helmbarte Daggers",
+      "value": 1404
+    },
+    {
+      "name": "Item 1405 - Peltflayers",
+      "value": 1405
+    },
+    {
+      "name": "Item 1406 - Bolts from the Blue",
+      "value": 1406
+    },
+    {
+      "name": "Item 1407 - Snagdaggers",
+      "value": 1407
+    },
+    {
+      "name": "Item 1408 - Bardiche Daggers",
+      "value": 1408
+    },
+    {
+      "name": "Item 1409 - Frosted Edges",
+      "value": 1409
+    },
+    {
+      "name": "Item 1410 - Spite",
+      "value": 1410
+    },
+    {
+      "name": "Item 1411 - Dragon\u0027s Vein",
+      "value": 1411
+    },
+    {
+      "name": "Item 1412 - Framae Blades",
+      "value": 1412
+    },
+    {
+      "name": "Item 1413 - Dowsing Spikes",
+      "value": 1413
+    },
+    {
+      "name": "Item 1414 - Heaven\u0027s Key",
+      "value": 1414
+    },
+    {
+      "name": "Item 1415 - Battahli Biters",
+      "value": 1415
+    },
+    {
+      "name": "Item 1416 - Crimson Teeth",
+      "value": 1416
+    },
+    {
+      "name": "Item 1417 - Divine Razors",
+      "value": 1417
+    },
+    {
+      "name": "Item 1500 - Wooden Staff",
+      "value": 1500
+    },
+    {
+      "name": "Item 1501 - Ironclad Staff",
+      "value": 1501
+    },
+    {
+      "name": "Item 1502 - Favored Flower",
+      "value": 1502
+    },
+    {
+      "name": "Item 1503 - Anchor to Heaven",
+      "value": 1503
+    },
+    {
+      "name": "Item 1504 - Cast Stone",
+      "value": 1504
+    },
+    {
+      "name": "Item 1505 - Tintreach",
+      "value": 1505
+    },
+    {
+      "name": "Item 1506 - Unfettered Claw",
+      "value": 1506
+    },
+    {
+      "name": "Item 1507 - Battahli Scepter",
+      "value": 1507
+    },
+    {
+      "name": "Item 1508 - Cardinal Blaze",
+      "value": 1508
+    },
+    {
+      "name": "Item 1509 - Solar Numen",
+      "value": 1509
+    },
+    {
+      "name": "Item 1510 - Frigid Finger",
+      "value": 1510
+    },
+    {
+      "name": "Item 1511 - Volant White",
+      "value": 1511
+    },
+    {
+      "name": "Item 1512 - Necrotic Shriek",
+      "value": 1512
+    },
+    {
+      "name": "Item 1513 - Legion\u0027s Might",
+      "value": 1513
+    },
+    {
+      "name": "Item 1514 - Dragon\u0027s Nous",
+      "value": 1514
+    },
+    {
+      "name": "Item 1516 - Favored Canopy",
+      "value": 1516
+    },
+    {
+      "name": "Item 1517 - Goblin Bane",
+      "value": 1517
+    },
+    {
+      "name": "Item 1600 - Grievous Horns",
+      "value": 1600
+    },
+    {
+      "name": "Item 1601 - Meniscus",
+      "value": 1601
+    },
+    {
+      "name": "Item 1602 - Favored Branches",
+      "value": 1602
+    },
+    {
+      "name": "Item 1603 - Craos Tine",
+      "value": 1603
+    },
+    {
+      "name": "Item 1604 - Plucked Heart",
+      "value": 1604
+    },
+    {
+      "name": "Item 1605 - Solar Providence",
+      "value": 1605
+    },
+    {
+      "name": "Item 1606 - Dragon\u0027s Wit",
+      "value": 1606
+    },
+    {
+      "name": "Item 1607 - Talarian White",
+      "value": 1607
+    },
+    {
+      "name": "Item 1608 - Anathema",
+      "value": 1608
+    },
+    {
+      "name": "Item 1609 - Bane Archistaff",
+      "value": 1609
+    },
+    {
+      "name": "Item 1610 - Caged Fury",
+      "value": 1610
+    },
+    {
+      "name": "Item 1611 - Helical Archistaff",
+      "value": 1611
+    },
+    {
+      "name": "Item 1612 - Lion-Lord\u0027s Archistaff",
+      "value": 1612
+    },
+    {
+      "name": "Item 1700 - Fluted Bow",
+      "value": 1700
+    },
+    {
+      "name": "Item 1701 - Lupine Bow",
+      "value": 1701
+    },
+    {
+      "name": "Item 1702 - Hunter\u0027s Bow",
+      "value": 1702
+    },
+    {
+      "name": "Item 1703 - Savage Fang",
+      "value": 1703
+    },
+    {
+      "name": "Item 1704 - Myfyr",
+      "value": 1704
+    },
+    {
+      "name": "Item 1705 - Bespoke Bow",
+      "value": 1705
+    },
+    {
+      "name": "Item 1706 - Dragon\u0027s Rancor",
+      "value": 1706
+    },
+    {
+      "name": "Item 1707 - Veteran\u0027s Arc",
+      "value": 1707
+    },
+    {
+      "name": "Item 1708 - Darkening Storm",
+      "value": 1708
+    },
+    {
+      "name": "Item 1709 - Repeller Bow",
+      "value": 1709
+    },
+    {
+      "name": "Item 1800 - Revenant Wail",
+      "value": 1800
+    },
+    {
+      "name": "Item 1801 - Dinistrydd",
+      "value": 1801
+    },
+    {
+      "name": "Item 1802 - Dragon\u0027s Blink",
+      "value": 1802
+    },
+    {
+      "name": "Item 1803 - Predator",
+      "value": 1803
+    },
+    {
+      "name": "Item 1804 - Medusan Spellbow",
+      "value": 1804
+    },
+    {
+      "name": "Item 1805 - Hydra Husk",
+      "value": 1805
+    },
+    {
+      "name": "Item 1900 - Magian Crutch",
+      "value": 1900
+    },
+    {
+      "name": "Item 1901 - Siocadh",
+      "value": 1901
+    },
+    {
+      "name": "Item 1902 - Terminal Gyre",
+      "value": 1902
+    },
+    {
+      "name": "Item 1903 - Dragon\u0027s Breath",
+      "value": 1903
+    },
+    {
+      "name": "Item 1904 - Metered Catharsis",
+      "value": 1904
+    },
+    {
+      "name": "Item 1905 - Herald\u0027s Helix",
+      "value": 1905
+    },
+    {
+      "name": "Item 1906 - Militant Dove",
+      "value": 1906
+    },
+    {
+      "name": "Item 1907 - Blackwing Bow",
+      "value": 1907
+    },
+    {
+      "name": "Item 1908 - Grianmhar",
+      "value": 1908
+    },
+    {
+      "name": "Item 1909 - Gimble Gyre",
+      "value": 1909
+    },
+    {
+      "name": "Item 2000 - Initiate\u0027s Blade",
+      "value": 2000
+    },
+    {
+      "name": "Item 2001 - Percipient Blade",
+      "value": 2001
+    },
+    {
+      "name": "Item 2002 - Fool\u0027s Prize",
+      "value": 2002
+    },
+    {
+      "name": "Item 2003 - Infernal Edge",
+      "value": 2003
+    },
+    {
+      "name": "Item 2004 - Soul of Antiquity",
+      "value": 2004
+    },
+    {
+      "name": "Item 2005 - Wings Asunder",
+      "value": 2005
+    },
+    {
+      "name": "Item 2006 - Tail Trimmer",
+      "value": 2006
+    },
+    {
+      "name": "Item 2007 - Rhewynt",
+      "value": 2007
+    },
+    {
+      "name": "Item 2009 - Dead Ringer",
+      "value": 2009
+    },
+    {
+      "name": "Item 2010 - Lindworm Fang",
+      "value": 2010
+    },
+    {
+      "name": "Item 2100 - Bewitching Balm",
+      "value": 2100
+    },
+    {
+      "name": "Item 2101 - Redolent Whisper",
+      "value": 2101
+    },
+    {
+      "name": "Item 2102 - Resonant Hymn",
+      "value": 2102
+    },
+    {
+      "name": "Item 2103 - Whimsical Daydream",
+      "value": 2103
+    },
+    {
+      "name": "Item 2104 - Achromic Reverie",
+      "value": 2104
+    },
+    {
+      "name": "Item 2105 - Dragonswail Litany",
+      "value": 2105
+    },
+    {
+      "name": "Item 2200 - Round Shield",
+      "value": 2200
+    },
+    {
+      "name": "Item 2201 - Iron Shield",
+      "value": 2201
+    },
+    {
+      "name": "Item 2202 - Feather-Light Pelta",
+      "value": 2202
+    },
+    {
+      "name": "Item 2203 - Shield of Vernworth",
+      "value": 2203
+    },
+    {
+      "name": "Item 2204 - Battahli Shield",
+      "value": 2204
+    },
+    {
+      "name": "Item 2205 - Lustrous Targe",
+      "value": 2205
+    },
+    {
+      "name": "Item 2206 - Continental Shield",
+      "value": 2206
+    },
+    {
+      "name": "Item 2207 - Dragon\u0027s Faith",
+      "value": 2207
+    },
+    {
+      "name": "Item 2208 - Dread Aspis",
+      "value": 2208
+    },
+    {
+      "name": "Item 2209 - Dragon\u0027s Aegis",
+      "value": 2209
+    },
+    {
+      "name": "Item 2210 - Daughter of the Evening",
+      "value": 2210
+    },
+    {
+      "name": "Item 3300 - Hide Cape",
+      "value": 3300
+    },
+    {
+      "name": "Item 3301 - Voyager\u0027s Cape",
+      "value": 3301
+    },
+    {
+      "name": "Item 3302 - Homespun Cloak",
+      "value": 3302
+    },
+    {
+      "name": "Item 3303 - Soft Neck Wrap",
+      "value": 3303
+    },
+    {
+      "name": "Item 3304 - Vermundian Cloak",
+      "value": 3304
+    },
+    {
+      "name": "Item 3305 - Dashing Capelet",
+      "value": 3305
+    },
+    {
+      "name": "Item 3306 - Windbreaking Cloak",
+      "value": 3306
+    },
+    {
+      "name": "Item 3307 - Heraldic Cape",
+      "value": 3307
+    },
+    {
+      "name": "Item 3309 - General\u0027s Mantle",
+      "value": 3309
+    },
+    {
+      "name": "Item 3310 - Guerco Peafowl Feathercloak",
+      "value": 3310
+    },
+    {
+      "name": "Item 3311 - Lupine Cape",
+      "value": 3311
+    },
+    {
+      "name": "Item 3312 - Saurianscale Cape",
+      "value": 3312
+    },
+    {
+      "name": "Item 3314 - Legacy Cloak",
+      "value": 3314
+    },
+    {
+      "name": "Item 3315 - Legend\u0027s Mantle",
+      "value": 3315
+    },
+    {
+      "name": "Item 3316 - Champion\u0027s Mantle",
+      "value": 3316
+    },
+    {
+      "name": "Item 3318 - Feathered Shawl",
+      "value": 3318
+    },
+    {
+      "name": "Item 3319 - Ceremonial Cape",
+      "value": 3319
+    },
+    {
+      "name": "Item 3320 - Velvet Cape",
+      "value": 3320
+    },
+    {
+      "name": "Item 3321 - Shadewalker\u0027s Neck Wrap",
+      "value": 3321
+    },
+    {
+      "name": "Item 3322 - Admiral\u0027s Mantle",
+      "value": 3322
+    },
+    {
+      "name": "Item 3323 - Pioneer\u0027s Cape",
+      "value": 3323
+    },
+    {
+      "name": "Item 3324 - Saint Idreum\u0027s Stole",
+      "value": 3324
+    },
+    {
+      "name": "Item 3325 - Sentinel\u0027s Shoulder Cape",
+      "value": 3325
+    },
+    {
+      "name": "Item 3326 - Expeditioner\u0027s Cloak",
+      "value": 3326
+    },
+    {
+      "name": "Item 3327 - Monarch\u0027s Mantle",
+      "value": 3327
+    },
+    {
+      "name": "Item 3328 - Comforting Neck Wrap",
+      "value": 3328
+    },
+    {
+      "name": "Item 3329 - Waterfowl Cloak",
+      "value": 3329
+    },
+    {
+      "name": "Item 3330 - Philosopher\u0027s Cape",
+      "value": 3330
+    },
+    {
+      "name": "Item 3331 - Redwolf Cape",
+      "value": 3331
+    },
+    {
+      "name": "Item 3332 - Hollow Cape",
+      "value": 3332
+    },
+    {
+      "name": "Item 3333 - Fair Cloak",
+      "value": 3333
+    },
+    {
+      "name": "Item 3334 - Warbler Capelet",
+      "value": 3334
+    },
+    {
+      "name": "Item 3335 - Moonhowl Cape",
+      "value": 3335
+    },
+    {
+      "name": "Item 3336 - Glorious Cape",
+      "value": 3336
+    },
+    {
+      "name": "Item 3337 - Murky Grouse Feathercloak",
+      "value": 3337
+    },
+    {
+      "name": "Item 3338 - Drakescale Cape",
+      "value": 3338
+    },
+    {
+      "name": "Item 3339 - Linen Cloak",
+      "value": 3339
+    },
+    {
+      "name": "Item 3340 - Ascendant Cloak",
+      "value": 3340
+    },
+    {
+      "name": "Item 3341 - Commander\u0027s Mantle",
+      "value": 3341
+    },
+    {
+      "name": "Item 3342 - Azure Shawl",
+      "value": 3342
+    },
+    {
+      "name": "Item 3343 - Kindred Cape",
+      "value": 3343
+    },
+    {
+      "name": "Item 3344 - Wayfarer\u0027s Cape",
+      "value": 3344
+    },
+    {
+      "name": "Item 3345 - Abyssinal Neck Wrap",
+      "value": 3345
+    },
+    {
+      "name": "Item 3346 - Uniter\u0027s Mantle",
+      "value": 3346
+    },
+    {
+      "name": "Item 3347 - Imperial Shoulder Cape",
+      "value": 3347
+    },
+    {
+      "name": "Item 3348 - Duty\u0027s Mantle",
+      "value": 3348
+    },
+    {
+      "name": "Item 3349 - Regal Cloak",
+      "value": 3349
+    },
+    {
+      "name": "Item 3350 - Wyrmhunter\u0027s Cloak",
+      "value": 3350
+    },
+    {
+      "name": "Item 3351 - Wyrmwing Cape",
+      "value": 3351
+    },
+    {
+      "name": "Item 3400 - Eventide Mask",
+      "value": 3400
+    },
+    {
+      "name": "Item 3401 - Salamander Mask",
+      "value": 3401
+    },
+    {
+      "name": "Item 3403 - Filcher Kerchief",
+      "value": 3403
+    },
+    {
+      "name": "Item 3404 - Wolfpack Kerchief",
+      "value": 3404
+    },
+    {
+      "name": "Item 3405 - Prowler Kerchief",
+      "value": 3405
+    },
+    {
+      "name": "Item 3406 - Leather Eyepatch",
+      "value": 3406
+    },
+    {
+      "name": "Item 3407 - Amber-Rimmed Glasses",
+      "value": 3407
+    },
+    {
+      "name": "Item 3408 - Monocle",
+      "value": 3408
+    },
+    {
+      "name": "Item 3409 - Nose-Pinchers",
+      "value": 3409
+    },
+    {
+      "name": "Item 3410 - White-Leather Kerchief",
+      "value": 3410
+    },
+    {
+      "name": "Item 3411 - Bandit Eyepatch",
+      "value": 3411
+    },
+    {
+      "name": "Item 3412 - Lordly Eyepatch",
+      "value": 3412
+    },
+    {
+      "name": "Item 3413 - Disciple\u0027s Spectacles",
+      "value": 3413
+    },
+    {
+      "name": "Item 3414 - Round-Frame Glasses",
+      "value": 3414
+    },
+    {
+      "name": "Item 3415 - Half-Frame Glasses",
+      "value": 3415
+    },
+    {
+      "name": "Item 3501 - Ring of Exultation",
+      "value": 3501
+    },
+    {
+      "name": "Item 3502 - Ring of Acclamation",
+      "value": 3502
+    },
+    {
+      "name": "Item 3503 - Ring of Tenacity",
+      "value": 3503
+    },
+    {
+      "name": "Item 3504 - Ring of Momentum",
+      "value": 3504
+    },
+    {
+      "name": "Item 3505 - Ring of Accrual",
+      "value": 3505
+    },
+    {
+      "name": "Item 3506 - Ring of Profusion",
+      "value": 3506
+    },
+    {
+      "name": "Item 3507 - Ring of Triumph",
+      "value": 3507
+    },
+    {
+      "name": "Item 3508 - Ring of Aggression",
+      "value": 3508
+    },
+    {
+      "name": "Item 3509 - Ring of Resiliency",
+      "value": 3509
+    },
+    {
+      "name": "Item 3510 - Ring of Percipience",
+      "value": 3510
+    },
+    {
+      "name": "Item 3511 - Ring of Conservation",
+      "value": 3511
+    },
+    {
+      "name": "Item 3512 - Ring of Deflection",
+      "value": 3512
+    },
+    {
+      "name": "Item 3513 - Ring of Indifference",
+      "value": 3513
+    },
+    {
+      "name": "Item 3514 - Ring of Cooling",
+      "value": 3514
+    },
+    {
+      "name": "Item 3515 - Ring of Tepidity",
+      "value": 3515
+    },
+    {
+      "name": "Item 3518 - Ring of Purification",
+      "value": 3518
+    },
+    {
+      "name": "Item 3519 - Ring of Awareness",
+      "value": 3519
+    },
+    {
+      "name": "Item 3520 - Ring of Insomnolence",
+      "value": 3520
+    },
+    {
+      "name": "Item 3521 - Ring of Desiccation",
+      "value": 3521
+    },
+    {
+      "name": "Item 3522 - Ring of Repellency",
+      "value": 3522
+    },
+    {
+      "name": "Item 3524 - Ring of Loquacity",
+      "value": 3524
+    },
+    {
+      "name": "Item 3525 - Ring of Pliancy",
+      "value": 3525
+    },
+    {
+      "name": "Item 3526 - Ring of Motility",
+      "value": 3526
+    },
+    {
+      "name": "Item 3527 - Ring of Quenching",
+      "value": 3527
+    },
+    {
+      "name": "Item 3528 - Ring of Thawing",
+      "value": 3528
+    },
+    {
+      "name": "Item 3530 - Ring of Ambition",
+      "value": 3530
+    },
+    {
+      "name": "Item 3531 - Ring of Endeavor",
+      "value": 3531
+    },
+    {
+      "name": "Item 3532 - Ring of Regeneration",
+      "value": 3532
+    },
+    {
+      "name": "Item 3533 - Ring of Articulacy",
+      "value": 3533
+    },
+    {
+      "name": "Item 3534 - Ring of Recitation",
+      "value": 3534
+    },
+    {
+      "name": "Item 3535 - Ring of Resolution",
+      "value": 3535
+    },
+    {
+      "name": "Item 3536 - Ring of Grit",
+      "value": 3536
+    },
+    {
+      "name": "Item 3537 - Ring of Requital",
+      "value": 3537
+    },
+    {
+      "name": "Item 3538 - Ring of Brawn",
+      "value": 3538
+    },
+    {
+      "name": "Item 3539 - Ring of Benevolence",
+      "value": 3539
+    },
+    {
+      "name": "Item 3540 - Ring of Recompense",
+      "value": 3540
+    },
+    {
+      "name": "Item 3541 - Ring of Predominance",
+      "value": 3541
+    },
+    {
+      "name": "Item 3543 - Ring of Disfavor",
+      "value": 3543
+    },
+    {
+      "name": "Item 3544 - Ring of Quickening",
+      "value": 3544
+    },
+    {
+      "name": "Item 3545 - Ring of Vehemence",
+      "value": 3545
+    },
+    {
+      "name": "Item 3548 - Ring of Proximity",
+      "value": 3548
+    },
+    {
+      "name": "Item 3549 - Ring of Gallantry",
+      "value": 3549
+    },
+    {
+      "name": "Item 3550 - Ring of Skullduggery",
+      "value": 3550
+    },
+    {
+      "name": "Item 3551 - Ring of Reassurance",
+      "value": 3551
+    },
+    {
+      "name": "Item 3552 - Ring of Amplification",
+      "value": 3552
+    },
+    {
+      "name": "Item 3553 - Turquoise Ring",
+      "value": 3553
+    },
+    {
+      "name": "Item 3554 - Ring of Derision",
+      "value": 3554
+    },
+    {
+      "name": "Item 3555 - Eternal Bond",
+      "value": 3555
+    },
+    {
+      "name": "Item 4000 - Wanderer\u0027s Hood",
+      "value": 4000
+    },
+    {
+      "name": "Item 4001 - Sentry\u0027s Coif",
+      "value": 4001
+    },
+    {
+      "name": "Item 4004 - Soldier\u0027s Helm",
+      "value": 4004
+    },
+    {
+      "name": "Item 4006 - Laurel Circlet",
+      "value": 4006
+    },
+    {
+      "name": "Item 4007 - Iron Helm",
+      "value": 4007
+    },
+    {
+      "name": "Item 4009 - Gryphic Helm",
+      "value": 4009
+    },
+    {
+      "name": "Item 4012 - Fiendish Armet",
+      "value": 4012
+    },
+    {
+      "name": "Item 4013 - Winged Sallet",
+      "value": 4013
+    },
+    {
+      "name": "Item 4014 - Monarch\u0027s Crown",
+      "value": 4014
+    },
+    {
+      "name": "Item 4015 - Subjugator\u0027s Sallet",
+      "value": 4015
+    },
+    {
+      "name": "Item 4016 - Gladiator\u0027s Helm",
+      "value": 4016
+    },
+    {
+      "name": "Item 4018 - Meloirean Cyclops Veil",
+      "value": 4018
+    },
+    {
+      "name": "Item 4019 - Howling Hood",
+      "value": 4019
+    },
+    {
+      "name": "Item 4022 - Ravager-Lord\u0027s Helm",
+      "value": 4022
+    },
+    {
+      "name": "Item 4024 - Valorous Helm",
+      "value": 4024
+    },
+    {
+      "name": "Item 4026 - Blazing Soul",
+      "value": 4026
+    },
+    {
+      "name": "Item 4029 - Agamenian Galea",
+      "value": 4029
+    },
+    {
+      "name": "Item 4031 - Friar\u0027s Hood",
+      "value": 4031
+    },
+    {
+      "name": "Item 4032 - Wardancer\u0027s Hat",
+      "value": 4032
+    },
+    {
+      "name": "Item 4034 - Battahli Turban",
+      "value": 4034
+    },
+    {
+      "name": "Item 4035 - Crusader\u0027s Helm",
+      "value": 4035
+    },
+    {
+      "name": "Item 4038 - Dragon Knight\u0027s Helm",
+      "value": 4038
+    },
+    {
+      "name": "Item 4039 - Deadly Nightshade",
+      "value": 4039
+    },
+    {
+      "name": "Item 4040 - Beseecher\u0027s Hood",
+      "value": 4040
+    },
+    {
+      "name": "Item 4041 - Devotee\u0027s Hood",
+      "value": 4041
+    },
+    {
+      "name": "Item 4043 - Wizard\u0027s Hat",
+      "value": 4043
+    },
+    {
+      "name": "Item 4045 - Dawn Hood",
+      "value": 4045
+    },
+    {
+      "name": "Item 4046 - Redstitch Hood",
+      "value": 4046
+    },
+    {
+      "name": "Item 4048 - Illuminary Crown",
+      "value": 4048
+    },
+    {
+      "name": "Item 4050 - Sage\u0027s Hood",
+      "value": 4050
+    },
+    {
+      "name": "Item 4051 - Cleric\u0027s Hood",
+      "value": 4051
+    },
+    {
+      "name": "Item 4052 - Bishop\u0027s Crown",
+      "value": 4052
+    },
+    {
+      "name": "Item 4053 - Scale Band",
+      "value": 4053
+    },
+    {
+      "name": "Item 4055 - Sorcerer\u0027s Hood",
+      "value": 4055
+    },
+    {
+      "name": "Item 4058 - Solar Ascension",
+      "value": 4058
+    },
+    {
+      "name": "Item 4060 - Witch\u0027s Hat",
+      "value": 4060
+    },
+    {
+      "name": "Item 4062 - Promethean Hood",
+      "value": 4062
+    },
+    {
+      "name": "Item 4064 - Visage of Ja\u0027Nuwa",
+      "value": 4064
+    },
+    {
+      "name": "Item 4065 - Veil of Awakening",
+      "value": 4065
+    },
+    {
+      "name": "Item 4066 - Visionary\u0027s Mask",
+      "value": 4066
+    },
+    {
+      "name": "Item 4067 - Doomdove Turban",
+      "value": 4067
+    },
+    {
+      "name": "Item 4068 - Uncanny Eyes",
+      "value": 4068
+    },
+    {
+      "name": "Item 4071 - Living Altar",
+      "value": 4071
+    },
+    {
+      "name": "Item 4073 - Summoner\u0027s Crown",
+      "value": 4073
+    },
+    {
+      "name": "Item 4074 - Felt Cap",
+      "value": 4074
+    },
+    {
+      "name": "Item 4075 - Scout\u0027s Hood",
+      "value": 4075
+    },
+    {
+      "name": "Item 4078 - Aerie\u0027s Watch",
+      "value": 4078
+    },
+    {
+      "name": "Item 4081 - Plumed Cap",
+      "value": 4081
+    },
+    {
+      "name": "Item 4083 - Galewind Helm",
+      "value": 4083
+    },
+    {
+      "name": "Item 4085 - Griffin-Feather Hood",
+      "value": 4085
+    },
+    {
+      "name": "Item 4087 - Cavalier Hat",
+      "value": 4087
+    },
+    {
+      "name": "Item 4088 - Dyed-Cloth Mask",
+      "value": 4088
+    },
+    {
+      "name": "Item 4090 - Hard-Leather Helm",
+      "value": 4090
+    },
+    {
+      "name": "Item 4091 - Unseen Shadow",
+      "value": 4091
+    },
+    {
+      "name": "Item 4092 - Gazer\u0027s Hood",
+      "value": 4092
+    },
+    {
+      "name": "Item 4095 - Lion-Lord\u0027s Helm",
+      "value": 4095
+    },
+    {
+      "name": "Item 4096 - Hood of Darkness",
+      "value": 4096
+    },
+    {
+      "name": "Item 4097 - Falconian Beak",
+      "value": 4097
+    },
+    {
+      "name": "Item 4102 - Predator\u0027s Maw",
+      "value": 4102
+    },
+    {
+      "name": "Item 4103 - Shrouded Helm",
+      "value": 4103
+    },
+    {
+      "name": "Item 4104 - Crown of Insight",
+      "value": 4104
+    },
+    {
+      "name": "Item 4105 - Leafshade Hood",
+      "value": 4105
+    },
+    {
+      "name": "Item 4106 - Ruminant Circlet",
+      "value": 4106
+    },
+    {
+      "name": "Item 4107 - Ancient Galea",
+      "value": 4107
+    },
+    {
+      "name": "Item 4113 - Invalid",
+      "value": 4113
+    },
+    {
+      "name": "Item 4115 - Confidant\u0027s Hood",
+      "value": 4115
+    },
+    {
+      "name": "Item 4116 - Beastren Mask",
+      "value": 4116
+    },
+    {
+      "name": "Item 4119 - Marcher\u0027s Helm",
+      "value": 4119
+    },
+    {
+      "name": "Item 4120 - Mask of Concealment",
+      "value": 4120
+    },
+    {
+      "name": "Item 4121 - Invalid",
+      "value": 4121
+    },
+    {
+      "name": "Item 4122 - Allesian Oxhide Hood",
+      "value": 4122
+    },
+    {
+      "name": "Item 4123 - Decapitator",
+      "value": 4123
+    },
+    {
+      "name": "Item 4124 - Oracular Veil",
+      "value": 4124
+    },
+    {
+      "name": "Item 4125 - Midnight Turban",
+      "value": 4125
+    },
+    {
+      "name": "Item 4126 - Tail of Simurgh",
+      "value": 4126
+    },
+    {
+      "name": "Item 4127 - Arcane Hat",
+      "value": 4127
+    },
+    {
+      "name": "Item 4128 - Zodiac Charm",
+      "value": 4128
+    },
+    {
+      "name": "Item 4129 - Serpentine Circlet",
+      "value": 4129
+    },
+    {
+      "name": "Item 4130 - Twilight Star",
+      "value": 4130
+    },
+    {
+      "name": "Item 4131 - Gnostic Wings",
+      "value": 4131
+    },
+    {
+      "name": "Item 4132 - Hood of Nonentity",
+      "value": 4132
+    },
+    {
+      "name": "Item 4133 - Farseer\u0027s Circlet",
+      "value": 4133
+    },
+    {
+      "name": "Item 4134 - Sergeant\u0027s Armet",
+      "value": 4134
+    },
+    {
+      "name": "Item 4135 - Persecutor\u0027s Horns",
+      "value": 4135
+    },
+    {
+      "name": "Item 5000 - Foot Soldier Armor",
+      "value": 5000
+    },
+    {
+      "name": "Item 5001 - Chain Mail",
+      "value": 5001
+    },
+    {
+      "name": "Item 5004 - Plate Armor",
+      "value": 5004
+    },
+    {
+      "name": "Item 5006 - Grand Surcoat",
+      "value": 5006
+    },
+    {
+      "name": "Item 5007 - Guardian Plate Armor",
+      "value": 5007
+    },
+    {
+      "name": "Item 5009 - Valiant Armor",
+      "value": 5009
+    },
+    {
+      "name": "Item 5012 - Grand Cuirass",
+      "value": 5012
+    },
+    {
+      "name": "Item 5013 - Dominion Armor",
+      "value": 5013
+    },
+    {
+      "name": "Item 5014 - Knightly Brigandine",
+      "value": 5014
+    },
+    {
+      "name": "Item 5015 - Stygian Omen",
+      "value": 5015
+    },
+    {
+      "name": "Item 5016 - Scaled Jacket",
+      "value": 5016
+    },
+    {
+      "name": "Item 5018 - Intrepid Scalecoat",
+      "value": 5018
+    },
+    {
+      "name": "Item 5019 - Tribal Brace",
+      "value": 5019
+    },
+    {
+      "name": "Item 5024 - Indomitable Armor",
+      "value": 5024
+    },
+    {
+      "name": "Item 5026 - Thrasher\u0027s Surcoat",
+      "value": 5026
+    },
+    {
+      "name": "Item 5028 - Vashara Scaleskin",
+      "value": 5028
+    },
+    {
+      "name": "Item 5029 - Dominator\u0027s Armor",
+      "value": 5029
+    },
+    {
+      "name": "Item 5031 - Bladewielder\u0027s Coat",
+      "value": 5031
+    },
+    {
+      "name": "Item 5032 - Noble Jacket",
+      "value": 5032
+    },
+    {
+      "name": "Item 5034 - Fencer\u0027s Jacket",
+      "value": 5034
+    },
+    {
+      "name": "Item 5035 - Creedbound Armor",
+      "value": 5035
+    },
+    {
+      "name": "Item 5038 - Soaring Surcoat",
+      "value": 5038
+    },
+    {
+      "name": "Item 5039 - Duelist\u0027s Coat",
+      "value": 5039
+    },
+    {
+      "name": "Item 5040 - Missionary\u0027s Robe",
+      "value": 5040
+    },
+    {
+      "name": "Item 5041 - Verger\u0027s Gown",
+      "value": 5041
+    },
+    {
+      "name": "Item 5043 - Magician\u0027s Coat",
+      "value": 5043
+    },
+    {
+      "name": "Item 5045 - Chanter\u0027s Half Robe",
+      "value": 5045
+    },
+    {
+      "name": "Item 5046 - Meadow Cloth",
+      "value": 5046
+    },
+    {
+      "name": "Item 5048 - Monastic Toga",
+      "value": 5048
+    },
+    {
+      "name": "Item 5050 - Priestly Habit",
+      "value": 5050
+    },
+    {
+      "name": "Item 5051 - Sacral Robe",
+      "value": 5051
+    },
+    {
+      "name": "Item 5052 - August Dalmatica",
+      "value": 5052
+    },
+    {
+      "name": "Item 5053 - Animistic Robe",
+      "value": 5053
+    },
+    {
+      "name": "Item 5054 - Esoteric Vestment",
+      "value": 5054
+    },
+    {
+      "name": "Item 5055 - Incanter\u0027s Coat",
+      "value": 5055
+    },
+    {
+      "name": "Item 5058 - Stargazer\u0027s Garb",
+      "value": 5058
+    },
+    {
+      "name": "Item 5060 - Silhouette of Sorcery",
+      "value": 5060
+    },
+    {
+      "name": "Item 5062 - Cardinal Robe",
+      "value": 5062
+    },
+    {
+      "name": "Item 5064 - Orphic Robe",
+      "value": 5064
+    },
+    {
+      "name": "Item 5065 - Robe of the Enlightened",
+      "value": 5065
+    },
+    {
+      "name": "Item 5066 - Enigmatic Robe",
+      "value": 5066
+    },
+    {
+      "name": "Item 5067 - Nirvane",
+      "value": 5067
+    },
+    {
+      "name": "Item 5068 - Mysterial Robe",
+      "value": 5068
+    },
+    {
+      "name": "Item 5071 - Totemic Shroud",
+      "value": 5071
+    },
+    {
+      "name": "Item 5073 - Arch-Conjuror\u0027s Robe",
+      "value": 5073
+    },
+    {
+      "name": "Item 5074 - Deepwood Jacket",
+      "value": 5074
+    },
+    {
+      "name": "Item 5075 - Archer\u0027s Vest",
+      "value": 5075
+    },
+    {
+      "name": "Item 5078 - Stoutdraw Armor",
+      "value": 5078
+    },
+    {
+      "name": "Item 5081 - Hunter\u0027s Mail",
+      "value": 5081
+    },
+    {
+      "name": "Item 5083 - Valkyrian Scalecloth",
+      "value": 5083
+    },
+    {
+      "name": "Item 5085 - Majestic Armor",
+      "value": 5085
+    },
+    {
+      "name": "Item 5087 - Heroic Coat",
+      "value": 5087
+    },
+    {
+      "name": "Item 5088 - Brigand\u0027s Vest",
+      "value": 5088
+    },
+    {
+      "name": "Item 5090 - Lamellar Armor",
+      "value": 5090
+    },
+    {
+      "name": "Item 5091 - Battahli Jacket",
+      "value": 5091
+    },
+    {
+      "name": "Item 5092 - Rampart Breaker",
+      "value": 5092
+    },
+    {
+      "name": "Item 5095 - Bestial Boon",
+      "value": 5095
+    },
+    {
+      "name": "Item 5096 - Enshadowed Battle Garb",
+      "value": 5096
+    },
+    {
+      "name": "Item 5097 - Wildeagle Padded Armor",
+      "value": 5097
+    },
+    {
+      "name": "Item 5102 - Vanquisher\u0027s Armor",
+      "value": 5102
+    },
+    {
+      "name": "Item 5103 - Dvarapala",
+      "value": 5103
+    },
+    {
+      "name": "Item 5104 - Spirit Coat",
+      "value": 5104
+    },
+    {
+      "name": "Item 5105 - Burgundy Coat",
+      "value": 5105
+    },
+    {
+      "name": "Item 5106 - Graceful Tunic",
+      "value": 5106
+    },
+    {
+      "name": "Item 5107 - Resonance Armor",
+      "value": 5107
+    },
+    {
+      "name": "Item 5113 - Eonian Coat",
+      "value": 5113
+    },
+    {
+      "name": "Item 5114 - Godsbeast Scalecoat",
+      "value": 5114
+    },
+    {
+      "name": "Item 5115 - Elven Garb",
+      "value": 5115
+    },
+    {
+      "name": "Item 5116 - Charming Corset",
+      "value": 5116
+    },
+    {
+      "name": "Item 5117 - Marcher\u0027s Armor",
+      "value": 5117
+    },
+    {
+      "name": "Item 5118 - Miner\u0027s Shirt",
+      "value": 5118
+    },
+    {
+      "name": "Item 5119 - Researcher\u0027s Robe",
+      "value": 5119
+    },
+    {
+      "name": "Item 5120 - Invalid",
+      "value": 5120
+    },
+    {
+      "name": "Item 5121 - Invalid",
+      "value": 5121
+    },
+    {
+      "name": "Item 5122 - Ranger\u0027s Vest",
+      "value": 5122
+    },
+    {
+      "name": "Item 5123 - Enchanter\u0027s Quilted Gown",
+      "value": 5123
+    },
+    {
+      "name": "Item 5124 - Adept\u0027s Coat",
+      "value": 5124
+    },
+    {
+      "name": "Item 5125 - Eminent Coat",
+      "value": 5125
+    },
+    {
+      "name": "Item 5126 - Edified Vestment",
+      "value": 5126
+    },
+    {
+      "name": "Item 5127 - Immaculate Blaze",
+      "value": 5127
+    },
+    {
+      "name": "Item 5128 - Outlander\u0027s Garb",
+      "value": 5128
+    },
+    {
+      "name": "Item 5129 - Elegant Petticoat",
+      "value": 5129
+    },
+    {
+      "name": "Item 5130 - Soulskin",
+      "value": 5130
+    },
+    {
+      "name": "Item 5131 - Hyperboreal Lorica",
+      "value": 5131
+    },
+    {
+      "name": "Item 5132 - Half-Plate Armor",
+      "value": 5132
+    },
+    {
+      "name": "Item 5133 - Final Roar",
+      "value": 5133
+    },
+    {
+      "name": "Item 5134 - Brunhilda\u0027s Embrace",
+      "value": 5134
+    },
+    {
+      "name": "Item 5135 - Beastren Pride",
+      "value": 5135
+    },
+    {
+      "name": "Item 5136 - Ares Morpho Robe",
+      "value": 5136
+    },
+    {
+      "name": "Item 5137 - Gauntleted Petticoat",
+      "value": 5137
+    },
+    {
+      "name": "Item 5138 - Courtly Tunic",
+      "value": 5138
+    },
+    {
+      "name": "Item 5139 - Meloirean Plate",
+      "value": 5139
+    },
+    {
+      "name": "Item 6000 - Worker\u0027s Greaves",
+      "value": 6000
+    },
+    {
+      "name": "Item 6001 - Combat Breeches",
+      "value": 6001
+    },
+    {
+      "name": "Item 6004 - Patroller Knee Guards",
+      "value": 6004
+    },
+    {
+      "name": "Item 6006 - Bush Raiders",
+      "value": 6006
+    },
+    {
+      "name": "Item 6007 - Guardian Leg Plates",
+      "value": 6007
+    },
+    {
+      "name": "Item 6009 - Raptor Claws",
+      "value": 6009
+    },
+    {
+      "name": "Item 6012 - Brutal Cuisses",
+      "value": 6012
+    },
+    {
+      "name": "Item 6013 - Sabatons of Judgment",
+      "value": 6013
+    },
+    {
+      "name": "Item 6014 - Conqueror\u0027s Sabatons",
+      "value": 6014
+    },
+    {
+      "name": "Item 6015 - Vigilant Greaves",
+      "value": 6015
+    },
+    {
+      "name": "Item 6016 - Traveler\u0027s Gaiters",
+      "value": 6016
+    },
+    {
+      "name": "Item 6018 - Bandit Greaves",
+      "value": 6018
+    },
+    {
+      "name": "Item 6019 - Mettlesome Cuisses",
+      "value": 6019
+    },
+    {
+      "name": "Item 6024 - Dauntless Greaves",
+      "value": 6024
+    },
+    {
+      "name": "Item 6026 - Executioner\u0027s Greaves",
+      "value": 6026
+    },
+    {
+      "name": "Item 6028 - Diabolic Cuisses",
+      "value": 6028
+    },
+    {
+      "name": "Item 6029 - Vanguarder\u0027s Greaves",
+      "value": 6029
+    },
+    {
+      "name": "Item 6031 - Stylish Boots",
+      "value": 6031
+    },
+    {
+      "name": "Item 6032 - Dapper Chausses",
+      "value": 6032
+    },
+    {
+      "name": "Item 6034 - Arena Breeches",
+      "value": 6034
+    },
+    {
+      "name": "Item 6035 - Venator\u0027s Leggings",
+      "value": 6035
+    },
+    {
+      "name": "Item 6038 - Strider\u0027s Greaves",
+      "value": 6038
+    },
+    {
+      "name": "Item 6040 - Pilgrim\u0027s Tights",
+      "value": 6040
+    },
+    {
+      "name": "Item 6041 - Landwalkers",
+      "value": 6041
+    },
+    {
+      "name": "Item 6043 - Miner\u0027s Hosen",
+      "value": 6043
+    },
+    {
+      "name": "Item 6045 - Savant\u0027s Boots",
+      "value": 6045
+    },
+    {
+      "name": "Item 6046 - Peddler\u0027s Boots",
+      "value": 6046
+    },
+    {
+      "name": "Item 6048 - Neophyte\u0027s Hosen",
+      "value": 6048
+    },
+    {
+      "name": "Item 6050 - Ascetic Gaiters",
+      "value": 6050
+    },
+    {
+      "name": "Item 6051 - Scholar\u0027s Breeches",
+      "value": 6051
+    },
+    {
+      "name": "Item 6052 - Euphoric Hosen",
+      "value": 6052
+    },
+    {
+      "name": "Item 6053 - Over-Knee Boots",
+      "value": 6053
+    },
+    {
+      "name": "Item 6055 - Nightfall Greaves",
+      "value": 6055
+    },
+    {
+      "name": "Item 6058 - Spellweaver\u0027s Waistcloth",
+      "value": 6058
+    },
+    {
+      "name": "Item 6060 - Scarlet Over-Knee Boots",
+      "value": 6060
+    },
+    {
+      "name": "Item 6062 - Practitioner\u0027s Hosen",
+      "value": 6062
+    },
+    {
+      "name": "Item 6064 - Epiphanic Waistguard",
+      "value": 6064
+    },
+    {
+      "name": "Item 6065 - Monkish Gaiters",
+      "value": 6065
+    },
+    {
+      "name": "Item 6067 - Braided Boots",
+      "value": 6067
+    },
+    {
+      "name": "Item 6068 - Runic Gaiters",
+      "value": 6068
+    },
+    {
+      "name": "Item 6071 - Rapturous Raffia Skirt",
+      "value": 6071
+    },
+    {
+      "name": "Item 6073 - Jewel-Woven Sandals",
+      "value": 6073
+    },
+    {
+      "name": "Item 6074 - Woodland Boots",
+      "value": 6074
+    },
+    {
+      "name": "Item 6075 - Napped-Leather Boots",
+      "value": 6075
+    },
+    {
+      "name": "Item 6078 - Beast-Leather Breeches",
+      "value": 6078
+    },
+    {
+      "name": "Item 6081 - Sprinter\u0027s Boots",
+      "value": 6081
+    },
+    {
+      "name": "Item 6085 - Rathe Greaves",
+      "value": 6085
+    },
+    {
+      "name": "Item 6087 - Eagle-Eye Cuisses",
+      "value": 6087
+    },
+    {
+      "name": "Item 6088 - Explorer\u0027s Boots",
+      "value": 6088
+    },
+    {
+      "name": "Item 6090 - Furred Greaves",
+      "value": 6090
+    },
+    {
+      "name": "Item 6091 - Journeyer\u0027s Sirwal",
+      "value": 6091
+    },
+    {
+      "name": "Item 6092 - Thief\u0027s Gaiters",
+      "value": 6092
+    },
+    {
+      "name": "Item 6095 - Lionel Hosen",
+      "value": 6095
+    },
+    {
+      "name": "Item 6096 - Assassin\u0027s Breeches",
+      "value": 6096
+    },
+    {
+      "name": "Item 6097 - Hillfolk Breeches",
+      "value": 6097
+    },
+    {
+      "name": "Item 6102 - Wildland Greaves",
+      "value": 6102
+    },
+    {
+      "name": "Item 6103 - Cliff Leapers",
+      "value": 6103
+    },
+    {
+      "name": "Item 6104 - Forest Greaves",
+      "value": 6104
+    },
+    {
+      "name": "Item 6113 - Mercenary Hosen",
+      "value": 6113
+    },
+    {
+      "name": "Item 6114 - Crimson Hosen",
+      "value": 6114
+    },
+    {
+      "name": "Item 6115 - Evergreen Greaves",
+      "value": 6115
+    },
+    {
+      "name": "Item 6116 - Ranger\u0027s Tights",
+      "value": 6116
+    },
+    {
+      "name": "Item 6117 - Marcher\u0027s Cuisses",
+      "value": 6117
+    },
+    {
+      "name": "Item 6118 - Laborer\u0027s Trousers",
+      "value": 6118
+    },
+    {
+      "name": "Item 6119 - Apprentice\u0027s Breeches",
+      "value": 6119
+    },
+    {
+      "name": "Item 6120 - Invalid",
+      "value": 6120
+    },
+    {
+      "name": "Item 6121 - Invalid",
+      "value": 6121
+    },
+    {
+      "name": "Item 6122 - Darkmetal Greaves",
+      "value": 6122
+    },
+    {
+      "name": "Item 6123 - Blessed Waistcloth",
+      "value": 6123
+    },
+    {
+      "name": "Item 6124 - Courtly Breeches",
+      "value": 6124
+    },
+    {
+      "name": "Item 7000 - Miner\u0027s Shirt",
+      "value": 7000
+    },
+    {
+      "name": "Item 7001 - Laborer\u0027s Trousers",
+      "value": 7001
+    },
+    {
+      "name": "Item 8000 - Superior Trusty Sword",
+      "value": 8000
+    },
+    {
+      "name": "Item 8050 - Superior Round Shield",
+      "value": 8050
+    },
+    {
+      "name": "Item 8100 - Superior Criteria",
+      "value": 8100
+    },
+    {
+      "name": "Item 8150 - Superior Wooden Staff",
+      "value": 8150
+    },
+    {
+      "name": "Item 8200 - Superior Fluted Bow",
+      "value": 8200
+    },
+    {
+      "name": "Item 8600 - Ring of Assurance",
+      "value": 8600
+    },
+    {
+      "name": "Item 10312 - Sovran\u0027s Crown",
+      "value": 10312
+    },
+    {
+      "name": "Item 10409 - Sovran\u0027s Plate",
+      "value": 10409
+    },
+    {
+      "name": "Item 10512 - Sovran\u0027s Greaves",
+      "value": 10512
+    }
+  ]
+}

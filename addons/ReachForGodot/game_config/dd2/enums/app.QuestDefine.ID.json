@@ -1,0 +1,492 @@
+{
+  "DisplayLabels": [
+    {
+      "name": "10010 /",
+      "value": 10010
+    },
+    {
+      "name": "10020 ",
+      "value": 10020
+    },
+    {
+      "name": "10030 Gaoled Awakening",
+      "value": 10030
+    },
+    {
+      "name": "10040 The Hand That Guides",
+      "value": 10040
+    },
+    {
+      "name": "10050 Tale\u0027s Beginning",
+      "value": 10050
+    },
+    {
+      "name": "10060 In Dragon\u0027s Wake",
+      "value": 10060
+    },
+    {
+      "name": "10070 One-Eyed Interloper",
+      "value": 10070
+    },
+    {
+      "name": "10080 Seat of the Sovran",
+      "value": 10080
+    },
+    {
+      "name": "10085 /",
+      "value": 10085
+    },
+    {
+      "name": "10090 Monster Culling",
+      "value": 10090
+    },
+    {
+      "name": "10100 Disa\u0027s Plot",
+      "value": 10100
+    },
+    {
+      "name": "10110 An Unsettling Encounter",
+      "value": 10110
+    },
+    {
+      "name": "10120 The Caged Magistrate",
+      "value": 10120
+    },
+    {
+      "name": "10130 The Arisen\u0027s Shadow",
+      "value": 10130
+    },
+    {
+      "name": "10140 Feast of Deception",
+      "value": 10140
+    },
+    {
+      "name": "10145 /",
+      "value": 10145
+    },
+    {
+      "name": "10150 Nation of the Lambent Flame",
+      "value": 10150
+    },
+    {
+      "name": "10151 Flickering Shadows",
+      "value": 10151
+    },
+    {
+      "name": "10160 Convergence",
+      "value": 10160
+    },
+    {
+      "name": "10170 A New Godsway",
+      "value": 10170
+    },
+    {
+      "name": "10180 The Guardian Gigantus",
+      "value": 10180
+    },
+    {
+      "name": "10190 /",
+      "value": 10190
+    },
+    {
+      "name": "10200 Legacy",
+      "value": 10200
+    },
+    {
+      "name": "10210 /",
+      "value": 10210
+    },
+    {
+      "name": "10220 /",
+      "value": 10220
+    },
+    {
+      "name": "11010 /",
+      "value": 11010
+    },
+    {
+      "name": "11020 /",
+      "value": 11020
+    },
+    {
+      "name": "11030 /",
+      "value": 11030
+    },
+    {
+      "name": "11040 /",
+      "value": 11040
+    },
+    {
+      "name": "11050 /",
+      "value": 11050
+    },
+    {
+      "name": "12000 /",
+      "value": 12000
+    },
+    {
+      "name": "12010 /",
+      "value": 12010
+    },
+    {
+      "name": "12020 /",
+      "value": 12020
+    },
+    {
+      "name": "12030 /",
+      "value": 12030
+    },
+    {
+      "name": "12040 /",
+      "value": 12040
+    },
+    {
+      "name": "20010 Medicament Predicament",
+      "value": 20010
+    },
+    {
+      "name": "20020 Ordeals of a New Recruit",
+      "value": 20020
+    },
+    {
+      "name": "20030 The Provisioner\u0027s Plight",
+      "value": 20030
+    },
+    {
+      "name": "20040 Nesting Troubles",
+      "value": 20040
+    },
+    {
+      "name": "20050 Brothers Brave and Timid",
+      "value": 20050
+    },
+    {
+      "name": "20060 \u0027Twixt a Rock and a Hard Place",
+      "value": 20060
+    },
+    {
+      "name": "20070 Till Death Do Us Part",
+      "value": 20070
+    },
+    {
+      "name": "20080 Scaly Invaders",
+      "value": 20080
+    },
+    {
+      "name": "20082 Trouble on the Cape",
+      "value": 20082
+    },
+    {
+      "name": "20090 A Beggar\u0027s Tale",
+      "value": 20090
+    },
+    {
+      "name": "20100 Tolled to Rest",
+      "value": 20100
+    },
+    {
+      "name": "20110 The Phantom Oxcart",
+      "value": 20110
+    },
+    {
+      "name": "20120 The Heel of History",
+      "value": 20120
+    },
+    {
+      "name": "20130 Saint of the Slums",
+      "value": 20130
+    },
+    {
+      "name": "20140 The Gift of Giving",
+      "value": 20140
+    },
+    {
+      "name": "20141 (Daphne - Detoxifying concoction requests)",
+      "value": 20141
+    },
+    {
+      "name": "20150 House of the Blue Sunbright",
+      "value": 20150
+    },
+    {
+      "name": "20160 The Expeditious Explorer",
+      "value": 20160
+    },
+    {
+      "name": "20170 The Inveterate Explorer",
+      "value": 20170
+    },
+    {
+      "name": "20180 Belle of the Bar",
+      "value": 20180
+    },
+    {
+      "name": "20190 A Noble Exchange",
+      "value": 20190
+    },
+    {
+      "name": "20200 A Game of Wits",
+      "value": 20200
+    },
+    {
+      "name": "20210 (Medusa hint NPCs)",
+      "value": 20210
+    },
+    {
+      "name": "20220 The Nameless Village",
+      "value": 20220
+    },
+    {
+      "name": "20230 A Place to Call Home",
+      "value": 20230
+    },
+    {
+      "name": "20240 Vocation Frustration",
+      "value": 20240
+    },
+    {
+      "name": "20250 Prey for the Pack",
+      "value": 20250
+    },
+    {
+      "name": "20260 (Newt liquor sellers)",
+      "value": 20260
+    },
+    {
+      "name": "20270 The Sotted Sage",
+      "value": 20270
+    },
+    {
+      "name": "20280 A Poisonous Proposal",
+      "value": 20280
+    },
+    {
+      "name": "20290 Short-Sighted Ambition",
+      "value": 20290
+    },
+    {
+      "name": "20310 A Case of Sculptor\u0027s Block",
+      "value": 20310
+    },
+    {
+      "name": "20320 (Sigurd Dragonbreath tower logic)",
+      "value": 20320
+    },
+    {
+      "name": "20330 Shadowed Prayers",
+      "value": 20330
+    },
+    {
+      "name": "20340 Crossing in Shadow",
+      "value": 20340
+    },
+    {
+      "name": "20350 Hunt for the Jadeite Orb",
+      "value": 20350
+    },
+    {
+      "name": "20360 Dreams Apart",
+      "value": 20360
+    },
+    {
+      "name": "20370 Halls of the First Dawn",
+      "value": 20370
+    },
+    {
+      "name": "20380 When Wills Collide",
+      "value": 20380
+    },
+    {
+      "name": "20390 The Regentkin\u0027s Resolve",
+      "value": 20390
+    },
+    {
+      "name": "20391 /",
+      "value": 20391
+    },
+    {
+      "name": "20420 Civil Unrest",
+      "value": 20420
+    },
+    {
+      "name": "20421 /",
+      "value": 20421
+    },
+    {
+      "name": "20440 A Scholarly Pursuit",
+      "value": 20440
+    },
+    {
+      "name": "20450 Wandering Roots",
+      "value": 20450
+    },
+    {
+      "name": "20451 /",
+      "value": 20451
+    },
+    {
+      "name": "20460 The Importance of Aiding Ernesto",
+      "value": 20460
+    },
+    {
+      "name": "20461 /",
+      "value": 20461
+    },
+    {
+      "name": "20470 Shepherd of the Pawns",
+      "value": 20470
+    },
+    {
+      "name": "20471 /",
+      "value": 20471
+    },
+    {
+      "name": "20480 Oxcart Courier",
+      "value": 20480
+    },
+    {
+      "name": "29010 /",
+      "value": 29010
+    },
+    {
+      "name": "29120 /",
+      "value": 29120
+    },
+    {
+      "name": "29130 /",
+      "value": 29130
+    },
+    {
+      "name": "29150 /",
+      "value": 29150
+    },
+    {
+      "name": "29180 /",
+      "value": 29180
+    },
+    {
+      "name": "29190 /",
+      "value": 29190
+    },
+    {
+      "name": "29200 /",
+      "value": 29200
+    },
+    {
+      "name": "29290 /",
+      "value": 29290
+    },
+    {
+      "name": "30010 The Ornate Box",
+      "value": 30010
+    },
+    {
+      "name": "30020 Claw Them Into Shape",
+      "value": 30020
+    },
+    {
+      "name": "30030 Beren\u0027s Final Lesson",
+      "value": 30030
+    },
+    {
+      "name": "30040 The Stolen Throne",
+      "value": 30040
+    },
+    {
+      "name": "30041 Masked Correspondence",
+      "value": 30041
+    },
+    {
+      "name": "30042 A Magisterial Amenity",
+      "value": 30042
+    },
+    {
+      "name": "30050 Every Rose Has Its Thorn",
+      "value": 30050
+    },
+    {
+      "name": "30060 Gift of the Bow",
+      "value": 30060
+    },
+    {
+      "name": "30070 A Trial of Archery",
+      "value": 30070
+    },
+    {
+      "name": "30080 The Ailing Arborheart",
+      "value": 30080
+    },
+    {
+      "name": "30090 Out of the Forest, Into the Forge",
+      "value": 30090
+    },
+    {
+      "name": "30100 Readvent of Calamity",
+      "value": 30100
+    },
+    {
+      "name": "30110 Home Is Where the Hearth Is",
+      "value": 30110
+    },
+    {
+      "name": "30120 Dulled Steel, Cold Forge",
+      "value": 30120
+    },
+    {
+      "name": "30130 Steeled Resolve, Blazing Forge",
+      "value": 30130
+    },
+    {
+      "name": "30140 Welcome to Battahl",
+      "value": 30140
+    },
+    {
+      "name": "30150 Spellbound",
+      "value": 30150
+    },
+    {
+      "name": "30160 The Sorcerer\u0027s Appraisal",
+      "value": 30160
+    },
+    {
+      "name": "30170 Put a Spring in Thy Step",
+      "value": 30170
+    },
+    {
+      "name": "30180 A Veil of Gossamer Clouds",
+      "value": 30180
+    },
+    {
+      "name": "30200 A Candle in the Storm",
+      "value": 30200
+    },
+    {
+      "name": "30210 Mercy among Thieves",
+      "value": 30210
+    },
+    {
+      "name": "30220 Off the Pilfered Path",
+      "value": 30220
+    },
+    {
+      "name": "30230 Tensions on the Highroad",
+      "value": 30230
+    },
+    {
+      "name": "30240 Clash and Conclusion",
+      "value": 30240
+    },
+    {
+      "name": "990000 /",
+      "value": 990000
+    },
+    {
+      "name": "990010 /",
+      "value": 990010
+    },
+    {
+      "name": "990030 /",
+      "value": 990030
+    }
+  ]
+}

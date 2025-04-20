@@ -1,0 +1,1332 @@
+{
+  "DisplayLabels": [
+    {
+      "name": "[group] wp00 Sword",
+      "value": 323860819
+    },
+    {
+      "name": "[group] wp00_000",
+      "value": 4285537105
+    },
+    {
+      "name": "wp00_000_00 - Trusty Sword",
+      "value": 962194021
+    },
+    {
+      "name": "[group] wp00_001",
+      "value": 3015106711
+    },
+    {
+      "name": "wp00_001_00 - Iron Sword",
+      "value": 2128971401
+    },
+    {
+      "name": "[group] wp00_002",
+      "value": 2243414972
+    },
+    {
+      "name": "wp00_002_00 - Bane of Bones",
+      "value": 3548901529
+    },
+    {
+      "name": "[group] wp00_003",
+      "value": 2831686687
+    },
+    {
+      "name": "wp00_003_00 - Cutlass",
+      "value": 2884590335
+    },
+    {
+      "name": "[group] wp00_004",
+      "value": 4118996507
+    },
+    {
+      "name": "wp00_004_00 - Broadsword",
+      "value": 1491884220
+    },
+    {
+      "name": "[group] wp00_005",
+      "value": 1626650353
+    },
+    {
+      "name": "wp00_005_00 - Silver Rapier",
+      "value": 3565243454
+    },
+    {
+      "name": "[group] wp00_006",
+      "value": 4250670449
+    },
+    {
+      "name": "wp00_006_00 - Silver Cinquedea",
+      "value": 3552503787
+    },
+    {
+      "name": "[group] wp00_007",
+      "value": 302583251
+    },
+    {
+      "name": "wp00_007_00 - Dragon\u0027s Dogma",
+      "value": 910621095
+    },
+    {
+      "name": "[group] wp00_008",
+      "value": 2791192126
+    },
+    {
+      "name": "wp00_008_00 - Threaded Cudgel",
+      "value": 3643593328
+    },
+    {
+      "name": "[group] wp00_009",
+      "value": 1450805
+    },
+    {
+      "name": "wp00_009_00 - Stalwart Sword",
+      "value": 3368873434
+    },
+    {
+      "name": "[group] wp00_010",
+      "value": 2579408775
+    },
+    {
+      "name": "wp00_010_00 - Labyrinthus",
+      "value": 2528970259
+    },
+    {
+      "name": "[group] wp00_011",
+      "value": 2029086186
+    },
+    {
+      "name": "wp00_011_00 - Carnation",
+      "value": 2250125044
+    },
+    {
+      "name": "[group] wp00_012",
+      "value": 2183667765
+    },
+    {
+      "name": "[group] wp00_013",
+      "value": 2486813009
+    },
+    {
+      "name": "wp00_013_00 - Vermundian Brand",
+      "value": 1826011890
+    },
+    {
+      "name": "[group] wp00_014",
+      "value": 2342709095
+    },
+    {
+      "name": "[group] wp00_015",
+      "value": 3785831583
+    },
+    {
+      "name": "wp00_015_00 - Battahli Shotel",
+      "value": 2292955251
+    },
+    {
+      "name": "[group] wp00_016",
+      "value": 3871535679
+    },
+    {
+      "name": "wp00_016_00 - Steeled Virtue",
+      "value": 2480729186
+    },
+    {
+      "name": "[group] wp00_017",
+      "value": 96530076
+    },
+    {
+      "name": "wp00_017_00 - The Exalted",
+      "value": 934758552
+    },
+    {
+      "name": "[group] wp00_018",
+      "value": 2092091542
+    },
+    {
+      "name": "wp00_018_00 - Almace",
+      "value": 492162396
+    },
+    {
+      "name": "[group] wp00_019",
+      "value": 3781883470
+    },
+    {
+      "name": "wp00_019_00 - Molten Fury",
+      "value": 1666196745
+    },
+    {
+      "name": "[group] wp00_050",
+      "value": 356253077
+    },
+    {
+      "name": "wp00_050_00 - Superior Trusty Sword",
+      "value": 2170448860
+    },
+    {
+      "name": "[group] wp01 Shield",
+      "value": 2991748387
+    },
+    {
+      "name": "[group] wp01_000",
+      "value": 1280065882
+    },
+    {
+      "name": "wp01_000_00 - Round Shield",
+      "value": 2770154262
+    },
+    {
+      "name": "[group] wp01_001",
+      "value": 3959677178
+    },
+    {
+      "name": "wp01_001_00 - Iron Shield",
+      "value": 2849414
+    },
+    {
+      "name": "[group] wp01_002",
+      "value": 3262357667
+    },
+    {
+      "name": "wp01_002_00 - Feather-Light Pelta",
+      "value": 3521337496
+    },
+    {
+      "name": "[group] wp01_003",
+      "value": 1201705397
+    },
+    {
+      "name": "wp01_003_00 - Lustrous Targe",
+      "value": 1620899700
+    },
+    {
+      "name": "[group] wp01_004",
+      "value": 3999295594
+    },
+    {
+      "name": "wp01_004_00 - Dragon\u0027s Aegis",
+      "value": 1725880613
+    },
+    {
+      "name": "[group] wp01_005",
+      "value": 3970936335
+    },
+    {
+      "name": "wp01_005_00 - Continental Shield",
+      "value": 1330631860
+    },
+    {
+      "name": "[group] wp01_006",
+      "value": 3556606596
+    },
+    {
+      "name": "wp01_006_00 - Dread Aspis",
+      "value": 4216487767
+    },
+    {
+      "name": "[group] wp01_007",
+      "value": 1901385081
+    },
+    {
+      "name": "wp01_007_00 - Dragon\u0027s Faith",
+      "value": 2217918383
+    },
+    {
+      "name": "[group] wp01_008",
+      "value": 1186338912
+    },
+    {
+      "name": "wp01_008_00 - Shield of Vernworth",
+      "value": 2483854788
+    },
+    {
+      "name": "[group] wp01_009",
+      "value": 2411980666
+    },
+    {
+      "name": "[group] wp01_010",
+      "value": 2117280461
+    },
+    {
+      "name": "wp01_010_00 - Battahli Shield",
+      "value": 863950109
+    },
+    {
+      "name": "[group] wp01_011",
+      "value": 1467346637
+    },
+    {
+      "name": "wp01_011_00 - Daughter of the Evening",
+      "value": 1389052217
+    },
+    {
+      "name": "[group] wp01_012",
+      "value": 538637004
+    },
+    {
+      "name": "[group] wp01_050",
+      "value": 2633943916
+    },
+    {
+      "name": "wp01_050_00 - Superior Round Shield",
+      "value": 3307324043
+    },
+    {
+      "name": "[group] wp02 Greatsword",
+      "value": 1425896890
+    },
+    {
+      "name": "[group] wp02_000",
+      "value": 1499945966
+    },
+    {
+      "name": "wp02_000_00 - Two-Hander",
+      "value": 1255921003
+    },
+    {
+      "name": "[group] wp02_001",
+      "value": 2839705474
+    },
+    {
+      "name": "wp02_001_00 - Steel Urchin",
+      "value": 3496086391
+    },
+    {
+      "name": "[group] wp02_002",
+      "value": 934870994
+    },
+    {
+      "name": "wp02_002_00 - Lifetaker",
+      "value": 898373402
+    },
+    {
+      "name": "[group] wp02_003",
+      "value": 204078645
+    },
+    {
+      "name": "wp02_003_00 - War Blade",
+      "value": 2749246190
+    },
+    {
+      "name": "[group] wp02_004",
+      "value": 1378325243
+    },
+    {
+      "name": "wp02_004_00 - Flamberge",
+      "value": 4294852783
+    },
+    {
+      "name": "[group] wp02_005",
+      "value": 3687429677
+    },
+    {
+      "name": "wp02_005_00 - Dragon\u0027s Bite",
+      "value": 4073325749
+    },
+    {
+      "name": "[group] wp02_006",
+      "value": 1876724776
+    },
+    {
+      "name": "wp02_006_00 - Eyecrusher",
+      "value": 1000131765
+    },
+    {
+      "name": "[group] wp02_007",
+      "value": 2792865276
+    },
+    {
+      "name": "wp02_007_00 - Gryphic Victory",
+      "value": 3588720050
+    },
+    {
+      "name": "[group] wp02_008",
+      "value": 516477776
+    },
+    {
+      "name": "wp02_008_00 - Black Matter",
+      "value": 2647749776
+    },
+    {
+      "name": "[group] wp02_009",
+      "value": 2734904427
+    },
+    {
+      "name": "wp02_009_00 - Wounded Heart",
+      "value": 595653165
+    },
+    {
+      "name": "[group] wp02_010",
+      "value": 3739033444
+    },
+    {
+      "name": "wp02_010_00 - Ogresbane",
+      "value": 1245946453
+    },
+    {
+      "name": "[group] wp02_011",
+      "value": 3441261716
+    },
+    {
+      "name": "wp02_011_00 - Dragon\u0027s Flight",
+      "value": 766431332
+    },
+    {
+      "name": "[group] wp02_012",
+      "value": 776998848
+    },
+    {
+      "name": "wp02_012_00 - Cyclopean Thunder",
+      "value": 432569635
+    },
+    {
+      "name": "[group] wp02_013",
+      "value": 1135573647
+    },
+    {
+      "name": "wp02_013_00 - Cinderspine",
+      "value": 2370064604
+    },
+    {
+      "name": "[group] wp02_014",
+      "value": 3732057964
+    },
+    {
+      "name": "[group] wp03 Dagger",
+      "value": 56582810
+    },
+    {
+      "name": "[group] wp03_000",
+      "value": 393580136
+    },
+    {
+      "name": "wp03_000_00 - Criteria",
+      "value": 2735070789
+    },
+    {
+      "name": "[group] wp03_001",
+      "value": 916744497
+    },
+    {
+      "name": "wp03_001_00 - Throatcutters",
+      "value": 3125144000
+    },
+    {
+      "name": "[group] wp03_002",
+      "value": 3517267969
+    },
+    {
+      "name": "wp03_002_00 - Signs of Valor",
+      "value": 696245148
+    },
+    {
+      "name": "[group] wp03_003",
+      "value": 337894750
+    },
+    {
+      "name": "wp03_003_00 - Peltflayers",
+      "value": 241581885
+    },
+    {
+      "name": "[group] wp03_004",
+      "value": 1194344730
+    },
+    {
+      "name": "wp03_004_00 - Stilettos",
+      "value": 2429131161
+    },
+    {
+      "name": "[group] wp03_005",
+      "value": 3006388326
+    },
+    {
+      "name": "wp03_005_00 - Divine Razors",
+      "value": 787500940
+    },
+    {
+      "name": "[group] wp03_006",
+      "value": 2732960420
+    },
+    {
+      "name": "wp03_006_00 - Snagdaggers",
+      "value": 2737057465
+    },
+    {
+      "name": "[group] wp03_007",
+      "value": 4271117246
+    },
+    {
+      "name": "wp03_007_00 - Framae Blades",
+      "value": 333282992
+    },
+    {
+      "name": "[group] wp03_008",
+      "value": 1797395424
+    },
+    {
+      "name": "wp03_008_00 - Bardiche Daggers",
+      "value": 2392873942
+    },
+    {
+      "name": "[group] wp03_009",
+      "value": 905183533
+    },
+    {
+      "name": "wp03_009_00 - Dragon\u0027s Vein",
+      "value": 269159415
+    },
+    {
+      "name": "[group] wp03_010",
+      "value": 2553105965
+    },
+    {
+      "name": "wp03_010_00 - Helmbarte Daggers",
+      "value": 3052133083
+    },
+    {
+      "name": "[group] wp03_011",
+      "value": 776856153
+    },
+    {
+      "name": "wp03_011_00 - Spite",
+      "value": 581709228
+    },
+    {
+      "name": "[group] wp03_012",
+      "value": 4001531757
+    },
+    {
+      "name": "wp03_012_00 - Dowsing Spikes",
+      "value": 2523252353
+    },
+    {
+      "name": "[group] wp03_013",
+      "value": 2070790800
+    },
+    {
+      "name": "wp03_013_00 - Crimson Teeth",
+      "value": 4284266652
+    },
+    {
+      "name": "[group] wp03_014",
+      "value": 4179443337
+    },
+    {
+      "name": "wp03_014_00 - Battahli Biters",
+      "value": 3616115869
+    },
+    {
+      "name": "[group] wp03_015",
+      "value": 3847841521
+    },
+    {
+      "name": "wp03_015_00 - Frosted Edges",
+      "value": 2432517249
+    },
+    {
+      "name": "[group] wp03_016",
+      "value": 554435466
+    },
+    {
+      "name": "wp03_016_00 - Heaven\u0027s Key",
+      "value": 4144196661
+    },
+    {
+      "name": "[group] wp03_017",
+      "value": 3793624986
+    },
+    {
+      "name": "wp03_017_00 - Bolts from the Blue",
+      "value": 2927885692
+    },
+    {
+      "name": "[group] wp03_018",
+      "value": 4129001371
+    },
+    {
+      "name": "[group] wp03_050",
+      "value": 527454466
+    },
+    {
+      "name": "wp03_050_00 - Superior Criteria",
+      "value": 2051540546
+    },
+    {
+      "name": "[group] wp04 Bow",
+      "value": 3046278436
+    },
+    {
+      "name": "[group] wp04_000",
+      "value": 2759992621
+    },
+    {
+      "name": "wp04_000_00 - Fluted Bow",
+      "value": 1963730254
+    },
+    {
+      "name": "[group] wp04_001",
+      "value": 69885982
+    },
+    {
+      "name": "wp04_001_00 - Lupine Bow",
+      "value": 3989010763
+    },
+    {
+      "name": "[group] wp04_002",
+      "value": 1592916645
+    },
+    {
+      "name": "wp04_002_00 - Savage Fang",
+      "value": 2077955691
+    },
+    {
+      "name": "[group] wp04_003",
+      "value": 477144287
+    },
+    {
+      "name": "wp04_003_00 - Predator",
+      "value": 3885226220
+    },
+    {
+      "name": "[group] wp04_004",
+      "value": 1543357209
+    },
+    {
+      "name": "wp04_004_00 - Myfyr",
+      "value": 3108828316
+    },
+    {
+      "name": "[group] wp04_005",
+      "value": 1892261447
+    },
+    {
+      "name": "wp04_005_00 - Dinistrydd",
+      "value": 3450585531
+    },
+    {
+      "name": "[group] wp04_006",
+      "value": 860882311
+    },
+    {
+      "name": "wp04_006_00 - Hunter\u0027s Bow",
+      "value": 3836302689
+    },
+    {
+      "name": "[group] wp04_007",
+      "value": 2965022593
+    },
+    {
+      "name": "wp04_007_00 - Veteran\u0027s Arc",
+      "value": 3464757884
+    },
+    {
+      "name": "[group] wp04_008",
+      "value": 3849048153
+    },
+    {
+      "name": "wp04_008_00 - Revenant Wail",
+      "value": 1721588685
+    },
+    {
+      "name": "[group] wp04_009",
+      "value": 244367107
+    },
+    {
+      "name": "wp04_009_00 - Dragon\u0027s Rancor",
+      "value": 2044150489
+    },
+    {
+      "name": "[group] wp04_010",
+      "value": 3992463830
+    },
+    {
+      "name": "wp04_010_00 - Repeller Bow",
+      "value": 2306908686
+    },
+    {
+      "name": "[group] wp04_011",
+      "value": 303264642
+    },
+    {
+      "name": "wp04_011_00 - Dragon\u0027s Blink",
+      "value": 835253020
+    },
+    {
+      "name": "[group] wp04_012",
+      "value": 4084619574
+    },
+    {
+      "name": "wp04_012_00 - Hydra Husk",
+      "value": 2609956695
+    },
+    {
+      "name": "[group] wp04_013",
+      "value": 2332783420
+    },
+    {
+      "name": "wp04_013_00 - Medusan Spellbow",
+      "value": 351208587
+    },
+    {
+      "name": "[group] wp04_014",
+      "value": 2505680414
+    },
+    {
+      "name": "wp04_014_00 - Darkening Storm",
+      "value": 3111365175
+    },
+    {
+      "name": "[group] wp04_015",
+      "value": 3659374090
+    },
+    {
+      "name": "[group] wp04_016",
+      "value": 3183577745
+    },
+    {
+      "name": "wp04_016_00 - Bespoke Bow",
+      "value": 1505547924
+    },
+    {
+      "name": "[group] wp04_017",
+      "value": 2950520570
+    },
+    {
+      "name": "[group] wp04_018",
+      "value": 4170561071
+    },
+    {
+      "name": "[group] wp04_050",
+      "value": 215222775
+    },
+    {
+      "name": "wp04_050_00 - Superior Fluted Bow",
+      "value": 540534220
+    },
+    {
+      "name": "[group] wp05 MagickBow",
+      "value": 2086141612
+    },
+    {
+      "name": "[group] wp05_000",
+      "value": 289043557
+    },
+    {
+      "name": "wp05_000_00 - Magian Crutch",
+      "value": 4186438982
+    },
+    {
+      "name": "[group] wp05_001",
+      "value": 2691645543
+    },
+    {
+      "name": "wp05_001_00 - Terminal Gyre",
+      "value": 1089083338
+    },
+    {
+      "name": "[group] wp05_002",
+      "value": 6601513
+    },
+    {
+      "name": "wp05_002_00 - Herald\u0027s Helix",
+      "value": 3361468653
+    },
+    {
+      "name": "[group] wp05_003",
+      "value": 853014073
+    },
+    {
+      "name": "wp05_003_00 - Dragon\u0027s Breath",
+      "value": 243994073
+    },
+    {
+      "name": "[group] wp05_004",
+      "value": 3021841759
+    },
+    {
+      "name": "wp05_004_00 - Gimble Gyre",
+      "value": 3822672911
+    },
+    {
+      "name": "[group] wp05_005",
+      "value": 1896732189
+    },
+    {
+      "name": "wp05_005_00 - Metered Catharsis",
+      "value": 872757337
+    },
+    {
+      "name": "[group] wp05_006",
+      "value": 4187381267
+    },
+    {
+      "name": "wp05_006_00 - Militant Dove",
+      "value": 775204496
+    },
+    {
+      "name": "[group] wp05_007",
+      "value": 2471767061
+    },
+    {
+      "name": "wp05_007_00 - Blackwing Bow",
+      "value": 3992875678
+    },
+    {
+      "name": "[group] wp05_008",
+      "value": 2240788285
+    },
+    {
+      "name": "wp05_008_00 - Grianmhar",
+      "value": 1047980332
+    },
+    {
+      "name": "[group] wp05_009",
+      "value": 3188936149
+    },
+    {
+      "name": "wp05_009_00 - Siocadh",
+      "value": 2978927034
+    },
+    {
+      "name": "[group] wp06 Quiver",
+      "value": 2534089935
+    },
+    {
+      "name": "[group] wp06_000",
+      "value": 2515516912
+    },
+    {
+      "name": "[group] wp06_001",
+      "value": 1869065702
+    },
+    {
+      "name": "[group] wp06_002",
+      "value": 2350350621
+    },
+    {
+      "name": "[group] wp06_003",
+      "value": 2620700066
+    },
+    {
+      "name": "[group] wp06_004",
+      "value": 4017401232
+    },
+    {
+      "name": "[group] wp06_005",
+      "value": 2536301209
+    },
+    {
+      "name": "[group] wp06_006",
+      "value": 3590227449
+    },
+    {
+      "name": "[group] wp06_007",
+      "value": 901148392
+    },
+    {
+      "name": "[group] wp06_008",
+      "value": 163131582
+    },
+    {
+      "name": "[group] wp06_009",
+      "value": 2730788155
+    },
+    {
+      "name": "[group] wp06_010",
+      "value": 133589034
+    },
+    {
+      "name": "[group] wp06_011",
+      "value": 2372972703
+    },
+    {
+      "name": "[group] wp06_012",
+      "value": 2135445414
+    },
+    {
+      "name": "[group] wp06_013",
+      "value": 3256857352
+    },
+    {
+      "name": "[group] wp06_014",
+      "value": 2887282107
+    },
+    {
+      "name": "[group] wp06_015",
+      "value": 923774833
+    },
+    {
+      "name": "[group] wp06_016",
+      "value": 1932323631
+    },
+    {
+      "name": "[group] wp06_017",
+      "value": 1959843337
+    },
+    {
+      "name": "[group] wp06_018",
+      "value": 3218999273
+    },
+    {
+      "name": "[group] wp07 Staff",
+      "value": 1331766412
+    },
+    {
+      "name": "[group] wp07_000",
+      "value": 467969654
+    },
+    {
+      "name": "wp07_000_00 - Wooden Staff",
+      "value": 3576059902
+    },
+    {
+      "name": "[group] wp07_001",
+      "value": 2216349044
+    },
+    {
+      "name": "wp07_001_00 - Favored Flower",
+      "value": 1442345881
+    },
+    {
+      "name": "[group] wp07_002",
+      "value": 2380299101
+    },
+    {
+      "name": "wp07_002_00 - Unfettered Claw",
+      "value": 2372685846
+    },
+    {
+      "name": "[group] wp07_003",
+      "value": 1492624056
+    },
+    {
+      "name": "wp07_003_00 - Favored Canopy",
+      "value": 862705771
+    },
+    {
+      "name": "[group] wp07_004",
+      "value": 1721210114
+    },
+    {
+      "name": "wp07_004_00 - Cast Stone",
+      "value": 2404883421
+    },
+    {
+      "name": "[group] wp07_005",
+      "value": 2572771053
+    },
+    {
+      "name": "wp07_005_00 - Ironclad Staff",
+      "value": 3296903055
+    },
+    {
+      "name": "[group] wp07_006",
+      "value": 3090231049
+    },
+    {
+      "name": "wp07_006_00 - Anchor to Heaven",
+      "value": 2891718340
+    },
+    {
+      "name": "[group] wp07_007",
+      "value": 8240896
+    },
+    {
+      "name": "wp07_007_00 - Solar Numen",
+      "value": 398771442
+    },
+    {
+      "name": "[group] wp07_008",
+      "value": 4232210683
+    },
+    {
+      "name": "wp07_008_00 - Battahli Scepter",
+      "value": 3722955372
+    },
+    {
+      "name": "[group] wp07_009",
+      "value": 226486976
+    },
+    {
+      "name": "wp07_009_00 - Dragon\u0027s Nous",
+      "value": 3761828662
+    },
+    {
+      "name": "[group] wp07_010",
+      "value": 396330083
+    },
+    {
+      "name": "wp07_010_00 - Frigid Finger",
+      "value": 54458564
+    },
+    {
+      "name": "[group] wp07_011",
+      "value": 3100780100
+    },
+    {
+      "name": "wp07_011_00 - Goblin Bane",
+      "value": 553636642
+    },
+    {
+      "name": "[group] wp07_012",
+      "value": 742357905
+    },
+    {
+      "name": "wp07_012_00 - Legion\u0027s Might",
+      "value": 3334863421
+    },
+    {
+      "name": "[group] wp07_013",
+      "value": 2820643636
+    },
+    {
+      "name": "wp07_013_00 - Volant White",
+      "value": 3254837252
+    },
+    {
+      "name": "[group] wp07_014",
+      "value": 1384471824
+    },
+    {
+      "name": "wp07_014_00 - Necrotic Shriek",
+      "value": 2966050956
+    },
+    {
+      "name": "[group] wp07_015",
+      "value": 3491261707
+    },
+    {
+      "name": "wp07_015_00 - Cardinal Blaze",
+      "value": 3468871686
+    },
+    {
+      "name": "[group] wp07_016",
+      "value": 2250015048
+    },
+    {
+      "name": "wp07_016_00 - Tintreach",
+      "value": 313474176
+    },
+    {
+      "name": "[group] wp07_017",
+      "value": 807316704
+    },
+    {
+      "name": "[group] wp07_018",
+      "value": 3074830925
+    },
+    {
+      "name": "[group] wp07_050",
+      "value": 2233349094
+    },
+    {
+      "name": "wp07_050_00 - Superior Wooden Staff",
+      "value": 2143895409
+    },
+    {
+      "name": "[group] wp08 Archistaff",
+      "value": 3348655075
+    },
+    {
+      "name": "[group] wp08_000",
+      "value": 3342263754
+    },
+    {
+      "name": "wp08_000_00 - Favored Branches",
+      "value": 843807730
+    },
+    {
+      "name": "[group] wp08_001",
+      "value": 1164785799
+    },
+    {
+      "name": "wp08_001_00 - Grievous Horns",
+      "value": 2832347634
+    },
+    {
+      "name": "[group] wp08_002",
+      "value": 825846316
+    },
+    {
+      "name": "wp08_002_00 - Helical Archistaff",
+      "value": 2277566015
+    },
+    {
+      "name": "[group] wp08_003",
+      "value": 395442495
+    },
+    {
+      "name": "wp08_003_00 - Meniscus",
+      "value": 2253986538
+    },
+    {
+      "name": "[group] wp08_004",
+      "value": 4160572617
+    },
+    {
+      "name": "wp08_004_00 - Plucked Heart",
+      "value": 3554649802
+    },
+    {
+      "name": "[group] wp08_005",
+      "value": 461748652
+    },
+    {
+      "name": "wp08_005_00 - Solar Providence",
+      "value": 477398671
+    },
+    {
+      "name": "[group] wp08_006",
+      "value": 3312484328
+    },
+    {
+      "name": "wp08_006_00 - Dragon\u0027s Wit",
+      "value": 1630809796
+    },
+    {
+      "name": "[group] wp08_007",
+      "value": 1623409094
+    },
+    {
+      "name": "wp08_007_00 - Caged Fury",
+      "value": 754228408
+    },
+    {
+      "name": "[group] wp08_008",
+      "value": 3724748985
+    },
+    {
+      "name": "wp08_008_00 - Talarian White",
+      "value": 2384189125
+    },
+    {
+      "name": "[group] wp08_009",
+      "value": 263598908
+    },
+    {
+      "name": "wp08_009_00 - Anathema",
+      "value": 583612285
+    },
+    {
+      "name": "[group] wp08_010",
+      "value": 3364339572
+    },
+    {
+      "name": "wp08_010_00 - Bane Archistaff",
+      "value": 2613241172
+    },
+    {
+      "name": "[group] wp08_011",
+      "value": 1592104096
+    },
+    {
+      "name": "wp08_011_00 - Lion-Lord\u0027s Archistaff",
+      "value": 1045168894
+    },
+    {
+      "name": "[group] wp08_012",
+      "value": 710881251
+    },
+    {
+      "name": "wp08_012_00 - Craos Tine",
+      "value": 3346514467
+    },
+    {
+      "name": "[group] wp08_013",
+      "value": 3296880562
+    },
+    {
+      "name": "[group] wp08_014",
+      "value": 2607530631
+    },
+    {
+      "name": "[group] wp09 Duospear",
+      "value": 475079461
+    },
+    {
+      "name": "[group] wp09_000",
+      "value": 2610599381
+    },
+    {
+      "name": "wp09_000_00 - Initiate\u0027s Blade",
+      "value": 2201140444
+    },
+    {
+      "name": "[group] wp09_001",
+      "value": 1883890678
+    },
+    {
+      "name": "wp09_001_00 - Percipient Blade",
+      "value": 1965933893
+    },
+    {
+      "name": "[group] wp09_002",
+      "value": 2177752877
+    },
+    {
+      "name": "wp09_002_00 - Fool\u0027s Prize",
+      "value": 1421017432
+    },
+    {
+      "name": "[group] wp09_003",
+      "value": 2476093335
+    },
+    {
+      "name": "wp09_003_00 - Soul of Antiquity",
+      "value": 859831952
+    },
+    {
+      "name": "[group] wp09_004",
+      "value": 2619674675
+    },
+    {
+      "name": "wp09_004_00 - Dead Ringer",
+      "value": 3176146805
+    },
+    {
+      "name": "[group] wp09_005",
+      "value": 1885329424
+    },
+    {
+      "name": "wp09_005_00 - Tail Trimmer",
+      "value": 153538110
+    },
+    {
+      "name": "[group] wp09_006",
+      "value": 1999442407
+    },
+    {
+      "name": "wp09_006_00 - Wings Asunder",
+      "value": 3397059346
+    },
+    {
+      "name": "[group] wp09_007",
+      "value": 3968462651
+    },
+    {
+      "name": "wp09_007_00 - Lindworm Fang",
+      "value": 130040936
+    },
+    {
+      "name": "[group] wp09_008",
+      "value": 3940088013
+    },
+    {
+      "name": "[group] wp09_009",
+      "value": 3899311654
+    },
+    {
+      "name": "[group] wp09_010",
+      "value": 723589629
+    },
+    {
+      "name": "[group] wp09_011",
+      "value": 1700375082
+    },
+    {
+      "name": "wp09_011_00 - Rhewynt",
+      "value": 295253032
+    },
+    {
+      "name": "[group] wp09_012",
+      "value": 2898832067
+    },
+    {
+      "name": "wp09_012_00 - Infernal Edge",
+      "value": 1168918555
+    },
+    {
+      "name": "[group] wp10 Censer",
+      "value": 1097687279
+    },
+    {
+      "name": "[group] wp10_000",
+      "value": 2445451665
+    },
+    {
+      "name": "wp10_000_00 - Redolent Whisper",
+      "value": 1690055740
+    },
+    {
+      "name": "[group] wp10_001",
+      "value": 2250754439
+    },
+    {
+      "name": "wp10_001_00 - Achromic Reverie",
+      "value": 3934524428
+    },
+    {
+      "name": "[group] wp10_002",
+      "value": 1386272162
+    },
+    {
+      "name": "wp10_002_00 - Resonant Hymn",
+      "value": 3926468715
+    },
+    {
+      "name": "[group] wp10_003",
+      "value": 1921286796
+    },
+    {
+      "name": "wp10_003_00 - Whimsical Daydream",
+      "value": 536332550
+    },
+    {
+      "name": "[group] wp10_004",
+      "value": 143906438
+    },
+    {
+      "name": "wp10_004_00 - Dragonswail Litany",
+      "value": 3569206815
+    },
+    {
+      "name": "[group] wp10_005",
+      "value": 812066738
+    },
+    {
+      "name": "wp10_005_00 - Bewitching Balm",
+      "value": 2097200075
+    },
+    {
+      "name": "[group] wp11 Arrow",
+      "value": 3565790188
+    },
+    {
+      "name": "[group] wp11_000",
+      "value": 3047121765
+    },
+    {
+      "name": "[group] wp11_001",
+      "value": 2930027042
+    },
+    {
+      "name": "[group] wp11_002",
+      "value": 4137017234
+    },
+    {
+      "name": "[group] wp11_003",
+      "value": 3476538324
+    },
+    {
+      "name": "[group] wp11_004",
+      "value": 4136473787
+    },
+    {
+      "name": "[group] wp11_005",
+      "value": 3347972605
+    },
+    {
+      "name": "[group] wp12",
+      "value": 781606367
+    },
+    {
+      "name": "[group] wp12_000",
+      "value": 358712087
+    },
+    {
+      "name": "[group] wp220000",
+      "value": 2907943768
+    }
+  ]
+}

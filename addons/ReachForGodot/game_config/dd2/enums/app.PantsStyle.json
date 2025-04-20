@@ -1,0 +1,860 @@
+{
+  "DisplayLabels": [
+    {
+      "name": "Pants_000 #1491387964",
+      "value": 1491387964
+    },
+    {
+      "name": "Pants_001 Guardian Leg Plates #548349780",
+      "value": 548349780
+    },
+    {
+      "name": "Pants_002 Beast-Leather Breeches #206911654",
+      "value": 206911654
+    },
+    {
+      "name": "Pants_003 Pilgrim\u0027s Tights #2271423031",
+      "value": 2271423031
+    },
+    {
+      "name": "Pants_004 Bush Raiders #2559877959",
+      "value": 2559877959
+    },
+    {
+      "name": "Pants_005 Bandit Greaves #3208219637",
+      "value": 3208219637
+    },
+    {
+      "name": "Pants_006 Furred Greaves #2252430336",
+      "value": 2252430336
+    },
+    {
+      "name": "Pants_007 Sprinter\u0027s Boots #4130536216",
+      "value": 4130536216
+    },
+    {
+      "name": "Pants_008 Miner\u0027s Hosen #3841490195",
+      "value": 3841490195
+    },
+    {
+      "name": "Pants_009 Dauntless Greaves #1131710773",
+      "value": 1131710773
+    },
+    {
+      "name": "Pants_011 Over-Knee Boots #1975807290",
+      "value": 1975807290
+    },
+    {
+      "name": "Pants_012 Raptor Claws #1508839159",
+      "value": 1508839159
+    },
+    {
+      "name": "Pants_013 Lionel Hosen #3181874664",
+      "value": 3181874664
+    },
+    {
+      "name": "Pants_015 Brutal Cuisses #3663663789",
+      "value": 3663663789
+    },
+    {
+      "name": "Pants_017 Euphoric Hosen #2752758146",
+      "value": 2752758146
+    },
+    {
+      "name": "Pants_021 Executioner\u0027s Greaves #676975347",
+      "value": 676975347
+    },
+    {
+      "name": "Pants_023 Spellweaver\u0027s Waistcloth #4129792517",
+      "value": 4129792517
+    },
+    {
+      "name": "Pants_035 Rathe Greaves #33078829",
+      "value": 33078829
+    },
+    {
+      "name": "Pants_036 Ranger\u0027s Tights #3181730031",
+      "value": 3181730031
+    },
+    {
+      "name": "Pants_037 Evergreen Greaves #3704443473",
+      "value": 3704443473
+    },
+    {
+      "name": "Pants_038 Hillfolk Breeches #2138742166",
+      "value": 2138742166
+    },
+    {
+      "name": "Pants_039 Wildland Greaves #2273505145",
+      "value": 2273505145
+    },
+    {
+      "name": "Pants_041 Vigilant Greaves #2002944535",
+      "value": 2002944535
+    },
+    {
+      "name": "Pants_042 Vanguarder\u0027s Greaves #1741769770",
+      "value": 1741769770
+    },
+    {
+      "name": "Pants_045 Nightfall Greaves #4010510747",
+      "value": 4010510747
+    },
+    {
+      "name": "Pants_046 Neophyte\u0027s Hosen #1641517969",
+      "value": 1641517969
+    },
+    {
+      "name": "Pants_047 Practitioner\u0027s Hosen #2348396242",
+      "value": 2348396242
+    },
+    {
+      "name": "Pants_048 Runic Gaiters #4072743227",
+      "value": 4072743227
+    },
+    {
+      "name": "Pants_049 Jewel-Woven Sandals #2461113100",
+      "value": 2461113100
+    },
+    {
+      "name": "Pants_050 Dapper Chausses #2152043480",
+      "value": 2152043480
+    },
+    {
+      "name": "Pants_051 Strider\u0027s Greaves #3461942223",
+      "value": 3461942223
+    },
+    {
+      "name": "Pants_200 Worker\u0027s Greaves #1037581354",
+      "value": 1037581354
+    },
+    {
+      "name": "Pants_2000 #3338763033",
+      "value": 3338763033
+    },
+    {
+      "name": "Pants_2001 #2688001722",
+      "value": 2688001722
+    },
+    {
+      "name": "Pants_2002 #301491147",
+      "value": 301491147
+    },
+    {
+      "name": "Pants_201 Combat Breeches #4092074897",
+      "value": 4092074897
+    },
+    {
+      "name": "Pants_202 Patroller Knee Guards #2432900706",
+      "value": 2432900706
+    },
+    {
+      "name": "Pants_2020 #3256457920",
+      "value": 3256457920
+    },
+    {
+      "name": "Pants_2021 #3386530796",
+      "value": 3386530796
+    },
+    {
+      "name": "Pants_203 Courtly Breeches #386993121",
+      "value": 386993121
+    },
+    {
+      "name": "Pants_2040 #556217678",
+      "value": 556217678
+    },
+    {
+      "name": "Pants_2041 #3876734588",
+      "value": 3876734588
+    },
+    {
+      "name": "Pants_205 Marcher\u0027s Cuisses #903017918",
+      "value": 903017918
+    },
+    {
+      "name": "Pants_2060 #661762094",
+      "value": 661762094
+    },
+    {
+      "name": "Pants_2061 #1113013124",
+      "value": 1113013124
+    },
+    {
+      "name": "Pants_2062 #3258375378",
+      "value": 3258375378
+    },
+    {
+      "name": "Pants_2063 #1069213075",
+      "value": 1069213075
+    },
+    {
+      "name": "Pants_207 Sabatons of Judgment #3130035842",
+      "value": 3130035842
+    },
+    {
+      "name": "Pants_210 Conqueror\u0027s Sabatons #3899680295",
+      "value": 3899680295
+    },
+    {
+      "name": "Pants_2100 #1480726988",
+      "value": 1480726988
+    },
+    {
+      "name": "Pants_2101 #1579470310",
+      "value": 1579470310
+    },
+    {
+      "name": "Pants_211 Traveler\u0027s Gaiters #3579784878",
+      "value": 3579784878
+    },
+    {
+      "name": "Pants_212 Mettlesome Cuisses #3426845810",
+      "value": 3426845810
+    },
+    {
+      "name": "Pants_2121 #1850015196",
+      "value": 1850015196
+    },
+    {
+      "name": "Pants_2122 #546602894",
+      "value": 546602894
+    },
+    {
+      "name": "Pants_2123 #4076428059",
+      "value": 4076428059
+    },
+    {
+      "name": "Pants_2124 #3534541541",
+      "value": 3534541541
+    },
+    {
+      "name": "Pants_2140 #2176288918",
+      "value": 2176288918
+    },
+    {
+      "name": "Pants_2141 #2046836593",
+      "value": 2046836593
+    },
+    {
+      "name": "Pants_2142 #3793868102",
+      "value": 3793868102
+    },
+    {
+      "name": "Pants_2143 #250651318",
+      "value": 250651318
+    },
+    {
+      "name": "Pants_2144 #2776280438",
+      "value": 2776280438
+    },
+    {
+      "name": "Pants_2150 #712615959",
+      "value": 712615959
+    },
+    {
+      "name": "Pants_2151 #1298028636",
+      "value": 1298028636
+    },
+    {
+      "name": "Pants_2152 #1690624557",
+      "value": 1690624557
+    },
+    {
+      "name": "Pants_2153 #1122023586",
+      "value": 1122023586
+    },
+    {
+      "name": "Pants_2154 #4079635147",
+      "value": 4079635147
+    },
+    {
+      "name": "Pants_2160 #2948079701",
+      "value": 2948079701
+    },
+    {
+      "name": "Pants_2161 #3245702440",
+      "value": 3245702440
+    },
+    {
+      "name": "Pants_2190 #658535232",
+      "value": 658535232
+    },
+    {
+      "name": "Pants_2191 #632804603",
+      "value": 632804603
+    },
+    {
+      "name": "Pants_2192 #4119286365",
+      "value": 4119286365
+    },
+    {
+      "name": "Pants_220 Diabolic Cuisses #2438457537",
+      "value": 2438457537
+    },
+    {
+      "name": "Pants_2200 #3405152311",
+      "value": 3405152311
+    },
+    {
+      "name": "Pants_2201 #3980167719",
+      "value": 3980167719
+    },
+    {
+      "name": "Pants_2202 #56258798",
+      "value": 56258798
+    },
+    {
+      "name": "Pants_221 Stylish Boots #3193866791",
+      "value": 3193866791
+    },
+    {
+      "name": "Pants_222 Arena Breeches #1079778540",
+      "value": 1079778540
+    },
+    {
+      "name": "Pants_2220 #2019866281",
+      "value": 2019866281
+    },
+    {
+      "name": "Pants_2240 #3498661486",
+      "value": 3498661486
+    },
+    {
+      "name": "Pants_225 Venator\u0027s Leggings #2052595039",
+      "value": 2052595039
+    },
+    {
+      "name": "Pants_2260 #2167331952",
+      "value": 2167331952
+    },
+    {
+      "name": "Pants_2261 #2285748964",
+      "value": 2285748964
+    },
+    {
+      "name": "Pants_2262 #1438163646",
+      "value": 1438163646
+    },
+    {
+      "name": "Pants_2280 #2024548922",
+      "value": 2024548922
+    },
+    {
+      "name": "Pants_2281 #2495499056",
+      "value": 2495499056
+    },
+    {
+      "name": "Pants_2282 #3205405931",
+      "value": 3205405931
+    },
+    {
+      "name": "Pants_229 Landwalkers #1726532521",
+      "value": 1726532521
+    },
+    {
+      "name": "Pants_2300 #168541434",
+      "value": 168541434
+    },
+    {
+      "name": "Pants_2301 #1942488384",
+      "value": 1942488384
+    },
+    {
+      "name": "Pants_2302 #4071621339",
+      "value": 4071621339
+    },
+    {
+      "name": "Pants_2303 #1587878233",
+      "value": 1587878233
+    },
+    {
+      "name": "Pants_2304 #2801966766",
+      "value": 2801966766
+    },
+    {
+      "name": "Pants_2305 #3411008864",
+      "value": 3411008864
+    },
+    {
+      "name": "Pants_2306 #2570129823",
+      "value": 2570129823
+    },
+    {
+      "name": "Pants_232 Savant\u0027s Boots #846556605",
+      "value": 846556605
+    },
+    {
+      "name": "Pants_2320 #3124074412",
+      "value": 3124074412
+    },
+    {
+      "name": "Pants_2321 #691197187",
+      "value": 691197187
+    },
+    {
+      "name": "Pants_2322 #401998643",
+      "value": 401998643
+    },
+    {
+      "name": "Pants_2323 #2683228585",
+      "value": 2683228585
+    },
+    {
+      "name": "Pants_2324 #1129979069",
+      "value": 1129979069
+    },
+    {
+      "name": "Pants_2325 #3102235524",
+      "value": 3102235524
+    },
+    {
+      "name": "Pants_2326 #2891383085",
+      "value": 2891383085
+    },
+    {
+      "name": "Pants_2327 #4283044521",
+      "value": 4283044521
+    },
+    {
+      "name": "Pants_2328 #3772384214",
+      "value": 3772384214
+    },
+    {
+      "name": "Pants_2329 #3349829480",
+      "value": 3349829480
+    },
+    {
+      "name": "Pants_2340 #2231315089",
+      "value": 2231315089
+    },
+    {
+      "name": "Pants_2341 #3157553421",
+      "value": 3157553421
+    },
+    {
+      "name": "Pants_2342 #3769556571",
+      "value": 3769556571
+    },
+    {
+      "name": "Pants_2343 #1143852105",
+      "value": 1143852105
+    },
+    {
+      "name": "Pants_2344 #1442460108",
+      "value": 1442460108
+    },
+    {
+      "name": "Pants_2345 #2095704746",
+      "value": 2095704746
+    },
+    {
+      "name": "Pants_236 Ascetic Gaiters #3953990565",
+      "value": 3953990565
+    },
+    {
+      "name": "Pants_2360 #3903910119",
+      "value": 3903910119
+    },
+    {
+      "name": "Pants_2361 #1716837516",
+      "value": 1716837516
+    },
+    {
+      "name": "Pants_237 Scholar\u0027s Breeches #2094614746",
+      "value": 2094614746
+    },
+    {
+      "name": "Pants_238 Peddler\u0027s Boots #1670403297",
+      "value": 1670403297
+    },
+    {
+      "name": "Pants_2380 #189646481",
+      "value": 189646481
+    },
+    {
+      "name": "Pants_2381 #3812885004",
+      "value": 3812885004
+    },
+    {
+      "name": "Pants_2382 #3943646226",
+      "value": 3943646226
+    },
+    {
+      "name": "Pants_2383 #38638824",
+      "value": 38638824
+    },
+    {
+      "name": "Pants_2384 #2956538183",
+      "value": 2956538183
+    },
+    {
+      "name": "Pants_2390 #2531571097",
+      "value": 2531571097
+    },
+    {
+      "name": "Pants_242 Scarlet Over-Knee Boots #1248591734",
+      "value": 1248591734
+    },
+    {
+      "name": "Pants_2420 #232715828",
+      "value": 232715828
+    },
+    {
+      "name": "Pants_2440 #4176840210",
+      "value": 4176840210
+    },
+    {
+      "name": "Pants_246 Epiphanic Waistguard #2139525801",
+      "value": 2139525801
+    },
+    {
+      "name": "Pants_2460 #2320767528",
+      "value": 2320767528
+    },
+    {
+      "name": "Pants_2461 #2811745453",
+      "value": 2811745453
+    },
+    {
+      "name": "Pants_247 Monkish Gaiters #1856210053",
+      "value": 1856210053
+    },
+    {
+      "name": "Pants_248 Braided Boots #3289643977",
+      "value": 3289643977
+    },
+    {
+      "name": "Pants_253 Rapturous Raffia Skirt #3905247622",
+      "value": 3905247622
+    },
+    {
+      "name": "Pants_254 Woodland Boots #313919484",
+      "value": 313919484
+    },
+    {
+      "name": "Pants_255 Napped-Leather Boots #1551930978",
+      "value": 1551930978
+    },
+    {
+      "name": "Pants_264 Eagle-Eye Cuisses #241201245",
+      "value": 241201245
+    },
+    {
+      "name": "Pants_265 Explorer\u0027s Boots #428927300",
+      "value": 428927300
+    },
+    {
+      "name": "Pants_266 Thief\u0027s Gaiters #3310364083",
+      "value": 3310364083
+    },
+    {
+      "name": "Pants_267 Journeyer\u0027s Sirwal #4118828029",
+      "value": 4118828029
+    },
+    {
+      "name": "Pants_270 #3451865329",
+      "value": 3451865329
+    },
+    {
+      "name": "Pants_271 Laborer\u0027s Trousers #2820352980",
+      "value": 2820352980
+    },
+    {
+      "name": "Pants_272 #1618140010",
+      "value": 1618140010
+    },
+    {
+      "name": "Pants_273 Assassin\u0027s Breeches #3283212268",
+      "value": 3283212268
+    },
+    {
+      "name": "Pants_274 #670618",
+      "value": 670618
+    },
+    {
+      "name": "Pants_275 Apprentice\u0027s Breeches #3064583966",
+      "value": 3064583966
+    },
+    {
+      "name": "Pants_276 Cliff Leapers #4275455885",
+      "value": 4275455885
+    },
+    {
+      "name": "Pants_277 Forest Greaves #2475552176",
+      "value": 2475552176
+    },
+    {
+      "name": "Pants_280 #896449259",
+      "value": 896449259
+    },
+    {
+      "name": "Pants_285 Mercenary Hosen #4242274501",
+      "value": 4242274501
+    },
+    {
+      "name": "Pants_286 Crimson Hosen #3243716954",
+      "value": 3243716954
+    },
+    {
+      "name": "Pants_300 Darkmetal Greaves #681630815",
+      "value": 681630815
+    },
+    {
+      "name": "Pants_3010 #136222962",
+      "value": 136222962
+    },
+    {
+      "name": "Pants_302 Blessed Waistcloth #1932536301",
+      "value": 1932536301
+    },
+    {
+      "name": "Pants_3030 #3429421918",
+      "value": 3429421918
+    },
+    {
+      "name": "Pants_3040 #2831457860",
+      "value": 2831457860
+    },
+    {
+      "name": "Pants_3050 #3371076561",
+      "value": 3371076561
+    },
+    {
+      "name": "Pants_3060 #1252371199",
+      "value": 1252371199
+    },
+    {
+      "name": "Pants_3070 #2993589630",
+      "value": 2993589630
+    },
+    {
+      "name": "Pants_3090 #971933626",
+      "value": 971933626
+    },
+    {
+      "name": "Pants_3100 #1901890681",
+      "value": 1901890681
+    },
+    {
+      "name": "Pants_3110 #2956484377",
+      "value": 2956484377
+    },
+    {
+      "name": "Pants_3120 #814402630",
+      "value": 814402630
+    },
+    {
+      "name": "Pants_3130 #1556716107",
+      "value": 1556716107
+    },
+    {
+      "name": "Pants_3140 #627818048",
+      "value": 627818048
+    },
+    {
+      "name": "Pants_3150 #809956442",
+      "value": 809956442
+    },
+    {
+      "name": "Pants_3160 #3557842905",
+      "value": 3557842905
+    },
+    {
+      "name": "Pants_3180 #2605640879",
+      "value": 2605640879
+    },
+    {
+      "name": "Pants_3210 #3241146491",
+      "value": 3241146491
+    },
+    {
+      "name": "Pants_3230 #1508381214",
+      "value": 1508381214
+    },
+    {
+      "name": "Pants_3240 #4161336432",
+      "value": 4161336432
+    },
+    {
+      "name": "Pants_3250 #3469061267",
+      "value": 3469061267
+    },
+    {
+      "name": "Pants_3260 #1074788750",
+      "value": 1074788750
+    },
+    {
+      "name": "Pants_3270 #1511586177",
+      "value": 1511586177
+    },
+    {
+      "name": "Pants_3280 #2535341987",
+      "value": 2535341987
+    },
+    {
+      "name": "Pants_3290 #3345419487",
+      "value": 3345419487
+    },
+    {
+      "name": "Pants_3300 #3291589714",
+      "value": 3291589714
+    },
+    {
+      "name": "Pants_3310 #4119151728",
+      "value": 4119151728
+    },
+    {
+      "name": "Pants_3320 #1363736359",
+      "value": 1363736359
+    },
+    {
+      "name": "Pants_3330 #981632976",
+      "value": 981632976
+    },
+    {
+      "name": "Pants_3340 #1659971676",
+      "value": 1659971676
+    },
+    {
+      "name": "Pants_3350 #293460779",
+      "value": 293460779
+    },
+    {
+      "name": "Pants_3360 #4058576427",
+      "value": 4058576427
+    },
+    {
+      "name": "Pants_3370 Laborer\u0027s Trousers #2728071560",
+      "value": 2728071560
+    },
+    {
+      "name": "Pants_3390 #3708224821",
+      "value": 3708224821
+    },
+    {
+      "name": "Pants_3400 #3482574758",
+      "value": 3482574758
+    },
+    {
+      "name": "Pants_3410 #3862380808",
+      "value": 3862380808
+    },
+    {
+      "name": "Pants_3420 #2040460732",
+      "value": 2040460732
+    },
+    {
+      "name": "Pants_3430 #1271537487",
+      "value": 1271537487
+    },
+    {
+      "name": "Pants_3450 #2482395101",
+      "value": 2482395101
+    },
+    {
+      "name": "Pants_4000 #758537933",
+      "value": 758537933
+    },
+    {
+      "name": "Pants_4010 #1801102751",
+      "value": 1801102751
+    },
+    {
+      "name": "Pants_4011 #1293354533",
+      "value": 1293354533
+    },
+    {
+      "name": "Pants_4020 #1770786739",
+      "value": 1770786739
+    },
+    {
+      "name": "Pants_4030 #3409536943",
+      "value": 3409536943
+    },
+    {
+      "name": "Pants_4040 #3401980165",
+      "value": 3401980165
+    },
+    {
+      "name": "Pants_4050 #3927983195",
+      "value": 3927983195
+    },
+    {
+      "name": "Pants_4060 #3669574085",
+      "value": 3669574085
+    },
+    {
+      "name": "Pants_4061 #1291919842",
+      "value": 1291919842
+    },
+    {
+      "name": "Pants_4070 #1156169080",
+      "value": 1156169080
+    },
+    {
+      "name": "Pants_4080 #1845673500",
+      "value": 1845673500
+    },
+    {
+      "name": "Pants_4081 #4218087364",
+      "value": 4218087364
+    },
+    {
+      "name": "Pants_4082 #361380314",
+      "value": 361380314
+    },
+    {
+      "name": "Pants_409 Sovran\u0027s Greaves #2014484620",
+      "value": 2014484620
+    },
+    {
+      "name": "Pants_4090 #2234795829",
+      "value": 2234795829
+    },
+    {
+      "name": "Pants_4100 #3570554520",
+      "value": 3570554520
+    },
+    {
+      "name": "Pants_4110 #951791015",
+      "value": 951791015
+    },
+    {
+      "name": "Pants_4120 #335431977",
+      "value": 335431977
+    },
+    {
+      "name": "Pants_4130 #2915985557",
+      "value": 2915985557
+    },
+    {
+      "name": "Pants_4131 #2526619801",
+      "value": 2526619801
+    },
+    {
+      "name": "Pants_4132 #4191873078",
+      "value": 4191873078
+    },
+    {
+      "name": "Pants_4140 #736868854",
+      "value": 736868854
+    },
+    {
+      "name": "Pants_4150 #302164979",
+      "value": 302164979
+    },
+    {
+      "name": "Pants_4160 #3279480459",
+      "value": 3279480459
+    },
+    {
+      "name": "Pants_4170 #2484017486",
+      "value": 2484017486
+    },
+    {
+      "name": "Pants_4180 #2598961888",
+      "value": 2598961888
+    }
+  ]
+}

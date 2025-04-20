@@ -1,0 +1,116 @@
+{
+  "DisplayLabels": [
+    {
+      "name": "Job000 Vernworth nobility",
+      "value": 0
+    },
+    {
+      "name": "Job001 Vernworth official",
+      "value": 1
+    },
+    {
+      "name": "Job002 Military officer",
+      "value": 2
+    },
+    {
+      "name": "Job003 Soldier",
+      "value": 3
+    },
+    {
+      "name": "Job004 Religious",
+      "value": 4
+    },
+    {
+      "name": "Job005 Festival",
+      "value": 5
+    },
+    {
+      "name": "Job006 Researcher",
+      "value": 6
+    },
+    {
+      "name": "Job007 Farmer",
+      "value": 7
+    },
+    {
+      "name": "Job008 Small-time merchant",
+      "value": 8
+    },
+    {
+      "name": "Job009 Produce worker",
+      "value": 9
+    },
+    {
+      "name": "Job010 Fisherman",
+      "value": 10
+    },
+    {
+      "name": "Job011 House-husband",
+      "value": 11
+    },
+    {
+      "name": "Job012 Dyer",
+      "value": 12
+    },
+    {
+      "name": "Job013 Public worker",
+      "value": 13
+    },
+    {
+      "name": "Job014 Trader",
+      "value": 14
+    },
+    {
+      "name": "Job015 Sex worker",
+      "value": 15
+    },
+    {
+      "name": "Job016 Performer",
+      "value": 16
+    },
+    {
+      "name": "Job017 Craftsman",
+      "value": 17
+    },
+    {
+      "name": "Job018 Oxcart worker",
+      "value": 18
+    },
+    {
+      "name": "Job019 Servant",
+      "value": 19
+    },
+    {
+      "name": "Job020 Cook",
+      "value": 20
+    },
+    {
+      "name": "Job021 Wanderer",
+      "value": 21
+    },
+    {
+      "name": "Job022 Traveling merchant",
+      "value": 22
+    },
+    {
+      "name": "Job023 Robber",
+      "value": 23
+    },
+    {
+      "name": "Job024 Prisoner/sick/unemployed",
+      "value": 24
+    },
+    {
+      "name": "Job025 Child",
+      "value": 25
+    },
+    {
+      "name": "Job026 Elf",
+      "value": 26
+    },
+    {
+      "name": "Job027 Beastren",
+      "value": 27
+    }
+  ]
+}

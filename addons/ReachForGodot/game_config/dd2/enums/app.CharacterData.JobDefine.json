@@ -1,0 +1,32 @@
+{
+  "DisplayLabels": [
+    {
+      "name": "Job045 Weaponsmith (Roderick, Celeste, Grisha, Awaran, Beatrice)",
+      "value": 43
+    },
+    {
+      "name": "Job047 Traveling merchant",
+      "value": 45
+    },
+    {
+      "name": "Job049 Blacksmith (Brokk)",
+      "value": 47
+    },
+    {
+      "name": "Job080 Petty merchant (Auriol)",
+      "value": 78
+    },
+    {
+      "name": "Job082 General store merchant (Philbert, Runne, Morris, Eldart, Isaac)",
+      "value": 80
+    },
+    {
+      "name": "Job086 Armorer merchant (Bjorn, Bodas)",
+      "value": 84
+    },
+    {
+      "name": "Job096 Scrap shop (Ibrahim)",
+      "value": 94
+    }
+  ]
+}
