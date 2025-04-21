@@ -445,6 +445,8 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
         foreach (var curgame in games) {
             var config = ReachForGodot.GetAssetConfig(curgame);
             if (!config.IsValid) continue;
+            // game doesn't use the requested file extension
+            if (!PathUtils.TryGetFileExtensionVersion(game, extension, out _)) continue;
 
             var hasAttemptedFullExtract = false;
             var extWithVersion = PathUtils.AppendFileVersion(extension, config);

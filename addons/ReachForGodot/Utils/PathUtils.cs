@@ -120,7 +120,7 @@ public static partial class PathUtils
     {
         if (_fileVersions != null) return _fileVersions;
         _fileVersions = ReachForGodot.ConfiguredGames
-            .Select(game => GetVersionDict(ReachForGodot.GetAssetConfig(game).Paths))
+            .Select(game => GetVersionDict(game))
             .SelectMany(kv => kv
                 .Where(kv => GetFileFormatFromExtension(kv.Key) != SupportedFileFormats.Unknown)
                 .Select(v => v.Value.ToString()))
@@ -133,7 +133,7 @@ public static partial class PathUtils
     {
         var ext = GetFileExtensionFromFormat(format);
         if (ext == null) return 0;
-        if (TryGetFileExtensionVersion(config, ext, out var version)) {
+        if (TryGetFileExtensionVersion(config.Game, ext, out var version)) {
             return version;
         }
 
@@ -170,43 +170,43 @@ public static partial class PathUtils
         public bool CanNotHaveLang { get; set; }
     }
 
-    private static FileExtensionCache GetExtensionInfo(GamePaths config)
+    private static FileExtensionCache GetExtensionInfo(SupportedGame game)
     {
-        if (!extensionInfo.TryGetValue(config.Game, out var info)) {
-            if (File.Exists(config.ExtensionVersionsCacheFilepath)) {
-                using var fs = File.OpenRead(config.ExtensionVersionsCacheFilepath);
+        if (!extensionInfo.TryGetValue(game, out var info)) {
+            if (File.Exists(GamePaths.GetExtensionVersionsCacheFilepath(game))) {
+                using var fs = File.OpenRead(GamePaths.GetExtensionVersionsCacheFilepath(game));
                 info = JsonSerializer.Deserialize<FileExtensionCache>(fs, TypeCache.jsonOptions) ?? new();
             }
-            extensionInfo[config.Game] = info ??= new FileExtensionCache();
+            extensionInfo[game] = info ??= new FileExtensionCache();
         }
         return info;
     }
 
-    private static Dictionary<string, int> GetVersionDict(GamePaths config)
+    private static Dictionary<string, int> GetVersionDict(SupportedGame game)
     {
-        return GetExtensionInfo(config).Versions;
+        return GetExtensionInfo(game).Versions;
     }
 
-    public static bool TryGetFileExtensionVersion(GamePaths config, string extension, out int version)
+    public static bool TryGetFileExtensionVersion(SupportedGame game, string extension, out int version)
     {
-        return GetVersionDict(config).TryGetValue(extension, out version);
+        return GetVersionDict(game).TryGetValue(extension, out version);
     }
 
     public static IEnumerable<string> GetGameFileExtensions(SupportedGame game)
     {
-        return GetVersionDict(ReachForGodot.GetPaths(game)!).Keys;
+        return GetVersionDict(game).Keys;
     }
 
     private static void UpdateFileExtension(GamePaths config, string extension, int version)
     {
-        var info = GetExtensionInfo(config);
+        var info = GetExtensionInfo(config.Game);
         info.Versions[extension] = version;
         SerializeExtensionInfo(config, info);
     }
 
     private static void SerializeExtensionInfo(GamePaths config, FileExtensionCache info)
     {
-        var path = config.ExtensionVersionsCacheFilepath;
+        var path = GamePaths.GetExtensionVersionsCacheFilepath(config.Game);
         Directory.CreateDirectory(path.GetBaseDir());
         using var fs = File.Create(path);
         JsonSerializer.Serialize(fs, info, TypeCache.jsonOptions);
@@ -219,7 +219,7 @@ public static partial class PathUtils
         }
 
         var ext = GetFileExtensionFromFormat(format) ?? relativePath.GetExtension();
-        if (TryGetFileExtensionVersion(config.Paths, ext, out var version)) {
+        if (TryGetFileExtensionVersion(config.Game, ext, out var version)) {
             return version;
         }
 
@@ -284,7 +284,7 @@ public static partial class PathUtils
         }
         var paths = ReachForGodot.GetPaths(game) ?? new GamePaths(game) { FilelistPath = listFilepath };
         using var file = new StreamReader(File.OpenRead(listFilepath));
-        var extensions = GetExtensionInfo(paths);
+        var extensions = GetExtensionInfo(game);
         while (!file.EndOfStream) {
             var line = file.ReadLine();
             if (string.IsNullOrEmpty(line)) continue;
@@ -435,7 +435,7 @@ public static partial class PathUtils
         string? ext = null;
         if (extIndex != -1) {
             ext = extensionSpan[..extIndex];
-            extInfo = GetExtensionInfo(config.Paths).Info.GetValueOrDefault(ext);
+            extInfo = GetExtensionInfo(config.Game).Info.GetValueOrDefault(ext);
         }
 
         var path = GetFilepathWithNativesFolder(basepath.ToString(), config.Game);

@@ -15,11 +15,13 @@ public record GamePaths(SupportedGame Game, string ChunkPath, string? Il2cppPath
     public string EnumCacheFilename => ProjectSettings.GlobalizePath(GetGameConfigPath(Game, "il2cpp_cache.json"));
     public string EnumOverridesDir => ProjectSettings.GlobalizePath(GetGameConfigPath(Game, "enums/"));
     public string PfbGameObjectRefPropsPath => ProjectSettings.GlobalizePath(GetGameConfigPath(Game, "pfb_ref_props.json"));
-    public string ExtensionVersionsCacheFilepath => ProjectSettings.GlobalizePath(GetGameConfigPath(Game, "file_extensions.json"));
+    public string ExtensionVersionsCacheFilepath => GetExtensionVersionsCacheFilepath(Game);
     public string IgnoredFilesListPath => ProjectSettings.GlobalizePath(GetGameConfigPath(Game, "ignored_files.list"));
     public string TypePatchFilepath => ProjectSettings.GlobalizePath(GetGameConfigPath(Game, "type_patches.json"));
 
     public string? Gamedir => !(PakFiles?.Length > 0) ? null : PathUtils.NormalizeFilePath(PakFiles.First().GetBaseDir());
+
+    public static string GetExtensionVersionsCacheFilepath(SupportedGame game) => ProjectSettings.GlobalizePath(GetGameConfigPath(game, "file_extensions.json"));
 
     public static string GetGameConfigPath(SupportedGame game, string subpath)
         => $"res://addons/ReachForGodot/game_config/{game.ToShortName()}/{subpath}";

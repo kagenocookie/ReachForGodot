@@ -96,6 +96,11 @@ public abstract partial class TestBase : TestClass
         var fails = new Dictionary<SupportedGame, int>();
         var gamelist = ReachForGodot.GameList.Except(skipGames);
         foreach (var game in gamelist) {
+            // game doesn't use the requested file extension
+            if (!PathUtils.TryGetFileExtensionVersion(game, extension, out _)) {
+                continue;
+            }
+
             var config = ReachForGodot.GetAssetConfig(game);
             if (!config.IsValid) {
                 unconfigured++;
