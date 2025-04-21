@@ -13,7 +13,7 @@ public partial class AssetReferenceProperty : EditorProperty
     private PackedScene? inspectorScene;
     private AssetReference? lastAsset;
 
-    [GeneratedRegex("[^a-zA-Z0-9-_/\\.]")]
+    [GeneratedRegex("[^a-zA-Z0-9 -_/\\.]")]
     private static partial Regex FilepathRegex();
 
     private AssetReference? GetAsset() => GetEditedObject().Get(GetEditedProperty()).As<AssetReference>();
