@@ -78,6 +78,26 @@ public partial class RequestSetCollisionShape3D : CollisionShape3D
                 collider.Shape = new BoxShape3D() { Size = aabb.Size };
                 collider.Position = aabb.Position;
                 break;
+            case RszTool.Rcol.ShapeType.HeightField:
+                var hf = shape.As<ColliderHeightFieldResource>();
+                if (hf.IsEmpty) {
+                    if (AssetConverter.InstanceForGame(hf.Game).Chf.ImportSync(hf)) {
+                        ResourceSaver.Save(hf);
+                    }
+                }
+                collider.Shape = hf.HeightMap;
+                collider.Position = (hf.MinRange + hf.MaxRange) / 2;
+                var span = hf.MaxRange - hf.MinRange;
+                if (hf.HeightMap != null && !collider.Position.IsZeroApprox()) {
+                    collider.Scale = new Vector3(
+                        hf.TileSize.X,
+                        1,
+                        hf.TileSize.Y
+                    );
+                } else {
+                    collider.Scale = Vector3.One;
+                }
+                break;
         }
     }
 
@@ -117,6 +137,8 @@ public partial class RequestSetCollisionShape3D : CollisionShape3D
                 cap.p0 = (center - up * (0.5f * capsule.Height - capsule.Radius)).ToRsz();
                 cap.p1 = (center + up * (0.5f * capsule.Height - capsule.Radius)).ToRsz();
                 return cap;
+            case RszTool.Rcol.ShapeType.HeightField:
+                // nothing to do - show default error in case of rcol calls since those probably don't support CHF
             default:
                 GD.PrintErr("Unsupported collider type " + shapeType);
                 return null;
@@ -153,6 +175,24 @@ public partial class RequestSetCollisionShape3D : CollisionShape3D
                 cap.p0 = cappos - up * (0.5f * capsule.Height - capsule.Radius);
                 cap.p1 = cappos + up * (0.5f * capsule.Height - capsule.Radius);
                 obj.SetField(accessor, cap);
+                break;
+            case RszTool.Rcol.ShapeType.HeightField:
+                var path = godotShape.ResourcePath;
+                if (string.IsNullOrEmpty(path)) {
+                    // do nothing, keep the value as is
+                    // the assumption is that we probably don't want null shapes, the user should just remove the collider instead
+                    GD.PrintErr($"HeightField shape with pathless height map shape is not supported. Please assign the {nameof(ColliderHeightFieldResource.HeightMap)} from a {nameof(ColliderHeightFieldResource)}.");
+                } else {
+                    var pathSplit = path.IndexOf("::");
+                    if (pathSplit != -1) {
+                        var hfPath = path[..pathSplit];
+                        if (ResourceLoader.Exists(hfPath)) {
+                            obj.SetField(accessor, ResourceLoader.Load<ColliderHeightFieldResource>(hfPath));
+                        }
+                    } else {
+                        GD.PrintErr($"HeightField shape's {nameof(ColliderHeightFieldResource)} path could not be determined. Please assign the {nameof(ColliderHeightFieldResource.HeightMap)} from a {nameof(ColliderHeightFieldResource)}.");
+                    }
+                }
                 break;
             default:
                 GD.PrintErr("Unsupported collider type " + shapeType);

@@ -18,6 +18,12 @@ public class AssetConverter
         }
     }
 
+    private static AssetConverter? _instance;
+    /// <summary>
+    /// A static converter instance intended for general single resource importing.
+    /// </summary>
+    public static AssetConverter Instance => _instance ??= new AssetConverter(GodotImportOptions.thisFolderOnly);
+
     public GodotImportOptions Options { get; }
 
     private ScnConverter? _scn;
@@ -59,6 +65,9 @@ public class AssetConverter
     private MotbankConverter? _motbank;
     public MotbankConverter Motbank => _motbank ??= new MotbankConverter() { Convert = this };
 
+    private ChfConverter? _chf;
+    public ChfConverter Chf => _chf ??= new ChfConverter() { Convert = this };
+
     private RszFileOption? _fileOption;
     public RszFileOption FileOption => _fileOption ??= TypeCache.CreateRszFileOptions(AssetConfig);
 
@@ -88,6 +97,12 @@ public class AssetConverter
         AssetConfig = null!;
         Options = options;
         Context.ShouldLog = options.logInfo;
+    }
+
+    public static AssetConverter InstanceForGame(SupportedGame game)
+    {
+        Instance.Game = game;
+        return Instance;
     }
 
     public async Task<bool> ImportAssetAsync(IImportableAsset asset, string sourceFilepath)
@@ -140,6 +155,8 @@ public class AssetConverter
                     return Cfil.ImportFromFile(filepath, asset as CollisionFilterResource);
                 case SupportedFileFormats.CollisionMaterial:
                     return Cmat.ImportFromFile(filepath, asset as CollisionMaterialResource);
+                case SupportedFileFormats.ColliderHeightField:
+                    return Chf.ImportFromFile(filepath, asset as ColliderHeightFieldResource);
                 default:
                     GD.PrintErr("Currently unsupported import for resource type " + reres.ResourceType);
                     return Task.FromResult(false);
@@ -192,6 +209,8 @@ public class AssetConverter
                     return Cfil.ExportToFile((CollisionFilterResource)reres, outputPath);
                 case SupportedFileFormats.CollisionMaterial:
                     return Cmat.ExportToFile((CollisionMaterialResource)reres, outputPath);
+                case SupportedFileFormats.ColliderHeightField:
+                    return Chf.ExportToFile((ColliderHeightFieldResource)reres, outputPath);
                 default:
                     GD.PrintErr("Currently unsupported export for resource type " + reres.ResourceType);
                     return Task.FromResult(false);

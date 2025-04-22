@@ -7846,5 +7846,14 @@
         "Type": "Resource"
       }
     ]
+  },
+  "via.physics.HeightFieldShape": {
+    "FieldPatches": [
+      {
+        "Name": "v1",
+        "ReplaceName": "HeightField",
+        "Type": "Resource"
+      }
+    ]
   }
 }

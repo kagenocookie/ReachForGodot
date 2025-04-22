@@ -7,7 +7,7 @@ using RszTool;
 using RszTool.Common;
 using RszTool.Rcol;
 
-public class RcolConverter : SceneRszAssetConverter<RcolRootNode, RcolResource, RcolFile>
+public class RcolConverter : SceneRszAssetConverter<RcolResource, RcolFile, RcolRootNode>
 {
     public override RcolFile CreateFile(FileHandler fileHandler)
     {

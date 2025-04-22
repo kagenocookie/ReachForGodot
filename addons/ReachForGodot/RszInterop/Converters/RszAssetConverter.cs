@@ -4,10 +4,10 @@ using Godot;
 using RszTool;
 using RszTool.Common;
 
-public abstract class RszAssetConverter<TImported, TExported, TResource> : RszToolConverter<TImported, TExported, TResource>
-    where TImported : GodotObject
-    where TExported : BaseFile
-    where TResource : Resource
+public abstract class RszAssetConverter<TResource, TFile, TAsset> : RszToolConverter<TResource, TFile, TAsset>
+    where TAsset : GodotObject
+    where TFile : BaseFile
+    where TResource : REResource
 {
     protected readonly Dictionary<RszInstance, REObject> importedObjects = new();
     protected readonly Dictionary<REObject, RszInstance> objectSourceInstances = new();

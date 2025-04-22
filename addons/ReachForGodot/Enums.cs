@@ -50,6 +50,8 @@ public enum SupportedFileFormats
     LightProbe,
     Probe,
     AiMap,
+    HeightField,
+    ColliderHeightField,
 }
 
 public static class EnumExtensions

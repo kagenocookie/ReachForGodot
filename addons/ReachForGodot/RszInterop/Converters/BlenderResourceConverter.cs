@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using Godot;
 
-public abstract class BlenderResourceConverter<TResource, TAsset> : ConverterBase<TAsset, TResource, TResource>
+public abstract class BlenderResourceConverter<TResource, TAsset> : ConverterBase<TResource, TResource, TAsset>
     where TResource : REResourceProxy
     where TAsset : GodotObject
 {

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Godot;
 using RszTool;
 
-public class ScnConverter : SceneRszAssetConverter<SceneFolder, SceneResource, ScnFile>
+public class ScnConverter : SceneRszAssetConverter<SceneResource, ScnFile, SceneFolder>
 {
     public override bool LoadFile(ScnFile file)
     {

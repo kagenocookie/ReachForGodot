@@ -65,7 +65,7 @@ public abstract partial class TestBase : TestClass
     )
         where TImported : GodotObject
         where TExported : BaseFile
-        where TResource : Resource
+        where TResource : REResource
     {
         var f = converter.CreateFile(new FileHandler(new MemoryStream()) { FileVersion = fileVersion });
         return await converter.Export(resource, f) && f.Write() ? f : null;

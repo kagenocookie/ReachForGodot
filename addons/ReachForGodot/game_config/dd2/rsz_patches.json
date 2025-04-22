@@ -5566,6 +5566,7 @@
       },
       {
         "Name": "v2",
+        "ReplaceName": "HeightField",
         "Type": "Resource"
       }
     ]

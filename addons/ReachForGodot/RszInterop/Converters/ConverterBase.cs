@@ -3,8 +3,8 @@ namespace ReaGE;
 using System.Threading.Tasks;
 using Godot;
 
-public abstract class ConverterBase<TImported, TExported, TResource>
-    where TImported : GodotObject
+public abstract class ConverterBase<TResource, TExported, TAsset>
+    where TAsset : GodotObject
     where TResource : Resource
 {
     public AssetConverter Convert { get; set; } = null!;
@@ -12,7 +12,7 @@ public abstract class ConverterBase<TImported, TExported, TResource>
     public AssetConfig Config => Convert.AssetConfig;
     public bool WritesEnabled => Convert.Options.allowWriting;
 
-    public virtual TImported? GetResourceImportedObject(TResource resource) => resource != null ? resource as TImported ?? throw new NotImplementedException() : null;
+    public virtual TAsset? GetResourceImportedObject(TResource resource) => resource != null ? resource as TAsset ?? throw new NotImplementedException() : null;
 
     public TResource CreateOrReplaceResourcePlaceholder(string resolvedFilepath)
     {
@@ -24,6 +24,27 @@ public abstract class ConverterBase<TImported, TExported, TResource>
 
     public virtual void Clear()
     {
+    }
+
+    public bool ImportSync<TImportable>(TImportable resource) where TImportable : REResource, TResource
+    {
+        if (this is not ISynchronousConverter<TResource, TExported> sync) {
+            GD.PrintErr("Resource does not have a synchronous conversion: " + resource.ResourceType);
+            return false;
+        }
+
+        var source = resource.Asset?.FindSourceFile(Config);
+        if (source == null) return false;
+
+        var file = sync.CreateFile(source);
+        try {
+            sync.LoadFile(file);
+            var success = sync.ImportSync(file, resource);
+            return success;
+        } finally {
+            Clear();
+            (file as IDisposable)?.Dispose();
+        }
     }
 
     protected TRes SetupResource<TRes>(TRes resource, AssetReference reference) where TRes : REResource
@@ -80,12 +101,12 @@ public abstract class ConverterBase<TImported, TExported, TResource>
     }
 }
 
-public abstract class DataConverter<TImported, TExported, TResource> : ConverterBase<TImported, TExported, TResource>
-    where TImported : GodotObject
+public abstract class DataConverter<TResource, TExported, TAsset> : ConverterBase<TResource, TExported, TAsset>
+    where TAsset : GodotObject
     where TResource : Resource
 {
-    public abstract Task<bool> Import(TExported file, TImported target);
-    public abstract Task<bool> Export(TImported source, TExported file);
+    public abstract Task<bool> Import(TExported file, TAsset target);
+    public abstract Task<bool> Export(TAsset source, TExported file);
 
     protected static bool PostExport(bool success, string outputFile)
     {

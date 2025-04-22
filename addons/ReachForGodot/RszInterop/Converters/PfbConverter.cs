@@ -6,7 +6,7 @@ using Godot;
 using ReaGE.DevTools;
 using RszTool;
 
-public class PfbConverter : SceneRszAssetConverter<PrefabNode, PrefabResource, PfbFile>
+public class PfbConverter : SceneRszAssetConverter<PrefabResource, PfbFile, PrefabNode>
 {
     public override PfbFile CreateFile(FileHandler fileHandler)
     {

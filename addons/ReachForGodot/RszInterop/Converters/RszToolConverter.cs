@@ -4,12 +4,12 @@ using System.Threading.Tasks;
 using Godot;
 using RszTool;
 
-public abstract class RszToolConverter<TImported, TExported, TResource> : DataConverter<TImported, TExported, TResource>
-    where TImported : GodotObject
+public abstract class RszToolConverter<TResource, TExported, TAsset> : DataConverter<TResource, TExported, TAsset>
+    where TAsset : GodotObject
     where TExported : BaseFile
-    where TResource : Resource
+    where TResource : REResource
 {
-    public async Task<bool> ExportToFile(TImported resource, string outputPath)
+    public async Task<bool> ExportToFile(TAsset resource, string outputPath)
     {
         Clear();
         var file = CreateFile(new FileHandler(outputPath));
@@ -18,7 +18,7 @@ public abstract class RszToolConverter<TImported, TExported, TResource> : DataCo
         return PostExport(file.Save(), outputPath);
     }
 
-    public Task<bool> ImportFromFile<T>(T imported) where T : IImportableAsset, TImported
+    public Task<bool> ImportFromFile<T>(T imported) where T : IImportableAsset, TAsset
     {
         Convert.Game = imported.Game;
         var fn = imported.Asset?.FindSourceFile(Config);
@@ -26,7 +26,7 @@ public abstract class RszToolConverter<TImported, TExported, TResource> : DataCo
         return ImportFromFile(fn, imported);
     }
 
-    public async Task<bool> ImportFromFile(string sourcePath, TImported? imported = null)
+    public async Task<bool> ImportFromFile(string sourcePath, TAsset? imported = null)
     {
         Clear();
         var file = CreateFile(new FileHandler(sourcePath));
@@ -65,8 +65,15 @@ public abstract class RszToolConverter<TImported, TExported, TResource> : DataCo
     public abstract TExported CreateFile(FileHandler fileHandler);
 }
 
-public abstract class ResourceConverter<TImported, TExported> : RszToolConverter<TImported, TExported, TImported>
-    where TImported : REResource
+public abstract class ResourceConverter<TResource, TExported> : RszToolConverter<TResource, TExported, TResource>
+    where TResource : REResource
     where TExported : BaseFile
 {
+}
+
+public interface ISynchronousConverter<TResource, TFile>
+{
+    TFile CreateFile(string absoluteFilepath);
+    bool LoadFile(TFile file);
+    bool ImportSync(TFile file, TResource target);
 }

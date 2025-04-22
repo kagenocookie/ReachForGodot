@@ -73,6 +73,11 @@ public partial class PhysicsCollidersComponent : REComponent, IVisualREComponent
         .OriginalType("via.physics.Shape")
         .Conditions(list => list.FirstOrDefault(f => f.RszField.size == 4));
 
+    [REObjectFieldTarget("via.physics.HeightFieldShape")]
+    private static readonly REFieldAccessor HFShape = new REFieldAccessor("HeightField")
+        .Resource<ColliderHeightFieldResource>()
+        .Conditions(list => list.FirstOrDefault(f => f.RszField.type is RszFieldType.String or RszFieldType.Resource));
+
     [ExportToolButton("Generate collider nodes")]
     private Callable GenerateColliderNodesBtn => Callable.From(() => { _ = GenerateColliderNodes(); });
 
@@ -259,6 +264,9 @@ public partial class PhysicsCollidersComponent : REComponent, IVisualREComponent
                         ImportColliderShape(subshape, collider);
                     }
                 }
+                break;
+            case "via.physics.HeightFieldShape":
+                RequestSetCollisionShape3D.ApplyShape(collider, RszTool.Rcol.ShapeType.HeightField, shape.GetField(HFShape));
                 break;
             default:
                 GD.Print("Unhandled collider shape " + shape.Classname);
