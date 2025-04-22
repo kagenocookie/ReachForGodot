@@ -37,9 +37,9 @@ public abstract partial class TestBase : TestClass
         return (path, opt);
     }
 
-    protected static TResource CreateTempResource<TImported, TExported, TResource>(
+    protected static TResource CreateTempResource<TResource, TExported, TImported>(
         AssetConverter converter,
-        ConverterBase<TImported, TExported, TResource> fileConverter,
+        ConverterBase<TResource, TExported, TImported> fileConverter,
         string fullpath
     )
         where TImported : GodotObject
@@ -58,8 +58,8 @@ public abstract partial class TestBase : TestClass
         }
     }
 
-    protected static async Task<TExported?> ExportToMemory<TImported, TExported, TResource>(
-        RszToolConverter<TImported, TExported, TResource> converter,
+    protected static async Task<TExported?> ExportToMemory<TResource, TExported, TImported>(
+        RszToolConverter<TResource, TExported, TImported> converter,
         TImported resource,
         int fileVersion
     )

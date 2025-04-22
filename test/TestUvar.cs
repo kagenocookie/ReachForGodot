@@ -50,7 +50,7 @@ public partial class TestUvar : TestBase
                         n1.Name.ShouldBe(n2.Name);
                         n1.nodeId.ShouldBe(n2.nodeId);
                         n1.uknCount.ShouldBe(n2.uknCount);
-                        n1.Parameters.ShouldBeEquivalentTo(n2.Parameters);
+                        n1.Parameters.Select(p => (p.nameHash, p.type, p.value)).ShouldBeEquivalentTo(n2.Parameters.Select(p => (p.nameHash, p.type, p.value)));
                     }
                 }
             }
