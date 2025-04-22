@@ -122,24 +122,20 @@ public partial class GameResourceImporter : EditorImportPlugin
         };
         ResourceSaver.Save(imported, importedSavePath);
 
-        if (ShouldImportContent(format.format)) {
-            var converter = new AssetConverter(config.Game, GodotImportOptions.directImport);
+        var converter = new AssetConverter(config.Game, GodotImportOptions.directImport);
 
-            var asset = (resource as REResourceProxy)?.ImportedResource as PackedScene ?? resource as Resource;
-            var importable = (asset as PackedScene)?.Instantiate<IImportableAsset>() ?? resource as IImportableAsset;
-            if (importable != null) {
-                _ = converter.ImportAsset(importable, globalSource).ContinueWith(t => {
-                    if (t.IsCompletedSuccessfully) {
-                        ResourceSaver.Save(asset);
-                    }
-                });
-            }
+        var asset = (resource as REResourceProxy)?.ImportedResource as PackedScene ?? resource as Resource;
+        var importable = (asset as PackedScene)?.Instantiate<IImportableAsset>() ?? resource as IImportableAsset;
+        if (importable != null) {
+            _ = converter.ImportAsset(importable, globalSource).ContinueWith(t => {
+                if (t.IsCompletedSuccessfully) {
+                    ResourceSaver.Save(asset);
+                }
+            });
         }
         config.Paths.SourcePathOverride = null;
 
         return Error.Ok;
     }
-
-    private static bool ShouldImportContent(SupportedFileFormats format) => format is not SupportedFileFormats.Texture;
 }
 #endif

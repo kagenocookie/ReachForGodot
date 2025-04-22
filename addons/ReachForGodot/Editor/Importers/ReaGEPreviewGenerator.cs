@@ -18,6 +18,10 @@ public partial class ReaGEPreviewGenerator : EditorResourcePreviewGenerator
     {
         if (resource is not REResource res) return null;
 
+        if (res.ResourceType == SupportedFileFormats.Texture) {
+            return (res as REResourceProxy)?.ImportedResource as Texture2D;
+        }
+
         var img = TryLoadImage("res://addons/ReachForGodot/icons/" + res.ResourceType + ".svg", size)
             ?? TryLoadImage("res://addons/ReachForGodot/icons/" + res.ResourceType + ".png", size)
             ?? TryLoadImage("res://addons/ReachForGodot/icons/Generic.svg", size);

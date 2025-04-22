@@ -89,17 +89,8 @@ See [the wiki](https://github.com/kagenocookie/ReachForGodot/wiki) for more deta
 - configure any export folders you need in editor settings
 - You can specify either just the full path, or also add a label for it to make it easier to identify with a | separator, e.g. `my awesome DD2 mod|D:/mods/dd2/awesome_mod/natives/stm/`
 
-## Planned and potential features
-- enums: support manually overriding enum settings (IsFlags, custom entries, friendly names)
-- support editing of as many file formats as possible
-- support serializing objects to JSON - for Content Editor integration and for upgrading changes in case of game updates
-- improvements to the packed file browser
-- game specific tooling to make navigation between scenes easier (mainly looking at DD2 / open world assets)
-- look into potential GUI support
-
 ## Known issues
 - no MPLY format mesh support yet (meaning DD2 levels are mostly placeholder meshes aside from the occasional simple mesh) - waiting for RE Mesh Editor
-- converted DDS textures aren't directly usable from Godot - waiting for Godot to fix DDS support for incomplete mipmaps; there are open pull requests that will likely fix it
 - some PFBs with `via.GameObjectRef` fields might not export correctly by default, as they rely on some arcane propertyId values that don't seem to have any direct correlation with RSZ or class data; some cases can be automated fairly accurately, but otherwise need to be manually reversed out of existing pfbs and defined in `addons/ReachForGodot/game_configs/{game}/pfb_ref_props.json` files. Feel free to make a PR adding more of these entries as you come across them
 - there tends to be some godot/c++ errors spewed out while it's doing mass importing of assets, most of them are safe to ignore
 - while the addon does support multiple games in one project, if you're going to import a lot of data, consider making separate projects, because Godot doesn't scale nicely with lots of files. The first time saving the project after opening (and re-opening) also takes a hot minute because from what I can tell, Godot rechecks _all_ files in the project just in case any of them changed.

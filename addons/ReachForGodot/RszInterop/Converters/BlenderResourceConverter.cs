@@ -31,7 +31,7 @@ public abstract class BlenderResourceConverter<TResource, TAsset> : ConverterBas
     public async Task<Resource?> ImportAssetGetResource(TResource resource, string? sourceFilePath = null)
     {
         sourceFilePath ??= resource.Asset?.FindSourceFile(Config);
-        if (!System.IO.Path.IsPathRooted(sourceFilePath)) {
+        if (!Path.IsPathRooted(sourceFilePath)) {
             sourceFilePath = PathUtils.FindSourceFilePath(sourceFilePath, Config);
         }
         var importFilepath = PathUtils.GetAssetImportPath(sourceFilePath, resource.ResourceType, Config);
@@ -46,12 +46,12 @@ public abstract class BlenderResourceConverter<TResource, TAsset> : ConverterBas
         Directory.CreateDirectory(Path.GetFullPath(outputPath.GetBaseDir()));
         var assetExisted = File.Exists(outputPath) && ResourceLoader.Exists(importFilepath);
         var updatedResource = await AsyncImporter.QueueAssetImport(sourceFilePath, outputPath, Game, ExecuteImport);
+        if (!string.IsNullOrEmpty(updatedResource?.ResourcePath)) {
+            resource.ImportedResource = ResourceLoader.Load<Resource>(updatedResource.ResourcePath);
+        }
         if (!string.IsNullOrEmpty(resource.ResourcePath)) {
             ResourceSaver.Save(resource);
             EditorInterface.Singleton.GetResourceFilesystem().UpdateFile(resource.ResourcePath);
-        }
-        if (!string.IsNullOrEmpty(updatedResource?.ResourcePath)) {
-            resource.ImportedResource = ResourceLoader.Load<Resource>(updatedResource?.ResourcePath);
         }
         if (assetExisted) {
             ReimportExistingFile(outputPath);
