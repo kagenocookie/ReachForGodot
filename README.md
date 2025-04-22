@@ -20,7 +20,7 @@ Integrates various open source tools dealing with RE Engine games and packs them
 ## Supported games
 Should work for any RE engine game, but I can only test what I own
 
-- Dragon's Dogma 2*
+- Dragon's Dogma 2* ([Field/Env ID lookup map](https://kagenocookie.github.io/dd2map/))
 - Resident Evil 2 RT
 - Devil May Cry 5
 - Resident Evil 2 non-RT
@@ -33,8 +33,6 @@ Should work for any RE engine game, but I can only test what I own
 - Monster Hunter Rise (untested)
 - Street Fighter 6 (untested)
 - Monster Hunter Wilds (untested)
-
-For the open world games: The scene structure is a mess thanks to how it's structured, slow and tedious to edit, but functional; could be improved with future game-specific tooling additions once the common core functionality is stabilized.
 
 \* Many of the terrain meshes use MPLY format meshes which are currently unsupported by RE Mesh Editor and will therefore be loaded as placeholders
 
