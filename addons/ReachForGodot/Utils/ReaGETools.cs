@@ -210,8 +210,13 @@ public static class ReaGETools
         } }
     };
 
+    private static readonly Dictionary<SupportedGame, HashSet<string>> componentClasses = new();
+
     public static void FindDuplicateRszObjectInstances(SupportedGame game, RSZFile file, string filepath)
     {
+        if (!componentClasses.TryGetValue(game, out var components)) {
+            componentClasses[game] = components = TypeCache.GetSubclasses(game, "via.Component").ToHashSet();
+        }
         var instances = new Dictionary<RszInstance, RszInstance>();
         foreach (var instance in file.InstanceList) {
             if (!instance.HasValues) {
@@ -228,6 +233,14 @@ public static class ReaGETools
                     var values = field.array ? ((List<object>)value).OfType<RszInstance>().ToArray() : [(RszInstance)value];
                     for (var i = 0; i < values.Length; i++) {
                         var val = values[i];
+                        if (components.Contains(val.RszClass.name)) {
+                            GD.PrintErr($"Found direct reference to component - this is almost definitely wrong! Object {instance} field {fieldIndex} {field.name} referenced a {val.RszClass.name}");
+                            GD.PrintErr($"Filepath: {filepath}");
+                            GD.PrintErr($"Adding to the {instance.RszClass.name} patch list: {{ \"Name\": \"{field.name}\", \"Type\": \"S32\" }}");
+                            field.type = RszFieldType.S32;
+                            field.IsTypeInferred = true;
+                            continue;
+                        }
                         if (val.Index != 0 && !instances.TryAdd(val, instance)) {
                             var isWhitelisted = whitelistedDuplicates.GetValueOrDefault(game)?.GetValueOrDefault(instance.RszClass.name)?.Contains(field.name);
                             if (isWhitelisted != true) {
@@ -242,6 +255,7 @@ public static class ReaGETools
                     }
                 }
             }
+            TypeCache.StoreInferredRszTypes(file, ReachForGodot.GetAssetConfig(game));
         }
     }
 }
