@@ -1,26 +1,46 @@
 namespace ReaGE;
 
 using System;
+using System.Threading.Tasks;
 using Godot;
+using ReaGE.DevTools;
 
 [GlobalClass, Tool]
 public partial class CustomSearchWindow : Window
 {
     public string SearchedQuery { get; private set; } = string.Empty;
-    private SearchType _type;
-    public SearchType Type
+    private NodeSearchType _typeNode;
+    public NodeSearchType SearchTypeNode
     {
-        get => _type;
+        get => _typeNode;
         set {
-            _type = value;
+            _typeNode = value;
             if (filterTypeBtn != null) {
                 filterTypeBtn.Selected = (int)value;
             }
         }
     }
+
+    private ExternalFileSearchType _typeExternal;
+    public ExternalFileSearchType SearchTypeExternalFile
+    {
+        get => _typeExternal;
+        set {
+            _typeExternal = value;
+            if (filterTypeBtn != null) {
+                filterTypeBtn.Selected = (int)value;
+            }
+        }
+    }
+
+    private static CancellationTokenSource tokenSource = new();
+
+    public SearchTargetType TargetType { get; set; }
+
     public Node? SearchRoot { get; set; }
 
     [Export] private LineEdit lineEdit = null!;
+    [Export] private OptionButton searchTargetBtn = null!;
     [Export] private OptionButton filterTypeBtn = null!;
     [Export] private Container resultsContainer = null!;
 
@@ -33,7 +53,7 @@ public partial class CustomSearchWindow : Window
 
     private readonly List<SearchResultItem> Results = new();
 
-    public enum SearchType
+    public enum NodeSearchType
     {
         NodeName,
         GameObjectName,
@@ -41,10 +61,16 @@ public partial class CustomSearchWindow : Window
         ComponentClassname,
     }
 
+    public enum ExternalFileSearchType
+    {
+        ComponentInRSZFiles,
+    }
+
     public enum SearchTargetType
     {
         Node,
-        Resource,
+        ExternalFile,
+        // Resource,
     }
 
     private delegate bool SearchFunction(CustomSearchWindow self, Node node, out string? summary);
@@ -60,16 +86,35 @@ public partial class CustomSearchWindow : Window
 
     public override void _Ready()
     {
+        searchTargetBtn.Clear();
+        foreach (var label in Enum.GetNames<SearchTargetType>()) {
+            searchTargetBtn.AddItem(label.Capitalize());
+        }
+        searchTargetBtn.Selected = (int)TargetType;
+        searchTargetBtn.ItemSelected += OnTargetTypeChanged;
+        filterTypeBtn.ItemSelected += OnFilterTypeChanged;
+        RefreshFilterTypeOptions();
+    }
+
+    private void RefreshFilterTypeOptions()
+    {
+        filterTypeBtn.ItemSelected -= OnFilterTypeChanged;
         filterTypeBtn.Clear();
-        foreach (var label in Enum.GetNames<SearchType>()) {
+        var names = TargetType switch {
+            SearchTargetType.Node => Enum.GetNames<NodeSearchType>(),
+            SearchTargetType.ExternalFile => Enum.GetNames<ExternalFileSearchType>(),
+            _ => Array.Empty<string>(),
+        };
+        foreach (var label in names) {
             filterTypeBtn.AddItem(label.Capitalize());
         }
-        filterTypeBtn.Selected = (int)Type;
+        filterTypeBtn.Selected = (int)SearchTypeNode;
         filterTypeBtn.ItemSelected += OnFilterTypeChanged;
     }
 
     private void HandleCloseRequested()
     {
+        tokenSource.Cancel();
         QueueFree();
     }
 
@@ -83,28 +128,57 @@ public partial class CustomSearchWindow : Window
     public static void ShowNameSearch(Node source)
     {
         var wnd = ResourceLoader.Load<PackedScene>(SceneFilepath).Instantiate<CustomSearchWindow>();
+        wnd.TargetType = SearchTargetType.Node;
         wnd.SearchRoot = source;
         EditorInterface.Singleton.PopupDialogCentered(wnd);
     }
     public static void ShowGameObjectSearch(Node source)
     {
         var wnd = ResourceLoader.Load<PackedScene>(SceneFilepath).Instantiate<CustomSearchWindow>();
+        wnd.TargetType = SearchTargetType.Node;
         wnd.SearchRoot = source;
-        wnd.Type = source is GameObject or SceneFolder ? SearchType.GameObjectName : SearchType.NodeName;
+        wnd.SearchTypeNode = source is GameObject or SceneFolder ? NodeSearchType.GameObjectName : NodeSearchType.NodeName;
         EditorInterface.Singleton.PopupDialogCentered(wnd);
     }
 
     public static void ShowGuidSearch(Guid guid, Node source)
     {
         var wnd = ResourceLoader.Load<PackedScene>(SceneFilepath).Instantiate<CustomSearchWindow>();
+        wnd.TargetType = SearchTargetType.Node;
         wnd.SearchedQuery = guid.ToString();
         wnd.SearchRoot = source;
         EditorInterface.Singleton.PopupDialogCentered(wnd);
     }
 
+    public static void ShowFileSearch(ExternalFileSearchType type, string? initialQuery)
+    {
+        var wnd = ResourceLoader.Load<PackedScene>(SceneFilepath).Instantiate<CustomSearchWindow>();
+        wnd.TargetType = SearchTargetType.ExternalFile;
+        wnd.SearchedQuery = initialQuery ?? string.Empty;
+
+        EditorInterface.Singleton.PopupDialogCentered(wnd);
+    }
+
+    private void OnTargetTypeChanged(long id)
+    {
+        TargetType = (SearchTargetType)id;
+        RefreshFilterTypeOptions();
+        Refilter();
+    }
+
     private void OnFilterTypeChanged(long id)
     {
-        Type = (SearchType)id;
+        switch (TargetType) {
+            case SearchTargetType.Node:
+                SearchTypeNode = (NodeSearchType)id;
+                break;
+            // case SearchTargetType.Resource:
+                // SearchTypeExternalFile = (ExternalFileSearchType)id;
+                // break;
+            case SearchTargetType.ExternalFile:
+                SearchTypeExternalFile = (ExternalFileSearchType)id;
+                break;
+        }
         Refilter();
     }
 
@@ -117,8 +191,8 @@ public partial class CustomSearchWindow : Window
     private void OnFilterUpdated(string text)
     {
         SearchedQuery = text;
-        if (Type is not SearchType.Guid && Guid.TryParse(text, out var guid)) {
-            Type = SearchType.Guid;
+        if (SearchTypeNode is not NodeSearchType.Guid && Guid.TryParse(text, out var guid)) {
+            SearchTypeNode = NodeSearchType.Guid;
         }
 
         Refilter();
@@ -126,7 +200,6 @@ public partial class CustomSearchWindow : Window
 
     private void Refilter()
     {
-
         StartSearch();
     }
 
@@ -135,26 +208,61 @@ public partial class CustomSearchWindow : Window
         if (Visible) {
             lineEdit.CallDeferred(Control.MethodName.GrabFocus);
             CallDeferred(MethodName.StartSearch);
+        } else {
+            tokenSource.Cancel();
         }
     }
 
     private void StartSearch()
     {
+        if (!tokenSource.IsCancellationRequested) tokenSource.Cancel();
         if (!Visible) return;
 
-        switch (Type) {
-            case SearchType.Guid:
+        tokenSource = new();
+
+        switch (TargetType) {
+            case SearchTargetType.Node:
+                StartNodeSearch();
+                break;
+            case SearchTargetType.ExternalFile:
+                StartExternalFileSearch();
+                break;
+        }
+    }
+
+    private void StartExternalFileSearch()
+    {
+        if (!Visible) return;
+
+        ClearResults();
+        if (string.IsNullOrEmpty(SearchedQuery)) {
+            return;
+        }
+
+        switch (SearchTypeExternalFile) {
+            case ExternalFileSearchType.ComponentInRSZFiles:
+                Task.Run(() => SearchFilesRSZInstances(SearchedQuery));
+                break;
+        }
+    }
+
+    private void StartNodeSearch()
+    {
+        if (!Visible) return;
+
+        switch (SearchTypeNode) {
+            case NodeSearchType.Guid:
                 Filter = SearchByGuid;
                 break;
-            case SearchType.GameObjectName:
+            case NodeSearchType.GameObjectName:
                 Filter = SearchGameObjectsByName;
                 break;
 
-            case SearchType.ComponentClassname:
+            case NodeSearchType.ComponentClassname:
                 Filter = SearchGameObjectsByComponent;
                 break;
 
-            case SearchType.NodeName:
+            case NodeSearchType.NodeName:
             default:
                 Filter = SearchNodesByName;
                 break;
@@ -165,21 +273,40 @@ public partial class CustomSearchWindow : Window
         if (SearchRoot == null) return;
 
         ClearResults();
-        SearchRecurse(SearchRoot);
+        SearchNodes(SearchRoot);
     }
 
-    private void SearchRecurse(Node node)
+    private void SearchNodes(Node node)
     {
         if (Results.Count >= resultLimit) {
             return;
         }
 
         if (Filter.Invoke(this, node, out var summary)) {
-            AddSearchResultItem(node, summary);
+            var ui = CreateSearchResultItem(summary, node);
+            resultsContainer.AddChild(ui);
         }
 
         foreach (var child in node.GetChildren()) {
-            SearchRecurse(child);
+            SearchNodes(child);
+        }
+    }
+
+    private void SearchFilesRSZInstances(string classname)
+    {
+        tokenSource.Cancel();
+        tokenSource = new();
+
+        foreach (var filepath in ReaGETools.FindInstancesInAnyRSZFile(classname, Array.Empty<SupportedGame>(), tokenSource.Token)) {
+            if (Results.Count >= resultLimit) {
+                return;
+            }
+
+            var ui = CreateSearchResultItem(filepath, null);
+            ui.Pressed += () => {
+                FileSystemUtils.ShowFileInExplorer(filepath);
+            };
+            resultsContainer.CallDeferred(Node.MethodName.AddChild, ui);
         }
     }
 
@@ -227,7 +354,7 @@ public partial class CustomSearchWindow : Window
         return false;
     }
 
-    private void AddSearchResultItem(GodotObject target, string? summary)
+    private SearchResultItem CreateSearchResultItem(string? summary, GodotObject? target)
     {
         var ui = searchResultItemTemplate.Instantiate<SearchResultItem>();
         Results.Add(ui);
@@ -250,7 +377,7 @@ public partial class CustomSearchWindow : Window
 
         if (context == null && target is IAssetPointer ass) context = ass.Asset?.AssetFilename;
 
-        ui.Setup(summary, context, target);
-        resultsContainer.AddChild(ui);
+        ui.Setup(summary, context, null);
+        return ui;
     }
 }

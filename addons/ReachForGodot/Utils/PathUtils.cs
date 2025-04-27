@@ -97,6 +97,13 @@ public static partial class PathUtils
         return filename[extIndex] == '.' ? filename[(extIndex + 1)..] : filename[extIndex..];
     }
 
+    public static ReadOnlySpan<char> GetFilenameExtensionWithoutSuffixes(ReadOnlySpan<char> filename)
+    {
+        var fullExt = GetFilenameExtensionWithSuffixes(filename);
+        var dot = fullExt.IndexOf('.');
+        return dot == -1 ? fullExt : fullExt[0..dot];
+    }
+
     public static ReadOnlySpan<char> GetFilepathWithoutExtensionOrVersion(ReadOnlySpan<char> filename)
     {
         var extIndex = GetFilenameExtensionStartIndex(filename);

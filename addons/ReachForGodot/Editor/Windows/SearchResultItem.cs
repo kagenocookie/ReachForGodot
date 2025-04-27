@@ -36,7 +36,7 @@ public partial class SearchResultItem : PanelContainer
 
     private Control HighlightNode => this;
 
-    public void Setup(string? label, string? context, GodotObject target)
+    public void Setup(string? label, string? context, GodotObject? target)
     {
         if (this.label != null) {
             this.label.Text = label;

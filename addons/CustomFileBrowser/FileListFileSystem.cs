@@ -2,7 +2,7 @@ namespace CustomFileBrowser;
 
 public class FileListFileSystem : ICustomFileSystem
 {
-    private string[] Files = Array.Empty<string>();
+    public string[] Files { get; private set; } = Array.Empty<string>();
 
     private Dictionary<string, string[]> folderListCache = new();
 

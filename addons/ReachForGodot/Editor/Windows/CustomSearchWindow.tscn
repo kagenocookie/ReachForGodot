@@ -3,13 +3,14 @@
 [ext_resource type="Script" uid="uid://b88mdvesfwtvw" path="res://addons/ReachForGodot/Editor/Windows/CustomSearchWindow.cs" id="1_apjd3"]
 [ext_resource type="PackedScene" uid="uid://dqivj48puahw7" path="res://addons/ReachForGodot/Editor/Windows/SearchResultItem.tscn" id="2_35gta"]
 
-[node name="CustomSearchWindow" type="Window" node_paths=PackedStringArray("lineEdit", "filterTypeBtn", "resultsContainer")]
+[node name="CustomSearchWindow" type="Window" node_paths=PackedStringArray("lineEdit", "searchTargetBtn", "filterTypeBtn", "resultsContainer")]
 title = "GameObject search"
 initial_position = 4
 size = Vector2i(1000, 500)
 popup_window = true
 script = ExtResource("1_apjd3")
 lineEdit = NodePath("Panel/MarginContainer/VBoxContainer/Filter/LineEdit")
+searchTargetBtn = NodePath("Panel/MarginContainer/VBoxContainer/Settings/TargetTypeButton")
 filterTypeBtn = NodePath("Panel/MarginContainer/VBoxContainer/Settings/OptionButton")
 resultsContainer = NodePath("Panel/MarginContainer/VBoxContainer/ScrollContainer/SearchResults")
 searchResultItemTemplate = ExtResource("2_35gta")
@@ -39,6 +40,13 @@ layout_mode = 2
 
 [node name="Settings" type="HBoxContainer" parent="Panel/MarginContainer/VBoxContainer"]
 layout_mode = 2
+
+[node name="TargetTypeButton" type="OptionButton" parent="Panel/MarginContainer/VBoxContainer/Settings"]
+layout_mode = 2
+selected = 0
+item_count = 1
+popup/item_0/text = "Target type"
+popup/item_0/id = 0
 
 [node name="OptionButton" type="OptionButton" parent="Panel/MarginContainer/VBoxContainer/Settings"]
 layout_mode = 2
@@ -71,9 +79,6 @@ size_flags_vertical = 3
 layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
-
-[node name="PanelContainer" parent="Panel/MarginContainer/VBoxContainer/ScrollContainer/SearchResults" instance=ExtResource("2_35gta")]
-layout_mode = 2
 
 [connection signal="close_requested" from="." to="." method="HandleCloseRequested"]
 [connection signal="visibility_changed" from="." to="." method="OnVisibilityChanged"]

@@ -2,6 +2,7 @@ namespace ReaGE.DevTools;
 
 using System;
 using System.Text;
+using CustomFileBrowser;
 using Godot;
 using RszTool;
 
@@ -256,6 +257,90 @@ public static class ReaGETools
                 }
             }
             TypeCache.StoreInferredRszTypes(file, ReachForGodot.GetAssetConfig(game));
+        }
+    }
+
+    private static readonly byte[] RSZBytes = [0x52, 0x53, 0x5a, 0];
+
+    public struct InstanceInfoStruct {
+        public uint typeId;
+        public uint CRC;
+
+        public InstanceInfo GetInstanceInfo() => new InstanceInfo() { typeId = typeId, CRC = CRC };
+    }
+
+    public static IEnumerable<InstanceInfoStruct>? GetRSZInstanceInfos(string filepath)
+    {
+        // read directly from file for finding the RSZ data - so we don't necesarily fully load every single fully into memory
+        using var fs = File.OpenRead(filepath);
+        var handler = new FileHandler(fs);
+        var rszOffset = handler.FindBytes(RSZBytes, new RszTool.Common.SearchParam() { end = -1 });
+        if (rszOffset == -1) {
+            yield break;
+        }
+
+        var header = new RSZFile.HeaderStruct();
+        handler.Seek(rszOffset);
+        handler.Read(ref header);
+        handler.Seek(rszOffset + header.instanceOffset);
+        for (int i = 0; i < header.instanceCount; i++)
+        {
+            InstanceInfoStruct instanceInfo = new();
+            handler.Read(ref instanceInfo);
+            yield return instanceInfo;
+        }
+    }
+
+    public static bool FileCanContainRSZData(string filepath)
+    {
+        var ext = PathUtils.GetFilenameExtensionWithoutSuffixes(filepath);
+        var format = PathUtils.GetFileFormatFromExtension(ext);
+        return format is SupportedFileFormats.Scene
+            or SupportedFileFormats.Prefab
+            or SupportedFileFormats.Rcol
+            or SupportedFileFormats.Userdata
+            || ext.StartsWith("ai") // all ai* files (AIMP) have an RSZ section, though it's empty for the most part
+            || ext.StartsWith("w") // many wwise related audio files contain a single main rsz instance similar to user files
+            || ext == "swms" // one more audio related file
+            ;
+    }
+
+    public static IEnumerable<string> FindInstancesInAnyRSZFile(string classname, SupportedGame[] games, CancellationToken? token = null)
+    {
+        var list = new FileListFileSystem();
+        var conv = new AssetConverter(GodotImportOptions.placeholderImport);
+        foreach (var config in ReachForGodot.AssetConfigs) {
+            if (!config.IsValid || config.Paths.FilelistPath == null) continue;
+            if (games.Length != 0 && games.Contains(config.Game)) {
+                continue;
+            }
+            conv.Game = config.Game;
+            var rszClass = conv.FileOption.RszParser.GetRSZClass(classname);
+            if (rszClass == null) continue;
+
+            GD.Print("Searching within game " + config.Game + " ...");
+
+            var crc = rszClass.crc;
+            list.ReadFileList(config.Paths.FilelistPath);
+            var basepath = PathUtils.GetFilepathWithoutNativesFolder(config.Paths.ChunkPath);
+
+            foreach (var file in list.Files) {
+                if (token?.IsCancellationRequested == true) yield break;
+                var filepath = Path.Combine(basepath, file);
+                if (!FileCanContainRSZData(filepath)) continue;
+
+                if (!File.Exists(filepath)) {
+                    if (!FileUnpacker.TryExtractFile(filepath, config) || !File.Exists(filepath)) {
+                        GD.PrintErr(config.Game + " file not found: " + file);
+                        continue;
+                    }
+                }
+
+                var match = GetRSZInstanceInfos(filepath)?.FirstOrDefault(info => info.CRC == crc);
+                if (match.HasValue && match.Value.CRC == crc) {
+                    yield return filepath;
+                }
+            }
         }
     }
 }
