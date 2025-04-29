@@ -25,7 +25,8 @@ public static class ReachForGodot
         }
     }
 
-    public static string GetUserdataPath(string path) => "res://userdata/" + path;
+    public static string GetUserdataBasePath(string path) => "res://userdata/" + path;
+    public static string GetUserdataPath(string path, SupportedGame game) => $"res://userdata/{game.ToShortName()}/{path}";
 
     public static bool IncludeMeshMaterial => ReachForGodotPlugin.IncludeMeshMaterial;
     public static int SceneFolderProxyThreshold => ReachForGodotPlugin.SceneFolderProxyThreshold;

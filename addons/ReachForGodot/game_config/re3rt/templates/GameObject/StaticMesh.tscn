@@ -1,0 +1,189 @@
+[gd_scene load_steps=18 format=3 uid="uid://cfxiwj5as8e7c"]
+
+[ext_resource type="Script" uid="uid://ct5prac1ag8hp" path="res://addons/ReachForGodot/Editor/ObjectTemplates/ObjectTemplateRoot.cs" id="1_0doi3"]
+[ext_resource type="Script" uid="uid://d1b3sogt8t06" path="res://addons/ReachForGodot/RszInterop/GameObjects/PrefabNode.cs" id="2_c8rwb"]
+[ext_resource type="Script" uid="uid://c4kswq21tieab" path="res://addons/ReachForGodot/Resources/REObject.cs" id="3_o7igq"]
+[ext_resource type="Script" uid="uid://cboxk1wpeqrab" path="res://addons/ReachForGodot/RszInterop/GameObjects/REComponent.cs" id="4_k1w1a"]
+[ext_resource type="Script" uid="uid://b5prf071ye431" path="res://addons/ReachForGodot/Components/RETransformComponent.cs" id="5_g3txl"]
+[ext_resource type="Script" uid="uid://drdexacu7ucsc" path="res://addons/ReachForGodot/Components/REMeshComponent.cs" id="6_yvbsy"]
+[ext_resource type="Script" uid="uid://c55yvji6n5y7k" path="res://addons/ReachForGodot/RszInterop/RszStructs/OrientedBoundingBox.cs" id="7_vmjyc"]
+[ext_resource type="Script" uid="uid://djo55wbalxc40" path="res://addons/ReachForGodot/Components/PhysicsCollidersComponent.cs" id="8_oubqq"]
+
+[sub_resource type="Resource" id="Resource_r6jtj"]
+resource_name = "GameObject"
+script = ExtResource("3_o7igq")
+Game = 6
+Classname = "via.GameObject"
+__Data = Dictionary[StringName, Variant]({
+&"Draw": true,
+&"Name": "sm26_013_oilCan01A",
+&"Tags": "",
+&"Timescale": -1.0,
+&"Update": true
+})
+
+[sub_resource type="Resource" id="Resource_0a347"]
+script = ExtResource("5_g3txl")
+Game = 6
+Classname = "via.Transform"
+__Data = Dictionary[StringName, Variant]({
+&"LocalPosition": Vector4(-42.6498, -4.9214, -6.82775, 0),
+&"LocalRotation": Vector4(0, 0.627574, 0, 0.778557),
+&"LocalScale": Vector4(1, 1, 1, 0),
+&"ParentJoint": "",
+&"v4": 0,
+&"v5": 0,
+&"v6": 0,
+&"v7": 0
+})
+
+[sub_resource type="Resource" id="Resource_dd2i4"]
+script = ExtResource("6_yvbsy")
+Game = 6
+Classname = "via.render.Mesh"
+__Data = Dictionary[StringName, Variant]({
+&"Material": null,
+&"Mesh": null,
+&"v0": 31,
+&"v1": 1,
+&"v10": 1,
+&"v11": 0,
+&"v12": 0,
+&"v13": 0,
+&"v14": 1,
+&"v15": 1,
+&"v16": 0,
+&"v17": 1,
+&"v18": 1,
+&"v19": 0,
+&"v20": 0,
+&"v21": 0,
+&"v22": 0,
+&"v23": 0,
+&"v24": 1,
+&"v25": 3,
+&"v26": 0,
+&"v27": 0,
+&"v28": 0,
+&"v29": [],
+&"v30": 0,
+&"v31": 0,
+&"v32": 0,
+&"v33": 0,
+&"v34": 10,
+&"v35": 0,
+&"v36": 1,
+&"v37": 0,
+&"v38": 0,
+&"v39": 0,
+&"v4": 1,
+&"v40": 0,
+&"v41": "00000000-0000-0000-0000-000000000000",
+&"v42": 0,
+&"v43": Vector2(0, 0),
+&"v44": 0,
+&"v45": 0,
+&"v46": 0,
+&"v47": Vector2(0, 0),
+&"v48": -1,
+&"v49": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+&"v5": 1.0,
+&"v50": 0,
+&"v51": 1,
+&"v52": 0,
+&"v53": 0,
+&"v54": 1,
+&"v55": [],
+&"v56": 0,
+&"v57": 0,
+&"v58": 0,
+&"v6": 0.25,
+&"v7": 0,
+&"v8": 1,
+&"v9": 1
+})
+
+[sub_resource type="Resource" id="Resource_r2x8m"]
+script = ExtResource("7_vmjyc")
+coord = Projection(1.00001, 0, 3.12924e-07, 0, 0, 1, 0, 0, -3.12924e-07, 0, 1.00001, 0, 0, 0.323975, 0, 1)
+extent = Vector3(0.5, 0.823975, 0.5)
+
+[sub_resource type="Resource" id="Resource_l2x1l"]
+resource_name = "BoxShape"
+script = ExtResource("3_o7igq")
+Game = 6
+Classname = "via.physics.BoxShape"
+__Data = Dictionary[StringName, Variant]({
+&"Box": SubResource("Resource_r2x8m"),
+&"v0": 0
+})
+
+[sub_resource type="Resource" id="Resource_0over"]
+resource_name = "FilterInfo"
+script = ExtResource("3_o7igq")
+Game = 6
+Classname = "via.physics.FilterInfo"
+__Data = Dictionary[StringName, Variant]({
+&"Group": 0,
+&"IgnoreSubGroup": 0,
+&"Layer": 0,
+&"MaskBits": 4294967295,
+&"SubGroup": 0
+})
+
+[sub_resource type="Resource" id="Resource_rgx10"]
+resource_name = "UserData"
+script = ExtResource("3_o7igq")
+Game = 6
+Classname = "via.physics.UserData"
+__Data = Dictionary[StringName, Variant]({})
+
+[sub_resource type="Resource" id="Resource_u8mr6"]
+resource_name = "Collider"
+script = ExtResource("3_o7igq")
+Game = 6
+Classname = "via.physics.Collider"
+__Data = Dictionary[StringName, Variant]({
+&"CollisionFilter": null,
+&"Shape": SubResource("Resource_l2x1l"),
+&"v0": 1,
+&"v1": 1,
+&"v3": SubResource("Resource_0over"),
+&"v4": SubResource("Resource_rgx10"),
+&"v6": null,
+&"v7": "",
+&"v8": ""
+})
+
+[sub_resource type="Resource" id="Resource_pehob"]
+script = ExtResource("8_oubqq")
+Game = 6
+Classname = "via.physics.Colliders"
+__Data = Dictionary[StringName, Variant]({
+&"Colliders": [SubResource("Resource_u8mr6")],
+&"v0": 1,
+&"v1": 1,
+&"v2": 1,
+&"v3": [],
+&"v4": 1
+})
+
+[node name="NewGameObject" type="Node"]
+script = ExtResource("1_0doi3")
+ResourceProperties = Dictionary[String, Dictionary]({
+".": Dictionary[String, String]({
+"via.physics.Colliders:Colliders.0/CollisionFilter": "Escape/Collision/Effect/EffectDefault.cfil",
+"via.render.Mesh:Material": "ObjectRoot/SetModel/sm2x_ArtifactLocation/sm26/sm26_013_oilCan01A/sm26_013_oilCan01A_00ms_Mat.mdf2",
+"via.render.Mesh:Mesh": "ObjectRoot/SetModel/sm2x_ArtifactLocation/sm26/sm26_013_oilCan01A/sm26_013_oilCan01A_00ms.mesh"
+})
+})
+
+[node name="NewGameObject" type="Node3D" parent="."]
+transform = Transform3D(0.212302, 0, 0.977204, 0, 1, 0, -0.977204, 0, 0.212302, -42.6498, -4.9214, -6.82775)
+script = ExtResource("2_c8rwb")
+Game = 6
+Uuid = "b68184e7-0704-4192-9496-3801c1040903"
+Prefab = "ObjectRoot/SetModel/sm2x_ArtifactLocation/sm26/sm26_013_oilCan01A/sm26_013_oilCan01A.pfb"
+OriginalName = "NewGameObject"
+Data = SubResource("Resource_r6jtj")
+Components = Array[ExtResource("4_k1w1a")]([SubResource("Resource_0a347"), SubResource("Resource_dd2i4"), SubResource("Resource_pehob")])

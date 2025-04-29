@@ -16,6 +16,8 @@ build/*
 /mhwilds/
 /re2rt/
 /re2/
+/re3/
+/re3rt/
 /re4/
 /asset_config*.tres
 /userdata

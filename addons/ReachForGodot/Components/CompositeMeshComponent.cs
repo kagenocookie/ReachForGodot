@@ -15,10 +15,14 @@ public partial class CompositeMeshComponent : REComponent, IVisualREComponent
     private static readonly REFieldAccessor InstanceGroups = new REFieldAccessor("InstanceGroups").NameOrConditions(f => f.FirstOrDefault(x => x.RszField.array));
 
     [REObjectFieldTarget("via.render.CompositeMeshInstanceGroup")]
-    private static readonly REFieldAccessor GroupMesh = new REFieldAccessor("Mesh").NameOrConditions(f => f.FirstOrDefault(x => x.RszField.type is RszFieldType.Resource));
+    private static readonly REFieldAccessor GroupMesh = new REFieldAccessor("Mesh").NameOrConditions(
+        f => f.FirstOrDefault(x => x.RszField.type is RszFieldType.Resource),
+        f => f.FirstOrDefault(x => x.RszField.type is RszFieldType.String));
 
     [REObjectFieldTarget("via.render.CompositeMeshInstanceGroup")]
-    private static readonly REFieldAccessor GroupMaterial = new REFieldAccessor("Material").NameOrConditions(f => f.Where(x => x.RszField.type is RszFieldType.Resource).Skip(1).FirstOrDefault());
+    private static readonly REFieldAccessor GroupMaterial = new REFieldAccessor("Material").NameOrConditions(
+        f => f.Where(x => x.RszField.type is RszFieldType.Resource).Skip(1).FirstOrDefault(),
+        f => f.Where(x => x.RszField.type is RszFieldType.Resource or RszFieldType.String).Skip(1).FirstOrDefault());
 
     /// <summary>
     /// via.render.CompositeMeshTransformController[]

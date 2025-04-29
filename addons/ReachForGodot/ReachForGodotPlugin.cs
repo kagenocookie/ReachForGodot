@@ -461,8 +461,8 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
                     FileUnpacker.TryExtractFilteredFiles($"\\.{extWithVersion}(?:\\.[^\\/]*)?$", config);
 
                     if (PathUtils.FindMissingFiles(extension, config).Any()) {
-                        Directory.CreateDirectory(ReachForGodot.GetUserdataPath(""));
-                        var missingFilelistPath = ReachForGodot.GetUserdataPath(config.Paths.ShortName + "_missing_files.list");
+                        Directory.CreateDirectory(ReachForGodot.GetUserdataBasePath(""));
+                        var missingFilelistPath = ReachForGodot.GetUserdataBasePath(config.Paths.ShortName + "_missing_files.list");
                         File.WriteAllLines(missingFilelistPath, PathUtils.FindMissingFiles(extension, config));
                         GD.PrintErr("List of missing files has been written to " + missingFilelistPath);
                     }
@@ -546,7 +546,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
                     var filepath = PathUtils.NormalizeSourceFolderPath((parts.Length >= 2 ? parts[1] : parts[0]));
                     return new LabelledPathSetting(filepath, label);
                 }).ToArray();
-            var paks = settings.GetSetting(PakFilepathSetting(game)).AsStringArray();
+            var paks = settings.GetSetting(PakFilepathSetting(game)).AsStringArray().Select(path => PathUtils.NormalizeFilePath(path)).ToArray();
 
             if (string.IsNullOrWhiteSpace(pathChunks)) {
                 ReachForGodot.SetPaths(game, null);

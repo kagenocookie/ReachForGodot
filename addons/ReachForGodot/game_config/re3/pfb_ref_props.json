@@ -1,0 +1,28 @@
+{
+  "offline.effect.script.FlashLightReflectionEffect": {
+    "TargetLight": {
+      "PropertyId": 393216,
+      "AutoDetected": true
+    }
+  },
+  "offline.gimmick.option.MovieSettings.Param": {
+    "MovieObject": {
+      "PropertyId": 196609,
+      "AutoDetected": true
+    }
+  },
+  "offline.effect.EsInventoryPartsBGSwitcher": {
+    "RenderTexBg": {
+      "PropertyId": 262144,
+      "AutoDetected": true
+    }
+  },
+  "offline.FlashLight": {
+    "IESLightRef": {
+      "PropertyId": 458760
+    },
+    "LightShaftRef": {
+      "PropertyId": 458761
+    }
+  }
+}

@@ -1,0 +1,179 @@
+[gd_scene load_steps=19 format=3 uid="uid://cqc8qnb6ufeoj"]
+
+[ext_resource type="Script" uid="uid://ct5prac1ag8hp" path="res://addons/ReachForGodot/Editor/ObjectTemplates/ObjectTemplateRoot.cs" id="1_og3uy"]
+[ext_resource type="Script" uid="uid://d1b3sogt8t06" path="res://addons/ReachForGodot/RszInterop/GameObjects/PrefabNode.cs" id="2_uej8d"]
+[ext_resource type="Script" uid="uid://c4kswq21tieab" path="res://addons/ReachForGodot/Resources/REObject.cs" id="3_jh3og"]
+[ext_resource type="Script" uid="uid://cboxk1wpeqrab" path="res://addons/ReachForGodot/RszInterop/GameObjects/REComponent.cs" id="4_xj34k"]
+[ext_resource type="Script" uid="uid://b5prf071ye431" path="res://addons/ReachForGodot/Components/RETransformComponent.cs" id="5_vhx1h"]
+[ext_resource type="Script" uid="uid://drdexacu7ucsc" path="res://addons/ReachForGodot/Components/REMeshComponent.cs" id="6_arvga"]
+[ext_resource type="Script" uid="uid://c55yvji6n5y7k" path="res://addons/ReachForGodot/RszInterop/RszStructs/OrientedBoundingBox.cs" id="7_6ige3"]
+[ext_resource type="Resource" uid="uid://dx2kv5yanl5kb" path="res://re3/Escape/Collision/Effect/EffectDefault.cfil.tres" id="7_x5d6i"]
+[ext_resource type="Script" uid="uid://djo55wbalxc40" path="res://addons/ReachForGodot/Components/PhysicsCollidersComponent.cs" id="8_crrvn"]
+
+[sub_resource type="Resource" id="Resource_7h6pr"]
+resource_name = "GameObject"
+script = ExtResource("3_jh3og")
+Game = 5
+Classname = "via.GameObject"
+__Data = Dictionary[StringName, Variant]({
+&"DrawSelf": 1,
+&"Name": "NewGameObject",
+&"Tag": "",
+&"Timescale": -1.0,
+&"UpdateSelf": 1
+})
+
+[sub_resource type="Resource" id="Resource_ux7qf"]
+script = ExtResource("5_vhx1h")
+Game = 5
+Classname = "via.Transform"
+__Data = Dictionary[StringName, Variant]({
+&"AbsoluteScaling": 0,
+&"LocalPosition": Vector4(0, 0, 0, 0),
+&"LocalRotation": Vector4(0, 0, 0, 1),
+&"LocalScale": Vector4(0.999999, 0.999999, 0.999999, 0),
+&"ParentJoint": "",
+&"SameJointsConstraint": 0
+})
+
+[sub_resource type="Resource" id="Resource_wv1yu"]
+script = ExtResource("6_arvga")
+Game = 5
+Classname = "via.render.Mesh"
+__Data = Dictionary[StringName, Variant]({
+&"Material": null,
+&"Mesh": null,
+&"isEnabled": 1,
+&"v0": 1,
+&"v10": 1,
+&"v11": 0,
+&"v12": 0,
+&"v13": 0,
+&"v14": 0,
+&"v15": 0,
+&"v16": 0,
+&"v17": 0,
+&"v18": 1,
+&"v19": 0,
+&"v2": 0,
+&"v20": 0,
+&"v23": 3,
+&"v24": 10,
+&"v25": 0,
+&"v26": 0,
+&"v27": "00000000-0000-0000-0000-000000000000",
+&"v28": 0,
+&"v29": Vector2(0, 0),
+&"v3": 0,
+&"v30": 0,
+&"v31": 0,
+&"v32": 0,
+&"v33": Vector2(0, 0),
+&"v34": 0,
+&"v35": 0,
+&"v36": 0,
+&"v37": 0,
+&"v38": 0,
+&"v39": 0,
+&"v4": 0,
+&"v40": 0,
+&"v41": [],
+&"v42": 0,
+&"v43": 0,
+&"v44": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+&"v45": 1,
+&"v46": 0,
+&"v5": 1,
+&"v6": 1,
+&"v7": 1,
+&"v8": 0,
+&"v9": 1
+})
+
+[sub_resource type="Resource" id="Resource_yhfix"]
+resource_local_to_scene = true
+script = ExtResource("7_6ige3")
+coord = Projection(1, 0, 3.12924e-07, 0, 9.31323e-09, 1, 6.89179e-08, 0, -3.12924e-07, 5.81611e-07, 1, 0, 0.000915527, 0.485059, 0.0102692, 1)
+extent = Vector3(0.301578, 0.486059, 0.274905)
+
+[sub_resource type="Resource" id="Resource_7mud3"]
+resource_name = "BoxShape"
+script = ExtResource("3_jh3og")
+Game = 5
+Classname = "via.physics.BoxShape"
+__Data = Dictionary[StringName, Variant]({
+&"Box": SubResource("Resource_yhfix"),
+&"v0": 0
+})
+
+[sub_resource type="Resource" id="Resource_qkk5i"]
+resource_local_to_scene = true
+resource_name = "FilterInfo"
+script = ExtResource("3_jh3og")
+Game = 5
+Classname = "via.physics.FilterInfo"
+__Data = Dictionary[StringName, Variant]({
+&"Group": 0,
+&"IgnoreSubGroup": 0,
+&"Layer": 0,
+&"MaskBits": 4294967295,
+&"SubGroup": 0
+})
+
+[sub_resource type="Resource" id="Resource_gvhpg"]
+resource_local_to_scene = true
+resource_name = "UserData"
+script = ExtResource("3_jh3og")
+Game = 5
+Classname = "via.physics.UserData"
+__Data = Dictionary[StringName, Variant]({})
+
+[sub_resource type="Resource" id="Resource_p4yco"]
+resource_name = "Collider"
+script = ExtResource("3_jh3og")
+Game = 5
+Classname = "via.physics.Collider"
+__Data = Dictionary[StringName, Variant]({
+&"CollisionFilter": ExtResource("7_x5d6i"),
+&"Shape": SubResource("Resource_7mud3"),
+&"v0": 1,
+&"v1": 1,
+&"v3": SubResource("Resource_qkk5i"),
+&"v4": SubResource("Resource_gvhpg"),
+&"v6": null,
+&"v7": "",
+&"v8": ""
+})
+
+[sub_resource type="Resource" id="Resource_b6fc8"]
+script = ExtResource("8_crrvn")
+Game = 5
+Classname = "via.physics.Colliders"
+__Data = Dictionary[StringName, Variant]({
+&"Colliders": [SubResource("Resource_p4yco")],
+&"v0": 1,
+&"v1": 1,
+&"v2": 1,
+&"v3": [],
+&"v4": 1
+})
+
+[node name="NewGameObject" type="Node"]
+script = ExtResource("1_og3uy")
+ResourceProperties = Dictionary[String, Dictionary]({
+".": Dictionary[String, String]({
+"via.physics.Colliders:Colliders.0/CollisionFilter": "Escape/Collision/Effect/EffectDefault.cfil",
+"via.render.Mesh:Material": "ObjectRoot/SetModel/sm3x_ArtifactProps/sm30/sm30_083_GarbageCart01A/sm30_083_GarbageCart01A_00ms_Mat.mdf2",
+"via.render.Mesh:Mesh": "ObjectRoot/SetModel/sm3x_ArtifactProps/sm30/sm30_083_GarbageCart01A/sm30_083_GarbageCart01A_00ms.mesh"
+})
+})
+
+[node name="NewGameObject" type="Node3D" parent="."]
+transform = Transform3D(0.999999, 0, 0, 0, 0.999999, 0, 0, 0, 0.999999, 0, 0, 0)
+script = ExtResource("2_uej8d")
+Game = 5
+Uuid = "ddc6b10c-704d-470a-8f9e-1d87af9e28ae"
+Prefab = "ObjectRoot/SetModel/sm3x_ArtifactProps/sm30/sm30_083_GarbageCart01A/sm30_083_GarbageCart01A.pfb"
+OriginalName = "NewGameObject"
+Data = SubResource("Resource_7h6pr")
+Components = Array[ExtResource("4_xj34k")]([SubResource("Resource_ux7qf"), SubResource("Resource_wv1yu"), SubResource("Resource_b6fc8")])

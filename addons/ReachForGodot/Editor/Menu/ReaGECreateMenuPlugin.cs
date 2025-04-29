@@ -11,7 +11,7 @@ public partial class ReaGECreateMenuPlugin : EditorContextMenuPlugin
 
     public override void _PopupMenu(string[] paths)
     {
-        if (paths.Length != 1 || paths[0].StartsWith(ReachForGodot.GetUserdataPath(string.Empty))) return;
+        if (paths.Length != 1 || paths[0].StartsWith(ReachForGodot.GetUserdataBasePath(string.Empty))) return;
         var config = PathUtils.GuessAssetConfigFromImportPath(paths[0]);
         ShowTemplateOptions(paths[0], config?.Game ?? SupportedGame.Unknown);
     }

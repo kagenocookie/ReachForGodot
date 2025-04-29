@@ -24,7 +24,7 @@ public sealed class ResourceFieldFinder : IDisposable
                 sb.Append("ext:").Append(ext).Append(" class:").Append(cls).Append(" field:").Append(field).Append(" resourceList:").Append(inList).AppendLine();
             }
             var outFile = suffix == null ? game.ToString() + "_resource_fields.txt" : game.ToString() + "_resource_fields" + suffix + ".txt";
-            File.WriteAllText(ProjectSettings.GlobalizePath(ReachForGodot.GetUserdataPath(outFile)), sb.ToString());
+            File.WriteAllText(ProjectSettings.GlobalizePath(ReachForGodot.GetUserdataBasePath(outFile)), sb.ToString());
         }
     }
 
@@ -114,7 +114,6 @@ public static class GameObjectRefResolver
                 continue;
             }
 
-            var propInfo = propInfoDict?.GetValueOrDefault(src.RszClass.name);
             var refValues = pfb.GameObjectRefInfoList.Where(rf =>
                 rf.Data.objectId == src.ObjectTableIndex &&
                 (rf.Data.arrayIndex == 0 || 1 == pfb.GameObjectRefInfoList.Count(rf2 => rf2.Data.objectId == src.ObjectTableIndex))
@@ -131,7 +130,7 @@ public static class GameObjectRefResolver
                 }
                 TypeCache.UpdatePfbGameObjectRefCache(game, src.RszClass.name, propInfoDict);
             } else {
-                GD.PrintErr($"Failed to resolve GameObjectRef properties in class {src.RszClass.name}.");
+                GD.PrintErr($"Failed to resolve all GameObjectRef properties in class {src.RszClass.name}, file: {pfb.FileHandler.FilePath}.");
             }
         }
     }

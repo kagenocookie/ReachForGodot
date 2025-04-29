@@ -18,7 +18,7 @@ public static class ObjectTemplateManager
         => GamePaths.GetGameConfigPath(game, TemplateSubfolder(type));
 
     public static string GetUserTemplateFolder(ObjectTemplateType type, SupportedGame game)
-        => ReachForGodot.GetUserdataPath(TemplateSubfolder(type));
+        => ReachForGodot.GetUserdataPath(TemplateSubfolder(type), game);
 
     public static string[] GetAvailableTemplates(ObjectTemplateType type, SupportedGame game)
     {
@@ -40,23 +40,22 @@ public static class ObjectTemplateManager
 
     public static GameObject? InstantiateGameobject(string chosenTemplate, Node? parent, Node? owner)
     {
-        var source = ResourceLoader.Load<PackedScene>(chosenTemplate).Instantiate<Node>(PackedScene.GenEditState.Instance);
+        var source = ResourceLoader.Load<PackedScene>(chosenTemplate).Instantiate<Node>(PackedScene.GenEditState.Disabled);
         GameObject? clone = null;
         if (source is GameObject go) {
             clone = go.Clone();
             parent?.AddUniqueNamedChild(clone);
         } else if (source is ObjectTemplateRoot template) {
-            clone = template.GetTarget<GameObject>();
-            template.RemoveChild(clone);
+            clone = template.GetTarget<GameObject>().Clone();
             clone.Owner = null;
             parent?.AddUniqueNamedChild(clone);
             template.ApplyProperties(clone);
             template.QueueFree();
         }
         if (clone == null) {
-                GD.PrintErr("Invalid game object template - must be a GameObject: " + chosenTemplate);
-                return null;
-            }
+            GD.PrintErr("Invalid game object template - must be a GameObject: " + chosenTemplate);
+            return null;
+        }
 
         if (owner != null) {
             clone.SetRecursiveOwner(owner, clone);
@@ -72,7 +71,7 @@ public static class ObjectTemplateManager
             return null;
         }
 
-        var newComponent = template.Component?.Duplicate() as REComponent;
+        var newComponent = template.Component?.DeepClone() as REComponent;
         if (newComponent == null) {
             GD.PrintErr("Component template is empty: " + chosenTemplate);
             return null;

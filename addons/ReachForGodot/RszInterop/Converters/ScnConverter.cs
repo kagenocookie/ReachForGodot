@@ -155,15 +155,6 @@ public class ScnConverter : SceneRszAssetConverter<SceneResource, ScnFile, Scene
         file.GameObjects.Add(new RszTool.Scn.ScnGameObject() {
             Info = info,
         });
-        // file.GameObjectInfoList.Add(new StructModel<RszTool.Scn.ScnGameObject>() {
-        //     Data = new RszTool.Scn.ScnGameObject() {
-        //         objectId = objectId,
-        //         parentId = parentId,
-        //         componentCount = (short)gameObject.Components.Count,
-        //         guid = gameObject.ObjectGuid,
-        //         prefabId = pfbIndex,
-        //     }
-        // });
     }
 
     public override async Task<bool> Import(ScnFile file, SceneFolder target)

@@ -1,0 +1,83 @@
+[gd_scene load_steps=11 format=3 uid="uid://w60g2rb7l2f5"]
+
+[ext_resource type="Script" uid="uid://dnr6p6wk1ckry" path="res://addons/ReachForGodot/Editor/ObjectTemplates/ComponentTemplate.cs" id="1_jsju1"]
+[ext_resource type="Script" uid="uid://c4kswq21tieab" path="res://addons/ReachForGodot/Resources/REObject.cs" id="2_qq6x0"]
+[ext_resource type="Script" uid="uid://c55yvji6n5y7k" path="res://addons/ReachForGodot/RszInterop/RszStructs/OrientedBoundingBox.cs" id="2_sejp7"]
+[ext_resource type="Script" uid="uid://djo55wbalxc40" path="res://addons/ReachForGodot/Components/PhysicsCollidersComponent.cs" id="3_sejp7"]
+
+[sub_resource type="Resource" id="Resource_yhi7m"]
+resource_local_to_scene = true
+script = ExtResource("2_sejp7")
+coord = Projection(1, 0, 3.12924e-07, 0, 9.31323e-09, 1, 6.89179e-08, 0, -3.12924e-07, 5.81611e-07, 1, 0, 0.000915527, 0.485059, 0.0102692, 1)
+extent = Vector3(0.301578, 0.486059, 0.274905)
+
+[sub_resource type="Resource" id="Resource_c6w75"]
+resource_name = "BoxShape"
+script = ExtResource("2_qq6x0")
+Game = 5
+Classname = "via.physics.BoxShape"
+__Data = Dictionary[StringName, Variant]({
+&"Box": SubResource("Resource_yhi7m"),
+&"v0": 0
+})
+
+[sub_resource type="Resource" id="Resource_qkk5i"]
+resource_local_to_scene = true
+resource_name = "FilterInfo"
+script = ExtResource("2_qq6x0")
+Game = 5
+Classname = "via.physics.FilterInfo"
+__Data = Dictionary[StringName, Variant]({
+&"Group": 0,
+&"IgnoreSubGroup": 0,
+&"Layer": 0,
+&"MaskBits": 4294967295,
+&"SubGroup": 0
+})
+
+[sub_resource type="Resource" id="Resource_gvhpg"]
+resource_local_to_scene = true
+resource_name = "UserData"
+script = ExtResource("2_qq6x0")
+Game = 5
+Classname = "via.physics.UserData"
+__Data = Dictionary[StringName, Variant]({})
+
+[sub_resource type="Resource" id="Resource_fhtpr"]
+resource_name = "Collider"
+script = ExtResource("2_qq6x0")
+Game = 5
+Classname = "via.physics.Collider"
+__Data = Dictionary[StringName, Variant]({
+&"CollisionFilter": null,
+&"Shape": SubResource("Resource_c6w75"),
+&"v0": 1,
+&"v1": 1,
+&"v3": SubResource("Resource_qkk5i"),
+&"v4": SubResource("Resource_gvhpg"),
+&"v6": null,
+&"v7": "",
+&"v8": ""
+})
+
+[sub_resource type="Resource" id="Resource_wmi84"]
+script = ExtResource("3_sejp7")
+Game = 5
+Classname = "via.physics.Colliders"
+__Data = Dictionary[StringName, Variant]({
+&"Colliders": [SubResource("Resource_fhtpr")],
+&"v0": 1,
+&"v1": 1,
+&"v2": 1,
+&"v3": [],
+&"v4": 1
+})
+
+[node name="sm30_083_GarbageCart01A_NSC_Colliders" type="Node"]
+script = ExtResource("1_jsju1")
+Component = SubResource("Resource_wmi84")
+ResourceProperties = Dictionary[String, Dictionary]({
+".": Dictionary[String, String]({
+"Colliders.0/CollisionFilter": "Escape/Collision/Effect/EffectDefault.cfil"
+})
+})

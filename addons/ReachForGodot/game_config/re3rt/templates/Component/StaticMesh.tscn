@@ -1,0 +1,80 @@
+[gd_scene load_steps=4 format=3 uid="uid://dx6qt70dxue2r"]
+
+[ext_resource type="Script" uid="uid://dnr6p6wk1ckry" path="res://addons/ReachForGodot/Editor/ObjectTemplates/ComponentTemplate.cs" id="1_s06li"]
+[ext_resource type="Script" uid="uid://drdexacu7ucsc" path="res://addons/ReachForGodot/Components/REMeshComponent.cs" id="2_kkvts"]
+
+[sub_resource type="Resource" id="Resource_mug88"]
+script = ExtResource("2_kkvts")
+Game = 6
+Classname = "via.render.Mesh"
+__Data = Dictionary[StringName, Variant]({
+&"Material": null,
+&"Mesh": null,
+&"v0": 31,
+&"v1": 1,
+&"v10": 1,
+&"v11": 0,
+&"v12": 0,
+&"v13": 0,
+&"v14": 1,
+&"v15": 1,
+&"v16": 0,
+&"v17": 1,
+&"v18": 1,
+&"v19": 0,
+&"v20": 0,
+&"v21": 0,
+&"v22": 0,
+&"v23": 0,
+&"v24": 1,
+&"v25": 3,
+&"v26": 0,
+&"v27": 0,
+&"v28": 0,
+&"v29": [],
+&"v30": 0,
+&"v31": 0,
+&"v32": 0,
+&"v33": 0,
+&"v34": 10,
+&"v35": 0,
+&"v36": 1,
+&"v37": 0,
+&"v38": 0,
+&"v39": 0,
+&"v4": 1,
+&"v40": 0,
+&"v41": "00000000-0000-0000-0000-000000000000",
+&"v42": 0,
+&"v43": Vector2(0, 0),
+&"v44": 0,
+&"v45": 0,
+&"v46": 0,
+&"v47": Vector2(0, 0),
+&"v48": -1,
+&"v49": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+&"v5": 1.0,
+&"v50": 0,
+&"v51": 1,
+&"v52": 0,
+&"v53": 0,
+&"v54": 1,
+&"v55": [],
+&"v56": 0,
+&"v57": 0,
+&"v58": 0,
+&"v6": 0.25,
+&"v7": 0,
+&"v8": 1,
+&"v9": 1
+})
+
+[node name="sm26_013_oilCan01A_Mesh" type="Node"]
+script = ExtResource("1_s06li")
+Component = SubResource("Resource_mug88")
+ResourceProperties = Dictionary[String, Dictionary]({
+".": Dictionary[String, String]({
+"Material": "ObjectRoot/SetModel/sm2x_ArtifactLocation/sm26/sm26_013_oilCan01A/sm26_013_oilCan01A_00ms_Mat.mdf2",
+"Mesh": "ObjectRoot/SetModel/sm2x_ArtifactLocation/sm26/sm26_013_oilCan01A/sm26_013_oilCan01A_00ms.mesh"
+})
+})
