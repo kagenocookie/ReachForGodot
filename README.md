@@ -49,8 +49,9 @@ Should work for any RE engine game, but I can only test what I own
 https://github.com/user-attachments/assets/4ac201b6-41ae-46c4-9772-13dbcc10242a
 </details>
 
-- Create a fresh godot project anywhere
-- Clone or download the `addons/ReachForGodot` folder into it (the file should stay in the same relative folder; the other files in this project are not needed)
+- Create a fresh Godot project anywhere
+- Download the latest release
+- Extract the `addons` folder into the Godot project (you should end up with a `<project folder>/addons/ReachForGodot` folder)
 - Next, you need to Build the project with the hammer icon in the top right; if it's not available, go under menu: Project > Tools > C# > Create C# solution
     - you will need to modify the default .csproj file for it to compile, adding the following entries (or copying the [csproj file contents from here](https://github.com/kagenocookie/ReachForGodot/tree/master/.gdignore/docs/example.csproj)):
         ```xml
@@ -71,6 +72,13 @@ https://github.com/user-attachments/assets/4ac201b6-41ae-46c4-9772-13dbcc10242a
     - **File list** and **il2cpp Dump file** are needed for new games that don't have cached data in the repository yet or when there's game updates
     - **File list**, **File Unpacker Executable** and **Pak list** and are needed if you don't have all the assets already extracted and would like them to get auto extracted as needed.
     - Detailed information regarding every available setting is available [here](https://github.com/kagenocookie/ReachForGodot/wiki/Addon-editor-settings)
+
+### Development setup
+Mainly for developing or debugging the addon itself, but feel free to use the raw repository data if you prefer that.
+- Clone or download as ZIP
+- `git submodule init`
+- `git submodule update`
+- Open the project and setup editor settings as described in the normal setup section
 
 ## Usage
 Start by going into the top menu: Project > Tools > RE ENGINE > Import assets and pick a file. Something like the appdata/contents.scn.20 (DD2) might be a good start since it's basically the root scene for the world. Once you have a scene file imported, you can import any further child scenes and referenced resources from the inspector there.
