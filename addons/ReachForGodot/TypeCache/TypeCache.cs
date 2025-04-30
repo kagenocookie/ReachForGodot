@@ -496,6 +496,7 @@ public static partial class TypeCache
             case RszFieldType.U16:
             case RszFieldType.U32:
             case RszFieldType.U64:
+            case RszFieldType.Enum:
                 refield.VariantType = Variant.Type.Int;
                 // TODO original type? display type?
                 if (!string.IsNullOrEmpty(srcField.original_type)) {

@@ -25,7 +25,7 @@ public partial class MaterialPropertyList : Resource
     public void SetParam(int index, Variant value, string name)
     {
         if (Names == null || index >= Names.Length) return;
-        ValueCounts![index] = value.VariantType == Variant.Type.Int ? 1 : 4;
+        ValueCounts![index] = value.VariantType is Variant.Type.Int or Variant.Type.Float ? 1 : 4;
         Names![index] = name;
         Values ??= new();
         while (Values.Count <= index) {

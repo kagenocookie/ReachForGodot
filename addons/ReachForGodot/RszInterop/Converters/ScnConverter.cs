@@ -77,7 +77,7 @@ public class ScnConverter : SceneRszAssetConverter<SceneResource, ScnFile, Scene
         var instanceId = file.RSZ.InstanceInfoList.Count;
         var folderInstance = new RszInstance(folderCls, instanceId);
 
-        file.RSZ.InstanceInfoList.Add(new InstanceInfo() { typeId = folderCls.typeId, CRC = folderCls.crc, ClassName = "via.Folder" });
+        file.RSZ.InstanceInfoList.Add(new InstanceInfo(Convert.FileOption.Version) { typeId = folderCls.typeId, CRC = folderCls.crc, ClassName = "via.Folder" });
         file.RSZ.InstanceList.Add(folderInstance);
         file.RSZ.AddToObjectTable(folderInstance);
 

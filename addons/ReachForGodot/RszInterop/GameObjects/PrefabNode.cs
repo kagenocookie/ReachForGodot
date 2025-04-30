@@ -1,7 +1,7 @@
 namespace ReaGE;
 using Godot;
 
-[GlobalClass, Tool, Icon("res://addons/ReachForGodot/icons/prefab.png"), ResourceHolder("pfb", SupportedFileFormats.Prefab)]
+[GlobalClass, Tool, Icon("res://addons/ReachForGodot/icons/prefab.png")]
 public partial class PrefabNode : GameObject, IRszContainer, IImportableAsset
 {
     [Export] public AssetReference? Asset { get; set; }

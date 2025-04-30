@@ -35,6 +35,7 @@ public partial class RequestSetCollisionGroup : AnimatableBody3D
         group.Info.guid = Guid;
         group.Info.Name = Name;
         group.Info.MaskBits = CollisionMask;
+        group.Info.LayerIndex = Mathf.RoundToInt(Mathf.Log(CollisionLayer) / Mathf.Log(2));
         group.Info.MaskGuids = MaskGuids?.Select(c => Guid.Parse(c)).ToList() ?? new();
         group.Info.LayerGuid = LayerGuid;
         return group;

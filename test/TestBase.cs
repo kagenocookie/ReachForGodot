@@ -87,17 +87,17 @@ public abstract partial class TestBase : TestClass
         string extension,
         Func<SupportedGame, RszFileOption, string, Task> action,
         Dictionary<SupportedGame, int>? expectedFails = null,
-        params SupportedGame[] skipGames)
+        params SupportedGame[] whitelistGames)
     {
         var sw = new Stopwatch();
         sw.Start();
         var configured = 0;
         var unconfigured = 0;
         var fails = new Dictionary<SupportedGame, int>();
-        var gamelist = ReachForGodot.GameList.Except(skipGames);
+        var gamelist = whitelistGames.Length != 0 ? whitelistGames : ReachForGodot.GameList;
         foreach (var game in gamelist) {
-            // game doesn't use the requested file extension
             if (!PathUtils.TryGetFileExtensionVersion(game, extension, out _)) {
+                // game doesn't use the requested file extension
                 continue;
             }
 

@@ -237,7 +237,7 @@ public static class ReaGETools
                     for (var i = 0; i < values.Length; i++) {
                         var val = values[i];
                         if (components.Contains(val.RszClass.name)) {
-                            GD.PrintErr($"Found direct reference to component - this is almost definitely wrong! Object {instance} field {fieldIndex} {field.name} referenced a {val.RszClass.name}");
+                            GD.PrintErr($"Found direct reference to component - this is almost definitely wrong! Object {instance} field {fieldIndex} {field.name} referenced {val}");
                             GD.PrintErr($"Filepath: {filepath}");
                             GD.PrintErr($"Adding to the {instance.RszClass.name} patch list: {{ \"Name\": \"{field.name}\", \"Type\": \"S32\" }}");
                             field.type = RszFieldType.S32;
@@ -268,7 +268,7 @@ public static class ReaGETools
         public uint typeId;
         public uint CRC;
 
-        public InstanceInfo GetInstanceInfo() => new InstanceInfo() { typeId = typeId, CRC = CRC };
+        public InstanceInfo GetInstanceInfo() => new InstanceInfo(GameVersion.unknown) { typeId = typeId, CRC = CRC };
     }
 
     public static IEnumerable<InstanceInfoStruct>? GetRSZInstanceInfos(string filepath)
@@ -281,9 +281,9 @@ public static class ReaGETools
             yield break;
         }
 
-        var header = new RSZFile.HeaderStruct();
+        var header = new RSZFile.RszHeader();
         handler.Seek(rszOffset);
-        handler.Read(ref header);
+        header.Read(handler);
         handler.Seek(rszOffset + header.instanceOffset);
         for (int i = 0; i < header.instanceCount; i++)
         {

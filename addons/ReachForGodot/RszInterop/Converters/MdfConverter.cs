@@ -18,7 +18,7 @@ public class MdfConverter : RszAssetConverter<MaterialDefinitionResource, MdfFil
         int m = 0;
         foreach (var matData in file.MatDatas) {
             var flags1 = (matData.Header.alphaFlags & 0x03ff);
-            var tess = (int)(((matData.Header.alphaFlags & 0xfc00) >> 10) & 0xf3);
+            var tess = (int)(((matData.Header.alphaFlags & 0xfc00) >> 10) & 0x3f);
             var phong = (int)(((matData.Header.alphaFlags & 0x00ff0000) >> 16) & 0xff);
             var flags2 = ((matData.Header.alphaFlags & 0xff000000) >> 24) & 0xff;
             var mat = new MaterialResource() {
@@ -47,7 +47,7 @@ public class MdfConverter : RszAssetConverter<MaterialDefinitionResource, MdfFil
             for (int i = 0; i < matData.Header.paramCount; ++i) {
                 var param = matData.ParamHeaders[i];
                 Variant value = param.componentCount switch {
-                    1 => (int)param.parameter.X,
+                    1 => param.parameter.X,
                     4 => new Color(param.parameter.X, param.parameter.Y, param.parameter.Z, param.parameter.W),
                     _ => throw new ArgumentException($"Unexpected MDF2 param [{i}] '{param.paramName}' size " + param.Size),
                 };
@@ -86,7 +86,7 @@ public class MdfConverter : RszAssetConverter<MaterialDefinitionResource, MdfFil
                 texCount = mat.Textures?.Count ?? 0,
                 alphaFlags = (
                     (uint)mat.AlphaFlags +
-                    (uint)((mat.TesselationFactor & 0xf3) << 10) +
+                    (uint)((mat.TesselationFactor & 0x3f) << 10) +
                     (uint)((mat.PhongFactor & 0xff) << 16) +
                     (uint)(((uint)mat.AlphaFlags2 & 0xff) << 24)
                 ),

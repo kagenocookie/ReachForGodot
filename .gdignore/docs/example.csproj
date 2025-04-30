@@ -6,4 +6,10 @@
     <Nullable>enable</Nullable>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="RszTool">
+      <HintPath>$(ProjectDir)/addons/ReachForGodot/Plugins/RszTool.dll</HintPath>
+    </Reference>
+  </ItemGroup>
 </Project>

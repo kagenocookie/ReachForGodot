@@ -127,6 +127,7 @@ public static class RszTypeConverter
             case RszFieldType.S32:
             case RszFieldType.U8:
             case RszFieldType.U16:
+            case RszFieldType.Enum:
                 return Convert.ToInt32(value, CultureInfo.InvariantCulture);
             case RszFieldType.U32:
                 return Convert.ToUInt32(value, CultureInfo.InvariantCulture);
@@ -229,7 +230,7 @@ public static class RszTypeConverter
             return valueType switch {
                 RszFieldType.S16 => ConvertArray(variant.AsGodotArray<uint>(), static v => v),
                 RszFieldType.U16 => ConvertArray(variant.AsGodotArray<uint>(), static v => v),
-                RszFieldType.S32 => ConvertArray(variant.AsInt32Array()),
+                RszFieldType.S32 or RszFieldType.Enum => ConvertArray(variant.AsInt32Array()),
                 RszFieldType.U32 => ConvertArray(variant.AsGodotArray<uint>(), static v => v),
                 RszFieldType.S64 => ConvertArray(variant.AsInt64Array()),
                 RszFieldType.U64 => ConvertArray(variant.AsGodotArray<uint>(), static v => v),
@@ -347,6 +348,7 @@ public static class RszTypeConverter
             RszFieldType.Sfix4 => variant.AsVector4I().ToSfix(),
             RszFieldType.String => variant.AsString(),
             RszFieldType.RuntimeType => variant.AsString(),
+            RszFieldType.Enum => variant.AsInt32(),
             _ => throw new Exception("No defined conversion to RSZ type " + valueType),
         };
     }

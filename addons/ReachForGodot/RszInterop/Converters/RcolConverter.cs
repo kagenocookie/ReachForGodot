@@ -131,7 +131,7 @@ public class RcolConverter : SceneRszAssetConverter<RcolResource, RcolFile, Rcol
 
         if (!RebuildRcol(file, source)) return Task.FromResult(false);
 
-        return Task.FromResult(PostExport(file.Save(), file.FileHandler.FilePath!));
+        return Task.FromResult(true);
     }
 
     public bool RebuildRcol(RcolFile file, RcolRootNode rcolRoot)

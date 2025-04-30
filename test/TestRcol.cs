@@ -55,7 +55,7 @@ public partial class TestRcol : TestBase
                     a.Info.guid.ShouldBe(b.Info.guid);
                     a.Info.LayerGuid.ShouldBe(b.Info.LayerGuid);
                     a.Info.MaskBits.ShouldBe(b.Info.MaskBits);
-                    a.Info.MaskGuids.ShouldBe(b.Info.MaskGuids);
+                    if (file.FileHandler.FileVersion > 2) a.Info.MaskGuids.ShouldBe(b.Info.MaskGuids);
                     a.Info.LayerIndex.ShouldBe(b.Info.LayerIndex);
                     a.Info.NumExtraShapes.ShouldBe(b.Info.NumExtraShapes);
 

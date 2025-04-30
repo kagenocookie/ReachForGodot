@@ -27,6 +27,7 @@
       $(DefaultItemExcludes);
       addons/ReachForGodot/RszTool/RszTool.App/**/*;
       addons/ReachForGodot/RszTool/RszTool.Test/**/*;
+      addons/ReachForGodot/RszTool/RszTool.Generators/**/*;
       addons/ReachForGodot/RszTool/RszTool/obj/**/*;
     </DefaultItemExcludes>
     <DefaultItemExcludes Condition="'$(Configuration)' == 'ExportRelease'">
@@ -51,5 +52,11 @@
   <ItemGroup>
     <!-- Production dependencies go here! -->
     <PackageReference Include="GodotSharp.SourceGenerators" Version="2.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="./addons/ReachForGodot/RszTool/RszTool.Generators/RszTool.Generators.csproj"
+                      OutputItemType="Analyzer"
+                      ReferenceOutputAssembly="false" />
   </ItemGroup>
 </Project>

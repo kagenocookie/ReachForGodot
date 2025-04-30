@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using Godot;
@@ -13,6 +14,7 @@ public static partial class PathUtils
 
     private static readonly List<FormatDescriptor> formats = new();
     private static readonly Dictionary<SupportedFileFormats, FormatDescriptor> formatToDescriptor = new();
+    private static readonly Dictionary<int, FormatDescriptor> extensionToDescriptor = new();
     private static readonly Dictionary<SupportedGame, HashSet<string>> ignoredFilepaths = new();
 
     private static readonly Dictionary<SupportedFileFormats, Func<REResource>> resourceFactory = new();
@@ -22,6 +24,12 @@ public static partial class PathUtils
 
         formats.Add(desc);
         formatToDescriptor[format] = desc;
+        extensionToDescriptor.Add(GetSpanHash(extension), desc);
+    }
+
+    private static int GetSpanHash(ReadOnlySpan<char> span)
+    {
+        return CultureInfo.InvariantCulture.CompareInfo.GetHashCode(span, CompareOptions.Ordinal);
     }
 
     public static REFileFormat GetFileFormat(ReadOnlySpan<char> filename)
@@ -113,10 +121,7 @@ public static partial class PathUtils
 
     public static SupportedFileFormats GetFileFormatFromExtension(ReadOnlySpan<char> extension)
     {
-        foreach (var desc in formats) {
-            if (extension.SequenceEqual(desc.extension)) return desc.format;
-        }
-        return SupportedFileFormats.Unknown;
+        return extensionToDescriptor.GetValueOrDefault(GetSpanHash(extension))?.format ?? SupportedFileFormats.Unknown;
     }
 
     public static string? GetFileExtensionFromFormat(SupportedFileFormats format) => formatToDescriptor.GetValueOrDefault(format)?.extension;

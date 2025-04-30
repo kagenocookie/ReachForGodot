@@ -1,11 +1,6 @@
 name: Package mod
 
-on:
-  push:
-    branches: [ "master" ]
-    tags:
-      - v0.*
-      - v1.*
+on: push
 
 jobs:
   release:
@@ -20,13 +15,25 @@ jobs:
         persist-credentials: false
         lfs: true
 
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+    - name: Restore RszTool dependencies
+      run: |
+        cd addons/ReachForGodot/RszTool/RszTool
+        dotnet restore -p:TargetFramework=net8.0
+    - name: Build RszTool
+      run: |
+        cd addons/ReachForGodot/RszTool/RszTool
+        dotnet publish --no-restore -f net8.0 -c Release -o _out
+        mv _out/RszTool.dll ../../Plugins
+
     - name: Prepare files
       run: |
-       rm addons/ReachForGodot/RszTool/RszTool.* -r
-       rm addons/ReachForGodot/RszTool/Docs -r
-       rm addons/ReachForGodot/RszTool/.git -force
-       mkdir output
-       mv addons output/
+        rm addons/ReachForGodot/RszTool/ -r -force
+        mkdir output
+        mv addons output/
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v4.4.3

@@ -217,7 +217,7 @@ public abstract class RszAssetConverter<TResource, TFile, TAsset> : RszToolConve
         // instance = new RszInstance(rszClass, rsz.InstanceInfoList.Count, userdataInfo, []);
         instance = new RszInstance(rszClass, userdataInfo.InstanceId, userdataInfo, []);
         instance.Index = rsz.InstanceList.Count;
-        rsz.InstanceInfoList.Add(new InstanceInfo() { ClassName = rszClass.name, CRC = rszClass.crc, typeId = rszClass.typeId });
+        rsz.InstanceInfoList.Add(new InstanceInfo(fileOption.Version) { ClassName = rszClass.name, CRC = rszClass.crc, typeId = rszClass.typeId });
         rsz.InstanceList.Add(instance);
         exportedInstances[userdata.Data] = instance;
         return instance;
@@ -357,7 +357,7 @@ public abstract class RszAssetConverter<TResource, TFile, TAsset> : RszToolConve
         }
 
         instance.Index = rsz.InstanceList.Count;
-        rsz.InstanceInfoList.Add(new InstanceInfo() { ClassName = rszClass.name, CRC = rszClass.crc, typeId = rszClass.typeId });
+        rsz.InstanceInfoList.Add(new InstanceInfo(fileOption.Version) { ClassName = rszClass.name, CRC = rszClass.crc, typeId = rszClass.typeId });
         rsz.InstanceList.Add(instance);
         exportedInstances[target] = instance;
         return instance;
