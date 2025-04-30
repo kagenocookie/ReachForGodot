@@ -7,7 +7,6 @@
 [ext_resource type="Script" uid="uid://b5prf071ye431" path="res://addons/ReachForGodot/Components/RETransformComponent.cs" id="5_vhx1h"]
 [ext_resource type="Script" uid="uid://drdexacu7ucsc" path="res://addons/ReachForGodot/Components/REMeshComponent.cs" id="6_arvga"]
 [ext_resource type="Script" uid="uid://c55yvji6n5y7k" path="res://addons/ReachForGodot/RszInterop/RszStructs/OrientedBoundingBox.cs" id="7_6ige3"]
-[ext_resource type="Resource" uid="uid://dx2kv5yanl5kb" path="res://re3/Escape/Collision/Effect/EffectDefault.cfil.tres" id="7_x5d6i"]
 [ext_resource type="Script" uid="uid://djo55wbalxc40" path="res://addons/ReachForGodot/Components/PhysicsCollidersComponent.cs" id="8_crrvn"]
 
 [sub_resource type="Resource" id="Resource_7h6pr"]
@@ -134,7 +133,6 @@ script = ExtResource("3_jh3og")
 Game = 5
 Classname = "via.physics.Collider"
 __Data = Dictionary[StringName, Variant]({
-&"CollisionFilter": ExtResource("7_x5d6i"),
 &"Shape": SubResource("Resource_7mud3"),
 &"v0": 1,
 &"v1": 1,

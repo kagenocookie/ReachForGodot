@@ -1,0 +1,133 @@
+{
+  "app.PropsRightHandCutting": {
+    "RightHandGameObjectRef": {
+      "PropertyId": 327680,
+      "AutoDetected": true
+    },
+    "RightHandItemGetGameObjectRef": {
+      "PropertyId": 327681,
+      "AutoDetected": true
+    }
+  },
+  "app.ItemGetConfigure": {
+    "InteractItemGetGameObject": {
+      "PropertyId": 458752,
+      "AutoDetected": true
+    }
+  },
+  "app.DetailSearch": {
+    "DetailSearchRotJointGameObject": {
+      "PropertyId": 196610,
+      "AutoDetected": true
+    }
+  },
+  "app.ActivateObjectActionManager.ActivateObjectData": {
+    "TargetObject": {
+      "PropertyId": 131072,
+      "AutoDetected": true
+    }
+  },
+  "app.InteractCheckParamUnit": {
+    "InteractObj": {
+      "PropertyId": 196608,
+      "AutoDetected": true
+    }
+  },
+  "app.Em1302.Props.MoreauWallTimelineParameter.TimelineObject": {
+    "ObjectReference": {
+      "PropertyId": 131072,
+      "AutoDetected": true
+    }
+  },
+  "app.DetailSearchBehavior": {
+    "HierarchicalInteractGameObjects": {
+      "PropertyId": 327682,
+      "AutoDetected": true
+    }
+  },
+  "app.TimelineKicker": {
+    "TargetRef": {
+      "PropertyId": 327681,
+      "AutoDetected": true
+    }
+  },
+  "app.EventAttachConstraintJoints.ConstTargetObjectParam": {
+    "ConstGameEventActionRef": {
+      "PropertyId": 131072,
+      "AutoDetected": true
+    }
+  },
+  "app.EventMaterialPositionSetController.MaterialControlParam": {
+    "PositionReferenceObjectRef": {
+      "PropertyId": 131074,
+      "AutoDetected": true
+    }
+  },
+  "app.Em1302DeadBodyController": {
+    "_DisableMeshObjectReferences": {
+      "PropertyId": 393216,
+      "AutoDetected": true
+    },
+    "_BreakTimeLineObjectReferences": {
+      "PropertyId": 393217,
+      "AutoDetected": true
+    }
+  },
+  "app.PropsBreakItemBoxParam": {
+    "BreakablePhysicsRigidBodyGameObject": {
+      "PropertyId": 327680,
+      "AutoDetected": true
+    },
+    "InteractGameObject": {
+      "PropertyId": 327681,
+      "AutoDetected": true
+    }
+  },
+  "app.InteractEnableData": {
+    "InteractEnableObj": {
+      "PropertyId": 196608,
+      "AutoDetected": true
+    }
+  },
+  "app.InteractStartParamUnit": {
+    "InteractObj": {
+      "PropertyId": 196608,
+      "AutoDetected": true
+    }
+  },
+  "app.SetMeshPartsEnableActionParamUnit": {
+    "MeshGameObj": {
+      "PropertyId": 196608,
+      "AutoDetected": true
+    }
+  },
+  "app.GameEventAction": {
+    "_Target": {
+      "PropertyId": 327688
+    }
+  },
+  "app.InteractItemGet": {
+    "ItemSetGameObject": {
+      "PropertyId": 458754
+    }
+  },
+  "app.PropsItemSpawnHangMadTerriytoryParam": {
+    "MadTerritoryCoreGameObjectList": {
+      "PropertyId": 327680
+    },
+    "MadTerritoryGameObject": {
+      "PropertyId": 327681
+    },
+    "RelationMadTerritoryStainGameObjectList": {
+      "PropertyId": 327684
+    },
+    "FallGameObject": {
+      "PropertyId": 393216
+    }
+  },
+  "app.ItemSpawnMarker": {
+    "ItemSpawnGameObject": {
+      "PropertyId": 327680
+    }
+  }
+}

@@ -359,17 +359,26 @@ public static partial class PathUtils
         return path;
     }
 
-    public static string GetFilepathWithNativesFolder(string path, SupportedGame game)
+    public static string GetFilepathWithNativesFolderPrefix(string path, SupportedGame game)
     {
         path = path.Replace('\\', '/');
         if (path.StartsWith("natives/")) return path;
 
-        if (game is SupportedGame.Unknown or SupportedGame.DevilMayCry5 or SupportedGame.ResidentEvil2 or SupportedGame.ResidentEvil7) {
-            return "natives/x64/" + path;
+        return (IsNativesX64(game) ? "natives/x64/" : "natives/stm/") + path;
+    }
+
+    public static string GetFilepathWithNativesFolderSuffix(string path, SupportedGame game)
+    {
+        if (string.IsNullOrEmpty(path)) return path;
+        path = NormalizeSourceFolderPath(path);
+        if (path.EndsWith("/natives/x64/", StringComparison.OrdinalIgnoreCase) || path.EndsWith("/natives/stm/", StringComparison.OrdinalIgnoreCase)) {
+            return path;
         }
 
-        return "natives/stm/" + path;
+        return path + (IsNativesX64(game) ? "natives/x64/" : "natives/stm/");
     }
+
+    private static bool IsNativesX64(SupportedGame game) => game is SupportedGame.DevilMayCry5 or SupportedGame.ResidentEvil2 or SupportedGame.ResidentEvil7;
 
     public static IEnumerable<string> GetFilesByExtensionFromListFile(string? listFilepath, string extension, string? basePath)
     {
@@ -445,7 +454,7 @@ public static partial class PathUtils
             extInfo = GetExtensionInfo(config.Game).Info.GetValueOrDefault(ext);
         }
 
-        var path = GetFilepathWithNativesFolder(basepath.ToString(), config.Game);
+        var path = GetFilepathWithNativesFolderPrefix(basepath.ToString(), config.Game);
         if (extInfo == null || ext == null) {
             yield return AppendFileVersion(path, config);
             yield break;
@@ -487,24 +496,25 @@ public static partial class PathUtils
             sourceFilePath = sourceFilePath.Substring(1);
         }
 
+        string? attemptedPath;
         foreach (var candidate in GetCandidateFilepaths(sourceFilePath, config)) {
-            if (!string.IsNullOrEmpty(config.Paths.SourcePathOverride) && File.Exists(Path.Combine(config.Paths.SourcePathOverride, sourceFilePath))) {
-                return Path.Combine(config.Paths.SourcePathOverride, sourceFilePath);
+            if (!string.IsNullOrEmpty(config.Paths.SourcePathOverride) && File.Exists(attemptedPath = Path.Combine(config.Paths.SourcePathOverride, sourceFilePath))) {
+                return attemptedPath;
             }
 
-            if (File.Exists(Path.Combine(config.Paths.ChunkPath, sourceFilePath))) {
-                return Path.Combine(config.Paths.ChunkPath, sourceFilePath);
+            if (File.Exists(attemptedPath = Path.Combine(config.Paths.ChunkPath, sourceFilePath))) {
+                return attemptedPath;
             }
 
             foreach (var extra in config.Paths.AdditionalPaths) {
-                if (File.Exists(Path.Combine(extra, sourceFilePath))) {
-                    return Path.Combine(extra, sourceFilePath);
+                if (File.Exists(attemptedPath = Path.Combine(extra, sourceFilePath))) {
+                    return attemptedPath;
                 }
             }
         }
 
-        if (autoExtract && !IsIgnoredFilepath(sourceFilePath, config) && FileUnpacker.TryExtractFile(sourceFilePath, config) && File.Exists(Path.Combine(config.Paths.ChunkPath, sourceFilePath))) {
-            return Path.Combine(config.Paths.ChunkPath, sourceFilePath);
+        if (autoExtract && !IsIgnoredFilepath(sourceFilePath, config) && FileUnpacker.TryExtractFile(sourceFilePath, config) && File.Exists(attemptedPath = Path.Combine(config.Paths.ChunkPath, sourceFilePath))) {
+            return attemptedPath;
         }
 
         return null;

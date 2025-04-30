@@ -207,6 +207,9 @@ public static class ReaGETools
         { SupportedGame.ResidentEvil2, new Dictionary<string, HashSet<string>>() {
             { "app.ropeway.environment.EnvironmentBoundaryClassifier", ["MyselfMap", "TargetMap"] },
             { "app.ropeway.posteffect.param.ColorCorrect", ["LinearParamsAt"] },
+        } },
+        { SupportedGame.ResidentEvil8, new Dictionary<string, HashSet<string>>() {
+            { "app.FsmStateManager.FsmStateData", ["StateID"] },
         } }
     };
 
