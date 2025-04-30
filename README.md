@@ -21,15 +21,12 @@ Integrates various open source tools dealing with RE Engine games and packs them
 Should work for any RE engine game, but I can only test what I own
 
 - Dragon's Dogma 2* ([Field/Env ID lookup map](https://kagenocookie.github.io/dd2map/))
-- Resident Evil 2 RT
 - Devil May Cry 5
-- Resident Evil 2 non-RT
-- Resident Evil 3 non-RT (untested)
-- Resident Evil 3 RT (untested)
+- Resident Evil 2 (RT and non-RT)
+- Resident Evil 3 (RT and non-RT)
 - Resident Evil 4
-- Resident Evil 7 non-RT (untested)
-- Resident Evil 7 RT (untested)
-- Resident Evil 8 (untested)
+- Resident Evil 7 (RT and non-RT)
+- Resident Evil 8
 - Monster Hunter Rise (untested)
 - Street Fighter 6 (untested)
 - Monster Hunter Wilds (untested)
@@ -55,10 +52,16 @@ https://github.com/user-attachments/assets/4ac201b6-41ae-46c4-9772-13dbcc10242a
 - Create a fresh godot project anywhere
 - Clone or download the `addons/ReachForGodot` folder into it (the file should stay in the same relative folder; the other files in this project are not needed)
 - Next, you need to Build the project with the hammer icon in the top right; if it's not available, go under menu: Project > Tools > C# > Create C# solution
-    - you may need to modify the default .csproj file for it to compile, adding the following inside a `<PropertyGroup>` entry (or copying the [csproj file contents from here](https://github.com/kagenocookie/ReachForGodot/tree/master/.gdignore/docs/example.csproj)):
+    - you will need to modify the default .csproj file for it to compile, adding the following entries (or copying the [csproj file contents from here](https://github.com/kagenocookie/ReachForGodot/tree/master/.gdignore/docs/example.csproj)):
         ```xml
-        <Nullable>enable</Nullable>
-	    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <PropertyGroup>
+            <Nullable>enable</Nullable>
+            <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        </PropertyGroup>
+
+        <ItemGroup>
+            <Reference Include="RszTool" HintPath="$(ProjectDir)/addons/ReachForGodot/Plugins/RszTool.dll"></Reference>
+        </ItemGroup>
         ```
 - Enable the ReachForGodot plugin in Project Settings > Plugins
 - Restart the editor (menu: Project > Reload Current Project)
@@ -95,7 +98,7 @@ See [the wiki](https://github.com/kagenocookie/ReachForGodot/wiki) for more deta
 - some files might not import or export quite correctly, as the RE_RSZ jsons don't always contain full and correct data. See [support for new games](https://github.com/kagenocookie/ReachForGodot/wiki/Adding-support-for-new-games) for more details in regards to fixing any glaring issues.
 
 ## Credits
-- [NSACloud](https://github.com/NSACloud) - RE Mesh Editor
+- [NSACloud](https://github.com/NSACloud) - RE Mesh Editor, RE4 EFX file structure
 - [czastack](https://github.com/czastack) - RszTool
 - [praydog](https://github.com/praydog) - REFramework and related tools
 - [alphazolam](https://github.com/alphazolam) - RE_RSZ and the binary templates
