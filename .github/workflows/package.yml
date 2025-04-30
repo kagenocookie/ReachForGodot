@@ -22,7 +22,7 @@ jobs:
     - name: Restore RszTool dependencies
       run: |
         cd addons/ReachForGodot/RszTool/RszTool
-        dotnet restore -p:TargetFramework=net8.0
+        dotnet restore
     - name: Build RszTool
       run: |
         cd addons/ReachForGodot/RszTool/RszTool
