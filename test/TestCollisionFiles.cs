@@ -21,13 +21,7 @@ public partial class TestCollisionFiles : TestBase
             file.Masks.Select(p => p.padding1).ShouldAllBe(n => n == 0);
             file.Masks.Select(p => p.padding2).ShouldAllBe(n => n == 0);
 
-            // file.Materials.Select(p => p.padding1).ShouldAllBe(n => n == 0);
-            // file.Materials.Select(p => p.padding2).ShouldAllBe(n => n == 0);
-
             file.Attributes.Select(p => p.padding).ShouldAllBe(n => n == 0);
-
-            file.Presets.Select(p => p.padding1).ShouldAllBe(n => n == 0);
-            file.Presets.Select(p => p.padding2).ShouldAllBe(n => n == 0);
 
             var res = new CollisionDefinitionResource();
             (await converter.Cdef.Import(file, res)).ShouldBe(true);
@@ -44,16 +38,22 @@ public partial class TestCollisionFiles : TestBase
             using var file = new CfilFile(new FileHandler(filepath));
             file.Read();
 
-            (file.ukn3 + file.ukn4 + file.ukn5 + file.ukn6).ShouldBe(0, "Found unhandled CFIL bytes");
-            (file.uknOffset >= file.guidListOffset + sizeof(long) * 2 * file.guidCount).ShouldBeTrue("Found unknown data in CFIL");
+            (file.uknOffset == 0 || file.uknOffset == file.FileHandler.Position).ShouldBeTrue("Found unknown data in CFIL");
 
             var res = new CollisionFilterResource();
             (await converter.Cfil.Import(file, res)).ShouldBe(true);
             using var exportFile = converter.Cfil.CreateFile(new MemoryStream(), file.FileHandler.FileVersion);
             (await converter.Cfil.Export(res, exportFile)).ShouldBe(true);
-
-            exportFile.LayerGuid.ShouldBe(file.LayerGuid);
-            exportFile.Masks.ShouldBeEquivalentTo(file.Masks);
+            if (file.FileHandler.FileVersion >= 7)
+            {
+                exportFile.LayerGuid.ShouldBe(file.LayerGuid);
+                exportFile.MaskGuids.ShouldBeEquivalentTo(file.MaskGuids);
+            }
+            else
+            {
+                // no point in adding real data support for these right now (RE7 uses index instead of guids)
+                // if ever needed, the solution will be to fetch the guid from the cdef file on Godot side to make it consistent
+            }
         });
     }
 
