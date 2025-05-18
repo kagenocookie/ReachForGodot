@@ -164,6 +164,7 @@ public partial class AssetBrowser : Resource
             var res = Importer.ImportResource(file, config);
             if (res is REResourceProxy resp) {
                 await resp.Import(true);
+                ResourceSaver.Save(resp);
             } else if (res is UserdataResource ud) {
                 ud.Reimport();
             }

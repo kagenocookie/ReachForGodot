@@ -11,7 +11,7 @@ Integrates various open source tools dealing with RE Engine games and packs them
 
 ## Main features
 - Integration of [RE Mesh Editor](https://github.com/NSACloud/RE-Mesh-Editor) for meshes, a [custom fork of RszTool](https://github.com/kagenocookie/RszTool) with additional file support and fixes, and [ree-pak-rs](https://github.com/eigeen/ree-pak-rs) for on-the-fly PAK file extraction.
-- Direct support for many RE Engine file formats: mesh, tex, pfb, scn, mdf2, rcol, user, cfil, fol, ...
+- Direct support for many RE Engine file formats: mesh, tex, pfb, scn, mdf2, efx, rcol, user, cfil, fol, ...
 - Default Godot features (3d visualization and editing, resource pickers, data editing UI)
 - PAK content browser and extractor GUI
 - Object template system for easily reusing common components and nested game object structures

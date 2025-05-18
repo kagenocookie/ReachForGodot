@@ -18,6 +18,7 @@ public record GamePaths(SupportedGame Game, string ChunkPath, string? Il2cppPath
     public string ExtensionVersionsCacheFilepath => GetExtensionVersionsCacheFilepath(Game);
     public string IgnoredFilesListPath => ProjectSettings.GlobalizePath(GetGameConfigPath(Game, "ignored_files.list"));
     public string TypePatchFilepath => ProjectSettings.GlobalizePath(GetGameConfigPath(Game, "type_patches.json"));
+    public string EfxStructsFilepath => ProjectSettings.GlobalizePath(GetGameConfigPath(Game, "efx_structs.json"));
 
     public string? Gamedir => !(PakFiles?.Length > 0) ? null : PathUtils.NormalizeFilePath(PakFiles.First().GetBaseDir());
 

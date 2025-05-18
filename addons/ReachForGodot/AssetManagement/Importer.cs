@@ -159,7 +159,7 @@ public class Importer
         var newres = resourceTypes.GetValueOrDefault(format) is Type rt ? (REResource)Activator.CreateInstance(rt)! : new REResource();
         newres.Asset = new AssetReference(relativePath);
         newres.Game = config.Game;
-        newres.ResourceName = newres.ResourceType is SupportedFileFormats.Prefab or SupportedFileFormats.Scene or SupportedFileFormats.Rcol
+        newres.ResourceName = newres.ResourceType is SupportedFileFormats.Prefab or SupportedFileFormats.Scene or SupportedFileFormats.Rcol or SupportedFileFormats.Efx
             ? newres.Asset.BaseFilename.ToString()
             : PathUtils.GetFilepathWithoutVersion(relativePath).GetFile();
 

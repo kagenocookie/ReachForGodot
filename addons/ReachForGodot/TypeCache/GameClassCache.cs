@@ -32,6 +32,19 @@ public static partial class TypeCache
             this.game = game;
         }
 
+        public void SetupEfxData(EfxStructCache cache)
+        {
+            foreach (var ee in cache.Enums) {
+                il2CppCache = new();
+                var backing = Type.GetType(ee.Value.BackingType)!;
+                var enumType = typeof(EnumDescriptor<>).MakeGenericType(backing);
+                var descriptor = (EnumDescriptor)Activator.CreateInstance(enumType)!;
+                foreach (var item in ee.Value.Items) {
+                    descriptor.AddValue(item.Name, JsonSerializer.SerializeToElement(item.Value));
+                }
+            }
+        }
+
         public Dictionary<string, PrefabGameObjectRefProperty>? GetClassProps(string classname)
         {
             if (GameObjectRefProps.TryGetValue(classname, out var result)) {

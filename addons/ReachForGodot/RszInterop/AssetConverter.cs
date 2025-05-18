@@ -2,6 +2,7 @@ namespace ReaGE;
 
 using System.Threading.Tasks;
 using Godot;
+using ReaGE.EFX;
 using RszTool;
 
 public class AssetConverter
@@ -67,6 +68,9 @@ public class AssetConverter
 
     private ChfConverter? _chf;
     public ChfConverter Chf => _chf ??= new ChfConverter() { Convert = this };
+
+    private EfxConverter? _efx;
+    public EfxConverter Efx => _efx ??= new EfxConverter() { Convert = this };
 
     private RszFileOption? _fileOption;
     public RszFileOption FileOption => _fileOption ??= TypeCache.CreateRszFileOptions(AssetConfig);
@@ -135,6 +139,8 @@ public class AssetConverter
                     return asset is PrefabResource pfbRes ? Pfb.ImportFromFile(pfbRes) : Pfb.ImportFromFile(filepath);
                 case SupportedFileFormats.Rcol:
                     return asset is RcolResource rcolRes ? Rcol.ImportFromFile(rcolRes) : Rcol.ImportFromFile(filepath);
+                case SupportedFileFormats.Efx:
+                    return asset is EfxResource efxRes ? Efx.ImportFromFile(efxRes) : Efx.ImportFromFile(filepath);
                 case SupportedFileFormats.Userdata:
                     return User.ImportFromFile(filepath, asset as UserdataResource);
                 case SupportedFileFormats.Foliage:
@@ -167,6 +173,8 @@ public class AssetConverter
             return Scn.ImportFromFile(filepath, scn);
         } else if (asset is RcolRootNode rcol) {
             return Rcol.ImportFromFile(filepath, rcol);
+        } else if (asset is EfxRootNode efx) {
+            return Efx.ImportFromFile(filepath, efx);
         } else {
             GD.PrintErr("Currently unsupported import for object type " + asset.GetType());
             return Task.FromResult(false);
@@ -193,6 +201,8 @@ public class AssetConverter
                     return Pfb.ExportToFile(((PrefabResource)reres).Instantiate()!, outputPath);
                 case SupportedFileFormats.Rcol:
                     return Rcol.ExportToFile(((RcolResource)reres).Instantiate()!, outputPath);
+                case SupportedFileFormats.Efx:
+                    return Efx.ExportToFile(((EfxResource)reres).Instantiate()!, outputPath);
                 case SupportedFileFormats.Userdata:
                     return User.ExportToFile((UserdataResource)reres, outputPath);
                 case SupportedFileFormats.Foliage:
@@ -221,6 +231,8 @@ public class AssetConverter
             return Scn.ExportToFile(scn, outputPath);
         } else if (resource is RcolRootNode rcol) {
             return Rcol.ExportToFile(rcol, outputPath);
+        } else if (resource is EfxRootNode efx) {
+            return Efx.ExportToFile(efx, outputPath);
         } else {
             GD.PrintErr("Currently unsupported export for object type " + resource.GetType());
             return Task.FromResult(false);

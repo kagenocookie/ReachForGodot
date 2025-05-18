@@ -19,7 +19,7 @@ public class ScnConverter : SceneRszAssetConverter<SceneResource, ScnFile, Scene
         return new ScnFile(Convert.FileOption, fileHandler);
     }
 
-    protected override void PreCreateScenePlaceholder(SceneFolder node)
+    protected override void PreCreateScenePlaceholder(SceneFolder node, SceneResource target)
     {
         node.LockNode(true);
     }

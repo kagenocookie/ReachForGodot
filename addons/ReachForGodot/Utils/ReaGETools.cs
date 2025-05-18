@@ -1,10 +1,11 @@
-namespace ReaGE.DevTools;
+namespace ReaGE.Tools;
 
 using System;
 using System.Text;
 using CustomFileBrowser;
 using Godot;
 using RszTool;
+using RszTool.Efx;
 
 public sealed class ResourceFieldFinder : IDisposable
 {
@@ -340,6 +341,56 @@ public static class ReaGETools
 
                 var match = GetRSZInstanceInfos(filepath)?.FirstOrDefault(info => info.CRC == crc);
                 if (match.HasValue && match.Value.CRC == crc) {
+                    yield return filepath;
+                }
+            }
+        }
+    }
+
+    public static IEnumerable<string> FindEfxByAttribute(EfxAttributeType efxType, EfxVersion version, CancellationToken? token = null)
+    {
+        var list = new FileListFileSystem();
+        var conv = new AssetConverter(GodotImportOptions.placeholderImport);
+        foreach (var config in ReachForGodot.AssetConfigs) {
+            if (!config.IsValid || config.Paths.FilelistPath == null) continue;
+            var efxVer = config.Game.GameToEfxVersion();
+            if (version != EfxVersion.Unknown && efxVer != version) {
+                continue;
+            }
+            if (efxVer == EfxVersion.Unknown) continue;
+
+            conv.Game = config.Game;
+            var attrType = EfxAttributeTypeRemapper.GetAttributeInstanceType(efxType, efxVer);
+            if (attrType == null) continue;
+
+            GD.Print("Searching within game " + config.Game + " ...");
+
+            list.ReadFileList(config.Paths.FilelistPath);
+            var basepath = PathUtils.GetFilepathWithoutNativesFolder(config.Paths.ChunkPath);
+
+            foreach (var file in list.Files) {
+                if (token?.IsCancellationRequested == true) yield break;
+                if (PathUtils.GetFileFormat(file).format != SupportedFileFormats.Efx) continue;
+
+                var filepath = Path.Combine(basepath, file);
+
+                if (!File.Exists(filepath)) {
+                    if (!FileUnpacker.TryExtractFile(filepath, config) || !File.Exists(filepath)) {
+                        GD.PrintErr(config.Game + " file not found: " + file);
+                        continue;
+                    }
+                }
+
+                using var f = conv.Efx.CreateFile(filepath);
+                try {
+                    f.Read();
+                } catch (Exception e) {
+                    GD.PrintErr($"Failed to read file {file}: {e.Message}");
+                    continue;
+                }
+                if (f.Actions.Any(a => a.Attributes.Any(attr => attr.type == efxType))) {
+                    yield return filepath;
+                } else if (f.Entries.Any(e => e.Attributes.Any(attr => attr.type == efxType))) {
                     yield return filepath;
                 }
             }

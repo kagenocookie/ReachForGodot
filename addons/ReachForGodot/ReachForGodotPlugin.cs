@@ -3,9 +3,8 @@ using RszTool;
 using GC = Godot.Collections;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using ReaGE.DevTools;
+using ReaGE.Tools;
 using ReaGE.ContentEditorIntegration;
-
 
 #if REAGE_DEV
 using Chickensoft.GoDotTest;
@@ -143,10 +142,10 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
         ];
         foreach (var i in inspectors) AddInspectorPlugin(i);
 
-        contextMenus = new EditorContextMenuPlugin[2];
+        contextMenus = new EditorContextMenuPlugin[3];
         AddContextMenuPlugin(EditorContextMenuPlugin.ContextMenuSlot.SceneTree, contextMenus[0] = new SceneFolderContextMenuPlugin());
         AddContextMenuPlugin(EditorContextMenuPlugin.ContextMenuSlot.FilesystemCreate, contextMenus[1] = new ReaGECreateMenuPlugin());
-
+        AddContextMenuPlugin(EditorContextMenuPlugin.ContextMenuSlot.Filesystem, contextMenus[2] = new ForceRescanMenuPlugin());
         gizmos = [new MeshGizmo()];
         foreach (var gizmo in gizmos) AddNode3DGizmoPlugin(gizmo);
 
@@ -200,12 +199,22 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
         toolMenuDev?.AddItem("Extract file format versions from file lists", 200);
         var tests = GoTest.Adapter.CreateProvider().GetTestSuites(System.Reflection.Assembly.GetExecutingAssembly());
         int testId = 1000;
+        var args = System.Environment.GetCommandLineArgs();
+        // if (args.Contains("--test"))
+        var autoTriggerTest = args.Contains("--editor-test") ? args[Array.IndexOf(args, "--editor-test") + 1] : null;
         foreach (var test in tests) {
             toolMenuDev?.AddItem("Test: " + (test.Name.StartsWith("Test") ? test.Name.Substring(4) : test.Name), testId++);
+            if (!_testsRun && autoTriggerTest != null && autoTriggerTest == test.Name) {
+                _testsRun = true;
+                RunTests(test.Name);
+                break;
+            }
         }
+        toolMenuDev?.AddItem("Re-generate EFX JSON files", 301);
         // toolMenuDev?.AddItem("Extract Content Editor enum display labels", 300);
 #endif
     }
+    private static bool _testsRun;
 
     private void HandleToolMenu(long id)
     {
@@ -222,6 +231,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
             RefreshToolMenu();
         }
         if (id == 200) ExtractFileVersions();
+        if (id == 301) ReaGE.Tests.DevTools.WriteEfxStructsJson();
 
         if (id == 300) {
             foreach (var cfg in ReachForGodot.AssetConfigs.Where(c => c.IsValid)) {

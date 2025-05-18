@@ -3,7 +3,8 @@ namespace ReaGE;
 using System;
 using System.Threading.Tasks;
 using Godot;
-using ReaGE.DevTools;
+using ReaGE.Tools;
+using RszTool.Efx;
 
 [GlobalClass, Tool]
 public partial class CustomSearchWindow : Window
@@ -64,6 +65,7 @@ public partial class CustomSearchWindow : Window
     public enum ExternalFileSearchType
     {
         ComponentInRSZFiles,
+        EfxAttributeType,
     }
 
     public enum SearchTargetType
@@ -243,6 +245,9 @@ public partial class CustomSearchWindow : Window
             case ExternalFileSearchType.ComponentInRSZFiles:
                 Task.Run(() => SearchFilesRSZInstances(SearchedQuery));
                 break;
+            case ExternalFileSearchType.EfxAttributeType:
+                Task.Run(() => SearchFilesEFX(SearchedQuery));
+                break;
         }
     }
 
@@ -298,6 +303,34 @@ public partial class CustomSearchWindow : Window
         tokenSource = new();
 
         foreach (var filepath in ReaGETools.FindInstancesInAnyRSZFile(classname, Array.Empty<SupportedGame>(), tokenSource.Token)) {
+            if (Results.Count >= resultLimit) {
+                return;
+            }
+
+            var ui = CreateSearchResultItem(filepath, null);
+            ui.Pressed += () => {
+                FileSystemUtils.ShowFileInExplorer(filepath);
+            };
+            resultsContainer.CallDeferred(Node.MethodName.AddChild, ui);
+        }
+    }
+
+    private void SearchFilesEFX(string attributeType)
+    {
+        tokenSource.Cancel();
+        tokenSource = new();
+
+        var words = attributeType.Split(' ');
+
+        var efxTypeStr = words.FirstOrDefault(w => Enum.TryParse<EfxAttributeType>(w, out _));
+        var efxVersionStr = words.FirstOrDefault(w => Enum.TryParse<EfxVersion>(w, out _));
+
+        if (efxTypeStr == null || !Enum.TryParse<EfxAttributeType>(efxTypeStr, out var efxType)) {
+            return;
+        }
+        var efxVersion = efxVersionStr != null && Enum.TryParse<EfxVersion>(efxVersionStr, out var efxV) ? efxV : EfxVersion.Unknown;
+
+        foreach (var filepath in ReaGETools.FindEfxByAttribute(efxType, efxVersion, tokenSource.Token)) {
             if (Results.Count >= resultLimit) {
                 return;
             }

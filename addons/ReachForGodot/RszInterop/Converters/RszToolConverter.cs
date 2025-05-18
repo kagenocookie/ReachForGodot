@@ -12,10 +12,10 @@ public abstract class RszToolConverter<TResource, TExported, TAsset> : DataConve
     public async Task<bool> ExportToFile(TAsset resource, string outputPath)
     {
         Clear();
-        var file = CreateFile(new FileHandler(outputPath));
-        await Export(resource, file);
+        using var file = CreateFile(new FileHandler(outputPath));
+        var success = await Export(resource, file);
         Clear();
-        return PostExport(file.Save(), outputPath);
+        return success && PostExport(file.Save(), outputPath);
     }
 
     public Task<bool> ImportFromFile<T>(T imported) where T : IImportableAsset, TAsset

@@ -715,6 +715,7 @@ public static partial class PathUtils
                 case SupportedFileFormats.Rcol:
                 case SupportedFileFormats.Scene:
                 case SupportedFileFormats.Prefab:
+                case SupportedFileFormats.Efx:
                     return sourcePath + ".tscn";
                 default:
                     return sourcePath + ".tres";

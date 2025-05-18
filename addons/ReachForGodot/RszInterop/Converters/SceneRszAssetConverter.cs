@@ -31,7 +31,7 @@ public abstract class SceneRszAssetConverter<TResource, TFile, TRootNode> : RszA
             Name = target.ResourceName ?? target.Asset.BaseFilename.ToString(),
             Game = target.Game,
         };
-        PreCreateScenePlaceholder(root);
+        PreCreateScenePlaceholder(root, target);
         scene.Pack(root);
         target.ImportedResource = scene;
         if (WritesEnabled) {
@@ -44,7 +44,7 @@ public abstract class SceneRszAssetConverter<TResource, TFile, TRootNode> : RszA
         return scene;
     }
 
-    protected virtual void PreCreateScenePlaceholder(TRootNode node) { }
+    protected virtual void PreCreateScenePlaceholder(TRootNode node, TResource target) { }
 
     public async Task<bool> ImportFromFile(TResource target)
     {

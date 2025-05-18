@@ -357,6 +357,8 @@ public static class RszTypeConverter
     public static Vector3 ToGodot(this System.Numerics.Vector3 val) => new Vector3(val.X, val.Y, val.Z);
     // not ideal but we can't use double positions nicely in godot so, hopefully not to lossy
     public static Vector3 ToGodot(this RszTool.via.Position val) => new Vector3((float)val.x, (float)val.y, (float)val.z);
+    public static Vector2I ToGodot(this RszTool.via.Int2 val) => new Vector2I(val.x, val.y);
+    public static Vector3I ToGodot(this RszTool.via.Int3 val) => new Vector3I(val.x, val.y, val.z);
     public static Vector4 ToGodot(this System.Numerics.Vector4 val) => new Vector4(val.X, val.Y, val.Z, val.W);
     public static Vector4 ToGodot(this RszTool.via.Rect val) => new Vector4(val.t, val.r, val.b, val.l);
     public static Vector4 ToVector4(this RszTool.via.Sphere val) => new Vector4(val.pos.X, val.pos.Y, val.Pos.Z, val.R);

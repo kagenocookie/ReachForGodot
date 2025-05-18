@@ -23,6 +23,8 @@ public static partial class TypeCache
         InitResourceFormats(typeof(TypeCache).Assembly);
         InitComponents(typeof(TypeCache).Assembly);
         jsonOptions.Converters.Add(new JsonStringEnumConverter<SupportedFileFormats>(allowIntegerValues: false));
+        jsonOptions.Converters.Add(new JsonStringEnumConverter<RszFieldType>(allowIntegerValues: false));
+        jsonOptions.Converters.Add(new JsonStringEnumConverter<EfxFieldFlags>(allowIntegerValues: false));
     }
 
     private static readonly Dictionary<SupportedGame, GameClassCache> allCacheData = new();
@@ -396,6 +398,11 @@ public static partial class TypeCache
 
     private static void RszFieldToGodotProperty(RszField srcField, REField refield, GameClassCache cache)
     {
+        RszFieldToGodotProperty(refield, cache, srcField.type, srcField.array, srcField.original_type);
+    }
+
+    private static void RszFieldToGodotProperty(REField refield, GameClassCache cache, RszFieldType type, bool array, string classname)
+    {
         static void ResourceHint(REField field, string resourceName)
         {
             field.VariantType = Variant.Type.Object;
@@ -403,15 +410,8 @@ public static partial class TypeCache
             field.HintString = resourceName;
         }
 
-        static void ArrayHint(REField field, Variant.Type variantType)
-        {
-            field.VariantType = Variant.Type.Array;
-            field.Hint = PropertyHint.TypeString;
-            field.HintString = $"{(int)variantType}/0:";
-        }
-
-        if (srcField.array) {
-            switch (srcField.type) {
+        if (array) {
+            switch (type) {
                 case RszFieldType.U8:
                     refield.VariantType = Variant.Type.PackedByteArray;
                     return;
@@ -432,8 +432,10 @@ public static partial class TypeCache
                 case RszFieldType.S16:
                 case RszFieldType.U32:
                 case RszFieldType.U64:
-                    ArrayHint(refield, Variant.Type.Int);
-                    break;
+                    refield.VariantType = Variant.Type.Array;
+                    refield.Hint = PropertyHint.TypeString;
+                    refield.HintString = $"{(int)Variant.Type.Int}/0:";
+                    return;
                 case RszFieldType.Color:
                     refield.VariantType = Variant.Type.PackedColorArray;
                     return;
@@ -474,14 +476,14 @@ public static partial class TypeCache
                     refield.VariantType = Variant.Type.Array;
                     refield.Hint = PropertyHint.TypeString;
                     refield.HintString = $"{(int)Variant.Type.PackedByteArray}/0:";
-                    break;
+                    return;
                 default:
                     refield.VariantType = Variant.Type.Array;
                     return;
             }
         }
 
-        switch (srcField.type) {
+        switch (type) {
             case RszFieldType.Object:
                 ResourceHint(refield, nameof(REObject));
                 break;
@@ -498,9 +500,8 @@ public static partial class TypeCache
             case RszFieldType.U64:
             case RszFieldType.Enum:
                 refield.VariantType = Variant.Type.Int;
-                // TODO original type? display type?
-                if (!string.IsNullOrEmpty(srcField.original_type)) {
-                    var desc = GetEnumDescriptor(cache, srcField.original_type);
+                if (!string.IsNullOrEmpty(classname)) {
+                    var desc = GetEnumDescriptor(cache, classname);
                     if (desc != null && !desc.IsEmpty) {
                         // use Enum and not EnumSuggestion so we could still add custom values
                         refield.Hint = desc.IsFlags ? PropertyHint.Flags : PropertyHint.Enum;
@@ -571,7 +572,7 @@ public static partial class TypeCache
                 refield.VariantType = Variant.Type.String;
                 break;
             case RszFieldType.Uri:
-                if (srcField.original_type.Contains("via.GameObjectRef")) {
+                if (classname.Contains("via.GameObjectRef")) {
                     ResourceHint(refield, nameof(GameObjectRef));
                 } else {
                     refield.VariantType = Variant.Type.String;
@@ -661,7 +662,7 @@ public static partial class TypeCache
                 break;
             default:
                 refield.VariantType = Variant.Type.Nil;
-                GD.Print("Unhandled rsz field type " + srcField.type + " / " + srcField.original_type);
+                GD.Print("Unhandled rsz field type " + type + " / " + classname);
                 break;
         }
     }

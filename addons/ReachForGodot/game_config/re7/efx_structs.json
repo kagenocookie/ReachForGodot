@@ -1,0 +1,5506 @@
+{
+  "AttributeTypes": {
+    "FixRandomGenerator": {
+      "TypeID": 8,
+      "Name": "FixRandomGenerator",
+      "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeFixRandomGenerator",
+      "Hash": 2831451546,
+      "Fields": [
+        {
+          "Name": "unkn1_0",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_1",
+          "FieldType": "S32"
+        },
+        {
+          "Name": "unkn1_2",
+          "FieldType": "S32"
+        },
+        {
+          "Name": "unkn1_3",
+          "FieldType": "S32"
+        },
+        {
+          "Name": "unkn1_4",
+          "FieldType": "S32"
+        }
+      ]
+    },
+    "Transform2D": {
+      "TypeID": 1,
+      "Name": "Transform2D",
+      "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTransform2D",
+      "Hash": 2336023418,
+      "Fields": [
+        {
+          "Name": "position",
+          "FieldType": "Vec2"
+        },
+        {
+          "Name": "rotation",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "scale",
+          "FieldType": "Vec2"
+        }
+      ]
+    },
+    "Transform2DClip": {
+      "TypeID": 2,
+      "Name": "Transform2DClip",
+      "Classname": "RszTool.Efx.Structs.RERT.EFXAttributeTransform2DClip",
+      "Hash": 3627670603,
+      "Fields": [
+        {
+          "Name": "ukn0",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "ukn1",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "ukn2",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "ukn3",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "ukn4",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "ukn5_0",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "ukn5_1",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "ukn5_2",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "ukn5_3",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "ukn5_4",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "ukn5_5",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "ukn5_6",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "ukn5_7",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "ukn5_8",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "ukn5_9",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "ukn5_10",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "ukn5_11",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "ukn5_12",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "ukn5_13",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "ukn5_14",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "ukn5_15",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "ukn5_16",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "ukn5_17",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "ukn5_18",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "ukn5_19",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "ukn5_20",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "ukn5_21",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "ukn5_22",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "ukn5_23",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "ukn5_24",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "ukn5_25",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "ukn5_26",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "ukn5_27",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "ukn5_28",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "ukn5_29",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "ukn5_30",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "ukn5_31",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "ukn5_32",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "ukn5_33",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "ukn6",
+          "FieldType": "U8"
+        },
+        {
+          "Name": "ukn7_0",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "ukn7_1",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "ukn7_2",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "ukn7_3",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "ukn7_4",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "ukn7_5",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "ukn7_6",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "ukn8_0",
+          "FieldType": "U8"
+        },
+        {
+          "Name": "ukn8_1",
+          "FieldType": "U8"
+        },
+        {
+          "Name": "ukn9",
+          "FieldType": "U32"
+        }
+      ]
+    },
+    "Transform2DExpression": {
+      "TypeID": 3,
+      "Name": "Transform2DExpression",
+      "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTransform2DExpression",
+      "Hash": 3729962027,
+      "Fields": [
+        {
+          "Name": "unkn1_0",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_1",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_2",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_3",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_4",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_5",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "expressions",
+          "FieldType": "Object",
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapperBase"
+        }
+      ]
+    },
+    "Transform3D": {
+      "TypeID": 4,
+      "Name": "Transform3D",
+      "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTransform3D",
+      "Hash": 624995886,
+      "Fields": [
+        {
+          "Name": "translation",
+          "FieldType": "Vec3"
+        },
+        {
+          "Name": "rotation",
+          "FieldType": "Vec3"
+        },
+        {
+          "Name": "scale",
+          "FieldType": "Vec3"
+        },
+        {
+          "Name": "rotationOrder",
+          "FieldType": "S32"
+        }
+      ]
+    },
+    "Transform3DClip": {
+      "TypeID": 5,
+      "Name": "Transform3DClip",
+      "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTransform3DClip",
+      "Hash": 2701023542,
+      "Fields": [
+        {
+          "Name": "unkn0",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn2",
+          "FieldType": "S32"
+        },
+        {
+          "Name": "unkn3",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn4",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn5",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn6",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "substruct1Length",
+          "FieldType": "S32",
+          "Flag": "StructSize",
+          "FlagTarget": "substruct1"
+        },
+        {
+          "Name": "substruct2Length",
+          "FieldType": "S32",
+          "Flag": "StructSize",
+          "FlagTarget": "substruct2"
+        },
+        {
+          "Name": "substruct3Length",
+          "FieldType": "S32",
+          "Flag": "StructSize",
+          "FlagTarget": "substruct3"
+        },
+        {
+          "Name": "substruct1",
+          "FieldType": "S32",
+          "IsArray": true
+        },
+        {
+          "Name": "substruct2",
+          "FieldType": "S32",
+          "IsArray": true
+        },
+        {
+          "Name": "substruct3",
+          "FieldType": "F32",
+          "IsArray": true
+        }
+      ]
+    },
+    "Transform3DExpression": {
+      "TypeID": 6,
+      "Name": "Transform3DExpression",
+      "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTransform3DExpression",
+      "Hash": 199919328,
+      "Fields": [
+        {
+          "Name": "unkn1",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn2",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn3",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn4",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn5",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn6",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn7",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn8",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn9",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn10",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "expressions",
+          "FieldType": "Object",
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapperBase"
+        }
+      ]
+    },
+    "ParentOptions": {
+      "TypeID": 7,
+      "Name": "ParentOptions",
+      "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeParentOptions",
+      "Hash": 1330675269,
+      "Fields": [
+        {
+          "Name": "RelationPos",
+          "FieldType": "Int3"
+        },
+        {
+          "Name": "RelationRot",
+          "FieldType": "Int3"
+        },
+        {
+          "Name": "RelationScl",
+          "FieldType": "Int3"
+        },
+        {
+          "Name": "ParticleUseLocal_re7",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "boneName",
+          "FieldType": "String"
+        }
+      ]
+    },
+    "Spawn": {
+      "TypeID": 9,
+      "Name": "Spawn",
+      "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeSpawn",
+      "Hash": 1440818362,
+      "Fields": [
+        {
+          "Name": "maxParticles",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "rawMaxParticles",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "spawnNum",
+          "FieldType": "Int2"
+        },
+        {
+          "Name": "intervalFrame",
+          "FieldType": "Int2"
+        },
+        {
+          "Name": "useSpawnFrame",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "spawnFrame",
+          "FieldType": "RangeI"
+        }
+      ]
+    },
+    "SpawnExpression": {
+      "TypeID": 10,
+      "Name": "SpawnExpression",
+      "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeSpawnExpression",
+      "Hash": 1924178930,
+      "Fields": [
+        {
+          "Name": "flags",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "spawnNum",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.RE4.ExpressionOperator"
+        },
+        {
+          "Name": "spawnNumRange",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.RE4.ExpressionOperator"
+        },
+        {
+          "Name": "intervalFrame",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.RE4.ExpressionOperator"
+        },
+        {
+          "Name": "intervalFrameRange",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.RE4.ExpressionOperator"
+        },
+        {
+          "Name": "expressions",
+          "FieldType": "Object",
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapperBase"
+        }
+      ]
+    },
+    "TypeBillboard2D": {
+      "TypeID": 11,
+      "Name": "TypeBillboard2D",
+      "Classname": "RszTool.Efx.Structs.DMC5.EFXAttributeTypeBillboard2D",
+      "Hash": 3021597588,
+      "Fields": [
+        {
+          "Name": "unkn0",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1",
+          "FieldType": "Color"
+        },
+        {
+          "Name": "unkn2",
+          "FieldType": "Color"
+        },
+        {
+          "Name": "unkn3",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn4",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn5",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn6",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn7",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn8",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn9",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn10",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn11",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn12",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn13",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn14",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn15",
+          "FieldType": "U32"
+        }
+      ]
+    },
+    "TypeBillboard2DExpression": {
+      "TypeID": 12,
+      "Name": "TypeBillboard2DExpression",
+      "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypeBillboard2DExpression",
+      "Hash": 3995934772,
+      "Fields": [
+        {
+          "Name": "unkn1_0",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_1",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_2",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "expressions",
+          "FieldType": "Object",
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapperBase"
+        }
+      ]
+    },
+    "TypeBillboard3D": {
+      "TypeID": 13,
+      "Name": "TypeBillboard3D",
+      "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypeBillboard3D",
+      "Hash": 3028442199,
+      "Fields": [
+        {
+          "Name": "unkn1",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "color0",
+          "FieldType": "Color"
+        },
+        {
+          "Name": "color1",
+          "FieldType": "Color"
+        },
+        {
+          "Name": "unknOpacityValue",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "ColorRate",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "AlphaRate",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "Rotation",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "RotationVariation",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "SizeScaler",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "SizeScalerVariation",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "SizeX",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "SizeXVariation",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "SizeY",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "SizeYVariation",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn13",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn14",
+          "FieldType": "U32"
+        }
+      ]
+    },
+    "TypeBillboard3DExpression": {
+      "TypeID": 14,
+      "Name": "TypeBillboard3DExpression",
+      "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypeBillboard3DExpression",
+      "Hash": 3922071066,
+      "Fields": [
+        {
+          "Name": "unkn1_0",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_1",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_2",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_3",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_4",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_5",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_6",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_7",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "expressions",
+          "FieldType": "Object",
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapperBase"
+        }
+      ]
+    },
+    "TypeMesh": {
+      "TypeID": 15,
+      "Name": "TypeMesh",
+      "Classname": "RszTool.Efx.Structs.DMC5.EFXAttributeTypeMesh",
+      "Hash": 1136688818,
+      "Fields": [
+        {
+          "Name": "ukn1",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "overriddenHashCount",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "color0",
+          "FieldType": "Color"
+        },
+        {
+          "Name": "color1",
+          "FieldType": "Color"
+        },
+        {
+          "Name": "unkn2",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "startingFrameMin",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "startingFrameMax",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "animationSpeedMin",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "animationSpeedMax",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "animationMode",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn13",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn14",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "rotationX",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "rotationXVariation",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "rotationY",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "rotationYVariation",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "rotationZ",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "rotationZVariation",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "scaleX",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "scaleXVariation",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "scaleY",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "scaleYVariation",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "scaleZ",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "scaleZVariation",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "scaleMultiplier",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "scaleMultiplierVariation",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "ukn3",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "meshPathLength",
+          "FieldType": "S32",
+          "Flag": "StringLength",
+          "FlagTarget": "meshPath"
+        },
+        {
+          "Name": "mdfPathLength",
+          "FieldType": "S32",
+          "Flag": "StringLength",
+          "FlagTarget": "mdfPath"
+        },
+        {
+          "Name": "texPathBlockLength",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "properties",
+          "FieldType": "Object",
+          "Classname": "RszTool.Efx.Structs.Common.MdfProperty",
+          "IsArray": true
+        },
+        {
+          "Name": "meshPath",
+          "FieldType": "String"
+        },
+        {
+          "Name": "mdfPath",
+          "FieldType": "String"
+        }
+      ]
+    },
+    "TypeMeshClip": {
+      "TypeID": 16,
+      "Name": "TypeMeshClip",
+      "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypeMeshClip",
+      "Hash": 1269239803,
+      "Fields": [
+        {
+          "Name": "unkn1",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "part2Size",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn3",
+          "FieldType": "S32"
+        },
+        {
+          "Name": "unkn4",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "substruct1Count",
+          "FieldType": "S32",
+          "Flag": "StructSize",
+          "FlagTarget": "substruct1"
+        },
+        {
+          "Name": "substruct2Count",
+          "FieldType": "S32",
+          "Flag": "StructSize",
+          "FlagTarget": "substruct2"
+        },
+        {
+          "Name": "substruct3Count",
+          "FieldType": "S32",
+          "Flag": "StructSize",
+          "FlagTarget": "substruct3"
+        },
+        {
+          "Name": "substruct1Length",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "substruct2Length",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "substruct3Length",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "substruct1",
+          "FieldType": "Struct",
+          "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypeMeshClip+MeshClip_Struct1",
+          "IsArray": true
+        },
+        {
+          "Name": "substruct2",
+          "FieldType": "Struct",
+          "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypeMeshClip+MeshClip_Struct2",
+          "IsArray": true
+        },
+        {
+          "Name": "substruct3",
+          "FieldType": "Struct",
+          "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypeMeshClip+MeshClip_Struct3",
+          "IsArray": true
+        },
+        {
+          "Name": "substruct4",
+          "FieldType": "Struct",
+          "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypeMeshClip+MeshClip_Struct4",
+          "IsArray": true
+        }
+      ]
+    },
+    "TypeMeshExpression": {
+      "TypeID": 17,
+      "Name": "TypeMeshExpression",
+      "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypeMeshExpression",
+      "Hash": 2044110685,
+      "Fields": [
+        {
+          "Name": "substructCount",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "substructLength",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn4",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn5_0",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn5_1",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn5_2",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn5_3",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn5_4",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn5_5",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn5_6",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn5_7",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn5_8",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn5_9",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn5_10",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn5_11",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn5_12",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn5_13",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn5_14",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn5_15",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn5_16",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn5_17",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn5_18",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "expressions",
+          "FieldType": "Object",
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapperBase"
+        }
+      ]
+    },
+    "TypeRibbonFollow": {
+      "TypeID": 18,
+      "Name": "TypeRibbonFollow",
+      "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypeRibbonFollow",
+      "Hash": 2332872096,
+      "Fields": [
+        {
+          "Name": "emission",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "color0",
+          "FieldType": "Color"
+        },
+        {
+          "Name": "color1",
+          "FieldType": "Color"
+        },
+        {
+          "Name": "unkn4",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn5",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn6",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn7",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn9",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn10",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "trailWidth",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn12",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "sb_unkn0",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn14",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn15",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "trailLength",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn17",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "ukn18",
+          "FieldType": "S32"
+        }
+      ]
+    },
+    "TypeRibbonLength": {
+      "TypeID": 19,
+      "Name": "TypeRibbonLength",
+      "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypeRibbonLength",
+      "Hash": 1397878967,
+      "Fields": [
+        {
+          "Name": "unkn1_0",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "color0",
+          "FieldType": "Color"
+        },
+        {
+          "Name": "color1",
+          "FieldType": "Color"
+        },
+        {
+          "Name": "unkn1_3",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_4",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_5",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_6",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_8",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_9",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_10",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_11",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_12",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_14",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_15",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_16",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_17",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_18",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_19",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_20",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_21",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_22",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_23",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_24",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_25",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_26",
+          "FieldType": "F32"
+        }
+      ]
+    },
+    "TypeRibbonChain": {
+      "TypeID": 20,
+      "Name": "TypeRibbonChain",
+      "Classname": "RszTool.Efx.Structs.RE7.EFXAttributeTypeRibbonChain",
+      "Hash": 2731342673,
+      "Fields": [
+        {
+          "Name": "unkn1",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "color0",
+          "FieldType": "Color"
+        },
+        {
+          "Name": "color1",
+          "FieldType": "Color"
+        },
+        {
+          "Name": "unkn2_0",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "null2_1",
+          "FieldType": "ukn_type"
+        },
+        {
+          "Name": "null2_2",
+          "FieldType": "ukn_type"
+        },
+        {
+          "Name": "unkn2_3",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "null2_4",
+          "FieldType": "ukn_type"
+        },
+        {
+          "Name": "unkn2_5",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "null2_6",
+          "FieldType": "ukn_type"
+        },
+        {
+          "Name": "unkn2_7",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "null2_8",
+          "FieldType": "ukn_type"
+        },
+        {
+          "Name": "unkn2_9",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn2_10",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn2_11",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn2_12",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "null2_13",
+          "FieldType": "ukn_type"
+        },
+        {
+          "Name": "unkn2_14",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "null2_15",
+          "FieldType": "ukn_type"
+        },
+        {
+          "Name": "unkn2_16",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "null2_17",
+          "FieldType": "ukn_type"
+        },
+        {
+          "Name": "unkn2_18",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "null2_19",
+          "FieldType": "ukn_type"
+        },
+        {
+          "Name": "null2_20",
+          "FieldType": "ukn_type"
+        },
+        {
+          "Name": "unkn2_21",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "null2_22",
+          "FieldType": "ukn_type"
+        },
+        {
+          "Name": "null2_23",
+          "FieldType": "ukn_type"
+        },
+        {
+          "Name": "null2_24",
+          "FieldType": "ukn_type"
+        }
+      ]
+    },
+    "TypeRibbonFollowExpression": {
+      "TypeID": 21,
+      "Name": "TypeRibbonFollowExpression",
+      "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypeRibbonFollowExpression",
+      "Hash": 2157012548,
+      "Fields": [
+        {
+          "Name": "unkn1_0",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_1",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_2",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_3",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_4",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_5",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_6",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_7",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "expressions",
+          "FieldType": "Object",
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapperBase"
+        }
+      ]
+    },
+    "TypeRibbonLengthExpression": {
+      "TypeID": 22,
+      "Name": "TypeRibbonLengthExpression",
+      "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypeRibbonLengthExpression",
+      "Hash": 3792589044,
+      "Fields": [
+        {
+          "Name": "unkn1",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn2",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn3",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn4",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn5",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn6",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "expressions",
+          "FieldType": "Object",
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapperBase"
+        }
+      ]
+    },
+    "TypeRibbonChainExpression": {
+      "TypeID": 23,
+      "Name": "TypeRibbonChainExpression",
+      "Classname": "RszTool.Efx.Structs.RERT.EFXAttributeTypeRibbonChainExpression",
+      "Hash": 1535488948,
+      "Fields": [
+        {
+          "Name": "unkn0",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn2",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn3",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn4",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn5",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn6",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn7",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "expressions",
+          "FieldType": "Object",
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapperBase"
+        }
+      ]
+    },
+    "TypePolygon": {
+      "TypeID": 24,
+      "Name": "TypePolygon",
+      "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypePolygon",
+      "Hash": 3422103263,
+      "Fields": [
+        {
+          "Name": "mFlags",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "color0",
+          "FieldType": "Color"
+        },
+        {
+          "Name": "color1",
+          "FieldType": "Color"
+        },
+        {
+          "Name": "unkn2",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn3",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn4_0",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn4_1",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn4_3",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn4_4",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn4_5",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn4_6",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn4_7",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn4_8",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn4_9",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn4_10",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn4_11",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn4_12",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn4_13",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn4_14",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn4_15",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn4_16",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn4_17",
+          "FieldType": "F32"
+        }
+      ]
+    },
+    "TypePolygonClip": {
+      "TypeID": 25,
+      "Name": "TypePolygonClip",
+      "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypePolygonClip",
+      "Hash": 1462300979,
+      "Fields": [
+        {
+          "Name": "unkn0",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn2",
+          "FieldType": "S32"
+        },
+        {
+          "Name": "unkn3",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn4",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn5",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "substruct0Length",
+          "FieldType": "S32",
+          "Flag": "StructSize",
+          "FlagTarget": "substruct0"
+        },
+        {
+          "Name": "substruct1Length",
+          "FieldType": "S32",
+          "Flag": "StructSize",
+          "FlagTarget": "substruct1"
+        },
+        {
+          "Name": "substruct2Length",
+          "FieldType": "S32",
+          "Flag": "StructSize",
+          "FlagTarget": "substruct2"
+        },
+        {
+          "Name": "substruct3Length",
+          "FieldType": "S32",
+          "Flag": "StructSize",
+          "FlagTarget": "substruct3"
+        },
+        {
+          "Name": "substruct0",
+          "FieldType": "U8",
+          "IsArray": true
+        },
+        {
+          "Name": "substruct1",
+          "FieldType": "S32",
+          "IsArray": true
+        },
+        {
+          "Name": "substruct2",
+          "FieldType": "S32",
+          "IsArray": true
+        },
+        {
+          "Name": "substruct3",
+          "FieldType": "F32",
+          "IsArray": true
+        }
+      ]
+    },
+    "TypePolygonExpression": {
+      "TypeID": 26,
+      "Name": "TypePolygonExpression",
+      "Classname": "RszTool.Efx.Structs.DMC5.EFXAttributeTypePolygonExpression",
+      "Hash": 2152351177,
+      "Fields": [
+        {
+          "Name": "unkn0",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn2",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn3",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn4",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn5",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn6",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn7",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn8",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn9",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn10",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn11",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn12",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn13",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn14",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn15",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn16",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn17",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn18",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "expressions",
+          "FieldType": "Object",
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapperBase"
+        }
+      ]
+    },
+    "TypeRibbonTrail": {
+      "TypeID": 27,
+      "Name": "TypeRibbonTrail",
+      "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypeRibbonTrail",
+      "Hash": 1778792349,
+      "Fields": [
+        {
+          "Name": "unkn0",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "color0",
+          "FieldType": "Color"
+        },
+        {
+          "Name": "color1",
+          "FieldType": "Color"
+        },
+        {
+          "Name": "unkn4",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn5",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn6",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn7",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn8",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn9",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn11",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn12",
+          "FieldType": "U32"
+        }
+      ]
+    },
+    "TypePolygonTrail": {
+      "TypeID": 28,
+      "Name": "TypePolygonTrail",
+      "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypePolygonTrail",
+      "Hash": 1607460306,
+      "Fields": [
+        {
+          "Name": "unkn1",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "color1",
+          "FieldType": "Color"
+        },
+        {
+          "Name": "color2",
+          "FieldType": "Color"
+        },
+        {
+          "Name": "unkn4",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn5",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn6",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn7",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn8",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn9",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn10",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn11",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn12",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn13",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn14",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn15",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "color3",
+          "FieldType": "Color"
+        },
+        {
+          "Name": "color4",
+          "FieldType": "Color"
+        },
+        {
+          "Name": "color5",
+          "FieldType": "Color"
+        },
+        {
+          "Name": "unkn19",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn20",
+          "FieldType": "F32"
+        }
+      ]
+    },
+    "TypeNoDraw": {
+      "TypeID": 29,
+      "Name": "TypeNoDraw",
+      "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypeNoDraw",
+      "Hash": 4051002511,
+      "Fields": [
+        {
+          "Name": "unkn1_0",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "color0",
+          "FieldType": "Color"
+        },
+        {
+          "Name": "color1",
+          "FieldType": "Color"
+        },
+        {
+          "Name": "unkn1_3",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_4",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_5",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_6",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_7",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_8",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_9",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_10",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_11",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_12",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_13",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_14",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_15",
+          "FieldType": "F32"
+        }
+      ]
+    },
+    "Velocity2D": {
+      "TypeID": 30,
+      "Name": "Velocity2D",
+      "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeVelocity2D",
+      "Hash": 4058879783,
+      "Fields": [
+        {
+          "Name": "unkn1_0",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_1",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_2",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_3",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_4",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_5",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_6",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_7",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn2_0",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn2_1",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn2_2",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn2_3",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn2_4",
+          "FieldType": "F32"
+        }
+      ]
+    },
+    "Velocity2DExpression": {
+      "TypeID": 31,
+      "Name": "Velocity2DExpression",
+      "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeVelocity2DExpression",
+      "Hash": 185719817,
+      "Fields": [
+        {
+          "Name": "unkn0",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn2",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn3",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn4",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn5",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn6",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn7",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn8",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "expressions",
+          "FieldType": "Object",
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapperBase"
+        }
+      ]
+    },
+    "Velocity3D": {
+      "TypeID": 32,
+      "Name": "Velocity3D",
+      "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeVelocity3D",
+      "Hash": 2364469665,
+      "Fields": [
+        {
+          "Name": "unkn2_0",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn2_1",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn2_2",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn2_3",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn2_4",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn2_5",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn2_6",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn2_7",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn2_8",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn2_9",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn2_12",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn2_13",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn2_14",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn2_15",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "re4_unkn0",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "re4_unkn1",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn3",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn4_0",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn4_2",
+          "FieldType": "F32"
+        }
+      ]
+    },
+    "Velocity3DExpression": {
+      "TypeID": 33,
+      "Name": "Velocity3DExpression",
+      "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeVelocity3DExpression",
+      "Hash": 3585941974,
+      "Fields": [
+        {
+          "Name": "unkn1_0",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "indicesCount",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_2",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_3",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_4",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_5",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_6",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_7",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_8",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_9",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_10",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_11",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_12",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "expressions",
+          "FieldType": "Object",
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapperBase"
+        }
+      ]
+    },
+    "RotateAnim": {
+      "TypeID": 34,
+      "Name": "RotateAnim",
+      "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeRotateAnim",
+      "Hash": 1959052390,
+      "Fields": [
+        {
+          "Name": "unkn1_0",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "rotateSpeedX",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "rotateSpeedXRandom",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "rotateSpeedY",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "rotateSpeedYRandom",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "rotateSpeedZ",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "rotateSpeedZRandom",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn4_2",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn4_3",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn4_4",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn4_5",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn4_6",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn4_7",
+          "FieldType": "F32"
+        }
+      ]
+    },
+    "RotateAnimExpression": {
+      "TypeID": 35,
+      "Name": "RotateAnimExpression",
+      "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeRotateAnimExpression",
+      "Hash": 2479476529,
+      "Fields": [
+        {
+          "Name": "ukn1_0",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "ukn1_1",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "ukn1_2",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "ukn1_3",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "ukn1_4",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "ukn1_5",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "ukn1_6",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "ukn1_7",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "ukn1_8",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "ukn1_9",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "ukn1_10",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "ukn1_11",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "ukn1_12",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "expressions",
+          "FieldType": "Object",
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapperBase"
+        }
+      ]
+    },
+    "ScaleAnim": {
+      "TypeID": 36,
+      "Name": "ScaleAnim",
+      "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeScaleAnim",
+      "Hash": 3894628461,
+      "Fields": [
+        {
+          "Name": "minScale",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_1",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "maxScale",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_3",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_4",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_5",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_6",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_7",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_8",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_9",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_10",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_11",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_12",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_13",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_14",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_15",
+          "FieldType": "F32"
+        }
+      ]
+    },
+    "ScaleAnimExpression": {
+      "TypeID": 37,
+      "Name": "ScaleAnimExpression",
+      "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeScaleAnimExpression",
+      "Hash": 375733216,
+      "Fields": [
+        {
+          "Name": "unkn1",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn2",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn3",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "expressions",
+          "FieldType": "Object",
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapperBase"
+        }
+      ]
+    },
+    "Life": {
+      "TypeID": 38,
+      "Name": "Life",
+      "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeLife",
+      "Hash": 1921954370,
+      "Fields": [
+        {
+          "Name": "AppearFrameMin",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "AppearFrameMax",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "KeepFrameMin",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "KeepFrameMax",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "VanishFrameMin",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "VanishFrameMax",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn7",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn8",
+          "FieldType": "U32"
+        }
+      ]
+    },
+    "LifeExpression": {
+      "TypeID": 39,
+      "Name": "LifeExpression",
+      "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeLifeExpression",
+      "Hash": 4115785933,
+      "Fields": [
+        {
+          "Name": "unkn1_0",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_1",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_2",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_3",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "dd2_unkn1",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "dd2_unkn2",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "dd2_unkn3",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "expressions",
+          "FieldType": "Object",
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapperBase"
+        }
+      ]
+    },
+    "UVSequence": {
+      "TypeID": 40,
+      "Name": "UVSequence",
+      "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeUVSequence",
+      "Hash": 1085344619,
+      "Fields": [
+        {
+          "Name": "unkn1",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn2",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "startingFrame",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "startingFrameRandom",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "animationSpeed",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "animationSpeedRandom",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "mode",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "uvsPath",
+          "FieldType": "String"
+        }
+      ]
+    },
+    "UVSequenceExpression": {
+      "TypeID": 41,
+      "Name": "UVSequenceExpression",
+      "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeUVSequenceExpression",
+      "Hash": 3018798983,
+      "Fields": [
+        {
+          "Name": "unkn1_0",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_1",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_2",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_3",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_4",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_5",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_6",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "expressions",
+          "FieldType": "Object",
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapperBase"
+        }
+      ]
+    },
+    "EmitterShape2D": {
+      "TypeID": 42,
+      "Name": "EmitterShape2D",
+      "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeEmitterShape2D",
+      "Hash": 2816830143,
+      "Fields": [
+        {
+          "Name": "unkn1_0",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_1",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_2",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_3",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_4",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_5",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_6",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_7",
+          "FieldType": "F32"
+        }
+      ]
+    },
+    "EmitterShape2DExpression": {
+      "TypeID": 43,
+      "Name": "EmitterShape2DExpression",
+      "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeEmitterShape2DExpression",
+      "Hash": 2300092189,
+      "Fields": [
+        {
+          "Name": "unkn1_0",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_1",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_2",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_3",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_4",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_5",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "expressions",
+          "FieldType": "Object",
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapper"
+        }
+      ]
+    },
+    "EmitterShape3D": {
+      "TypeID": 44,
+      "Name": "EmitterShape3D",
+      "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeEmitterShape3D",
+      "Hash": 567436501,
+      "Fields": [
+        {
+          "Name": "RangeXMin",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "RangeXMax",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "RangeYMin",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "RangeYMax",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "RangeZMin",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "RangeZMax",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "ShapeType",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "RangeDivideNum",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "RangeDivideAxis",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "LocalRotationX",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "LocalRotationY",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "LocalRotationZ",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "RotationOrder",
+          "FieldType": "U32"
+        }
+      ]
+    },
+    "EmitterShape3DExpression": {
+      "TypeID": 45,
+      "Name": "EmitterShape3DExpression",
+      "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeEmitterShape3DExpression",
+      "Hash": 3247970493,
+      "Fields": [
+        {
+          "Name": "unkn1_0",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_1",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_2",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_3",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_4",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_5",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_6",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "expressions",
+          "FieldType": "Object",
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapperBase"
+        }
+      ]
+    },
+    "AlphaCorrection": {
+      "TypeID": 46,
+      "Name": "AlphaCorrection",
+      "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeAlphaCorrection",
+      "Hash": 398967792,
+      "Fields": [
+        {
+          "Name": "unkn2_0",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn2_1",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn2_2",
+          "FieldType": "F32"
+        }
+      ]
+    },
+    "TypeStrainRibbon": {
+      "TypeID": 47,
+      "Name": "TypeStrainRibbon",
+      "Classname": "RszTool.Efx.Structs.DMC5.EFXAttributeTypeStrainRibbon",
+      "Hash": 266691646,
+      "Fields": [
+        {
+          "Name": "ukn1",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "color0",
+          "FieldType": "Color"
+        },
+        {
+          "Name": "color1",
+          "FieldType": "Color"
+        },
+        {
+          "Name": "unkn1_3",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "ukn2_0",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "ukn2_1",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "ukn2_2",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "ukn2_3",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "ukn2_4",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "ukn2_5",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "ukn2_6",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "ukn2_7",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "ukn2_8",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "ukn2_9",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "ukn2_10",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "ukn2_11",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "ukn2_12",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "ukn2_13",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "ukn2_14",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "ukn2_15",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "ukn2_16",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "ukn2_17",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "ukn2_18",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "ukn2_19",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "ukn2_20",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "ukn2_21",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "ukn2_22",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "ukn2_23",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "ukn2_24",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "ukn2_25",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "ukn2_26",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "ukn2_27",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "boneName",
+          "FieldType": "String"
+        }
+      ]
+    },
+    "TypeStrainRibbonExpression": {
+      "TypeID": 48,
+      "Name": "TypeStrainRibbonExpression",
+      "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypeStrainRibbonExpression",
+      "Hash": 861043447,
+      "Fields": [
+        {
+          "Name": "unkn1_0",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_1",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_2",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_3",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_4",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_5",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_6",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_7",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_8",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_9",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_10",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_11",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_12",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_13",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "expressions",
+          "FieldType": "Object",
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapper"
+        }
+      ]
+    },
+    "ShaderSettings": {
+      "TypeID": 49,
+      "Name": "ShaderSettings",
+      "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeShaderSettings",
+      "Hash": 932205215,
+      "Fields": [
+        {
+          "Name": "unkn1",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn2",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn3",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn4",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn5",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "color0",
+          "FieldType": "Color"
+        },
+        {
+          "Name": "unkn6",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn7",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn8",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn9",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn10",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn11",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn12",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn13",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn14",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn15",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn16",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn19",
+          "FieldType": "U32"
+        }
+      ]
+    },
+    "ShaderSettingsExpression": {
+      "TypeID": 50,
+      "Name": "ShaderSettingsExpression",
+      "Classname": "RszTool.Efx.Structs.DMC5.EFXAttributeShaderSettingsExpression",
+      "Hash": 3433628069,
+      "Fields": [
+        {
+          "Name": "ukn0",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "ukn1",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "expressions",
+          "FieldType": "Object",
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapperBase"
+        }
+      ]
+    },
+    "Distortion": {
+      "TypeID": 51,
+      "Name": "Distortion",
+      "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeDistortion",
+      "Hash": 613548987,
+      "Fields": [
+        {
+          "Name": "distortionType",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.RE4.DistortionType"
+        },
+        {
+          "Name": "unkn2_strength",
+          "FieldType": "F32"
+        }
+      ]
+    },
+    "RenderTarget": {
+      "TypeID": 52,
+      "Name": "RenderTarget",
+      "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeRenderTarget",
+      "Hash": 582562912,
+      "Fields": [
+        {
+          "Name": "unkn_toggle",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "rtexPath",
+          "FieldType": "String"
+        }
+      ]
+    },
+    "PtLife": {
+      "TypeID": 53,
+      "Name": "PtLife",
+      "Classname": "RszTool.Efx.Structs.RE4.EFXAttributePtLife",
+      "Hash": 1315610037,
+      "Fields": [
+        {
+          "Name": "unkn1_0",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_1",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "actionIndex",
+          "FieldType": "S32"
+        }
+      ]
+    },
+    "PtBehavior": {
+      "TypeID": 54,
+      "Name": "PtBehavior",
+      "Classname": "RszTool.Efx.Structs.RE4.EFXAttributePtBehavior",
+      "Hash": 2966398030,
+      "Fields": [
+        {
+          "Name": "unkn1",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "behaviorStringLength",
+          "FieldType": "S32",
+          "Flag": "StringLength",
+          "FlagTarget": "behaviorString"
+        },
+        {
+          "Name": "varCount",
+          "FieldType": "S32",
+          "Flag": "StructSize",
+          "FlagTarget": "properties"
+        },
+        {
+          "Name": "behaviorString",
+          "FieldType": "String"
+        },
+        {
+          "Name": "properties",
+          "FieldType": "Object",
+          "Classname": "RszTool.Efx.Structs.RE4.PtBehaviorVariable",
+          "IsArray": true
+        }
+      ]
+    },
+    "PlayEfx": {
+      "TypeID": 56,
+      "Name": "PlayEfx",
+      "Classname": "RszTool.Efx.Structs.RE4.EFXAttributePlayEfx",
+      "Hash": 214092906,
+      "Fields": [
+        {
+          "Name": "efxPath",
+          "FieldType": "String"
+        }
+      ]
+    },
+    "FadeByAngle": {
+      "TypeID": 57,
+      "Name": "FadeByAngle",
+      "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeFadeByAngle",
+      "Hash": 2995321683,
+      "Fields": [
+        {
+          "Name": "unkn1_0",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_1",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_2",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_3",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_4",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_5",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_6",
+          "FieldType": "F32"
+        }
+      ]
+    },
+    "FadeByAngleExpression": {
+      "TypeID": 58,
+      "Name": "FadeByAngleExpression",
+      "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeFadeByAngleExpression",
+      "Hash": 608764265,
+      "Fields": [
+        {
+          "Name": "unkn0",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn2",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "expressions",
+          "FieldType": "Object",
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapper"
+        }
+      ]
+    },
+    "FadeByDepth": {
+      "TypeID": 59,
+      "Name": "FadeByDepth",
+      "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeFadeByDepth",
+      "Hash": 3868049376,
+      "Fields": [
+        {
+          "Name": "unkn1",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn2",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn3",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn4",
+          "FieldType": "F32"
+        }
+      ]
+    },
+    "FadeByDepthExpression": {
+      "TypeID": 60,
+      "Name": "FadeByDepthExpression",
+      "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeFadeByDepthExpression",
+      "Hash": 2903749040,
+      "Fields": [
+        {
+          "Name": "unkn1_0",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_1",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_2",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_3",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_4",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "expressions",
+          "FieldType": "Object",
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapperBase"
+        }
+      ]
+    },
+    "FadeByOcclusion": {
+      "TypeID": 61,
+      "Name": "FadeByOcclusion",
+      "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeFadeByOcclusion",
+      "Hash": 1899156877,
+      "Fields": [
+        {
+          "Name": "unkn1",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn2",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn3",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn4",
+          "FieldType": "F32"
+        }
+      ]
+    },
+    "FakeDoF": {
+      "TypeID": 63,
+      "Name": "FakeDoF",
+      "Classname": "RszTool.Efx.Structs.DMC5.EFXAttributeFakeDoF",
+      "Hash": 3437132732,
+      "Fields": [
+        {
+          "Name": "unkn0",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn2",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn3",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn4",
+          "FieldType": "F32"
+        }
+      ]
+    },
+    "LuminanceBleed": {
+      "TypeID": 64,
+      "Name": "LuminanceBleed",
+      "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeLuminanceBleed",
+      "Hash": 994867349,
+      "Fields": [
+        {
+          "Name": "unkn0",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn2",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn3",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn4",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn5",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn6",
+          "FieldType": "F32"
+        }
+      ]
+    },
+    "TypeNodeBillboard": {
+      "TypeID": 65,
+      "Name": "TypeNodeBillboard",
+      "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypeNodeBillboard",
+      "Hash": 1839216616,
+      "Fields": [
+        {
+          "Name": "unkn1_0",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_1",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_2",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_4",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_5",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_6",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_7",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_8",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_9",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "color1",
+          "FieldType": "Color"
+        },
+        {
+          "Name": "unkn2_1",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn2_2",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn2_3",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn2_4",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn2_5",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn2_6",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn2_7",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "color3",
+          "FieldType": "Color"
+        },
+        {
+          "Name": "unkn3_1",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn3_2",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn3_3",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn3_4",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn3_5",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn3_6",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn3_7",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "color5",
+          "FieldType": "Color"
+        },
+        {
+          "Name": "unkn4_1",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn4_2",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn4_3",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn4_4",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn4_5",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn4_6",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn4_7",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "color7",
+          "FieldType": "Color"
+        },
+        {
+          "Name": "unkn5_1",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn5_2",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn5_3",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn5_4",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn5_5",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_52",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_53",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_54",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_55",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_56",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_57",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_58",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_61",
+          "FieldType": "F32"
+        }
+      ]
+    },
+    "TypeNodeBillboardExpression": {
+      "TypeID": 66,
+      "Name": "TypeNodeBillboardExpression",
+      "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypeNodeBillboardExpression",
+      "Hash": 982224773,
+      "Fields": [
+        {
+          "Name": "unkn1_0",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_1",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_2",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_3",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_4",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_5",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_6",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_7",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_8",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_9",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_10",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_11",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_12",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_13",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_14",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_15",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_16",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_17",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_18",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_19",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_20",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_21",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_22",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_23",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_24",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_25",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_26",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_27",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_28",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_29",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_30",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_31",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_32",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_33",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_34",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_35",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_36",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_37",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_38",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_39",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_40",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_41",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_42",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_43",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "expressions",
+          "FieldType": "Object",
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapper"
+        }
+      ]
+    },
+    "UnitCulling": {
+      "TypeID": 67,
+      "Name": "UnitCulling",
+      "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeUnitCulling",
+      "Hash": 3405184299,
+      "Fields": [
+        {
+          "Name": "unkn1_0",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_1",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_2",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_3",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_4",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_5",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_6",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_7",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_8",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_9",
+          "FieldType": "F32"
+        }
+      ]
+    },
+    "FluidEmitter2D": {
+      "TypeID": 68,
+      "Name": "FluidEmitter2D",
+      "Classname": "RszTool.Efx.Structs.DMC5.EFXAttributeFluidEmitter2D",
+      "Hash": 3234484701,
+      "Fields": [
+        {
+          "Name": "unkn0",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn2",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn3",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn4",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn5",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn6",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn7",
+          "FieldType": "F32"
+        }
+      ]
+    },
+    "FluidSimulator2D": {
+      "TypeID": 69,
+      "Name": "FluidSimulator2D",
+      "Classname": "RszTool.Efx.Structs.DMC5.EFXAttributeFluidSimulator2D",
+      "Hash": 3676837452,
+      "Fields": [
+        {
+          "Name": "unkn1_0",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_1",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_2",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_3",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_4",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_5",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_6",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_7",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_8",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_9",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_10",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_11",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_12",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_13",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_14",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_15",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_16",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_17",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_18",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_19",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_20",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_21",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_22",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_23",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_24",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_25",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_26",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_27",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_28_re3",
+          "FieldType": "S32"
+        },
+        {
+          "Name": "unkn1_29_re3",
+          "FieldType": "S32"
+        },
+        {
+          "Name": "unkn1_30",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_31",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_32",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_33",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_34",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_35",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_36_v1",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_37",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_38",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_39_re3",
+          "FieldType": "S32"
+        },
+        {
+          "Name": "unkn1_40",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_41",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_42_re3",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn2_0",
+          "FieldType": "ukn_type"
+        },
+        {
+          "Name": "unkn2_1",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn2_2",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "extraByteCount",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "path1Size",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "path2Size",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "path3Size",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "path4Size",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "path5Size",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "uvsPath1",
+          "FieldType": "String"
+        },
+        {
+          "Name": "uvsPath2",
+          "FieldType": "String"
+        },
+        {
+          "Name": "uvsPath3",
+          "FieldType": "String"
+        },
+        {
+          "Name": "uvsPath4",
+          "FieldType": "String"
+        },
+        {
+          "Name": "uvsPath5",
+          "FieldType": "String"
+        },
+        {
+          "Name": "extraBytes",
+          "FieldType": "U8",
+          "IsArray": true
+        }
+      ]
+    },
+    "PlayEmitter": {
+      "TypeID": 70,
+      "Name": "PlayEmitter",
+      "Classname": "RszTool.Efx.Structs.RE4.EFXAttributePlayEmitter",
+      "Hash": 1225564198,
+      "Fields": [
+        {
+          "Name": "efxrSize",
+          "FieldType": "U32",
+          "Flag": "StructSize",
+          "FlagTarget": "efxrData"
+        },
+        {
+          "Name": "efxrData",
+          "FieldType": "Data",
+          "Classname": "RszTool.EfxFile",
+          "IsArray": true,
+          "Flag": "EmbeddedEFX"
+        }
+      ]
+    },
+    "PtTransform3D": {
+      "TypeID": 71,
+      "Name": "PtTransform3D",
+      "Classname": "RszTool.Efx.Structs.RE4.EFXAttributePtTransform3D",
+      "Hash": 1359642926,
+      "Fields": [
+        {
+          "Name": "unkn1_0",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_1",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_2",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_3",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_4",
+          "FieldType": "ukn_type"
+        },
+        {
+          "Name": "unkn1_5",
+          "FieldType": "ukn_type"
+        },
+        {
+          "Name": "unkn1_6",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_7",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_8",
+          "FieldType": "F32"
+        }
+      ]
+    },
+    "PtTransform3DClip": {
+      "TypeID": 72,
+      "Name": "PtTransform3DClip",
+      "Classname": "RszTool.Efx.Structs.RE4.EFXAttributePtTransform3DClip",
+      "Hash": 666611434,
+      "Fields": [
+        {
+          "Name": "unkn0",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn2",
+          "FieldType": "S32"
+        },
+        {
+          "Name": "unkn3",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn4",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn5",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn6",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "substruct1Length",
+          "FieldType": "S32",
+          "Flag": "StructSize",
+          "FlagTarget": "substruct1"
+        },
+        {
+          "Name": "substruct2Length",
+          "FieldType": "S32",
+          "Flag": "StructSize",
+          "FlagTarget": "substruct2"
+        },
+        {
+          "Name": "substruct3Length",
+          "FieldType": "S32",
+          "Flag": "StructSize",
+          "FlagTarget": "substruct3"
+        },
+        {
+          "Name": "substruct1",
+          "FieldType": "S32",
+          "IsArray": true
+        },
+        {
+          "Name": "substruct2",
+          "FieldType": "S32",
+          "IsArray": true
+        },
+        {
+          "Name": "substruct3",
+          "FieldType": "F32",
+          "IsArray": true
+        }
+      ]
+    },
+    "PtTransform2D": {
+      "TypeID": 73,
+      "Name": "PtTransform2D",
+      "Classname": "RszTool.Efx.Structs.DMC5.EFXAttributePtTransform2D",
+      "Hash": 3007435788,
+      "Fields": [
+        {
+          "Name": "unkn0",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn2",
+          "FieldType": "ukn_type"
+        },
+        {
+          "Name": "unkn3",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn4",
+          "FieldType": "F32"
+        }
+      ]
+    },
+    "PtTransform2DClip": {
+      "TypeID": 74,
+      "Name": "PtTransform2DClip",
+      "Classname": "RszTool.Efx.Structs.RE8.EFXAttributePtTransform2DClip",
+      "Hash": 3373883657,
+      "Fields": [
+        {
+          "Name": "unkn0",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "null1",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn2",
+          "FieldType": "S32"
+        },
+        {
+          "Name": "unkn3",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn4",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn5",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "null6",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "substruct1Length",
+          "FieldType": "S32",
+          "Flag": "StructSize",
+          "FlagTarget": "substruct1"
+        },
+        {
+          "Name": "substruct2Length",
+          "FieldType": "S32",
+          "Flag": "StructSize",
+          "FlagTarget": "substruct2"
+        },
+        {
+          "Name": "substruct3Length",
+          "FieldType": "S32",
+          "Flag": "StructSize",
+          "FlagTarget": "substruct3"
+        },
+        {
+          "Name": "substruct1",
+          "FieldType": "S32",
+          "IsArray": true
+        },
+        {
+          "Name": "substruct2",
+          "FieldType": "S32",
+          "IsArray": true
+        },
+        {
+          "Name": "substruct3",
+          "FieldType": "F32",
+          "IsArray": true
+        }
+      ]
+    },
+    "PtVelocity3D": {
+      "TypeID": 75,
+      "Name": "PtVelocity3D",
+      "Classname": "RszTool.Efx.Structs.RE4.EFXAttributePtVelocity3D",
+      "Hash": 2477481854,
+      "Fields": [
+        {
+          "Name": "unkn1_0",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_1",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_2",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1_3",
+          "FieldType": "F32"
+        }
+      ]
+    },
+    "PtVelocity3DClip": {
+      "TypeID": 76,
+      "Name": "PtVelocity3DClip",
+      "Classname": "RszTool.Efx.Structs.RE4.EFXAttributePtVelocity3DClip",
+      "Hash": 149251849,
+      "Fields": [
+        {
+          "Name": "unkn0",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn2",
+          "FieldType": "S32"
+        },
+        {
+          "Name": "unkn3",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn4",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn5",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn6",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "substruct1Length",
+          "FieldType": "S32",
+          "Flag": "StructSize",
+          "FlagTarget": "substruct1"
+        },
+        {
+          "Name": "substruct2Length",
+          "FieldType": "S32",
+          "Flag": "StructSize",
+          "FlagTarget": "substruct2"
+        },
+        {
+          "Name": "substruct3Length",
+          "FieldType": "S32",
+          "Flag": "StructSize",
+          "FlagTarget": "substruct3"
+        },
+        {
+          "Name": "substruct1",
+          "FieldType": "S32",
+          "IsArray": true
+        },
+        {
+          "Name": "substruct2",
+          "FieldType": "S32",
+          "IsArray": true
+        },
+        {
+          "Name": "substruct3",
+          "FieldType": "F32",
+          "IsArray": true
+        }
+      ]
+    },
+    "PtVelocity2D": {
+      "TypeID": 77,
+      "Name": "PtVelocity2D",
+      "Classname": "RszTool.Efx.Structs.RERT.EFXAttributePtVelocity2D",
+      "Hash": 3902102560,
+      "Fields": [
+        {
+          "Name": "ukn0",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "ukn1",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "ukn2",
+          "FieldType": "F32"
+        }
+      ]
+    },
+    "PtVelocity2DClip": {
+      "TypeID": 78,
+      "Name": "PtVelocity2DClip",
+      "Classname": "RszTool.Efx.Structs.RERT.EFXAttributePtVelocity2DClip",
+      "Hash": 2449568405,
+      "Fields": [
+        {
+          "Name": "ukn0",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "ukn1",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "ukn2",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "ukn3",
+          "FieldType": "U32"
+        }
+      ]
+    },
+    "PtColliderAction": {
+      "TypeID": 79,
+      "Name": "PtColliderAction",
+      "Classname": "RszTool.Efx.Structs.RE4.EFXAttributePtColliderAction",
+      "Hash": 1194719978,
+      "Fields": [
+        {
+          "Name": "dataFlags",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn2",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "linkedAction",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "ukn_flag2_0",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "ukn_flag2_2",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "ukn_flag2_3",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "ukn_flag2_4",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "ukn_flag2_5",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "ukn_flag2_6",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "ukn_flag2_7",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "ukn_flag2_8",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "ukn_flag2_9",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "ukn_flag2_10",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "ukn_flag2_11",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unknString_flag2",
+          "FieldType": "String"
+        },
+        {
+          "Name": "unknString_flag1",
+          "FieldType": "String"
+        }
+      ]
+    },
+    "PtCollision": {
+      "TypeID": 80,
+      "Name": "PtCollision",
+      "Classname": "RszTool.Efx.Structs.RE4.EFXAttributePtCollision",
+      "Hash": 2824509247,
+      "Fields": [
+        {
+          "Name": "stringBitFlag",
+          "FieldType": "U8"
+        },
+        {
+          "Name": "unkn0_1",
+          "FieldType": "U8"
+        },
+        {
+          "Name": "unkn0_2",
+          "FieldType": "U8"
+        },
+        {
+          "Name": "unkn0_3",
+          "FieldType": "U8"
+        },
+        {
+          "Name": "unkn1",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn2",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn3",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn4",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn5",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn6",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn7",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn8",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn9",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unknString0",
+          "FieldType": "String"
+        },
+        {
+          "Name": "unknString1",
+          "FieldType": "String"
+        }
+      ]
+    },
+    "PtColor": {
+      "TypeID": 81,
+      "Name": "PtColor",
+      "Classname": "RszTool.Efx.Structs.RE4.EFXAttributePtColor",
+      "Hash": 3140469440,
+      "Fields": [
+        {
+          "Name": "unkn1",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn2",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "color0",
+          "FieldType": "Color"
+        }
+      ]
+    },
+    "PtColorClip": {
+      "TypeID": 82,
+      "Name": "PtColorClip",
+      "Classname": "RszTool.Efx.Structs.DMC5.EFXAttributePtColorClip",
+      "Hash": 20975063,
+      "Fields": [
+        {
+          "Name": "secChunkID",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn2",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "loop",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.DMC5.Cycle_Loop"
+        },
+        {
+          "Name": "loopTime",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn3",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn4",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn5",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "substruct1Length",
+          "FieldType": "S32",
+          "Flag": "StructSize",
+          "FlagTarget": "substruct1"
+        },
+        {
+          "Name": "substruct2Length",
+          "FieldType": "S32",
+          "Flag": "StructSize",
+          "FlagTarget": "substruct2"
+        },
+        {
+          "Name": "substruct3Length",
+          "FieldType": "S32",
+          "Flag": "StructSize",
+          "FlagTarget": "substruct3"
+        },
+        {
+          "Name": "substruct1",
+          "FieldType": "S32",
+          "IsArray": true
+        },
+        {
+          "Name": "substruct2",
+          "FieldType": "S32",
+          "IsArray": true
+        },
+        {
+          "Name": "substruct3",
+          "FieldType": "F32",
+          "IsArray": true
+        }
+      ]
+    },
+    "PtUvSequence": {
+      "TypeID": 83,
+      "Name": "PtUvSequence",
+      "Classname": "RszTool.Efx.Structs.RE4.EFXAttributePtUvSequence",
+      "Hash": 640339934,
+      "Fields": [
+        {
+          "Name": "unkn1_0",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_1",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_2",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1_3",
+          "FieldType": "F32"
+        }
+      ]
+    },
+    "PtUvSequenceClip": {
+      "TypeID": 84,
+      "Name": "PtUvSequenceClip",
+      "Classname": "RszTool.Efx.Structs.RE4.EFXAttributePtUvSequenceClip",
+      "Hash": 820482490,
+      "Fields": [
+        {
+          "Name": "unkn0",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn2",
+          "FieldType": "S32"
+        },
+        {
+          "Name": "unkn3",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn4",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn5",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn6",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "substruct1Length",
+          "FieldType": "S32",
+          "Flag": "StructSize",
+          "FlagTarget": "substruct1"
+        },
+        {
+          "Name": "substruct2Length",
+          "FieldType": "S32",
+          "Flag": "StructSize",
+          "FlagTarget": "substruct2"
+        },
+        {
+          "Name": "substruct3Length",
+          "FieldType": "S32",
+          "Flag": "StructSize",
+          "FlagTarget": "substruct3"
+        },
+        {
+          "Name": "substruct1",
+          "FieldType": "S32",
+          "IsArray": true
+        },
+        {
+          "Name": "substruct2",
+          "FieldType": "S32",
+          "IsArray": true
+        },
+        {
+          "Name": "substruct3",
+          "FieldType": "F32",
+          "IsArray": true
+        }
+      ]
+    },
+    "TypeGpuBillboard": {
+      "TypeID": 85,
+      "Name": "TypeGpuBillboard",
+      "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypeGpuBillboard",
+      "Hash": 871912694,
+      "Fields": [
+        {
+          "Name": "unkn1",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn2",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "color0",
+          "FieldType": "Color"
+        },
+        {
+          "Name": "color1",
+          "FieldType": "Color"
+        },
+        {
+          "Name": "emission",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn5",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn6",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn7",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn8",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "effectScale",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn10",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn11",
+          "FieldType": "F32"
+        }
+      ]
+    },
+    "EmitterPriority": {
+      "TypeID": 86,
+      "Name": "EmitterPriority",
+      "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeEmitterPriority",
+      "Hash": 2682251144,
+      "Fields": []
+    }
+  },
+  "Structs": {
+    "RszTool.Efx.Structs.Common.EFXExpressionListWrapperBase": {
+      "Name": "",
+      "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapperBase",
+      "Hash": 3646916518,
+      "Fields": [
+        {
+          "Name": "solverSize",
+          "FieldType": "U32"
+        }
+      ]
+    },
+    "RszTool.Efx.Structs.Common.EFXExpressionListWrapper3": {
+      "Name": "",
+      "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapper3",
+      "Hash": 210741366,
+      "Fields": [
+        {
+          "Name": "expressions",
+          "FieldType": "Object",
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpression3",
+          "IsArray": true
+        }
+      ]
+    },
+    "RszTool.Efx.Structs.Common.EFXExpressionListWrapper": {
+      "Name": "",
+      "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapper",
+      "Hash": 1874543619,
+      "Fields": [
+        {
+          "Name": "expressions",
+          "FieldType": "Object",
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpression",
+          "IsArray": true
+        }
+      ]
+    },
+    "RszTool.Efx.Structs.Common.MdfProperty": {
+      "Name": "",
+      "Classname": "RszTool.Efx.Structs.Common.MdfProperty",
+      "Hash": 2487044820,
+      "Fields": [
+        {
+          "Name": "PropertyNameUTF8Hash",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "parameterCount",
+          "FieldType": "U16"
+        },
+        {
+          "Name": "parameterType",
+          "FieldType": "S16",
+          "Classname": "RszTool.Efx.Structs.Common.MaterialParameterType"
+        },
+        {
+          "Name": "ukn1_2",
+          "FieldType": "S32"
+        },
+        {
+          "Name": "propertyValue",
+          "FieldType": "U8",
+          "IsArray": true
+        }
+      ]
+    },
+    "RszTool.Efx.Structs.RE4.EFXAttributeTypeMeshClip+MeshClip_Struct1": {
+      "Name": "",
+      "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypeMeshClip+MeshClip_Struct1",
+      "Hash": 187226169,
+      "Fields": [
+        {
+          "Name": "unkn0",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1",
+          "FieldType": "U32"
+        }
+      ]
+    },
+    "RszTool.Efx.Structs.RE4.EFXAttributeTypeMeshClip+MeshClip_Struct2": {
+      "Name": "",
+      "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypeMeshClip+MeshClip_Struct2",
+      "Hash": 3490690986,
+      "Fields": [
+        {
+          "Name": "unkn0",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn2",
+          "FieldType": "F32"
+        }
+      ]
+    },
+    "RszTool.Efx.Structs.RE4.EFXAttributeTypeMeshClip+MeshClip_Struct3": {
+      "Name": "",
+      "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypeMeshClip+MeshClip_Struct3",
+      "Hash": 28461360,
+      "Fields": [
+        {
+          "Name": "unkn0",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn2",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn3",
+          "FieldType": "F32"
+        }
+      ]
+    },
+    "RszTool.Efx.Structs.RE4.EFXAttributeTypeMeshClip+MeshClip_Struct4": {
+      "Name": "",
+      "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypeMeshClip+MeshClip_Struct4",
+      "Hash": 2690209542,
+      "Fields": [
+        {
+          "Name": "hash",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn2",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn3",
+          "FieldType": "S32"
+        }
+      ]
+    },
+    "RszTool.Efx.Structs.Common.EFXExpressionListWrapper2": {
+      "Name": "",
+      "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapper2",
+      "Hash": 591288925,
+      "Fields": [
+        {
+          "Name": "indexCount",
+          "FieldType": "S32",
+          "Flag": "StructSize",
+          "FlagTarget": "data2"
+        },
+        {
+          "Name": "unknData",
+          "FieldType": "U32",
+          "IsArray": true
+        },
+        {
+          "Name": "data2",
+          "FieldType": "U32",
+          "IsArray": true
+        }
+      ]
+    },
+    "RszTool.Efx.Structs.RE4.PtBehaviorVariable": {
+      "Name": "",
+      "Classname": "RszTool.Efx.Structs.RE4.PtBehaviorVariable",
+      "Hash": 3404957194,
+      "Fields": [
+        {
+          "Name": "varSize",
+          "FieldType": "S32"
+        },
+        {
+          "Name": "dataType",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.RE4.PtBehaviorPropType"
+        },
+        {
+          "Name": "variable",
+          "FieldType": "Object",
+          "Classname": "RszTool.Efx.Structs.RE4.PtBehaviorVariableDataBase"
+        },
+        {
+          "Name": "behaviorProperty",
+          "FieldType": "String"
+        }
+      ]
+    },
+    "RszTool.Efx.Structs.Common.EFXExpression3": {
+      "Name": "",
+      "Classname": "RszTool.Efx.Structs.Common.EFXExpression3",
+      "Hash": 269523061,
+      "Fields": [
+        {
+          "Name": "struct1Count",
+          "FieldType": "S32",
+          "Flag": "StructSize",
+          "FlagTarget": "struct1"
+        },
+        {
+          "Name": "struct2Count",
+          "FieldType": "S32",
+          "Flag": "StructSize",
+          "FlagTarget": "struct2"
+        },
+        {
+          "Name": "struct3Count",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "struct1",
+          "FieldType": "Struct",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionStruct_Param1",
+          "IsArray": true
+        },
+        {
+          "Name": "struct2",
+          "FieldType": "Object",
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionData",
+          "IsArray": true
+        }
+      ]
+    },
+    "RszTool.Efx.Structs.Common.EFXExpression": {
+      "Name": "",
+      "Classname": "RszTool.Efx.Structs.Common.EFXExpression",
+      "Hash": 4026165671,
+      "Fields": [
+        {
+          "Name": "struct1Count",
+          "FieldType": "S32",
+          "Flag": "StructSize",
+          "FlagTarget": "struct1"
+        },
+        {
+          "Name": "struct2Count",
+          "FieldType": "S32",
+          "Flag": "StructSize",
+          "FlagTarget": "struct2"
+        },
+        {
+          "Name": "struct1",
+          "FieldType": "Struct",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionStruct_Param1",
+          "IsArray": true
+        },
+        {
+          "Name": "struct2",
+          "FieldType": "Object",
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionData",
+          "IsArray": true
+        }
+      ]
+    },
+    "RszTool.Efx.Structs.RE4.PtBehaviorVariableDataBase": {
+      "Name": "",
+      "Classname": "RszTool.Efx.Structs.RE4.PtBehaviorVariableDataBase",
+      "Hash": 564517550,
+      "Fields": [
+        {
+          "Name": "unkn",
+          "FieldType": "S32"
+        },
+        {
+          "Name": "size",
+          "FieldType": "S32"
+        }
+      ]
+    },
+    "RszTool.Efx.Structs.RE4.PtBehaviorVariableDataColor": {
+      "Name": "",
+      "Classname": "RszTool.Efx.Structs.RE4.PtBehaviorVariableDataColor",
+      "Hash": 498161970,
+      "Fields": [
+        {
+          "Name": "color",
+          "FieldType": "Color"
+        },
+        {
+          "Name": "restData",
+          "FieldType": "U8",
+          "IsArray": true
+        }
+      ]
+    },
+    "RszTool.Efx.Structs.RE4.PtBehaviorVariableDataPrefabPath": {
+      "Name": "",
+      "Classname": "RszTool.Efx.Structs.RE4.PtBehaviorVariableDataPrefabPath",
+      "Hash": 3458933686,
+      "Fields": [
+        {
+          "Name": "prefabPath",
+          "FieldType": "String"
+        }
+      ]
+    },
+    "RszTool.Efx.Structs.RE4.PtBehaviorVariableInteger": {
+      "Name": "",
+      "Classname": "RszTool.Efx.Structs.RE4.PtBehaviorVariableInteger",
+      "Hash": 3400636216,
+      "Fields": [
+        {
+          "Name": "value",
+          "FieldType": "S32"
+        },
+        {
+          "Name": "restData",
+          "FieldType": "U8",
+          "IsArray": true
+        }
+      ]
+    },
+    "RszTool.Efx.Structs.RE4.PtBehaviorVariableFloat": {
+      "Name": "",
+      "Classname": "RszTool.Efx.Structs.RE4.PtBehaviorVariableFloat",
+      "Hash": 3314348760,
+      "Fields": [
+        {
+          "Name": "value",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "restData",
+          "FieldType": "U8",
+          "IsArray": true
+        }
+      ]
+    },
+    "RszTool.Efx.Structs.RE4.PtBehaviorVariableFloat2": {
+      "Name": "",
+      "Classname": "RszTool.Efx.Structs.RE4.PtBehaviorVariableFloat2",
+      "Hash": 360670422,
+      "Fields": [
+        {
+          "Name": "Vec",
+          "FieldType": "Vec2"
+        },
+        {
+          "Name": "restData",
+          "FieldType": "U8",
+          "IsArray": true
+        }
+      ]
+    },
+    "RszTool.Efx.Structs.RE4.PtBehaviorVariableFloat3": {
+      "Name": "",
+      "Classname": "RszTool.Efx.Structs.RE4.PtBehaviorVariableFloat3",
+      "Hash": 2422911495,
+      "Fields": [
+        {
+          "Name": "vec",
+          "FieldType": "Vec3"
+        },
+        {
+          "Name": "restData",
+          "FieldType": "U8",
+          "IsArray": true
+        }
+      ]
+    },
+    "RszTool.Efx.Structs.RE4.PtBehaviorVariableDataPrefabUnknown": {
+      "Name": "",
+      "Classname": "RszTool.Efx.Structs.RE4.PtBehaviorVariableDataPrefabUnknown",
+      "Hash": 1694248405,
+      "Fields": [
+        {
+          "Name": "data",
+          "FieldType": "U8",
+          "IsArray": true
+        }
+      ]
+    },
+    "RszTool.Efx.Structs.Common.ExpressionStruct_Param1": {
+      "Name": "",
+      "Classname": "RszTool.Efx.Structs.Common.ExpressionStruct_Param1",
+      "Hash": 2169098896,
+      "Fields": [
+        {
+          "Name": "parameterNameHash",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn2",
+          "FieldType": "U32"
+        }
+      ]
+    },
+    "RszTool.Efx.Structs.Common.EFXExpressionData": {
+      "Name": "",
+      "Classname": "RszTool.Efx.Structs.Common.EFXExpressionData",
+      "Hash": 3151872663,
+      "Fields": [
+        {
+          "Name": "type",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "data",
+          "FieldType": "Object",
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionDataBase"
+        }
+      ]
+    },
+    "RszTool.Efx.Structs.Common.EFXExpressionDataBase": {
+      "Name": "",
+      "Classname": "RszTool.Efx.Structs.Common.EFXExpressionDataBase",
+      "Hash": 2078750061,
+      "Fields": []
+    },
+    "RszTool.Efx.Structs.Common.EFXExpressionDataTypeFloat": {
+      "Name": "",
+      "Classname": "RszTool.Efx.Structs.Common.EFXExpressionDataTypeFloat",
+      "Hash": 1785654360,
+      "Fields": [
+        {
+          "Name": "value",
+          "FieldType": "F32"
+        }
+      ]
+    },
+    "RszTool.Efx.Structs.Common.EFXExpressionDataType1": {
+      "Name": "",
+      "Classname": "RszTool.Efx.Structs.Common.EFXExpressionDataType1",
+      "Hash": 2102558364,
+      "Fields": [
+        {
+          "Name": "value",
+          "FieldType": "U32"
+        }
+      ]
+    },
+    "RszTool.Efx.Structs.Common.EFXExpressionDataType2": {
+      "Name": "",
+      "Classname": "RszTool.Efx.Structs.Common.EFXExpressionDataType2",
+      "Hash": 2119232347,
+      "Fields": [
+        {
+          "Name": "value",
+          "FieldType": "U32"
+        }
+      ]
+    },
+    "RszTool.Efx.Structs.Common.EFXExpressionDataType3": {
+      "Name": "",
+      "Classname": "RszTool.Efx.Structs.Common.EFXExpressionDataType3",
+      "Hash": 4280312563,
+      "Fields": [
+        {
+          "Name": "unkn1",
+          "FieldType": "U32"
+        }
+      ]
+    },
+    "RszTool.Efx.Structs.Common.EFXExpressionDataTypeParameterHash": {
+      "Name": "",
+      "Classname": "RszTool.Efx.Structs.Common.EFXExpressionDataTypeParameterHash",
+      "Hash": 112984600,
+      "Fields": [
+        {
+          "Name": "parameterHash",
+          "FieldType": "U32"
+        }
+      ]
+    }
+  },
+  "Enums": {
+    "RszTool.Efx.Structs.RE4.ExpressionOperator": {
+      "Items": [
+        {
+          "Name": "Addition"
+        },
+        {
+          "Name": "Subtraction",
+          "Value": 1
+        },
+        {
+          "Name": "Multiplication",
+          "Value": 2
+        },
+        {
+          "Name": "Division",
+          "Value": 3
+        },
+        {
+          "Name": "Assign",
+          "Value": 4
+        },
+        {
+          "Name": "ForceWord",
+          "Value": -1
+        }
+      ],
+      "BackingType": "System.Int32"
+    },
+    "RszTool.Efx.Structs.RE4.DistortionType": {
+      "Items": [
+        {
+          "Name": "Blur"
+        },
+        {
+          "Name": "Refract",
+          "Value": 1
+        },
+        {
+          "Name": "BlurTexture",
+          "Value": 2
+        }
+      ],
+      "BackingType": "System.Int32"
+    },
+    "RszTool.Efx.Structs.DMC5.Cycle_Loop": {
+      "Items": [
+        {
+          "Name": "NOT_LOOP",
+          "Value": 2
+        },
+        {
+          "Name": "LOOP",
+          "Value": -1
+        }
+      ],
+      "BackingType": "System.Int32"
+    },
+    "RszTool.Efx.Structs.Common.MaterialParameterType": {
+      "Items": [
+        {
+          "Name": "None"
+        },
+        {
+          "Name": "Float",
+          "Value": 1
+        },
+        {
+          "Name": "Range",
+          "Value": 2
+        },
+        {
+          "Name": "Texture",
+          "Value": 3
+        }
+      ],
+      "BackingType": "System.Int16"
+    },
+    "RszTool.Efx.Structs.RE4.PtBehaviorPropType": {
+      "Items": [
+        {
+          "Name": "PropUint",
+          "Value": 4
+        },
+        {
+          "Name": "PropFloat",
+          "Value": 9
+        },
+        {
+          "Name": "PropRange",
+          "Value": 10
+        },
+        {
+          "Name": "PropFloat3",
+          "Value": 11
+        },
+        {
+          "Name": "PropInt",
+          "Value": 14
+        },
+        {
+          "Name": "PropColor",
+          "Value": 15
+        },
+        {
+          "Name": "PropPrefabpath",
+          "Value": 17
+        },
+        {
+          "Name": "PropEnum",
+          "Value": 18
+        },
+        {
+          "Name": "PropFloat2",
+          "Value": 19
+        },
+        {
+          "Name": "PropWstring",
+          "Value": 21
+        }
+      ],
+      "BackingType": "System.Int32"
+    }
+  }
+}
