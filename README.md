@@ -50,7 +50,7 @@ https://github.com/user-attachments/assets/4ac201b6-41ae-46c4-9772-13dbcc10242a
 </details>
 
 - Create a fresh Godot project anywhere
-- Download the latest release
+- [Download the latest release](https://github.com/kagenocookie/ReachForGodot/releases)
 - Extract the `addons` folder into the Godot project (you should end up with a `<project folder>/addons/ReachForGodot` folder)
 - Next, you need to Build the project with the hammer icon in the top right; if it's not available, go under menu: Project > Tools > C# > Create C# solution
     - you will need to modify the default .csproj file for it to compile, adding the following entries (or copying the [csproj file contents from here](https://github.com/kagenocookie/ReachForGodot/tree/master/.gdignore/docs/example.csproj)):
