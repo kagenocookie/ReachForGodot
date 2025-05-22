@@ -47,6 +47,20 @@ public static class RszTypeConverter
         return FromRszValueSingleValue(field.RszField.type, value, game, field.RszField.original_type);
     }
 
+    public static uint SwapEndianness(uint value)
+    {
+        return
+            ((value & 0xff000000) >> 24) +
+            ((value & 0xff0000) >> 8) +
+            ((value & 0xff00) << 8) +
+            ((value & 0xff) << 24);
+    }
+
+    public static float SwapEndianness(float value)
+    {
+        return BitConverter.UInt32BitsToSingle(SwapEndianness(BitConverter.SingleToUInt32Bits(value)));
+    }
+
     public static Variant FromRszValueSingleValue(RszFieldType type, object value, SupportedGame game, string? originalType)
     {
         switch (type) {
@@ -163,7 +177,7 @@ public static class RszTypeConverter
             case RszFieldType.Quaternion:
                 return ((System.Numerics.Quaternion)value).ToGodot();
             case RszFieldType.Color:
-                return new Godot.Color(((RszTool.via.Color)value).rgba);
+                return ((RszTool.via.Color)value).ToGodot();
             case RszFieldType.Guid:
                 return ((Guid)value).ToString();
             case RszFieldType.Uri:
@@ -367,6 +381,7 @@ public static class RszTypeConverter
     public static Transform3D ToGodot(this RszTool.via.Transform transform) => new Transform3D(new Basis(transform.rot.ToGodot()).Scaled(transform.scale.ToGodot()), transform.pos.ToGodot());
     public static Quaternion ToGodot(this System.Numerics.Quaternion val) => new Quaternion(val.X, val.Y, val.Z, val.W);
     public static Aabb ToGodot(this RszTool.via.AABB val) => new Aabb(val.minpos.ToGodot(), val.maxpos.ToGodot() - val.minpos.ToGodot());
+    public static Godot.Color ToGodot(this RszTool.via.Color val) => new Godot.Color(SwapEndianness(val.rgba));  // godot's interpretation of RGBA is 0xff000000 = R and 0xff = A
 
     public static RszTool.via.Sfix2 ToSfix(this Vector2I vec) => new() { x = new sfix() { v = vec.X }, y = new sfix() { v = vec.Y } };
     public static RszTool.via.Sfix3 ToSfix(this Vector3I vec) => new() { x = new sfix() { v = vec.X }, y = new sfix() { v = vec.Y }, z = new sfix() { v = vec.Z } };
@@ -401,7 +416,7 @@ public static class RszTypeConverter
     public static RszTool.via.Int2 ToRsz(this Vector2I val) => new RszTool.via.Int2 { x = val.X, y = val.Y };
     public static RszTool.via.Int3 ToRsz(this Vector3I val) => new RszTool.via.Int3 { x = val.X, y = val.Y, z = val.Z };
     public static RszTool.via.Int4 ToRsz(this Vector4I val) => new RszTool.via.Int4 { x = val.X, y = val.Y, z = val.Z, w = val.W };
-    public static RszTool.via.Color ToRsz(this Godot.Color val) => new RszTool.via.Color { rgba = val.ToRgba32() };
+    public static RszTool.via.Color ToRsz(this Godot.Color val) => new RszTool.via.Color { rgba = val.ToAbgr32() };
     public static System.Numerics.Quaternion ToRsz(this Quaternion val) => new System.Numerics.Quaternion(val.X, val.Y, val.Z, val.W);
     public static RszTool.via.Uint2 ToRszU(this Vector2I val) => new RszTool.via.Uint2 { x = (uint)val.X, y = (uint)val.Y };
     public static RszTool.via.Uint3 ToRszU(this Vector3I val) => new RszTool.via.Uint3 { x = (uint)val.X, y = (uint)val.Y, z = (uint)val.Z };
