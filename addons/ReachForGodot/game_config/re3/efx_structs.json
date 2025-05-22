@@ -4,7 +4,7 @@
       "TypeID": 1,
       "Name": "FixRandomGenerator",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeFixRandomGenerator",
-      "Hash": 2206780807,
+      "Hash": 2426354813,
       "Fields": [
         {
           "Name": "unkn1_0",
@@ -36,7 +36,7 @@
       "TypeID": 4,
       "Name": "Transform2D",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTransform2D",
-      "Hash": 2336023418,
+      "Hash": 1708369542,
       "Fields": [
         {
           "Name": "position",
@@ -56,7 +56,7 @@
       "TypeID": 5,
       "Name": "Transform2DModifierDelayFrame",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTransform2DModifierDelayFrame",
-      "Hash": 706156633,
+      "Hash": 1423984568,
       "Fields": [
         {
           "Name": "frameDelay",
@@ -72,7 +72,7 @@
       "TypeID": 7,
       "Name": "Transform2DClip",
       "Classname": "RszTool.Efx.Structs.RERT.EFXAttributeTransform2DClip",
-      "Hash": 3627670603,
+      "Hash": 1001603208,
       "Fields": [
         {
           "Name": "ukn0",
@@ -280,7 +280,7 @@
       "TypeID": 8,
       "Name": "Transform2DExpression",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTransform2DExpression",
-      "Hash": 3729962027,
+      "Hash": 2596575544,
       "Fields": [
         {
           "Name": "unkn1_0",
@@ -317,7 +317,7 @@
       "TypeID": 9,
       "Name": "Transform3D",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTransform3D",
-      "Hash": 624995886,
+      "Hash": 1781656819,
       "Fields": [
         {
           "Name": "translation",
@@ -341,7 +341,7 @@
       "TypeID": 10,
       "Name": "Transform3DModifierDelayFrame",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTransform3DModifierDelayFrame",
-      "Hash": 1830024399,
+      "Hash": 3235776307,
       "Fields": [
         {
           "Name": "frameDelay",
@@ -357,7 +357,7 @@
       "TypeID": 11,
       "Name": "Transform3DModifier",
       "Classname": "RszTool.Efx.Structs.DMC5.EFXAttributeTransform3DModifier",
-      "Hash": 3160761806,
+      "Hash": 3617580675,
       "Fields": [
         {
           "Name": "unkn0",
@@ -585,7 +585,7 @@
       "TypeID": 12,
       "Name": "Transform3DClip",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTransform3DClip",
-      "Hash": 2701023542,
+      "Hash": 1362027432,
       "Fields": [
         {
           "Name": "unkn0",
@@ -654,7 +654,7 @@
       "TypeID": 13,
       "Name": "Transform3DExpression",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTransform3DExpression",
-      "Hash": 199919328,
+      "Hash": 2604446344,
       "Fields": [
         {
           "Name": "unkn1",
@@ -707,7 +707,7 @@
       "TypeID": 14,
       "Name": "ParentOptions",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeParentOptions",
-      "Hash": 1330675269,
+      "Hash": 3649150034,
       "Fields": [
         {
           "Name": "RelationPos",
@@ -735,7 +735,7 @@
       "TypeID": 2,
       "Name": "Spawn",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeSpawn",
-      "Hash": 1440818362,
+      "Hash": 3773842407,
       "Fields": [
         {
           "Name": "maxParticles",
@@ -767,7 +767,7 @@
       "TypeID": 3,
       "Name": "SpawnExpression",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeSpawnExpression",
-      "Hash": 1072220972,
+      "Hash": 3176073560,
       "Fields": [
         {
           "Name": "flags",
@@ -814,7 +814,7 @@
       "TypeID": 15,
       "Name": "EmitterColor",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeEmitterColor",
-      "Hash": 4225614730,
+      "Hash": 4130294338,
       "Fields": [
         {
           "Name": "unkn1",
@@ -834,7 +834,7 @@
       "TypeID": 16,
       "Name": "EmitterColorClip",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeEmitterColorClip",
-      "Hash": 1166689530,
+      "Hash": 2188248823,
       "Fields": [
         {
           "Name": "unkn0",
@@ -903,7 +903,7 @@
       "TypeID": 17,
       "Name": "TypeBillboard2D",
       "Classname": "RszTool.Efx.Structs.DMC5.EFXAttributeTypeBillboard2D",
-      "Hash": 3021597588,
+      "Hash": 427853095,
       "Fields": [
         {
           "Name": "unkn0",
@@ -975,7 +975,7 @@
       "TypeID": 18,
       "Name": "TypeBillboard2DExpression",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypeBillboard2DExpression",
-      "Hash": 2838963185,
+      "Hash": 394204735,
       "Fields": [
         {
           "Name": "unkn1_0",
@@ -1040,7 +1040,7 @@
       "TypeID": 19,
       "Name": "TypeBillboard3D",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypeBillboard3D",
-      "Hash": 2815899899,
+      "Hash": 631567249,
       "Fields": [
         {
           "Name": "unkn1",
@@ -1120,7 +1120,7 @@
       "TypeID": 20,
       "Name": "TypeBillboard3DExpression",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypeBillboard3DExpression",
-      "Hash": 3564827864,
+      "Hash": 178777850,
       "Fields": [
         {
           "Name": "unkn1_0",
@@ -1185,7 +1185,7 @@
       "TypeID": 21,
       "Name": "TypeBillboard3DMaterial",
       "Classname": "RszTool.Efx.Structs.RERT.EFXAttributeTypeBillboard3DMaterial",
-      "Hash": 2241601897,
+      "Hash": 701992442,
       "Fields": [
         {
           "Name": "ukn0",
@@ -1250,7 +1250,7 @@
       "TypeID": 22,
       "Name": "TypeBillboard3DMaterialClip",
       "Classname": "RszTool.Efx.Structs.RERT.EFXAttributeTypeBillboard3DMaterialClip",
-      "Hash": 4059821210,
+      "Hash": 1275146546,
       "Fields": [
         {
           "Name": "unkn0",
@@ -1331,7 +1331,7 @@
       "TypeID": 23,
       "Name": "TypeBillboard3DMaterialExpression",
       "Classname": "RszTool.Efx.Structs.RERT.EFXAttributeTypeBillboard3DMaterialExpression",
-      "Hash": 634841210,
+      "Hash": 1070041844,
       "Fields": [
         {
           "Name": "ukn0",
@@ -1404,7 +1404,7 @@
       "TypeID": 24,
       "Name": "TypeMesh",
       "Classname": "RszTool.Efx.Structs.DMC5.EFXAttributeTypeMesh",
-      "Hash": 2444136348,
+      "Hash": 490327560,
       "Fields": [
         {
           "Name": "ukn1",
@@ -1567,7 +1567,7 @@
       "TypeID": 25,
       "Name": "TypeMeshClip",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypeMeshClip",
-      "Hash": 1059567229,
+      "Hash": 2216663920,
       "Fields": [
         {
           "Name": "unkn1",
@@ -1656,7 +1656,7 @@
       "TypeID": 26,
       "Name": "TypeMeshExpression",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypeMeshExpression",
-      "Hash": 2797794586,
+      "Hash": 1877299025,
       "Fields": [
         {
           "Name": "substructCount",
@@ -1780,7 +1780,7 @@
       "TypeID": 27,
       "Name": "TypeRibbonFollow",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypeRibbonFollow",
-      "Hash": 182682991,
+      "Hash": 969652956,
       "Fields": [
         {
           "Name": "emission",
@@ -1904,7 +1904,7 @@
       "TypeID": 28,
       "Name": "TypeRibbonLength",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypeRibbonLength",
-      "Hash": 3389703940,
+      "Hash": 2654865889,
       "Fields": [
         {
           "Name": "unkn1_0",
@@ -2056,7 +2056,7 @@
       "TypeID": 29,
       "Name": "TypeRibbonChain",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypeRibbonChain",
-      "Hash": 3799286768,
+      "Hash": 2298502750,
       "Fields": [
         {
           "Name": "unkn1",
@@ -2276,7 +2276,7 @@
       "TypeID": 30,
       "Name": "TypeRibbonFixEnd",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypeRibbonFixEnd",
-      "Hash": 401203110,
+      "Hash": 110416274,
       "Fields": [
         {
           "Name": "unkn1",
@@ -2408,7 +2408,7 @@
       "TypeID": 31,
       "Name": "TypeRibbonLightweight",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypeRibbonLightweight",
-      "Hash": 2260345246,
+      "Hash": 3818931853,
       "Fields": [
         {
           "Name": "unkn1",
@@ -2472,7 +2472,7 @@
       "TypeID": 32,
       "Name": "TypeRibbonFollowExpression",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypeRibbonFollowExpression",
-      "Hash": 2157012548,
+      "Hash": 3849399518,
       "Fields": [
         {
           "Name": "unkn1_0",
@@ -2517,7 +2517,7 @@
       "TypeID": 33,
       "Name": "TypeRibbonLengthExpression",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypeRibbonLengthExpression",
-      "Hash": 3347024164,
+      "Hash": 148035229,
       "Fields": [
         {
           "Name": "unkn1",
@@ -2562,7 +2562,7 @@
       "TypeID": 34,
       "Name": "TypeRibbonChainExpression",
       "Classname": "RszTool.Efx.Structs.RERT.EFXAttributeTypeRibbonChainExpression",
-      "Hash": 1535488948,
+      "Hash": 542797132,
       "Fields": [
         {
           "Name": "unkn0",
@@ -2607,7 +2607,7 @@
       "TypeID": 35,
       "Name": "TypeRibbonFixEndExpression",
       "Classname": "RszTool.Efx.Structs.DMC5.EFXAttributeTypeRibbonFixEndExpression",
-      "Hash": 3609976953,
+      "Hash": 2861587561,
       "Fields": [
         {
           "Name": "ukn1_0",
@@ -2652,7 +2652,7 @@
       "TypeID": 36,
       "Name": "TypePolygon",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypePolygon",
-      "Hash": 3422103263,
+      "Hash": 1980481854,
       "Fields": [
         {
           "Name": "mFlags",
@@ -2748,7 +2748,7 @@
       "TypeID": 37,
       "Name": "TypePolygonClip",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypePolygonClip",
-      "Hash": 1462300979,
+      "Hash": 3929027712,
       "Fields": [
         {
           "Name": "unkn0",
@@ -2824,7 +2824,7 @@
       "TypeID": 38,
       "Name": "TypePolygonExpression",
       "Classname": "RszTool.Efx.Structs.DMC5.EFXAttributeTypePolygonExpression",
-      "Hash": 2152351177,
+      "Hash": 1475761489,
       "Fields": [
         {
           "Name": "unkn0",
@@ -2913,7 +2913,7 @@
       "TypeID": 39,
       "Name": "TypeRibbonTrail",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypeRibbonTrail",
-      "Hash": 1778792349,
+      "Hash": 1906845057,
       "Fields": [
         {
           "Name": "unkn0",
@@ -2965,7 +2965,7 @@
       "TypeID": 40,
       "Name": "TypePolygonTrail",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypePolygonTrail",
-      "Hash": 1607460306,
+      "Hash": 1808830225,
       "Fields": [
         {
           "Name": "unkn1",
@@ -3053,7 +3053,7 @@
       "TypeID": 41,
       "Name": "TypeNoDraw",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypeNoDraw",
-      "Hash": 4051002511,
+      "Hash": 277099131,
       "Fields": [
         {
           "Name": "unkn1_0",
@@ -3125,7 +3125,7 @@
       "TypeID": 42,
       "Name": "TypeNoDrawExpression",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypeNoDrawExpression",
-      "Hash": 2195879537,
+      "Hash": 2369341744,
       "Fields": [
         {
           "Name": "unkn0",
@@ -3198,7 +3198,7 @@
       "TypeID": 44,
       "Name": "Velocity2D",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeVelocity2D",
-      "Hash": 4058879783,
+      "Hash": 3581735968,
       "Fields": [
         {
           "Name": "unkn1_0",
@@ -3258,7 +3258,7 @@
       "TypeID": 45,
       "Name": "Velocity2DExpression",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeVelocity2DExpression",
-      "Hash": 185719817,
+      "Hash": 3824481888,
       "Fields": [
         {
           "Name": "unkn0",
@@ -3307,7 +3307,7 @@
       "TypeID": 46,
       "Name": "Velocity3DDelayFrame",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeVelocity3DDelayFrame",
-      "Hash": 1476400515,
+      "Hash": 4259120866,
       "Fields": [
         {
           "Name": "frameDelay",
@@ -3323,7 +3323,7 @@
       "TypeID": 47,
       "Name": "Velocity3D",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeVelocity3D",
-      "Hash": 3717028059,
+      "Hash": 3568876543,
       "Fields": [
         {
           "Name": "unkn1",
@@ -3427,7 +3427,7 @@
       "TypeID": 48,
       "Name": "Velocity3DExpression",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeVelocity3DExpression",
-      "Hash": 3585941974,
+      "Hash": 3012291525,
       "Fields": [
         {
           "Name": "unkn1_0",
@@ -3492,7 +3492,7 @@
       "TypeID": 49,
       "Name": "RotateAnimDelayFrame",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeRotateAnimDelayFrame",
-      "Hash": 1869280088,
+      "Hash": 4285929748,
       "Fields": [
         {
           "Name": "frameDelay",
@@ -3508,7 +3508,7 @@
       "TypeID": 50,
       "Name": "RotateAnim",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeRotateAnim",
-      "Hash": 1959052390,
+      "Hash": 2364457468,
       "Fields": [
         {
           "Name": "unkn1_0",
@@ -3568,7 +3568,7 @@
       "TypeID": 51,
       "Name": "RotateAnimExpression",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeRotateAnimExpression",
-      "Hash": 2479476529,
+      "Hash": 14955878,
       "Fields": [
         {
           "Name": "ukn1_0",
@@ -3633,7 +3633,7 @@
       "TypeID": 52,
       "Name": "ScaleAnimDelayFrame",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeScaleAnimDelayFrame",
-      "Hash": 2090681370,
+      "Hash": 541693839,
       "Fields": [
         {
           "Name": "frameDelay",
@@ -3649,7 +3649,7 @@
       "TypeID": 53,
       "Name": "ScaleAnim",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeScaleAnim",
-      "Hash": 3894628461,
+      "Hash": 3735127837,
       "Fields": [
         {
           "Name": "minScale",
@@ -3721,7 +3721,7 @@
       "TypeID": 54,
       "Name": "ScaleAnimExpression",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeScaleAnimExpression",
-      "Hash": 375733216,
+      "Hash": 1905871560,
       "Fields": [
         {
           "Name": "unkn1",
@@ -3746,7 +3746,7 @@
       "TypeID": 55,
       "Name": "VanishArea3D",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeVanishArea3D",
-      "Hash": 645193068,
+      "Hash": 81728874,
       "Fields": [
         {
           "Name": "unkn1_0",
@@ -3806,7 +3806,7 @@
       "TypeID": 56,
       "Name": "VanishArea3DExpression",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeVanishArea3DExpression",
-      "Hash": 3396651632,
+      "Hash": 775150698,
       "Fields": [
         {
           "Name": "unkn1_0",
@@ -3879,7 +3879,7 @@
       "TypeID": 57,
       "Name": "Life",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeLife",
-      "Hash": 590804586,
+      "Hash": 401412082,
       "Fields": [
         {
           "Name": "AppearFrameMin",
@@ -3923,7 +3923,7 @@
       "TypeID": 58,
       "Name": "LifeExpression",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeLifeExpression",
-      "Hash": 3211784210,
+      "Hash": 418070501,
       "Fields": [
         {
           "Name": "unkn1_0",
@@ -3952,7 +3952,7 @@
       "TypeID": 59,
       "Name": "UVSequence",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeUVSequence",
-      "Hash": 1085344619,
+      "Hash": 4022229618,
       "Fields": [
         {
           "Name": "unkn1",
@@ -3992,7 +3992,7 @@
       "TypeID": 60,
       "Name": "UVSequenceModifier",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeUVSequenceModifier",
-      "Hash": 1076879563,
+      "Hash": 3715160368,
       "Fields": [
         {
           "Name": "unkn1_0",
@@ -4028,7 +4028,7 @@
       "TypeID": 61,
       "Name": "UVSequenceExpression",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeUVSequenceExpression",
-      "Hash": 3018798983,
+      "Hash": 924178538,
       "Fields": [
         {
           "Name": "unkn1_0",
@@ -4069,7 +4069,7 @@
       "TypeID": 62,
       "Name": "UVScroll",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeUVScroll",
-      "Hash": 1700289979,
+      "Hash": 3609582113,
       "Fields": [
         {
           "Name": "unkn1_0",
@@ -4129,7 +4129,7 @@
       "TypeID": 63,
       "Name": "TextureUnit",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTextureUnit",
-      "Hash": 2650099759,
+      "Hash": 1637598267,
       "Fields": [
         {
           "Name": "unkn1_0",
@@ -4633,7 +4633,7 @@
       "TypeID": 64,
       "Name": "TextureUnitExpression",
       "Classname": "RszTool.Efx.Structs.RERT.EFXAttributeTextureUnitExpression",
-      "Hash": 565858061,
+      "Hash": 3913610365,
       "Fields": [
         {
           "Name": "ukn0",
@@ -4667,7 +4667,7 @@
       "TypeID": 65,
       "Name": "TextureFilter",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTextureFilter",
-      "Hash": 249147887,
+      "Hash": 2584416160,
       "Fields": [
         {
           "Name": "unkn1",
@@ -4687,7 +4687,7 @@
       "TypeID": 66,
       "Name": "EmitterShape2D",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeEmitterShape2D",
-      "Hash": 2816830143,
+      "Hash": 206916228,
       "Fields": [
         {
           "Name": "unkn1_0",
@@ -4727,7 +4727,7 @@
       "TypeID": 67,
       "Name": "EmitterShape2DExpression",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeEmitterShape2DExpression",
-      "Hash": 2300092189,
+      "Hash": 964624156,
       "Fields": [
         {
           "Name": "unkn1_0",
@@ -4764,7 +4764,7 @@
       "TypeID": 68,
       "Name": "EmitterShape3D",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeEmitterShape3D",
-      "Hash": 2196701934,
+      "Hash": 57003044,
       "Fields": [
         {
           "Name": "RangeXMin",
@@ -4844,7 +4844,7 @@
       "TypeID": 69,
       "Name": "EmitterShape3DExpression",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeEmitterShape3DExpression",
-      "Hash": 293126479,
+      "Hash": 3471829341,
       "Fields": [
         {
           "Name": "unkn1_0",
@@ -4889,7 +4889,7 @@
       "TypeID": 70,
       "Name": "AlphaCorrection",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeAlphaCorrection",
-      "Hash": 2701438023,
+      "Hash": 1725393396,
       "Fields": [
         {
           "Name": "unkn1",
@@ -4913,7 +4913,7 @@
       "TypeID": 71,
       "Name": "ContrastHighlighter",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeContrastHighlighter",
-      "Hash": 3104873370,
+      "Hash": 1415524307,
       "Fields": [
         {
           "Name": "unkn1_0",
@@ -4945,7 +4945,7 @@
       "TypeID": 72,
       "Name": "ColorGrading",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeColorGrading",
-      "Hash": 3115231556,
+      "Hash": 718531484,
       "Fields": [
         {
           "Name": "color0",
@@ -4977,7 +4977,7 @@
       "TypeID": 73,
       "Name": "TexelChannelOperator",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTexelChannelOperator",
-      "Hash": 2471922799,
+      "Hash": 4111038252,
       "Fields": [
         {
           "Name": "unkn1_0",
@@ -5053,7 +5053,7 @@
       "TypeID": 74,
       "Name": "TexelChannelOperatorClip",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTexelChannelOperatorClip",
-      "Hash": 1710643847,
+      "Hash": 3894855075,
       "Fields": [
         {
           "Name": "unkn0",
@@ -5122,7 +5122,7 @@
       "TypeID": 76,
       "Name": "TypeStrainRibbon",
       "Classname": "RszTool.Efx.Structs.DMC5.EFXAttributeTypeStrainRibbon",
-      "Hash": 2982148013,
+      "Hash": 3944743466,
       "Fields": [
         {
           "Name": "ukn1",
@@ -5302,7 +5302,7 @@
       "TypeID": 77,
       "Name": "TypeStrainRibbonExpression",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypeStrainRibbonExpression",
-      "Hash": 861043447,
+      "Hash": 3117145310,
       "Fields": [
         {
           "Name": "unkn1_0",
@@ -5371,7 +5371,7 @@
       "TypeID": 78,
       "Name": "TypeLightning3D",
       "Classname": "RszTool.Efx.Structs.DMC5.EFXAttributeTypeLightning3D",
-      "Hash": 2531166880,
+      "Hash": 3969397749,
       "Fields": [
         {
           "Name": "unknBitFlag",
@@ -5623,7 +5623,7 @@
       "TypeID": 79,
       "Name": "ShaderSettings",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeShaderSettings",
-      "Hash": 174560244,
+      "Hash": 1965949307,
       "Fields": [
         {
           "Name": "unkn1",
@@ -5715,7 +5715,7 @@
       "TypeID": 80,
       "Name": "ShaderSettingsExpression",
       "Classname": "RszTool.Efx.Structs.DMC5.EFXAttributeShaderSettingsExpression",
-      "Hash": 3433628069,
+      "Hash": 2410555600,
       "Fields": [
         {
           "Name": "ukn0",
@@ -5736,7 +5736,7 @@
       "TypeID": 81,
       "Name": "Distortion",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeDistortion",
-      "Hash": 1227295914,
+      "Hash": 1975186423,
       "Fields": [
         {
           "Name": "distortionType",
@@ -5761,7 +5761,7 @@
       "TypeID": 82,
       "Name": "RenderTarget",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeRenderTarget",
-      "Hash": 582562912,
+      "Hash": 2573165173,
       "Fields": [
         {
           "Name": "unkn_toggle",
@@ -5777,7 +5777,7 @@
       "TypeID": 83,
       "Name": "PtLife",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributePtLife",
-      "Hash": 1315610037,
+      "Hash": 2014343984,
       "Fields": [
         {
           "Name": "unkn1_0",
@@ -5797,7 +5797,7 @@
       "TypeID": 84,
       "Name": "PtBehavior",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributePtBehavior",
-      "Hash": 2966398030,
+      "Hash": 3599128464,
       "Fields": [
         {
           "Name": "unkn1",
@@ -5831,7 +5831,7 @@
       "TypeID": 86,
       "Name": "PlayEfx",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributePlayEfx",
-      "Hash": 214092906,
+      "Hash": 1573600450,
       "Fields": [
         {
           "Name": "efxPath",
@@ -5843,7 +5843,7 @@
       "TypeID": 87,
       "Name": "FadeByAngle",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeFadeByAngle",
-      "Hash": 2995321683,
+      "Hash": 2479845925,
       "Fields": [
         {
           "Name": "unkn1_0",
@@ -5879,7 +5879,7 @@
       "TypeID": 88,
       "Name": "FadeByAngleExpression",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeFadeByAngleExpression",
-      "Hash": 608764265,
+      "Hash": 3508926455,
       "Fields": [
         {
           "Name": "unkn0",
@@ -5904,7 +5904,7 @@
       "TypeID": 89,
       "Name": "FadeByEmitterAngle",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeFadeByEmitterAngle",
-      "Hash": 2028338404,
+      "Hash": 538088522,
       "Fields": [
         {
           "Name": "unkn1_0",
@@ -5936,7 +5936,7 @@
       "TypeID": 90,
       "Name": "FadeByDepth",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeFadeByDepth",
-      "Hash": 3868049376,
+      "Hash": 3223898460,
       "Fields": [
         {
           "Name": "unkn1",
@@ -5960,7 +5960,7 @@
       "TypeID": 91,
       "Name": "FadeByDepthExpression",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeFadeByDepthExpression",
-      "Hash": 2903749040,
+      "Hash": 793999539,
       "Fields": [
         {
           "Name": "unkn1_0",
@@ -5993,7 +5993,7 @@
       "TypeID": 92,
       "Name": "FadeByOcclusion",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeFadeByOcclusion",
-      "Hash": 1899156877,
+      "Hash": 3567414507,
       "Fields": [
         {
           "Name": "unkn1",
@@ -6017,7 +6017,7 @@
       "TypeID": 94,
       "Name": "FakeDoF",
       "Classname": "RszTool.Efx.Structs.DMC5.EFXAttributeFakeDoF",
-      "Hash": 3437132732,
+      "Hash": 623469914,
       "Fields": [
         {
           "Name": "unkn0",
@@ -6045,7 +6045,7 @@
       "TypeID": 95,
       "Name": "LuminanceBleed",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeLuminanceBleed",
-      "Hash": 961680637,
+      "Hash": 3096842337,
       "Fields": [
         {
           "Name": "unkn0",
@@ -6081,7 +6081,7 @@
       "TypeID": 96,
       "Name": "TypeNodeBillboard",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypeNodeBillboard",
-      "Hash": 2723532386,
+      "Hash": 1923369343,
       "Fields": [
         {
           "Name": "unkn1_0",
@@ -6329,7 +6329,7 @@
       "TypeID": 97,
       "Name": "TypeNodeBillboardExpression",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypeNodeBillboardExpression",
-      "Hash": 982224773,
+      "Hash": 3295985195,
       "Fields": [
         {
           "Name": "unkn1_0",
@@ -6518,7 +6518,7 @@
       "TypeID": 98,
       "Name": "UnitCulling",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeUnitCulling",
-      "Hash": 3405184299,
+      "Hash": 651261800,
       "Fields": [
         {
           "Name": "unkn1_0",
@@ -6566,7 +6566,7 @@
       "TypeID": 99,
       "Name": "FluidEmitter2D",
       "Classname": "RszTool.Efx.Structs.DMC5.EFXAttributeFluidEmitter2D",
-      "Hash": 3234484701,
+      "Hash": 617392605,
       "Fields": [
         {
           "Name": "unkn0",
@@ -6606,7 +6606,7 @@
       "TypeID": 100,
       "Name": "FluidSimulator2D",
       "Classname": "RszTool.Efx.Structs.DMC5.EFXAttributeFluidSimulator2D",
-      "Hash": 3676837452,
+      "Hash": 910665170,
       "Fields": [
         {
           "Name": "unkn1_0",
@@ -6847,7 +6847,7 @@
       "TypeID": 101,
       "Name": "PlayEmitter",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributePlayEmitter",
-      "Hash": 1225564198,
+      "Hash": 3088655394,
       "Fields": [
         {
           "Name": "efxrSize",
@@ -6868,7 +6868,7 @@
       "TypeID": 102,
       "Name": "PtTransform3D",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributePtTransform3D",
-      "Hash": 1359642926,
+      "Hash": 2393383116,
       "Fields": [
         {
           "Name": "unkn1_0",
@@ -6912,7 +6912,7 @@
       "TypeID": 103,
       "Name": "PtTransform3DClip",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributePtTransform3DClip",
-      "Hash": 666611434,
+      "Hash": 699659932,
       "Fields": [
         {
           "Name": "unkn0",
@@ -6981,7 +6981,7 @@
       "TypeID": 104,
       "Name": "PtTransform2D",
       "Classname": "RszTool.Efx.Structs.DMC5.EFXAttributePtTransform2D",
-      "Hash": 3007435788,
+      "Hash": 3900697801,
       "Fields": [
         {
           "Name": "unkn0",
@@ -7009,7 +7009,7 @@
       "TypeID": 105,
       "Name": "PtTransform2DClip",
       "Classname": "RszTool.Efx.Structs.RE8.EFXAttributePtTransform2DClip",
-      "Hash": 3373883657,
+      "Hash": 1863299599,
       "Fields": [
         {
           "Name": "unkn0",
@@ -7078,7 +7078,7 @@
       "TypeID": 106,
       "Name": "PtVelocity3D",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributePtVelocity3D",
-      "Hash": 2477481854,
+      "Hash": 3369652836,
       "Fields": [
         {
           "Name": "unkn1_0",
@@ -7102,7 +7102,7 @@
       "TypeID": 107,
       "Name": "PtVelocity3DClip",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributePtVelocity3DClip",
-      "Hash": 149251849,
+      "Hash": 2823731395,
       "Fields": [
         {
           "Name": "unkn0",
@@ -7171,7 +7171,7 @@
       "TypeID": 108,
       "Name": "PtVelocity2D",
       "Classname": "RszTool.Efx.Structs.RERT.EFXAttributePtVelocity2D",
-      "Hash": 3902102560,
+      "Hash": 164661855,
       "Fields": [
         {
           "Name": "ukn0",
@@ -7191,7 +7191,7 @@
       "TypeID": 109,
       "Name": "PtVelocity2DClip",
       "Classname": "RszTool.Efx.Structs.RERT.EFXAttributePtVelocity2DClip",
-      "Hash": 2449568405,
+      "Hash": 1368737505,
       "Fields": [
         {
           "Name": "ukn0",
@@ -7215,7 +7215,7 @@
       "TypeID": 110,
       "Name": "PtColliderAction",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributePtColliderAction",
-      "Hash": 1194719978,
+      "Hash": 436373622,
       "Fields": [
         {
           "Name": "dataFlags",
@@ -7291,7 +7291,7 @@
       "TypeID": 111,
       "Name": "PtCollision",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributePtCollision",
-      "Hash": 2937006244,
+      "Hash": 1149800093,
       "Fields": [
         {
           "Name": "stringBitFlag",
@@ -7375,7 +7375,7 @@
       "TypeID": 112,
       "Name": "PtColor",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributePtColor",
-      "Hash": 3140469440,
+      "Hash": 3974071036,
       "Fields": [
         {
           "Name": "unkn1",
@@ -7395,7 +7395,7 @@
       "TypeID": 113,
       "Name": "PtColorClip",
       "Classname": "RszTool.Efx.Structs.DMC5.EFXAttributePtColorClip",
-      "Hash": 20975063,
+      "Hash": 3122581435,
       "Fields": [
         {
           "Name": "secChunkID",
@@ -7465,7 +7465,7 @@
       "TypeID": 114,
       "Name": "PtUvSequence",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributePtUvSequence",
-      "Hash": 640339934,
+      "Hash": 1765460783,
       "Fields": [
         {
           "Name": "unkn1_0",
@@ -7489,7 +7489,7 @@
       "TypeID": 115,
       "Name": "PtUvSequenceClip",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributePtUvSequenceClip",
-      "Hash": 820482490,
+      "Hash": 513941497,
       "Fields": [
         {
           "Name": "unkn0",
@@ -7558,7 +7558,7 @@
       "TypeID": 116,
       "Name": "MeshEmitter",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeMeshEmitter",
-      "Hash": 2505277864,
+      "Hash": 3067713153,
       "Fields": [
         {
           "Name": "unkn0",
@@ -7696,7 +7696,7 @@
       "TypeID": 117,
       "Name": "MeshEmitterClip",
       "Classname": "RszTool.Efx.Structs.DMC5.EFXAttributeMeshEmitterClip",
-      "Hash": 465532362,
+      "Hash": 120600241,
       "Fields": [
         {
           "Name": "unkn0",
@@ -7759,7 +7759,7 @@
       "TypeID": 118,
       "Name": "MeshEmitterExpression",
       "Classname": "RszTool.Efx.Structs.DMC5.EFXAttributeMeshEmitterExpression",
-      "Hash": 3149188151,
+      "Hash": 1290965854,
       "Fields": [
         {
           "Name": "unkn0",
@@ -7840,7 +7840,7 @@
       "TypeID": 119,
       "Name": "VectorFieldParameter",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeVectorFieldParameter",
-      "Hash": 1260095061,
+      "Hash": 2748980315,
       "Fields": [
         {
           "Name": "unkn1_0",
@@ -7916,7 +7916,7 @@
       "TypeID": 120,
       "Name": "VectorFieldParameterClip",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeVectorFieldParameterClip",
-      "Hash": 3037350461,
+      "Hash": 1240412539,
       "Fields": [
         {
           "Name": "unkn0",
@@ -7985,7 +7985,7 @@
       "TypeID": 121,
       "Name": "VectorFieldParameterExpression",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeVectorFieldParameterExpression",
-      "Hash": 2335749474,
+      "Hash": 4113794087,
       "Fields": [
         {
           "Name": "unkn1_0",
@@ -8082,7 +8082,7 @@
       "TypeID": 122,
       "Name": "DepthOperator",
       "Classname": "RszTool.Efx.Structs.DMC5.EFXAttributeDepthOperator",
-      "Hash": 3675997201,
+      "Hash": 2531307290,
       "Fields": [
         {
           "Name": "unkn0",
@@ -8102,7 +8102,7 @@
       "TypeID": 123,
       "Name": "PlaneCollider",
       "Classname": "RszTool.Efx.Structs.RE8.EFXAttributePlaneCollider",
-      "Hash": 712275264,
+      "Hash": 3295201310,
       "Fields": [
         {
           "Name": "unkn1",
@@ -8174,7 +8174,7 @@
       "TypeID": 125,
       "Name": "DepthOcclusion",
       "Classname": "RszTool.Efx.Structs.RE8.EFXAttributeDepthOcclusion",
-      "Hash": 2387493353,
+      "Hash": 2601748280,
       "Fields": [
         {
           "Name": "unkn",
@@ -8186,7 +8186,7 @@
       "TypeID": 128,
       "Name": "WindInfluence3DDelayFrame",
       "Classname": "RszTool.Efx.Structs.RERT.EFXAttributeWindInfluence3DDelayFrame",
-      "Hash": 801180835,
+      "Hash": 1710047468,
       "Fields": [
         {
           "Name": "frameDelay",
@@ -8202,7 +8202,7 @@
       "TypeID": 129,
       "Name": "WindInfluence3D",
       "Classname": "RszTool.Efx.Structs.RE8.EFXAttributeWindInfluence3D",
-      "Hash": 3202202168,
+      "Hash": 1572566593,
       "Fields": [
         {
           "Name": "unkn1",
@@ -8234,7 +8234,7 @@
       "TypeID": 130,
       "Name": "Attractor",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeAttractor",
-      "Hash": 652064034,
+      "Hash": 1435402197,
       "Fields": [
         {
           "Name": "unkn1_0",
@@ -8278,7 +8278,7 @@
       "TypeID": 131,
       "Name": "AttractorClip",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeAttractorClip",
-      "Hash": 1330016685,
+      "Hash": 751849198,
       "Fields": [
         {
           "Name": "unkn0",
@@ -8347,7 +8347,7 @@
       "TypeID": 132,
       "Name": "AttractorExpression",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeAttractorExpression",
-      "Hash": 883539046,
+      "Hash": 273010175,
       "Fields": [
         {
           "Name": "unkn1_0",
@@ -8404,7 +8404,7 @@
       "TypeID": 134,
       "Name": "TypeGpuBillboard",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypeGpuBillboard",
-      "Hash": 871912694,
+      "Hash": 1166969616,
       "Fields": [
         {
           "Name": "unkn1",
@@ -8460,7 +8460,7 @@
       "TypeID": 135,
       "Name": "TypeGpuBillboardExpression",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypeGpuBillboardExpression",
-      "Hash": 969960376,
+      "Hash": 3145300790,
       "Fields": [
         {
           "Name": "unkn1_0",
@@ -8505,7 +8505,7 @@
       "TypeID": 136,
       "Name": "TypeGpuPolygon",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypeGpuPolygon",
-      "Hash": 3251465709,
+      "Hash": 129007782,
       "Fields": [
         {
           "Name": "unkn1",
@@ -8593,7 +8593,7 @@
       "TypeID": 137,
       "Name": "TypeGpuRibbonFollow",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypeGpuRibbonFollow",
-      "Hash": 1151720444,
+      "Hash": 3225986287,
       "Fields": [
         {
           "Name": "unkn1_0",
@@ -8657,7 +8657,7 @@
       "TypeID": 138,
       "Name": "TypeGpuRibbonLength",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypeGpuRibbonLength",
-      "Hash": 2431237725,
+      "Hash": 1034023642,
       "Fields": [
         {
           "Name": "unkn1",
@@ -8765,7 +8765,7 @@
       "TypeID": 139,
       "Name": "TypeGpuMesh",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypeGpuMesh",
-      "Hash": 483044388,
+      "Hash": 1435838909,
       "Fields": [
         {
           "Name": "unkn0",
@@ -8893,7 +8893,7 @@
       "TypeID": 140,
       "Name": "TypeGpuMeshExpression",
       "Classname": "RszTool.Efx.Structs.RE8.EFXAttributeTypeGpuMeshExpression",
-      "Hash": 2435717082,
+      "Hash": 2052236145,
       "Fields": [
         {
           "Name": "unkn1_0",
@@ -8986,7 +8986,7 @@
       "TypeID": 141,
       "Name": "TypeGpuLightning3D",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypeGpuLightning3D",
-      "Hash": 1385364287,
+      "Hash": 1081402459,
       "Fields": [
         {
           "Name": "unkn1",
@@ -9361,7 +9361,7 @@
       "TypeID": 143,
       "Name": "DrawOverlay",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeDrawOverlay",
-      "Hash": 1568999279,
+      "Hash": 3131330840,
       "Fields": [
         {
           "Name": "unkn0_0",
@@ -9381,7 +9381,7 @@
       "TypeID": 146,
       "Name": "AngularVelocity3DDelayFrame",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeAngularVelocity3DDelayFrame",
-      "Hash": 990821557,
+      "Hash": 2565429035,
       "Fields": [
         {
           "Name": "frameDelay",
@@ -9397,7 +9397,7 @@
       "TypeID": 147,
       "Name": "AngularVelocity3D",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeAngularVelocity3D",
-      "Hash": 2313117970,
+      "Hash": 1680937386,
       "Fields": [
         {
           "Name": "unkn1_0",
@@ -9485,7 +9485,7 @@
       "TypeID": 148,
       "Name": "PtAngularVelocity3D",
       "Classname": "RszTool.Efx.Structs.RE8.EFXAttributePtAngularVelocity3D",
-      "Hash": 1182753838,
+      "Hash": 4194190172,
       "Fields": [
         {
           "Name": "unkn1",
@@ -9525,7 +9525,7 @@
       "TypeID": 151,
       "Name": "AngularVelocity2D",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeAngularVelocity2D",
-      "Hash": 4285385109,
+      "Hash": 2289420035,
       "Fields": [
         {
           "Name": "unkn1_0",
@@ -9600,7 +9600,7 @@
       "TypeID": 155,
       "Name": "ProceduralDistortionDelayFrame",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeProceduralDistortionDelayFrame",
-      "Hash": 755036850,
+      "Hash": 2017297483,
       "Fields": [
         {
           "Name": "frameDelay",
@@ -9616,7 +9616,7 @@
       "TypeID": 156,
       "Name": "ProceduralDistortion",
       "Classname": "RszTool.Efx.Structs.DMC5.EFXAttributeProceduralDistortion",
-      "Hash": 3074006717,
+      "Hash": 857175719,
       "Fields": [
         {
           "Name": "unkn0",
@@ -9648,7 +9648,7 @@
       "TypeID": 157,
       "Name": "ProceduralDistortionClip",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeProceduralDistortionClip",
-      "Hash": 2836070058,
+      "Hash": 1500124135,
       "Fields": [
         {
           "Name": "unkn0",
@@ -9718,7 +9718,7 @@
     "RszTool.Efx.Structs.Common.EFXExpressionListWrapperBase": {
       "Name": "",
       "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapperBase",
-      "Hash": 3646916518,
+      "Hash": 2667827896,
       "Fields": [
         {
           "Name": "solverSize",
@@ -9729,7 +9729,7 @@
     "RszTool.Efx.Structs.Common.EFXExpressionListWrapper3": {
       "Name": "",
       "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapper3",
-      "Hash": 210741366,
+      "Hash": 1186757763,
       "Fields": [
         {
           "Name": "expressions",
@@ -9742,7 +9742,7 @@
     "RszTool.Efx.Structs.Common.EFXExpressionListWrapper": {
       "Name": "",
       "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapper",
-      "Hash": 1874543619,
+      "Hash": 3932858817,
       "Fields": [
         {
           "Name": "expressions",
@@ -9761,7 +9761,7 @@
     "RszTool.Efx.Structs.Common.EfxMaterialStructV2": {
       "Name": "",
       "Classname": "RszTool.Efx.Structs.Common.EfxMaterialStructV2",
-      "Hash": 3808719850,
+      "Hash": 445495612,
       "Fields": [
         {
           "Name": "ukn1",
@@ -9823,7 +9823,7 @@
     "RszTool.Efx.Structs.Common.EfxMaterialStructV1": {
       "Name": "",
       "Classname": "RszTool.Efx.Structs.Common.EfxMaterialStructV1",
-      "Hash": 3487100718,
+      "Hash": 4272480037,
       "Fields": [
         {
           "Name": "maxPropertyIndex",
@@ -9889,7 +9889,7 @@
     "RszTool.Efx.Structs.Common.MdfProperty": {
       "Name": "",
       "Classname": "RszTool.Efx.Structs.Common.MdfProperty",
-      "Hash": 1661530586,
+      "Hash": 1139256230,
       "Fields": [
         {
           "Name": "PropertyNameUTF8Hash",
@@ -9922,7 +9922,7 @@
     "RszTool.Efx.Structs.RE4.EFXAttributeTypeMeshClip+MeshClip_Struct1": {
       "Name": "",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypeMeshClip+MeshClip_Struct1",
-      "Hash": 187226169,
+      "Hash": 325219947,
       "Fields": [
         {
           "Name": "unkn0",
@@ -9937,7 +9937,7 @@
     "RszTool.Efx.Structs.RE4.EFXAttributeTypeMeshClip+MeshClip_Struct2": {
       "Name": "",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypeMeshClip+MeshClip_Struct2",
-      "Hash": 3490690986,
+      "Hash": 1791411186,
       "Fields": [
         {
           "Name": "unkn0",
@@ -9956,7 +9956,7 @@
     "RszTool.Efx.Structs.RE4.EFXAttributeTypeMeshClip+MeshClip_Struct3": {
       "Name": "",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypeMeshClip+MeshClip_Struct3",
-      "Hash": 28461360,
+      "Hash": 3744931286,
       "Fields": [
         {
           "Name": "unkn0",
@@ -9979,7 +9979,7 @@
     "RszTool.Efx.Structs.RE4.EFXAttributeTypeMeshClip+MeshClip_Struct4": {
       "Name": "",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypeMeshClip+MeshClip_Struct4",
-      "Hash": 2690209542,
+      "Hash": 1389561200,
       "Fields": [
         {
           "Name": "hash",
@@ -10002,7 +10002,7 @@
     "RszTool.Efx.Structs.Common.EFXExpressionListWrapper2": {
       "Name": "",
       "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapper2",
-      "Hash": 591288925,
+      "Hash": 1925851407,
       "Fields": [
         {
           "Name": "indexCount",
@@ -10025,7 +10025,7 @@
     "RszTool.Efx.Structs.Common.EFXExpression4": {
       "Name": "",
       "Classname": "RszTool.Efx.Structs.Common.EFXExpression4",
-      "Hash": 3420221528,
+      "Hash": 2456166676,
       "Fields": [
         {
           "Name": "unkn1",
@@ -10053,7 +10053,7 @@
     "RszTool.Efx.Structs.RE4.PtBehaviorVariable": {
       "Name": "",
       "Classname": "RszTool.Efx.Structs.RE4.PtBehaviorVariable",
-      "Hash": 3404957194,
+      "Hash": 1486355851,
       "Fields": [
         {
           "Name": "varSize",
@@ -10078,7 +10078,7 @@
     "RszTool.Efx.Structs.Common.EFXExpression3": {
       "Name": "",
       "Classname": "RszTool.Efx.Structs.Common.EFXExpression3",
-      "Hash": 269523061,
+      "Hash": 1438635318,
       "Fields": [
         {
           "Name": "struct1Count",
@@ -10113,7 +10113,7 @@
     "RszTool.Efx.Structs.Common.EFXExpression": {
       "Name": "",
       "Classname": "RszTool.Efx.Structs.Common.EFXExpression",
-      "Hash": 4026165671,
+      "Hash": 2884809964,
       "Fields": [
         {
           "Name": "struct1Count",
@@ -10144,7 +10144,7 @@
     "RszTool.Efx.Structs.RE4.PtBehaviorVariableDataBase": {
       "Name": "",
       "Classname": "RszTool.Efx.Structs.RE4.PtBehaviorVariableDataBase",
-      "Hash": 564517550,
+      "Hash": 745484611,
       "Fields": [
         {
           "Name": "unkn",
@@ -10159,7 +10159,7 @@
     "RszTool.Efx.Structs.RE4.PtBehaviorVariableDataColor": {
       "Name": "",
       "Classname": "RszTool.Efx.Structs.RE4.PtBehaviorVariableDataColor",
-      "Hash": 498161970,
+      "Hash": 1623612403,
       "Fields": [
         {
           "Name": "color",
@@ -10175,7 +10175,7 @@
     "RszTool.Efx.Structs.RE4.PtBehaviorVariableDataPrefabPath": {
       "Name": "",
       "Classname": "RszTool.Efx.Structs.RE4.PtBehaviorVariableDataPrefabPath",
-      "Hash": 3458933686,
+      "Hash": 764813822,
       "Fields": [
         {
           "Name": "prefabPath",
@@ -10186,7 +10186,7 @@
     "RszTool.Efx.Structs.RE4.PtBehaviorVariableInteger": {
       "Name": "",
       "Classname": "RszTool.Efx.Structs.RE4.PtBehaviorVariableInteger",
-      "Hash": 3400636216,
+      "Hash": 2223093938,
       "Fields": [
         {
           "Name": "value",
@@ -10202,7 +10202,7 @@
     "RszTool.Efx.Structs.RE4.PtBehaviorVariableFloat": {
       "Name": "",
       "Classname": "RszTool.Efx.Structs.RE4.PtBehaviorVariableFloat",
-      "Hash": 3314348760,
+      "Hash": 4231135616,
       "Fields": [
         {
           "Name": "value",
@@ -10218,7 +10218,7 @@
     "RszTool.Efx.Structs.RE4.PtBehaviorVariableFloat2": {
       "Name": "",
       "Classname": "RszTool.Efx.Structs.RE4.PtBehaviorVariableFloat2",
-      "Hash": 360670422,
+      "Hash": 3764633103,
       "Fields": [
         {
           "Name": "Vec",
@@ -10234,7 +10234,7 @@
     "RszTool.Efx.Structs.RE4.PtBehaviorVariableFloat3": {
       "Name": "",
       "Classname": "RszTool.Efx.Structs.RE4.PtBehaviorVariableFloat3",
-      "Hash": 2422911495,
+      "Hash": 3071876915,
       "Fields": [
         {
           "Name": "vec",
@@ -10250,7 +10250,7 @@
     "RszTool.Efx.Structs.RE4.PtBehaviorVariableDataPrefabUnknown": {
       "Name": "",
       "Classname": "RszTool.Efx.Structs.RE4.PtBehaviorVariableDataPrefabUnknown",
-      "Hash": 1694248405,
+      "Hash": 2039981646,
       "Fields": [
         {
           "Name": "data",
@@ -10262,7 +10262,7 @@
     "RszTool.Efx.Structs.Common.ExpressionStruct_Param1": {
       "Name": "",
       "Classname": "RszTool.Efx.Structs.Common.ExpressionStruct_Param1",
-      "Hash": 2169098896,
+      "Hash": 2877903394,
       "Fields": [
         {
           "Name": "parameterNameHash",
@@ -10281,7 +10281,7 @@
     "RszTool.Efx.Structs.Common.EFXExpressionData": {
       "Name": "",
       "Classname": "RszTool.Efx.Structs.Common.EFXExpressionData",
-      "Hash": 3151872663,
+      "Hash": 2292740793,
       "Fields": [
         {
           "Name": "type",
@@ -10303,7 +10303,7 @@
     "RszTool.Efx.Structs.Common.EFXExpressionDataTypeFloat": {
       "Name": "",
       "Classname": "RszTool.Efx.Structs.Common.EFXExpressionDataTypeFloat",
-      "Hash": 1785654360,
+      "Hash": 1898101902,
       "Fields": [
         {
           "Name": "value",
@@ -10314,7 +10314,7 @@
     "RszTool.Efx.Structs.Common.EFXExpressionDataType1": {
       "Name": "",
       "Classname": "RszTool.Efx.Structs.Common.EFXExpressionDataType1",
-      "Hash": 2102558364,
+      "Hash": 2813227406,
       "Fields": [
         {
           "Name": "value",
@@ -10325,7 +10325,7 @@
     "RszTool.Efx.Structs.Common.EFXExpressionDataType2": {
       "Name": "",
       "Classname": "RszTool.Efx.Structs.Common.EFXExpressionDataType2",
-      "Hash": 2119232347,
+      "Hash": 1925723725,
       "Fields": [
         {
           "Name": "value",
@@ -10336,7 +10336,7 @@
     "RszTool.Efx.Structs.Common.EFXExpressionDataType3": {
       "Name": "",
       "Classname": "RszTool.Efx.Structs.Common.EFXExpressionDataType3",
-      "Hash": 4280312563,
+      "Hash": 154287576,
       "Fields": [
         {
           "Name": "unkn1",
@@ -10347,7 +10347,7 @@
     "RszTool.Efx.Structs.Common.EFXExpressionDataTypeParameterHash": {
       "Name": "",
       "Classname": "RszTool.Efx.Structs.Common.EFXExpressionDataTypeParameterHash",
-      "Hash": 112984600,
+      "Hash": 2949787100,
       "Fields": [
         {
           "Name": "parameterHash",

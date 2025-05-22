@@ -2050,28 +2050,38 @@
   "via.AnimationCurve": {
     "FieldPatches": [
       {
+        "Name": "v0",
+        "ReplaceName": "Keys"
+      },
+      {
         "Name": "v1",
-        "Type": "S32"
+        "Type": "S32",
+        "ReplaceName": "MinValue"
       },
       {
         "Name": "v2",
-        "Type": "F32"
+        "Type": "F32",
+        "ReplaceName": "MaxValue"
       },
       {
         "Name": "v3",
-        "Type": "S32"
+        "Type": "S32",
+        "ReplaceName": "LoopStartTime"
       },
       {
         "Name": "v4",
-        "Type": "F32"
+        "Type": "F32",
+        "ReplaceName": "LoopEndTime"
       },
       {
         "Name": "v5",
-        "Type": "S32"
+        "Type": "S32",
+        "ReplaceName": "LoopCount"
       },
       {
         "Name": "v6",
-        "Type": "S32"
+        "Type": "S32",
+        "ReplaceName": "LoopWrapNo"
       }
     ]
   },

@@ -26,6 +26,14 @@
       }
     ]
   },
+  "via.AnimationCurve": {
+    "FieldPatches": [
+      {
+        "Name": "v0",
+        "ReplaceName": "Keys"
+      }
+    ]
+  },
   "via.Folder": {
     "FieldPatches": [
       {

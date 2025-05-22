@@ -12,8 +12,6 @@ public partial class EfxRootNode : Node3D, IImportableAsset, IExportableAsset
     [Export] public AssetReference? Asset { get; set; }
     [Export] public Godot.Collections.Array<EfxFieldParameter> FieldParameterValues = new();
     [Export] public Godot.Collections.Array<EfxExpressionParameter> ExpressionParameters = new();
-    // TODO - store these as a flag on the Attributes instead?
-    [Export] public Godot.Collections.Array<EfxCollisionEffect> CollisionEffects = new();
     // public EfxResource? Resource { get; set; }
     private EfxResource? _resource;
     public EfxResource? Resource {

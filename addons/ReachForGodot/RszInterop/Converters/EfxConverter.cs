@@ -52,12 +52,15 @@ public class EfxConverter : SceneRszAssetConverter<EfxResource, EfxFile, EfxRoot
             }
             entry.index = srcEntry.index;
             entry.OriginalName = srcEntry.name;
-            entry.assignment = srcEntry.entryAssignment;
+            entry.Assignment = srcEntry.entryAssignment;
             entry.LockNode(true);
+
+            entry.FreeAllChildrenImmediately();
 
             foreach (var srcAttr in srcEntry.Attributes) {
                 ImportAttribute(file, target, entry, srcAttr);
             }
+            entry.Groups = srcEntry.Groups.ToArray();
 
             entry.RegenerateNodeName();
         }
@@ -82,25 +85,28 @@ public class EfxConverter : SceneRszAssetConverter<EfxResource, EfxFile, EfxRoot
             action.RegenerateNodeName();
         }
 
+        resource.BoneValues ??= new();
+        resource.BoneValues.Clear();
         foreach (var bone in file.Bones) {
-            resource.BoneValues ??= new();
             resource.BoneValues.Add(bone.name, bone.value);
         }
 
+        target.ExpressionParameters ??= new();
+        target.ExpressionParameters.Clear();
         foreach (var srcExpr in file.ExpressionParameters) {
-            target.ExpressionParameters ??= new();
-            var expr = new EfxExpressionParameter()
-            {
+            var expr = new EfxExpressionParameter() {
                 originalName = srcExpr.name,
-                unknown1 = srcExpr.unkn1,
-                unknown2 = srcExpr.unkn2,
-                unknown3 = srcExpr.unkn3,
-                unknown4 = srcExpr.unkn4,
+                ParameterType = srcExpr.type,
+                RawValueF = new Vector3(
+                    srcExpr.type == EfxExpressionParameterType.Color ? RszTypeConverter.SwapEndianness(srcExpr.value1) : srcExpr.value1,
+                    srcExpr.value2,
+                    srcExpr.value3)
             };
             target.ExpressionParameters.Add(expr);
         }
+        target.FieldParameterValues ??= new();
+        target.FieldParameterValues.Clear();
         foreach (var param in file.FieldParameterValues) {
-            target.FieldParameterValues ??= new();
             target.FieldParameterValues.Add(new EfxFieldParameter() {
                 unkn1 = param.unkn0,
                 unkn2 = param.unkn2,
@@ -114,14 +120,6 @@ public class EfxConverter : SceneRszAssetConverter<EfxResource, EfxFile, EfxRoot
                 unkn10 = param.value_ukn6,
                 name = param.name,
                 filePath = param.filePath,
-            });
-        }
-
-        foreach (var param in file.CollisionEffects) {
-            target.CollisionEffects ??= new();
-            target.CollisionEffects.Add(new () {
-                Values = new Godot.Collections.Array<uint>(param.efxEntryIndexes ?? Array.Empty<uint>()),
-                OriginalName = param.conditionalEffectGroupName,
             });
         }
 
@@ -224,8 +222,9 @@ public class EfxConverter : SceneRszAssetConverter<EfxResource, EfxFile, EfxRoot
             var outEntry = new EFXEntry();
             outEntry.index = srcEntry.index;
             outEntry.name = srcEntry.OriginalName;
-            outEntry.entryAssignment = srcEntry.assignment;
+            outEntry.entryAssignment = srcEntry.Assignment;
             outEntry.Version = source.Version;
+            if (srcEntry.Groups != null) outEntry.Groups.AddRange(srcEntry.Groups);
 
             foreach (var srcAttr in srcEntry.Attributes) {
                 if (srcAttr.Data == null) continue;
@@ -253,10 +252,10 @@ public class EfxConverter : SceneRszAssetConverter<EfxResource, EfxFile, EfxRoot
         foreach (var srcExpr in source.ExpressionParameters) {
             file.ExpressionParameters ??= new();
             file.ExpressionParameters.Add(new EFXExpressionParameter() {
-                unkn1 = srcExpr.unknown1,
-                unkn2 = srcExpr.unknown2,
-                unkn3 = srcExpr.unknown3,
-                unkn4 = srcExpr.unknown4,
+                type = srcExpr.ParameterType,
+                value1 = srcExpr.ParameterType == EfxExpressionParameterType.Color ? RszTypeConverter.SwapEndianness(srcExpr.RawValueF.X) : srcExpr.RawValueF.X,
+                value2 = srcExpr.RawValueF.Y,
+                value3 = srcExpr.RawValueF.Z,
                 name = srcExpr.originalName,
             });
         }
@@ -276,14 +275,6 @@ public class EfxConverter : SceneRszAssetConverter<EfxResource, EfxFile, EfxRoot
                 value_ukn6 = param.unkn10,
                 name = param.name,
                 filePath = param.filePath,
-            });
-        }
-
-        foreach (var param in source.CollisionEffects) {
-            file.CollisionEffects ??= new();
-            file.CollisionEffects.Add(new() {
-                conditionalEffectGroupName = param.OriginalName,
-                efxEntryIndexes = param.Values?.ToArray<uint>() ?? Array.Empty<uint>(),
             });
         }
 
