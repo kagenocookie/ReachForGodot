@@ -54,7 +54,8 @@ public abstract class SceneRszAssetConverter<TResource, TFile, TRootNode> : RszA
         }
         var success = await base.ImportFromFile<TRootNode>(node);
         if (success && WritesEnabled && node.Asset != null) {
-            CreateOrReplaceSceneResource(node, node.Asset);
+            target.ImportedResource = CreateOrReplaceSceneResource(node, node.Asset);
+            target.SaveOrReplaceResource(target.ResourcePath);
         }
         return success;
     }

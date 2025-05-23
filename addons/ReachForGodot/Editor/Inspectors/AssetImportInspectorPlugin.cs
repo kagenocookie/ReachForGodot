@@ -168,6 +168,16 @@ public partial class AssetImportInspectorPlugin : EditorInspectorPlugin, ISerial
                 if (proxy.ShowLinkedFolder) {
                     proxy.LoadScene();
                 }
+            } else if (asset is REResourceProxy outProxy) {
+                if (outProxy.ImportedResource != null) {
+                    if (outProxy.ImportedResource is PackedScene) {
+                        EditorInterface.Singleton.CallDeferred(EditorInterface.MethodName.OpenSceneFromPath, outProxy.ImportedResource.ResourcePath);
+                    } else {
+                        EditorInterface.Singleton.CallDeferred(EditorInterface.MethodName.EditResource, outProxy.ImportedResource);
+                    }
+                } else {
+                    EditorInterface.Singleton.CallDeferred(EditorInterface.MethodName.SelectFile, outProxy.ResourcePath);
+                }
             } else {
                 EditorInterface.Singleton.CallDeferred(EditorInterface.MethodName.MarkSceneAsUnsaved);
             }
