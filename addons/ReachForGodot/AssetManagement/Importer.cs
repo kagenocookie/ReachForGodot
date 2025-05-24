@@ -57,7 +57,7 @@ public class Importer
     public static T? FindOrImportAsset<T>(string? chunkRelativeFilepath, AssetConfig config, bool saveAssetToFilesystem = true) where T : Resource
     {
         var resource = FindOrImportResource<REResource>(chunkRelativeFilepath, config, saveAssetToFilesystem);
-        var asset = resource?.GetAsset<T>();
+        var asset = resource?.GetAsset<T>(saveAssetToFilesystem);
         if (asset != null) return asset;
 
         if (resource is REResourceProxy proxy) {

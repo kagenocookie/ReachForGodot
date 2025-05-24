@@ -40,14 +40,18 @@ public static class ReachExtensions
         return field.type == RszFieldType.GameObjectRef || field.type == RszFieldType.Uri && field.original_type.Contains("via.GameObjectRef");
     }
 
-    public static TResource? GetAsset<TResource>(this REResource resource) where TResource : Resource
+    public static TResource? GetAsset<TResource>(this REResource resource, bool saveAssetToFilesystem = true) where TResource : Resource
     {
         if (resource is REResourceProxy proxy) {
             if (proxy.ImportedResource != null) return proxy.ImportedResource as TResource;
             // in case the asset was already imported but not saved properly on the proxy resource
             var path = PathUtils.GetAssetImportPath(resource.Asset?.AssetFilename, resource.ResourceType, ReachForGodot.GetAssetConfig(resource.Game));
             if (path != null && ResourceLoader.Exists(path)) {
-                return (proxy.ImportedResource = ResourceLoader.Load<TResource>(path)) as TResource;
+                var asset = (proxy.ImportedResource = ResourceLoader.Load<TResource>(path)) as TResource;
+                if (saveAssetToFilesystem && asset != null) {
+                    resource.SaveOrReplaceResource(resource.ResourcePath);
+                }
+                return asset;
             }
         }
 
