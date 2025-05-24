@@ -214,7 +214,9 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
         // toolMenuDev?.AddItem("Extract Content Editor enum display labels", 300);
 #endif
     }
+#if REAGE_DEV
     private static bool _testsRun;
+#endif
 
     private void HandleToolMenu(long id)
     {
@@ -231,7 +233,6 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
             RefreshToolMenu();
         }
         if (id == 200) ExtractFileVersions();
-        if (id == 301) ReaGE.Tests.DevTools.WriteEfxStructsJson();
 
         if (id == 300) {
             foreach (var cfg in ReachForGodot.AssetConfigs.Where(c => c.IsValid)) {
@@ -246,6 +247,8 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
             var test = tests[(int)(id - 1000)];
             RunTests(test.Name);
         }
+
+        if (id == 301) ReaGE.Tests.DevTools.WriteEfxStructsJson();
 #endif
     }
 

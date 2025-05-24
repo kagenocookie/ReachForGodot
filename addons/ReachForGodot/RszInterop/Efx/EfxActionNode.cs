@@ -1,8 +1,6 @@
 namespace ReaGE.EFX;
 
-using System;
 using Godot;
-using RszTool.Efx;
 
 [GlobalClass, Tool, Icon("res://addons/ReachForGodot/icons/efx_action.png")]
 public partial class EfxActionNode : Node3D

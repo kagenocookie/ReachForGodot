@@ -1,15 +1,12 @@
 namespace ReaGE;
 
 using System.Collections;
-using System.Reflection;
 using System.Threading.Tasks;
 using Godot;
 using ReaGE.EFX;
 using RszTool;
 using RszTool.Efx;
 using RszTool.Efx.Structs.RE4;
-using RszTool.Efx.Structs.RERT;
-using RszTool.Tools;
 
 public class EfxConverter : SceneRszAssetConverter<EfxResource, EfxFile, EfxRootNode>
 {

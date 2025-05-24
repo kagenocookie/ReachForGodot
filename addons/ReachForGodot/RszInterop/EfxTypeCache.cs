@@ -1,15 +1,11 @@
 namespace ReaGE;
 
 using System;
-using System.Numerics;
 using System.Reflection;
-using System.Text.Encodings.Web;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using Godot;
 using RszTool;
 using RszTool.Efx;
-using RszTool.Tools;
 
 public class EfxClassInfo
 {

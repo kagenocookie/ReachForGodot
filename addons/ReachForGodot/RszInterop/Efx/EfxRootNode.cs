@@ -1,6 +1,5 @@
 namespace ReaGE.EFX;
 
-using System;
 using Godot;
 using RszTool.Efx;
 

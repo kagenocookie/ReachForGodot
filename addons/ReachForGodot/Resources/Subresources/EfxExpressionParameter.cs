@@ -2,8 +2,6 @@ namespace ReaGE;
 
 using Godot;
 using Godot.Collections;
-using Microsoft.VisualBasic;
-using RszTool.Common;
 using RszTool.Efx;
 
 [GlobalClass, Tool]

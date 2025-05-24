@@ -1,13 +1,11 @@
 namespace ReaGE;
 
 using System;
-using System.Globalization;
 using System.Runtime.CompilerServices;
 using Godot;
 using Godot.Collections;
 using RszTool;
 using RszTool.Efx;
-using RszTool.Tools;
 
 [GlobalClass, Tool]
 public partial class EfxObject : Resource

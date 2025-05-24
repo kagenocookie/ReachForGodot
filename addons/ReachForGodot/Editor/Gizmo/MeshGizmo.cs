@@ -23,7 +23,7 @@ public partial class MeshGizmo : EditorNode3DGizmoPlugin
         if (resource == null) return default!;
 
         if (resource.ImportedMesh == null) {
-            resource.Import(false);
+            _ = resource.Import(false);
         } else {
             var gizmo = new EditorNode3DGizmo();
             gizmo.SetNode3D(forNode3D);
