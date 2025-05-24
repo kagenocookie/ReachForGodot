@@ -1,17 +1,11 @@
-using System.Globalization;
-using System.Net.Http.Headers;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Chickensoft.GoDotTest;
 using Godot;
-using ReaGE.EFX;
 using RszTool;
 using RszTool.Efx;
-using RszTool.Efx.Structs;
-using RszTool.Efx.Structs.DMC5;
 using RszTool.Efx.Structs.RE4;
-using RszTool.Efx.Structs.RERT;
 using RszTool.Tools;
 using Shouldly;
 
@@ -112,50 +106,34 @@ public partial class TestEfx : TestBase
 
         // GD.Print(string.Join("\n", actionContainingEfx.Select(t => t.FileHandler.FilePath)));
 
-
-
-        // var matches = DevTools.FindEfxAttributes<EFXAttributeUnknownDD2_239>(EfxAttributeType.UnknownDD2_239,
+        // var matches = DevTools.FindEfxAttributes<EFXAttributeTypeMeshExpression>(EfxAttributeType.TypeMeshExpression,
         //     // (attr) => attr.substructCount > 0 || attr.indicesCount > 0,
-        //     (attr) => attr.v0.value2 != 0 || attr.v0.value3 != 0,
-        //     // SupportedGame.ResidentEvil2RT)
-        //     // SupportedGame.ResidentEvil2RT, SupportedGame.ResidentEvil3RT, SupportedGame.ResidentEvil7RT, SupportedGame.DevilMayCry5, SupportedGame.ResidentEvil4)
-        //     // SupportedGame.ResidentEvil4)
-        //     // SupportedGame.DevilMayCry5)
-        //     SupportedGame.DragonsDogma2)
+        //     // (attr) => attr.expressions?.solverSize > 0
+        //     // (attr) => attr.expression3 != null
+        //     (attr) => attr.materialExpressions is EFXMaterialExpressionListWrapper1 xx1 && xx1.expressions.Any(ex => ex.expression?.componentsCount > 40)
+        //     // SupportedGame.ResidentEvil2RT
+        //     // SupportedGame.ResidentEvil2RT, SupportedGame.ResidentEvil3RT, SupportedGame.ResidentEvil7RT, SupportedGame.DevilMayCry5, SupportedGame.ResidentEvil4
+        //     // SupportedGame.ResidentEvil4
+        //     // SupportedGame.DevilMayCry5
+        //     // SupportedGame.ResidentEvil4
+        //     )
         // ;
-
-
-        // // GD.Print(string.Join("\n", matches.Select(t => $"{t.matchedAttribute.Start} : {t.file.FileHandler.FilePath}")));
         // GD.Print(string.Join("\n", matches.Select(t => t.file.FileHandler.FilePath).Distinct()));
 
-        // var solverAttrs = FindEfxAttributes(SupportedGame.ResidentEvil4, attr => attr.GetType().GetField("solverSize") != null);
-        // // GD.Print(string.Join("\n", sampleFiles.Select(f => f.FileHandler.FilePath)));
-        // var groups = new HashSet<(string src, string data)>();
-        // foreach (var (file, attr) in solverAttrs) {
-        //     var size = Convert.ToInt32(attr.GetType().GetField("solverSize")!.GetValue(attr));
-        //     if (size > 0) {
-        //         var data = (attr.GetType().GetField("data") ?? attr.GetType().GetField("expression"))?.GetValue(attr) as uint[];
-        //         if (data != null) {
-        //             var str = $"size: {size:000} args: {data[0]:000}, {data[1]:000}";
-        //             groups.Add((attr.GetType().Name, str));
-        //             GD.Print(str + "\t" + attr.GetType().Name + "\t" + file.FileHandler.FilePath);
-        //         }
-        //     } else {
-        //         groups.Add((attr.GetType().Name, "size: 000"));
-        //     }
-        // }
-        // GD.Print(string.Join("\n", groups.Order().Select(pair => (pair.data + "\t" + pair.src))));
+        // var matches = DevTools.FindEfxByAttribute(attr => attr is IExpressionAttribute exprAttr && exprAttr.Expression != null && exprAttr.Expression.Expressions.Any(exp => exp.Components.Count() > 40));
+        // GD.Print(string.Join("\n", matches.Select(t => t.FileHandler.FilePath).Distinct()));
 
         // using var file = new EfxFile(new FileHandler("E:/mods/dd2/REtool/re_chunk_000/natives/stm/gui/mastermaterial/ui03/ui030201/ui_dust_full_01.efx.4064419"));
         // using var file = new EfxFile(new FileHandler("E:/mods/re4/chunks/natives/stm/_chainsaw/vfx/effecteditor/efd_character/efd_ch_common/efd_0015_ch_common_damage_smoke_acid_0000.efx.3539837"));
-        // using var file = new EfxFile(new FileHandler("E:/mods/re4/chunks/natives/stm/_chainsaw/vfx/effecteditor/efd_setmodel/efd_sm82_619_00/efd_0015_sm82_619_00_0000.efx.3539837"));
+        // using var file = new EfxFile(new FileHandler("J:/mods/re4/chunks/natives/stm/_anotherorder/vfx/effecteditor/efd_character/efd_ao_chc3/efd_0015_ao_chc3_hold_dead_0000.efx.3539837"));
         // file.Read();
         // Debug.Break();
 
-        // await FullReadTest();
+        await FullReadTest();
         // await DumpEfxAttributeUsageList();
         // await DumpEfxStructValueLists<EFXAttributeFluidSimulator2D>();
-        await DumpEfxStructValueLists();
+        // await DumpEfxStructValueLists();
+
 
         var fieldInconsistencies = await FindInconsistentEfXFields();
 
@@ -184,6 +162,7 @@ public partial class TestEfx : TestBase
             try {
                 file.Read();
                 file.FileHandler.Position.ShouldBe(file.FileHandler.Stream.Length, "File was not fully read");
+                // file.ParseExpressions();
             } catch (Exception e) {
                 GD.PrintErr("Failed file " + Path.GetFileName(filepath) + ": " + e.Message + "/n" + filepath);
                 return;
@@ -329,31 +308,47 @@ public partial class TestEfx : TestBase
             foreach (var attr in file.GetAttributesAndActions(true)) {
                 var attrType = attr.GetType();
                 if (targetType != null && attrType != targetType) continue;
+                HandleObjectValuePrint(dict, file, attr);
+            }
 
-                if (!dict.TryGetValue(attrType, out var allValues)) {
-                    dict[attrType] = allValues = new();
-                }
-                if (attr.type == EfxAttributeType.TypePolygonClip) {
-                    Debug.Break();
+            static void HandleObjectValuePrint(Dictionary<Type, Dictionary<string, Dictionary<EfxVersion, HashSet<string>>>> dict, EfxFile file, object target)
+            {
+                var targetType = target.GetType();
+                if (targetType.Namespace?.StartsWith("System") == true) return;
+
+                if (!dict.TryGetValue(targetType, out var allValues)) {
+                    dict[targetType] = allValues = new();
                 }
 
-                var fields = EfxTools.GetFieldInfo(attrType, file.Header!.Version);
-                foreach (var (fname, ftype) in fields) {
-                    if (!allValues.TryGetValue(fname, out var values)) {
-                        allValues[fname] = values = new();
+                var fieldInfos = targetType.IsValueType ? targetType.GetFields(BindingFlags.Instance|BindingFlags.Public|BindingFlags.NonPublic)!
+                    : EfxTools.GetFieldInfo(targetType, file.Header!.Version)
+                        .Select(pair => targetType.GetField(pair.name, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)!)
+                        .Where(f => f != null);
+
+                foreach (var fi in fieldInfos) {
+
+                    if (!allValues.TryGetValue(fi.Name, out var values)) {
+                        allValues[fi.Name] = values = new();
                     }
                     if (!values.TryGetValue(file.Header!.Version, out var fieldValues)) {
                         values[file.Header!.Version] = fieldValues = new();
                     }
-                    var fi = attrType.GetField(fname, BindingFlags.Instance|BindingFlags.Public|BindingFlags.NonPublic);
-                    if (fi == null) continue;
-                    var value = fi.GetValue(attr);
+                    var value = fi.GetValue(target);
                     if (value is int i) fieldValues.Add(new ukn(i).GetMostLikelyValueTypeString());
                     else if (value is uint u) fieldValues.Add(new ukn(u).GetMostLikelyValueTypeString());
                     else if (value is float f) fieldValues.Add(new ukn(f).GetMostLikelyValueTypeString());
                     else if (value is RszTool.via.Color c) fieldValues.Add(new ukn(c.rgba).GetMostLikelyValueTypeString());
                     else if (value is ukn uu) fieldValues.Add(uu.GetMostLikelyValueTypeString());
-                    else fieldValues.Add(value?.ToString() ?? "NULL");
+                    else {
+                        fieldValues.Add(value?.ToString() ?? "NULL");
+                        if (value != null && fi.FieldType.IsAssignableTo(typeof(BaseModel))) {
+                            HandleObjectValuePrint(dict, file, value);
+                        } else if (fi.FieldType.IsArray) {
+                            foreach (var it in (Array)value!) { HandleObjectValuePrint(dict, file, it); }
+                        } else if (fi.FieldType.IsGenericType && fi.FieldType.GetGenericTypeDefinition() == typeof(List<>)) {
+                            foreach (var it in (System.Collections.IList)value!) { HandleObjectValuePrint(dict, file, it); }
+                        }
+                    }
                 }
             }
         }, null, DevTools.EfxSupportedGames);

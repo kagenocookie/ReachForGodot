@@ -320,7 +320,7 @@
       "TypeID": 8,
       "Name": "Transform2DExpression",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTransform2DExpression",
-      "Hash": 2596575544,
+      "Hash": 1856127627,
       "Fields": [
         {
           "Name": "unkn1_0",
@@ -349,7 +349,7 @@
         {
           "Name": "expressions",
           "FieldType": "Object",
-          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapperBase"
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionContainer"
         }
       ]
     },
@@ -694,7 +694,7 @@
       "TypeID": 13,
       "Name": "Transform3DExpression",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTransform3DExpression",
-      "Hash": 2604446344,
+      "Hash": 100866528,
       "Fields": [
         {
           "Name": "unkn1",
@@ -702,44 +702,53 @@
         },
         {
           "Name": "unkn2",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
         },
         {
           "Name": "unkn3",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
         },
         {
           "Name": "unkn4",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
         },
         {
           "Name": "unkn5",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
         },
         {
           "Name": "unkn6",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
         },
         {
           "Name": "unkn7",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
         },
         {
           "Name": "unkn8",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
         },
         {
           "Name": "unkn9",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
         },
         {
           "Name": "unkn10",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
         },
         {
           "Name": "expressions",
           "FieldType": "Object",
-          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapperBase"
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionContainer"
         }
       ]
     },
@@ -879,7 +888,7 @@
       "TypeID": 17,
       "Name": "SpawnExpression",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeSpawnExpression",
-      "Hash": 3219207328,
+      "Hash": 2478759411,
       "Fields": [
         {
           "Name": "flags",
@@ -923,7 +932,7 @@
         {
           "Name": "expressions",
           "FieldType": "Object",
-          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapperBase"
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionContainer"
         }
       ]
     },
@@ -1104,7 +1113,7 @@
       "TypeID": 22,
       "Name": "TypeBillboard2DExpression",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypeBillboard2DExpression",
-      "Hash": 1428092035,
+      "Hash": 687644118,
       "Fields": [
         {
           "Name": "unkn1_0",
@@ -1165,7 +1174,7 @@
         {
           "Name": "expressions",
           "FieldType": "Object",
-          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapperBase"
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionContainer"
         }
       ]
     },
@@ -1257,68 +1266,81 @@
       "TypeID": 24,
       "Name": "TypeBillboard3DExpression",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypeBillboard3DExpression",
-      "Hash": 48688638,
+      "Hash": 1375761226,
       "Fields": [
-        {
-          "Name": "re4_unkn0",
-          "FieldType": "U32"
-        },
         {
           "Name": "unkn1_0",
           "FieldType": "U32"
         },
         {
           "Name": "unkn1_1",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
         },
         {
           "Name": "unkn1_2",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
         },
         {
           "Name": "unkn1_3",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
         },
         {
           "Name": "unkn1_4",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
         },
         {
           "Name": "unkn1_5",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
         },
         {
           "Name": "unkn1_6",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
         },
         {
           "Name": "unkn1_7",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
         },
         {
           "Name": "unkn1_8",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
         },
         {
           "Name": "unkn1_9",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
         },
         {
           "Name": "unkn1_10",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
         },
         {
           "Name": "unkn1_11",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
         },
         {
           "Name": "unkn1_12",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
+        },
+        {
+          "Name": "unkn1_13",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
         },
         {
           "Name": "expressions",
           "FieldType": "Object",
-          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapperBase"
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionContainer"
         }
       ]
     },
@@ -1472,7 +1494,7 @@
       "TypeID": 27,
       "Name": "TypeBillboard3DMaterialExpression",
       "Classname": "RszTool.Efx.Structs.RERT.EFXAttributeTypeBillboard3DMaterialExpression",
-      "Hash": 1070041844,
+      "Hash": 65720263,
       "Fields": [
         {
           "Name": "ukn0",
@@ -1529,7 +1551,7 @@
         {
           "Name": "expressions",
           "FieldType": "Object",
-          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapperBase"
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionContainer"
         },
         {
           "Name": "ukn14",
@@ -1833,16 +1855,8 @@
       "TypeID": 30,
       "Name": "TypeMeshExpression",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypeMeshExpression",
-      "Hash": 4288569899,
+      "Hash": 125493279,
       "Fields": [
-        {
-          "Name": "substructCount",
-          "FieldType": "U32"
-        },
-        {
-          "Name": "substructLength",
-          "FieldType": "U32"
-        },
         {
           "Name": "unkn4",
           "FieldType": "U32"
@@ -1950,7 +1964,16 @@
         {
           "Name": "expressions",
           "FieldType": "Object",
-          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapperBase"
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionContainer"
+        },
+        {
+          "Name": "materialExpressionsCount",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "materialExpressions",
+          "FieldType": "Object",
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionContainer"
         }
       ]
     },
@@ -2646,7 +2669,7 @@
       "TypeID": 58,
       "Name": "TypeRibbonLengthExpression",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypeRibbonLengthExpression",
-      "Hash": 1214617019,
+      "Hash": 85557749,
       "Fields": [
         {
           "Name": "unkn1",
@@ -2654,84 +2677,103 @@
         },
         {
           "Name": "unkn2",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
         },
         {
           "Name": "unkn3",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
         },
         {
           "Name": "unkn4",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
         },
         {
           "Name": "unkn5",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
         },
         {
           "Name": "unkn6",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
         },
         {
           "Name": "unkn7",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
         },
         {
           "Name": "unkn8",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
         },
         {
           "Name": "sb_unkn0",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
         },
         {
           "Name": "sb_unkn1",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
         },
         {
           "Name": "sb_unkn2",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
         },
         {
           "Name": "sb_unkn3",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
         },
         {
           "Name": "sb_unkn4",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
         },
         {
           "Name": "sb_unkn5",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
         },
         {
           "Name": "sb_unkn6",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
         },
         {
           "Name": "sb_unkn7",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
         },
         {
           "Name": "re4_unkn1",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
         },
         {
           "Name": "re4_unkn2",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
         },
         {
           "Name": "re4_unkn3",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
         },
         {
           "Name": "re4_unkn4",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
         },
         {
           "Name": "expressions",
           "FieldType": "Object",
-          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapperBase"
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionContainer"
         }
       ]
     },
@@ -2739,7 +2781,7 @@
       "TypeID": 60,
       "Name": "TypeRibbonFixEndExpression",
       "Classname": "RszTool.Efx.Structs.DMC5.EFXAttributeTypeRibbonFixEndExpression",
-      "Hash": 318159186,
+      "Hash": 3872678565,
       "Fields": [
         {
           "Name": "ukn1_0",
@@ -2816,7 +2858,7 @@
         {
           "Name": "expressions",
           "FieldType": "Object",
-          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapperBase"
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionContainer"
         }
       ]
     },
@@ -3008,7 +3050,7 @@
       "TypeID": 65,
       "Name": "TypePolygonExpression",
       "Classname": "RszTool.Efx.Structs.DMC5.EFXAttributeTypePolygonExpression",
-      "Hash": 4166213747,
+      "Hash": 3425765830,
       "Fields": [
         {
           "Name": "unkn0",
@@ -3093,7 +3135,7 @@
         {
           "Name": "expressions",
           "FieldType": "Object",
-          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapperBase"
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionContainer"
         }
       ]
     },
@@ -3329,7 +3371,7 @@
       "TypeID": 76,
       "Name": "TypeNoDrawExpression",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypeNoDrawExpression",
-      "Hash": 3876905477,
+      "Hash": 3136457560,
       "Fields": [
         {
           "Name": "unkn0",
@@ -3402,7 +3444,7 @@
         {
           "Name": "expressions",
           "FieldType": "Object",
-          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapperBase"
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionContainer"
         }
       ]
     },
@@ -3490,7 +3532,7 @@
       "TypeID": 79,
       "Name": "Velocity2DExpression",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeVelocity2DExpression",
-      "Hash": 2440938831,
+      "Hash": 1700490914,
       "Fields": [
         {
           "Name": "unkn0",
@@ -3551,7 +3593,7 @@
         {
           "Name": "expressions",
           "FieldType": "Object",
-          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapperBase"
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionContainer"
         }
       ]
     },
@@ -3703,7 +3745,7 @@
       "TypeID": 82,
       "Name": "Velocity3DExpression",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeVelocity3DExpression",
-      "Hash": 21171292,
+      "Hash": 3575690671,
       "Fields": [
         {
           "Name": "unkn1_0",
@@ -3820,7 +3862,7 @@
         {
           "Name": "expressions",
           "FieldType": "Object",
-          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapperBase"
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionContainer"
         }
       ]
     },
@@ -3904,7 +3946,7 @@
       "TypeID": 85,
       "Name": "RotateAnimExpression",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeRotateAnimExpression",
-      "Hash": 14955878,
+      "Hash": 3569475257,
       "Fields": [
         {
           "Name": "ukn1_0",
@@ -3961,7 +4003,7 @@
         {
           "Name": "expressions",
           "FieldType": "Object",
-          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapperBase"
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionContainer"
         }
       ]
     },
@@ -4057,7 +4099,7 @@
       "TypeID": 88,
       "Name": "ScaleAnimExpression",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeScaleAnimExpression",
-      "Hash": 4274921055,
+      "Hash": 3534473138,
       "Fields": [
         {
           "Name": "unkn1",
@@ -4098,7 +4140,7 @@
         {
           "Name": "expressions",
           "FieldType": "Object",
-          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapperBase"
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionContainer"
         }
       ]
     },
@@ -4166,7 +4208,7 @@
       "TypeID": 90,
       "Name": "VanishArea3DExpression",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeVanishArea3DExpression",
-      "Hash": 775150698,
+      "Hash": 34702781,
       "Fields": [
         {
           "Name": "unkn1_0",
@@ -4231,7 +4273,7 @@
         {
           "Name": "expressions",
           "FieldType": "Object",
-          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapperBase"
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionContainer"
         }
       ]
     },
@@ -4283,7 +4325,7 @@
       "TypeID": 92,
       "Name": "LifeExpression",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeLifeExpression",
-      "Hash": 418070501,
+      "Hash": 3972589880,
       "Fields": [
         {
           "Name": "unkn1_0",
@@ -4304,7 +4346,7 @@
         {
           "Name": "expressions",
           "FieldType": "Object",
-          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapperBase"
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionContainer"
         }
       ]
     },
@@ -4388,7 +4430,7 @@
       "TypeID": 95,
       "Name": "UVSequenceExpression",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeUVSequenceExpression",
-      "Hash": 924178538,
+      "Hash": 183730621,
       "Fields": [
         {
           "Name": "unkn1_0",
@@ -4421,7 +4463,7 @@
         {
           "Name": "expressions",
           "FieldType": "Object",
-          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapperBase"
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionContainer"
         }
       ]
     },
@@ -4993,7 +5035,7 @@
       "TypeID": 98,
       "Name": "TextureUnitExpression",
       "Classname": "RszTool.Efx.Structs.RERT.EFXAttributeTextureUnitExpression",
-      "Hash": 3913610365,
+      "Hash": 3173162448,
       "Fields": [
         {
           "Name": "ukn0",
@@ -5019,7 +5061,7 @@
         {
           "Name": "expressions",
           "FieldType": "Object",
-          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapperBase"
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionContainer"
         }
       ]
     },
@@ -5087,7 +5129,7 @@
       "TypeID": 101,
       "Name": "EmitterShape2DExpression",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeEmitterShape2DExpression",
-      "Hash": 964624156,
+      "Hash": 637727175,
       "Fields": [
         {
           "Name": "unkn1_0",
@@ -5116,7 +5158,7 @@
         {
           "Name": "expressions",
           "FieldType": "Object",
-          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapper"
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapper1"
         }
       ]
     },
@@ -5216,52 +5258,61 @@
       "TypeID": 103,
       "Name": "EmitterShape3DExpression",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeEmitterShape3DExpression",
-      "Hash": 3621919916,
+      "Hash": 2860551635,
       "Fields": [
         {
           "Name": "unkn1_0",
           "FieldType": "U32"
         },
         {
-          "Name": "unkn1_1",
-          "FieldType": "U32"
+          "Name": "rangeXMin",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
         },
         {
-          "Name": "unkn1_2",
-          "FieldType": "U32"
+          "Name": "rangeXMax",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
         },
         {
-          "Name": "unkn1_3",
-          "FieldType": "U32"
+          "Name": "rangeYMin",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
         },
         {
-          "Name": "unkn1_4",
-          "FieldType": "U32"
+          "Name": "rangeYMax",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
         },
         {
-          "Name": "unkn1_5",
-          "FieldType": "U32"
+          "Name": "rangeZMin",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
         },
         {
-          "Name": "unkn1_6",
-          "FieldType": "U32"
+          "Name": "rangeZMax",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
         },
         {
           "Name": "unkn1_7",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
         },
         {
           "Name": "unkn1_8",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
         },
         {
           "Name": "unkn1_9",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
         },
         {
           "Name": "expressions",
           "FieldType": "Object",
-          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapperBase"
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionContainer"
         }
       ]
     },
@@ -5413,7 +5464,7 @@
       "TypeID": 110,
       "Name": "NoiseExpression",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeNoiseExpression",
-      "Hash": 1616638347,
+      "Hash": 876190430,
       "Fields": [
         {
           "Name": "unkn0",
@@ -5454,7 +5505,7 @@
         {
           "Name": "expressions",
           "FieldType": "Object",
-          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapperBase"
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionContainer"
         }
       ]
     },
@@ -6055,7 +6106,7 @@
       "TypeID": 124,
       "Name": "ShaderSettingsExpression",
       "Classname": "RszTool.Efx.Structs.DMC5.EFXAttributeShaderSettingsExpression",
-      "Hash": 2473418121,
+      "Hash": 1732970204,
       "Fields": [
         {
           "Name": "ukn0",
@@ -6092,7 +6143,7 @@
         {
           "Name": "expressions",
           "FieldType": "Object",
-          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapperBase"
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionContainer"
         }
       ]
     },
@@ -6129,7 +6180,7 @@
       "TypeID": 126,
       "Name": "DistortionExpression",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeDistortionExpression",
-      "Hash": 228596775,
+      "Hash": 3783116154,
       "Fields": [
         {
           "Name": "unkn1_0",
@@ -6158,7 +6209,7 @@
         {
           "Name": "expressions",
           "FieldType": "Object",
-          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapperBase"
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionContainer"
         }
       ]
     },
@@ -6336,7 +6387,7 @@
       "TypeID": 136,
       "Name": "FadeByAngleExpression",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeFadeByAngleExpression",
-      "Hash": 3508926455,
+      "Hash": 3182029474,
       "Fields": [
         {
           "Name": "unkn0",
@@ -6353,7 +6404,7 @@
         {
           "Name": "expressions",
           "FieldType": "Object",
-          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapper"
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapper1"
         }
       ]
     },
@@ -6393,22 +6444,22 @@
       "TypeID": 138,
       "Name": "FadeByDepth",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeFadeByDepth",
-      "Hash": 3223898460,
+      "Hash": 1436822410,
       "Fields": [
         {
-          "Name": "unkn1",
+          "Name": "nearStart",
           "FieldType": "F32"
         },
         {
-          "Name": "unkn2",
+          "Name": "nearEnd",
           "FieldType": "F32"
         },
         {
-          "Name": "unkn3",
+          "Name": "farStart",
           "FieldType": "F32"
         },
         {
-          "Name": "unkn4",
+          "Name": "farEnd",
           "FieldType": "F32"
         }
       ]
@@ -6417,7 +6468,7 @@
       "TypeID": 139,
       "Name": "FadeByDepthExpression",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeFadeByDepthExpression",
-      "Hash": 793999539,
+      "Hash": 53551622,
       "Fields": [
         {
           "Name": "unkn1_0",
@@ -6442,7 +6493,7 @@
         {
           "Name": "expressions",
           "FieldType": "Object",
-          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapperBase"
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionContainer"
         }
       ]
     },
@@ -7746,7 +7797,7 @@
       "TypeID": 172,
       "Name": "MeshEmitterExpression",
       "Classname": "RszTool.Efx.Structs.DMC5.EFXAttributeMeshEmitterExpression",
-      "Hash": 1290965854,
+      "Hash": 964068873,
       "Fields": [
         {
           "Name": "unkn0",
@@ -7819,7 +7870,7 @@
         {
           "Name": "expressions",
           "FieldType": "Object",
-          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapper"
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapper1"
         }
       ]
     },
@@ -8000,7 +8051,7 @@
       "TypeID": 177,
       "Name": "VectorFieldParameterExpression",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeVectorFieldParameterExpression",
-      "Hash": 4113794087,
+      "Hash": 3373346170,
       "Fields": [
         {
           "Name": "unkn1_0",
@@ -8089,7 +8140,7 @@
         {
           "Name": "expressions",
           "FieldType": "Object",
-          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapperBase"
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionContainer"
         }
       ]
     },
@@ -8386,7 +8437,7 @@
       "TypeID": 194,
       "Name": "AttractorExpression",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeAttractorExpression",
-      "Hash": 273010175,
+      "Hash": 3827529554,
       "Fields": [
         {
           "Name": "unkn1_0",
@@ -8435,7 +8486,7 @@
         {
           "Name": "expressions",
           "FieldType": "Object",
-          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapperBase"
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionContainer"
         }
       ]
     },
@@ -8743,7 +8794,7 @@
       "TypeID": 252,
       "Name": "TypeGpuMeshExpression",
       "Classname": "RszTool.Efx.Structs.RE8.EFXAttributeTypeGpuMeshExpression",
-      "Hash": 2052236145,
+      "Hash": 1725339164,
       "Fields": [
         {
           "Name": "unkn1_0",
@@ -8828,7 +8879,7 @@
         {
           "Name": "expressions",
           "FieldType": "Object",
-          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapper"
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapper1"
         }
       ]
     },
@@ -9504,7 +9555,7 @@
       "TypeID": 244,
       "Name": "UnknownRE4_244Expression",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeUnknownRE4_244",
-      "Hash": 1170948699,
+      "Hash": 430500782,
       "Fields": [
         {
           "Name": "unkn1_0",
@@ -9569,7 +9620,7 @@
         {
           "Name": "expressions",
           "FieldType": "Object",
-          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapperBase"
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionContainer"
         }
       ]
     },
@@ -9745,7 +9796,7 @@
       "TypeID": 248,
       "Name": "UnknownRE4_248_UnknTypeGpuExpression",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeUnknownRE4_248",
-      "Hash": 2791200733,
+      "Hash": 2050752816,
       "Fields": [
         {
           "Name": "unkn1",
@@ -9790,7 +9841,7 @@
         {
           "Name": "expressions",
           "FieldType": "Object",
-          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapperBase"
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionContainer"
         }
       ]
     },
@@ -9908,10 +9959,10 @@
     }
   },
   "Structs": {
-    "RszTool.Efx.Structs.Common.EFXExpressionListWrapperBase": {
+    "RszTool.Efx.Structs.Common.EFXExpressionContainer": {
       "Name": "",
-      "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapperBase",
-      "Hash": 2667827896,
+      "Classname": "RszTool.Efx.Structs.Common.EFXExpressionContainer",
+      "Hash": 2095313355,
       "Fields": [
         {
           "Name": "solverSize",
@@ -9919,10 +9970,10 @@
         }
       ]
     },
-    "RszTool.Efx.Structs.Common.EFXExpressionListWrapper3": {
+    "RszTool.Efx.Structs.Common.EFXExpressionListWrapper2": {
       "Name": "",
-      "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapper3",
-      "Hash": 1186757763,
+      "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapper2",
+      "Hash": 588654632,
       "Fields": [
         {
           "Name": "expressions",
@@ -9932,10 +9983,10 @@
         }
       ]
     },
-    "RszTool.Efx.Structs.Common.EFXExpressionListWrapper": {
+    "RszTool.Efx.Structs.Common.EFXExpressionListWrapper1": {
       "Name": "",
-      "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapper",
-      "Hash": 3932858817,
+      "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapper1",
+      "Hash": 578465836,
       "Fields": [
         {
           "Name": "expressions",
@@ -10192,10 +10243,10 @@
         }
       ]
     },
-    "RszTool.Efx.Structs.Common.EFXExpressionListWrapper2": {
+    "RszTool.Efx.Structs.Common.EFXMaterialExpressionListWrapper2": {
       "Name": "",
-      "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapper2",
-      "Hash": 1925851407,
+      "Classname": "RszTool.Efx.Structs.Common.EFXMaterialExpressionListWrapper2",
+      "Hash": 3616191978,
       "Fields": [
         {
           "Name": "indexCount",
@@ -10204,8 +10255,33 @@
           "FlagTarget": "data2"
         },
         {
-          "Name": "unknData",
+          "Name": "expressions",
+          "FieldType": "Object",
+          "Classname": "RszTool.Efx.Structs.Common.EFXMaterialExpression2",
+          "IsArray": true
+        },
+        {
+          "Name": "data2",
           "FieldType": "U32",
+          "IsArray": true
+        }
+      ]
+    },
+    "RszTool.Efx.Structs.Common.EFXMaterialExpressionListWrapper1": {
+      "Name": "",
+      "Classname": "RszTool.Efx.Structs.Common.EFXMaterialExpressionListWrapper1",
+      "Hash": 3660818434,
+      "Fields": [
+        {
+          "Name": "indexCount",
+          "FieldType": "S32",
+          "Flag": "StructSize",
+          "FlagTarget": "data2"
+        },
+        {
+          "Name": "expressions",
+          "FieldType": "Object",
+          "Classname": "RszTool.Efx.Structs.Common.EFXMaterialExpression1",
           "IsArray": true
         },
         {
@@ -10305,32 +10381,32 @@
     "RszTool.Efx.Structs.Common.EFXExpression3": {
       "Name": "",
       "Classname": "RszTool.Efx.Structs.Common.EFXExpression3",
-      "Hash": 1438635318,
+      "Hash": 386213223,
       "Fields": [
         {
-          "Name": "struct1Count",
+          "Name": "parameterCount",
           "FieldType": "S32",
           "Flag": "StructSize",
-          "FlagTarget": "struct1"
+          "FlagTarget": "parameters"
         },
         {
-          "Name": "struct2Count",
+          "Name": "componentsCount",
           "FieldType": "S32",
           "Flag": "StructSize",
-          "FlagTarget": "struct2"
+          "FlagTarget": "components"
         },
         {
           "Name": "struct3Count",
           "FieldType": "U32"
         },
         {
-          "Name": "struct1",
+          "Name": "parameters",
           "FieldType": "Struct",
-          "Classname": "RszTool.Efx.Structs.Common.ExpressionStruct_Param1",
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionParameterName",
           "IsArray": true
         },
         {
-          "Name": "struct2",
+          "Name": "components",
           "FieldType": "Object",
           "Classname": "RszTool.Efx.Structs.Common.EFXExpressionData",
           "IsArray": true
@@ -10340,31 +10416,91 @@
     "RszTool.Efx.Structs.Common.EFXExpression": {
       "Name": "",
       "Classname": "RszTool.Efx.Structs.Common.EFXExpression",
-      "Hash": 2884809964,
+      "Hash": 2962117085,
       "Fields": [
         {
-          "Name": "struct1Count",
+          "Name": "parameterCount",
           "FieldType": "S32",
           "Flag": "StructSize",
-          "FlagTarget": "struct1"
+          "FlagTarget": "parameters"
         },
         {
-          "Name": "struct2Count",
+          "Name": "componentsCount",
           "FieldType": "S32",
           "Flag": "StructSize",
-          "FlagTarget": "struct2"
+          "FlagTarget": "components"
         },
         {
-          "Name": "struct1",
+          "Name": "parameters",
           "FieldType": "Struct",
-          "Classname": "RszTool.Efx.Structs.Common.ExpressionStruct_Param1",
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionParameterName",
           "IsArray": true
         },
         {
-          "Name": "struct2",
+          "Name": "components",
           "FieldType": "Object",
           "Classname": "RszTool.Efx.Structs.Common.EFXExpressionData",
           "IsArray": true
+        }
+      ]
+    },
+    "RszTool.Efx.Structs.Common.EFXMaterialExpression2": {
+      "Name": "",
+      "Classname": "RszTool.Efx.Structs.Common.EFXMaterialExpression2",
+      "Hash": 3263019689,
+      "Fields": [
+        {
+          "Name": "unkn1",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn2",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "hash3",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn4",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "expression",
+          "FieldType": "Object",
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpression2"
+        }
+      ]
+    },
+    "RszTool.Efx.Structs.Common.EFXMaterialExpression1": {
+      "Name": "",
+      "Classname": "RszTool.Efx.Structs.Common.EFXMaterialExpression1",
+      "Hash": 3385881328,
+      "Fields": [
+        {
+          "Name": "unkn1",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn2",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "hash3",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn4",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn5",
+          "FieldType": "ukn_type"
+        },
+        {
+          "Name": "expression",
+          "FieldType": "Object",
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpression"
         }
       ]
     },
@@ -10494,10 +10630,10 @@
         }
       ]
     },
-    "RszTool.Efx.Structs.Common.ExpressionStruct_Param1": {
+    "RszTool.Efx.Structs.Common.EFXExpressionParameterName": {
       "Name": "",
-      "Classname": "RszTool.Efx.Structs.Common.ExpressionStruct_Param1",
-      "Hash": 2877903394,
+      "Classname": "RszTool.Efx.Structs.Common.EFXExpressionParameterName",
+      "Hash": 3335832803,
       "Fields": [
         {
           "Name": "parameterNameHash",
@@ -10529,16 +10665,55 @@
         }
       ]
     },
+    "RszTool.Efx.Structs.Common.EFXExpression2": {
+      "Name": "",
+      "Classname": "RszTool.Efx.Structs.Common.EFXExpression2",
+      "Hash": 2530508122,
+      "Fields": [
+        {
+          "Name": "uknCount",
+          "FieldType": "S32"
+        },
+        {
+          "Name": "parameterCount",
+          "FieldType": "S32",
+          "Flag": "StructSize",
+          "FlagTarget": "parameters"
+        },
+        {
+          "Name": "componentsCount",
+          "FieldType": "S32",
+          "Flag": "StructSize",
+          "FlagTarget": "components"
+        },
+        {
+          "Name": "struct3Count",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "parameters",
+          "FieldType": "Struct",
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionParameterName",
+          "IsArray": true
+        },
+        {
+          "Name": "components",
+          "FieldType": "Object",
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionData",
+          "IsArray": true
+        }
+      ]
+    },
     "RszTool.Efx.Structs.Common.EFXExpressionDataBase": {
       "Name": "",
       "Classname": "RszTool.Efx.Structs.Common.EFXExpressionDataBase",
       "Hash": 2078750061,
       "Fields": []
     },
-    "RszTool.Efx.Structs.Common.EFXExpressionDataTypeFloat": {
+    "RszTool.Efx.Structs.Common.EFXExpressionDataFloat": {
       "Name": "",
-      "Classname": "RszTool.Efx.Structs.Common.EFXExpressionDataTypeFloat",
-      "Hash": 1898101902,
+      "Classname": "RszTool.Efx.Structs.Common.EFXExpressionDataFloat",
+      "Hash": 3150772894,
       "Fields": [
         {
           "Name": "value",
@@ -10546,10 +10721,22 @@
         }
       ]
     },
-    "RszTool.Efx.Structs.Common.EFXExpressionDataType1": {
+    "RszTool.Efx.Structs.Common.EFXExpressionDataBinaryOperator": {
       "Name": "",
-      "Classname": "RszTool.Efx.Structs.Common.EFXExpressionDataType1",
-      "Hash": 2813227406,
+      "Classname": "RszTool.Efx.Structs.Common.EFXExpressionDataBinaryOperator",
+      "Hash": 2266504277,
+      "Fields": [
+        {
+          "Name": "value",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.BinaryExpressionOperator"
+        }
+      ]
+    },
+    "RszTool.Efx.Structs.Common.EFXExpressionDataUnaryOperator": {
+      "Name": "",
+      "Classname": "RszTool.Efx.Structs.Common.EFXExpressionDataUnaryOperator",
+      "Hash": 3147563358,
       "Fields": [
         {
           "Name": "value",
@@ -10557,32 +10744,22 @@
         }
       ]
     },
-    "RszTool.Efx.Structs.Common.EFXExpressionDataType2": {
+    "RszTool.Efx.Structs.Common.EFXExpressionDataFunction": {
       "Name": "",
-      "Classname": "RszTool.Efx.Structs.Common.EFXExpressionDataType2",
-      "Hash": 1925723725,
+      "Classname": "RszTool.Efx.Structs.Common.EFXExpressionDataFunction",
+      "Hash": 899748578,
       "Fields": [
         {
           "Name": "value",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.EfxExpressionFunction"
         }
       ]
     },
-    "RszTool.Efx.Structs.Common.EFXExpressionDataType3": {
+    "RszTool.Efx.Structs.Common.EFXExpressionDataParameterHash": {
       "Name": "",
-      "Classname": "RszTool.Efx.Structs.Common.EFXExpressionDataType3",
-      "Hash": 154287576,
-      "Fields": [
-        {
-          "Name": "unkn1",
-          "FieldType": "U32"
-        }
-      ]
-    },
-    "RszTool.Efx.Structs.Common.EFXExpressionDataTypeParameterHash": {
-      "Name": "",
-      "Classname": "RszTool.Efx.Structs.Common.EFXExpressionDataTypeParameterHash",
-      "Hash": 2949787100,
+      "Classname": "RszTool.Efx.Structs.Common.EFXExpressionDataParameterHash",
+      "Hash": 1356650556,
       "Fields": [
         {
           "Name": "parameterHash",
@@ -10592,6 +10769,30 @@
     }
   },
   "Enums": {
+    "RszTool.Efx.Structs.RE4.ValueExpressionType": {
+      "Items": [
+        {
+          "Name": "Unknown"
+        },
+        {
+          "Name": "Unknown1",
+          "Value": 1
+        },
+        {
+          "Name": "Constant",
+          "Value": 2
+        },
+        {
+          "Name": "Unknown3",
+          "Value": 3
+        },
+        {
+          "Name": "Expression",
+          "Value": 4
+        }
+      ],
+      "BackingType": "System.Int32"
+    },
     "RszTool.Efx.Structs.RE4.ExpressionOperator": {
       "Items": [
         {
@@ -10710,6 +10911,91 @@
         {
           "Name": "PropWstring",
           "Value": 21
+        }
+      ],
+      "BackingType": "System.Int32"
+    },
+    "RszTool.Efx.Structs.Common.BinaryExpressionOperator": {
+      "Items": [
+        {
+          "Name": "Add",
+          "Value": 1
+        },
+        {
+          "Name": "Sub",
+          "Value": 2
+        },
+        {
+          "Name": "Mul",
+          "Value": 3
+        },
+        {
+          "Name": "Div",
+          "Value": 4
+        },
+        {
+          "Name": "ClampMax",
+          "Value": 5
+        },
+        {
+          "Name": "UknSix",
+          "Value": 6
+        }
+      ],
+      "BackingType": "System.Int32"
+    },
+    "RszTool.Efx.Structs.Common.EfxExpressionFunction": {
+      "Items": [
+        {
+          "Name": "Unary0"
+        },
+        {
+          "Name": "Unary1",
+          "Value": 1
+        },
+        {
+          "Name": "Unary2",
+          "Value": 2
+        },
+        {
+          "Name": "Unary4",
+          "Value": 4
+        },
+        {
+          "Name": "Unary5",
+          "Value": 5
+        },
+        {
+          "Name": "Unary6",
+          "Value": 6
+        },
+        {
+          "Name": "Unary7",
+          "Value": 7
+        },
+        {
+          "Name": "Unary8",
+          "Value": 8
+        },
+        {
+          "Name": "Unary9",
+          "Value": 9
+        },
+        {
+          "Name": "Unary10",
+          "Value": 10
+        },
+        {
+          "Name": "Ternary15",
+          "Value": 15
+        },
+        {
+          "Name": "Ternary16",
+          "Value": 16
+        },
+        {
+          "Name": "Ternary17",
+          "Value": 17
         }
       ],
       "BackingType": "System.Int32"

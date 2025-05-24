@@ -157,6 +157,11 @@ public static partial class TypeCache
             // they're all 0 in available files, meaning they're likely meaningless for editing purposes, hide from UI
             if (field.FieldType == RszFieldType.ukn_type) continue;
 
+            rf.HintString = default;
+            rf.ElementType = default;
+            rf.Hint = default;
+            rf.VariantType = default;
+
             fieldDict.Add(field.Name, field);
             var genFieldType = field.FieldType == RszFieldType.Struct ? RszFieldType.Object : field.FieldType;
             RszFieldToGodotProperty(rf, data.classCache, genFieldType, field.IsArray, field.Classname ?? string.Empty);

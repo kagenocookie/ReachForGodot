@@ -17,11 +17,18 @@ public partial class EfxActionNode : Node3D
         var baseName = OriginalName ?? ((this is EfxNode ? "Node_" : "Action_") + GetIndex().ToString("00"));
         // attempt translate?
         var typeAttr = Attributes.FirstOrDefault(attr => attr.Data?.TypeInfo.Info.Name.StartsWith("Type") == true);
-        if (typeAttr?.Data == null) {
-            Name = baseName;
+        if (typeAttr?.Data != null) {
+            Name = baseName + "__" + typeAttr.Data.TypeInfo.Info.Name.Replace("Type", "");
             return;
         }
 
-        Name = baseName + "__" + typeAttr.Data?.TypeInfo.Info.Name.Replace("Type", "");
+        typeAttr = Attributes.FirstOrDefault(attr => attr.Data?.TypeInfo.Info.Name.StartsWith("Unknown") == true && attr.Data.TypeInfo.Info.Name.Contains("_Type"));
+        if (typeAttr?.Data != null) {
+            var typename = typeAttr.Data.TypeInfo.Info.Name.Substring(typeAttr.Data.TypeInfo.Info.Name.IndexOf("_Type") + "_Type".Length);
+            Name = baseName + "__" + typename;
+            return;
+        }
+
+        Name = baseName;
     }
 }
