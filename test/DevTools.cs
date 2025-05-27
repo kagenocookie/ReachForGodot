@@ -1,7 +1,6 @@
 using Godot;
 using RszTool;
 using RszTool.Efx;
-
 using RszTool.Tools;
 
 using ukn = RszTool.UndeterminedFieldType;
@@ -55,13 +54,24 @@ public static class DevTools
         return FindEfxAttributes<EFXAttribute>(type, filter, games);
     }
 
-    public static IEnumerable<(EfxFile file, TAttr matchedAttribute)> FindEfxAttributes<TAttr>(EfxAttributeType type, Func<TAttr, bool> filter, params SupportedGame[] games) where TAttr : EFXAttribute
+    public static IEnumerable<(EfxFile file, TAttr matchedAttribute)> FindEfxAttributes<TAttr>(EfxAttributeType type, Func<TAttr, bool> filter, params SupportedGame[] games) where TAttr : class
     {
         return FindEfxByAttribute((e) => e is TAttr ta && e.type == type && filter(ta), games)
             .SelectMany(efx => efx.Entries
                 .SelectMany(e => e.Attributes
                     .Where(e => e is TAttr ta && e.type == type && filter(ta))
-                    .Select(a => (efx, (TAttr)a))
+                    .Select(a => (efx, (a as TAttr)!))
+                )
+            );
+    }
+
+    public static IEnumerable<(EfxFile file, TAttr matchedAttribute)> FindEfxAttributes<TAttr>(Func<TAttr, bool> filter, params SupportedGame[] games) where TAttr : class
+    {
+        return FindEfxByAttribute((e) => e is TAttr ta && filter(ta), games)
+            .SelectMany(efx => efx.Entries
+                .SelectMany(e => e.Attributes
+                    .Where(e => e is TAttr ta && filter(ta))
+                    .Select(a => (efx, (a as TAttr)!))
                 )
             );
     }

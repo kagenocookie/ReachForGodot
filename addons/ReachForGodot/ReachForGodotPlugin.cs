@@ -210,6 +210,9 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
                 break;
             }
         }
+        if (!args.Contains("--headless")) {
+            ReaGE.Tests.DevTools.WriteEfxStructsJson();
+        }
         toolMenuDev?.AddItem("Re-generate EFX JSON files", 301);
         // toolMenuDev?.AddItem("Extract Content Editor enum display labels", 300);
 #endif

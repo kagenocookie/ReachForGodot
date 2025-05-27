@@ -104,7 +104,6 @@ public static partial class TypeCache
 
     private static EfxCacheData? ReadEfxCache(string cacheFile)
     {
-        // TODO move RszTool.Tools into the base rsztool project, as we don't wanna ship that data in the .dll
         EfxCacheData? data;
         using var f = File.OpenRead(cacheFile);
         var cache = JsonSerializer.Deserialize<EfxStructCache>(f, jsonOptions);
@@ -147,10 +146,21 @@ public static partial class TypeCache
 
         var rf = new REField() { RszField = null!, FieldIndex = 0 };
         foreach (var field in attr.Fields) {
+            if (field.Flag == EfxFieldFlags.BitSet) {
+                var props = new Godot.Collections.Dictionary();
+                rf.VariantType = Variant.Type.PackedInt32Array;
+                rf.Hint = default;
+                rf.HintString = default;
+                rf.ElementType = default;
+                UpdateEfxFieldProperty(rf, field.Name, props);
+                info.PropertyList.Add(props);
+                fieldDict.Add(field.Name, field);
+                continue;
+            }
             if (field.Flag != EfxFieldFlags.None) continue;
 
             // RszFieldType.ukn_type is UndeterminedFieldType fields
-            // they're all 0 in available files, meaning they're likely meaningless for editing purposes, hide from UI
+            // they're all 0 in known available files, meaning they're likely meaningless for editing purposes, hide from UI
             if (field.FieldType == RszFieldType.ukn_type) continue;
 
             rf.HintString = default;
@@ -181,7 +191,8 @@ public static partial class TypeCache
             return info;
         }
 
-        throw new ArgumentException("Unknown efx struct classname " + classname);
+        GD.PrintErr($"Unknown efx struct classname {classname}. A file may be out of date.");
+        return new EfxClassInfo();
     }
 
 }

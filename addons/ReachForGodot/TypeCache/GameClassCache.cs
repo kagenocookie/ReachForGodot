@@ -34,14 +34,13 @@ public static partial class TypeCache
 
         public void SetupEfxData(EfxStructCache cache)
         {
+            il2CppCache = new();
             foreach (var ee in cache.Enums) {
-                il2CppCache = new();
                 var backing = Type.GetType(ee.Value.BackingType)!;
                 var enumType = typeof(EnumDescriptor<>).MakeGenericType(backing);
                 var descriptor = (EnumDescriptor)Activator.CreateInstance(enumType)!;
-                foreach (var item in ee.Value.Items) {
-                    descriptor.AddValue(item.Name, JsonSerializer.SerializeToElement(item.Value));
-                }
+                descriptor.ParseCacheData(ee.Value.Items);
+                il2CppCache.enums.Add(ee.Key, descriptor);
             }
         }
 

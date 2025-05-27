@@ -3,6 +3,7 @@ namespace ReaGE;
 using System.Numerics;
 using System.Text.Json;
 using REFDumpFormatter;
+using RszTool;
 
 public abstract class EnumDescriptor
 {
@@ -36,6 +37,15 @@ public abstract class EnumDescriptor
     {
         foreach (var item in pairs) {
             AddValue(item.name, item.value);
+        }
+
+        IsEmpty = false;
+    }
+
+    public void ParseCacheData(SignedEnumItem[] pairs)
+    {
+        foreach (var item in pairs) {
+            AddValue(item.Name, JsonSerializer.SerializeToElement(item.Value));
         }
 
         IsEmpty = false;

@@ -280,36 +280,45 @@
       "TypeID": 8,
       "Name": "Transform2DExpression",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTransform2DExpression",
-      "Hash": 1856127627,
+      "Hash": 3919574987,
       "Fields": [
         {
-          "Name": "unkn1_0",
-          "FieldType": "U32"
+          "Name": "expressionBits",
+          "FieldType": "U32",
+          "IsArray": true,
+          "FixedLength": 1,
+          "Flag": "BitSet",
+          "FlagTarget": "5"
         },
         {
-          "Name": "unkn1_1",
-          "FieldType": "U32"
+          "Name": "unkn1",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_2",
-          "FieldType": "U32"
+          "Name": "unkn2",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_3",
-          "FieldType": "U32"
+          "Name": "unkn3",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_4",
-          "FieldType": "U32"
+          "Name": "unkn4",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_5",
-          "FieldType": "U32"
+          "Name": "unkn5",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "expressions",
           "FieldType": "Object",
-          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionContainer"
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionList"
         }
       ]
     },
@@ -585,68 +594,24 @@
       "TypeID": 12,
       "Name": "Transform3DClip",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTransform3DClip",
-      "Hash": 1362027432,
+      "Hash": 2159917296,
       "Fields": [
         {
-          "Name": "unkn0",
-          "FieldType": "U32"
+          "Name": "clipBits",
+          "FieldType": "U32",
+          "IsArray": true,
+          "FixedLength": 1,
+          "Flag": "BitSet",
+          "FlagTarget": "9"
         },
         {
           "Name": "unkn1",
           "FieldType": "U32"
         },
         {
-          "Name": "unkn2",
-          "FieldType": "S32"
-        },
-        {
-          "Name": "unkn3",
-          "FieldType": "F32"
-        },
-        {
-          "Name": "unkn4",
-          "FieldType": "U32"
-        },
-        {
-          "Name": "unkn5",
-          "FieldType": "U32"
-        },
-        {
-          "Name": "unkn6",
-          "FieldType": "U32"
-        },
-        {
-          "Name": "substruct1Length",
-          "FieldType": "S32",
-          "Flag": "StructSize",
-          "FlagTarget": "substruct1"
-        },
-        {
-          "Name": "substruct2Length",
-          "FieldType": "S32",
-          "Flag": "StructSize",
-          "FlagTarget": "substruct2"
-        },
-        {
-          "Name": "substruct3Length",
-          "FieldType": "S32",
-          "Flag": "StructSize",
-          "FlagTarget": "substruct3"
-        },
-        {
-          "Name": "substruct1",
-          "FieldType": "S32",
-          "IsArray": true
-        },
-        {
-          "Name": "substruct2",
-          "FieldType": "S32",
-          "IsArray": true
-        },
-        {
-          "Name": "substruct3",
-          "FieldType": "F32",
-          "IsArray": true
+          "Name": "clipData",
+          "FieldType": "Object",
+          "Classname": "RszTool.Efx.Structs.Common.EfxClipData"
         }
       ]
     },
@@ -654,61 +619,65 @@
       "TypeID": 13,
       "Name": "Transform3DExpression",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTransform3DExpression",
-      "Hash": 100866528,
+      "Hash": 3353436305,
       "Fields": [
         {
-          "Name": "unkn1",
-          "FieldType": "U32"
+          "Name": "expressionBits",
+          "FieldType": "U32",
+          "IsArray": true,
+          "FixedLength": 1,
+          "Flag": "BitSet",
+          "FlagTarget": "9"
         },
         {
-          "Name": "unkn2",
+          "Name": "translationX",
           "FieldType": "S32",
-          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn3",
+          "Name": "translationY",
           "FieldType": "S32",
-          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn4",
+          "Name": "translationZ",
           "FieldType": "S32",
-          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn5",
+          "Name": "rotationX",
           "FieldType": "S32",
-          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn6",
+          "Name": "rotationY",
           "FieldType": "S32",
-          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn7",
+          "Name": "rotationZ",
           "FieldType": "S32",
-          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn8",
+          "Name": "scaleX",
           "FieldType": "S32",
-          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn9",
+          "Name": "scaleY",
           "FieldType": "S32",
-          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn10",
+          "Name": "scaleZ",
           "FieldType": "S32",
-          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "expressions",
           "FieldType": "Object",
-          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionContainer"
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionList"
         }
       ]
     },
@@ -776,46 +745,50 @@
       "TypeID": 3,
       "Name": "SpawnExpression",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeSpawnExpression",
-      "Hash": 2435625643,
+      "Hash": 2400008863,
       "Fields": [
         {
-          "Name": "flags",
-          "FieldType": "U32"
+          "Name": "expressionBits",
+          "FieldType": "U32",
+          "IsArray": true,
+          "FixedLength": 1,
+          "Flag": "BitSet",
+          "FlagTarget": "7"
         },
         {
           "Name": "spawnNum",
           "FieldType": "S32",
-          "Classname": "RszTool.Efx.Structs.RE4.ExpressionOperator"
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "spawnNumRange",
           "FieldType": "S32",
-          "Classname": "RszTool.Efx.Structs.RE4.ExpressionOperator"
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "intervalFrame",
           "FieldType": "S32",
-          "Classname": "RszTool.Efx.Structs.RE4.ExpressionOperator"
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "intervalFrameRange",
           "FieldType": "S32",
-          "Classname": "RszTool.Efx.Structs.RE4.ExpressionOperator"
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "emitterDelayFrame",
           "FieldType": "S32",
-          "Classname": "RszTool.Efx.Structs.RE4.ExpressionOperator"
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "emitterDelayFrameRange",
           "FieldType": "S32",
-          "Classname": "RszTool.Efx.Structs.RE4.ExpressionOperator"
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "expressions",
           "FieldType": "Object",
-          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionContainer"
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionList"
         }
       ]
     },
@@ -843,68 +816,24 @@
       "TypeID": 16,
       "Name": "EmitterColorClip",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeEmitterColorClip",
-      "Hash": 2188248823,
+      "Hash": 4189919044,
       "Fields": [
         {
-          "Name": "unkn0",
-          "FieldType": "U32"
+          "Name": "clipBits",
+          "FieldType": "U32",
+          "IsArray": true,
+          "FixedLength": 1,
+          "Flag": "BitSet",
+          "FlagTarget": "4"
         },
         {
           "Name": "unkn1",
           "FieldType": "U32"
         },
         {
-          "Name": "unkn2",
-          "FieldType": "U32"
-        },
-        {
-          "Name": "unkn3",
-          "FieldType": "F32"
-        },
-        {
-          "Name": "unkn4",
-          "FieldType": "U32"
-        },
-        {
-          "Name": "unkn5",
-          "FieldType": "U32"
-        },
-        {
-          "Name": "unkn6",
-          "FieldType": "U32"
-        },
-        {
-          "Name": "substruct1Length",
-          "FieldType": "S32",
-          "Flag": "StructSize",
-          "FlagTarget": "substruct1"
-        },
-        {
-          "Name": "substruct2Length",
-          "FieldType": "S32",
-          "Flag": "StructSize",
-          "FlagTarget": "substruct2"
-        },
-        {
-          "Name": "substruct3Length",
-          "FieldType": "S32",
-          "Flag": "StructSize",
-          "FlagTarget": "substruct3"
-        },
-        {
-          "Name": "substruct1",
-          "FieldType": "S32",
-          "IsArray": true
-        },
-        {
-          "Name": "substruct2",
-          "FieldType": "S32",
-          "IsArray": true
-        },
-        {
-          "Name": "substruct3",
-          "FieldType": "F32",
-          "IsArray": true
+          "Name": "clipData",
+          "FieldType": "Object",
+          "Classname": "RszTool.Efx.Structs.Common.EfxColorClipData"
         }
       ]
     },
@@ -984,44 +913,55 @@
       "TypeID": 18,
       "Name": "TypeBillboard2DExpression",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypeBillboard2DExpression",
-      "Hash": 4048387713,
+      "Hash": 2351783150,
       "Fields": [
         {
-          "Name": "unkn1_0",
-          "FieldType": "U32"
+          "Name": "expressionBits",
+          "FieldType": "U32",
+          "IsArray": true,
+          "FixedLength": 1,
+          "Flag": "BitSet",
+          "FlagTarget": "13"
         },
         {
-          "Name": "unkn1_1",
-          "FieldType": "U32"
+          "Name": "unkn1",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_2",
-          "FieldType": "U32"
+          "Name": "unkn2",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_3",
-          "FieldType": "U32"
+          "Name": "unkn3",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_4",
-          "FieldType": "U32"
+          "Name": "unkn4",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_5",
-          "FieldType": "U32"
+          "Name": "unkn5",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_6",
-          "FieldType": "U32"
+          "Name": "unkn6",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_7",
-          "FieldType": "U32"
+          "Name": "unkn7",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "expressions",
           "FieldType": "Object",
-          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionContainer"
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionList"
         }
       ]
     },
@@ -1109,84 +1049,88 @@
       "TypeID": 20,
       "Name": "TypeBillboard3DExpression",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypeBillboard3DExpression",
-      "Hash": 3445040681,
+      "Hash": 676780213,
       "Fields": [
         {
-          "Name": "unkn1_0",
-          "FieldType": "U32"
+          "Name": "expressionBits",
+          "FieldType": "U32",
+          "IsArray": true,
+          "FixedLength": 1,
+          "Flag": "BitSet",
+          "FlagTarget": "13"
         },
         {
-          "Name": "unkn1_1",
+          "Name": "unkn1",
           "FieldType": "S32",
-          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_2",
+          "Name": "unkn2",
           "FieldType": "S32",
-          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_3",
+          "Name": "unkn3",
           "FieldType": "S32",
-          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_4",
+          "Name": "unkn4",
           "FieldType": "S32",
-          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_5",
+          "Name": "unkn5",
           "FieldType": "S32",
-          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_6",
+          "Name": "unkn6",
           "FieldType": "S32",
-          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_7",
+          "Name": "unkn7",
           "FieldType": "S32",
-          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_8",
+          "Name": "unkn8",
           "FieldType": "S32",
-          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_9",
+          "Name": "unkn9",
           "FieldType": "S32",
-          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_10",
+          "Name": "unkn10",
           "FieldType": "S32",
-          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_11",
+          "Name": "unkn11",
           "FieldType": "S32",
-          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_12",
+          "Name": "unkn12",
           "FieldType": "S32",
-          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "expressions",
           "FieldType": "Object",
-          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionContainer"
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionList"
         }
       ]
     },
     "TypeBillboard3DMaterial": {
       "TypeID": 21,
       "Name": "TypeBillboard3DMaterial",
-      "Classname": "RszTool.Efx.Structs.RERT.EFXAttributeTypeBillboard3DMaterial",
-      "Hash": 701992442,
+      "Classname": "RszTool.Efx.Structs.DD2.EFXAttributeTypeBillboard3DMaterial",
+      "Hash": 766671741,
       "Fields": [
         {
           "Name": "ukn0",
@@ -1250,8 +1194,8 @@
     "TypeBillboard3DMaterialClip": {
       "TypeID": 22,
       "Name": "TypeBillboard3DMaterialClip",
-      "Classname": "RszTool.Efx.Structs.RERT.EFXAttributeTypeBillboard3DMaterialClip",
-      "Hash": 1275146546,
+      "Classname": "RszTool.Efx.Structs.DD2.EFXAttributeTypeBillboard3DMaterialClip",
+      "Hash": 3599795334,
       "Fields": [
         {
           "Name": "unkn0",
@@ -1262,142 +1206,104 @@
           "FieldType": "U32"
         },
         {
-          "Name": "unkn2",
-          "FieldType": "S32"
-        },
-        {
-          "Name": "unkn3",
-          "FieldType": "F32"
-        },
-        {
-          "Name": "unkn4",
-          "FieldType": "U32"
-        },
-        {
-          "Name": "unkn5",
-          "FieldType": "U32"
-        },
-        {
-          "Name": "unkn6",
-          "FieldType": "ukn_type"
-        },
-        {
-          "Name": "substruct1Count",
-          "FieldType": "U32"
-        },
-        {
-          "Name": "substruct2Count",
-          "FieldType": "U32"
-        },
-        {
-          "Name": "substruct3Count",
-          "FieldType": "U32"
-        },
-        {
-          "Name": "substruct4Count",
-          "FieldType": "U32"
-        },
-        {
-          "Name": "substruct5Count",
-          "FieldType": "U32"
-        },
-        {
-          "Name": "substruct1",
-          "FieldType": "S32",
-          "IsArray": true
-        },
-        {
-          "Name": "substruct2",
-          "FieldType": "S32",
-          "IsArray": true
-        },
-        {
-          "Name": "substruct3",
-          "FieldType": "F32",
-          "IsArray": true
-        },
-        {
-          "Name": "substruct4",
-          "FieldType": "U32",
-          "IsArray": true
-        },
-        {
-          "Name": "substruct5",
-          "FieldType": "U32",
-          "IsArray": true
+          "Name": "clipData",
+          "FieldType": "Object",
+          "Classname": "RszTool.Efx.Structs.Common.EfxMaterialClipData"
         }
       ]
     },
     "TypeBillboard3DMaterialExpression": {
       "TypeID": 23,
       "Name": "TypeBillboard3DMaterialExpression",
-      "Classname": "RszTool.Efx.Structs.RERT.EFXAttributeTypeBillboard3DMaterialExpression",
-      "Hash": 65720263,
+      "Classname": "RszTool.Efx.Structs.DD2.EFXAttributeTypeBillboard3DMaterialExpression",
+      "Hash": 4199969665,
       "Fields": [
         {
-          "Name": "ukn0",
-          "FieldType": "U32"
+          "Name": "expressionBits",
+          "FieldType": "U32",
+          "IsArray": true,
+          "FixedLength": 1,
+          "Flag": "BitSet",
+          "FlagTarget": "13"
         },
         {
           "Name": "ukn1",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "ukn2",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "ukn3",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "ukn4",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "ukn5",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "ukn6",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "ukn7",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "ukn8",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "ukn9",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "ukn10",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "ukn11",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "ukn12",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "expressions",
           "FieldType": "Object",
-          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionContainer"
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionList"
         },
         {
-          "Name": "ukn14",
+          "Name": "ukn13",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
+        },
+        {
+          "Name": "materialExpressionCount",
           "FieldType": "U32"
         },
         {
-          "Name": "ukn15",
-          "FieldType": "U32"
+          "Name": "materialExpressions",
+          "FieldType": "Object",
+          "Classname": "RszTool.Efx.Structs.Common.EFXMaterialExpressionList"
         }
       ]
     },
@@ -1568,88 +1474,20 @@
       "TypeID": 25,
       "Name": "TypeMeshClip",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypeMeshClip",
-      "Hash": 2216663920,
+      "Hash": 1869200039,
       "Fields": [
         {
           "Name": "unkn1",
           "FieldType": "U32"
         },
         {
-          "Name": "part2Size",
+          "Name": "substruct1SizeSeparate",
           "FieldType": "U32"
         },
         {
-          "Name": "unkn3",
-          "FieldType": "S32"
-        },
-        {
-          "Name": "unkn4",
-          "FieldType": "F32"
-        },
-        {
-          "Name": "substruct1Count",
-          "FieldType": "S32",
-          "Flag": "StructSize",
-          "FlagTarget": "substruct1"
-        },
-        {
-          "Name": "substruct2Count",
-          "FieldType": "S32",
-          "Flag": "StructSize",
-          "FlagTarget": "substruct2"
-        },
-        {
-          "Name": "substruct3Count",
-          "FieldType": "S32",
-          "Flag": "StructSize",
-          "FlagTarget": "substruct3"
-        },
-        {
-          "Name": "substruct1Length",
-          "FieldType": "U32"
-        },
-        {
-          "Name": "substruct2Length",
-          "FieldType": "U32"
-        },
-        {
-          "Name": "substruct3Length",
-          "FieldType": "U32"
-        },
-        {
-          "Name": "indicesCount",
-          "FieldType": "S32",
-          "Flag": "StructSize",
-          "FlagTarget": "indices"
-        },
-        {
-          "Name": "substruct1",
-          "FieldType": "Struct",
-          "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypeMeshClip+MeshClip_Struct1",
-          "IsArray": true
-        },
-        {
-          "Name": "substruct2",
-          "FieldType": "Struct",
-          "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypeMeshClip+MeshClip_Struct2",
-          "IsArray": true
-        },
-        {
-          "Name": "substruct3",
-          "FieldType": "Struct",
-          "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypeMeshClip+MeshClip_Struct3",
-          "IsArray": true
-        },
-        {
-          "Name": "substruct4",
-          "FieldType": "Struct",
-          "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypeMeshClip+MeshClip_Struct4",
-          "IsArray": true
-        },
-        {
-          "Name": "indices",
-          "FieldType": "U32",
-          "IsArray": true
+          "Name": "clipData",
+          "FieldType": "Object",
+          "Classname": "RszTool.Efx.Structs.Common.EfxMaterialClipData"
         }
       ]
     },
@@ -1657,121 +1495,148 @@
       "TypeID": 26,
       "Name": "TypeMeshExpression",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypeMeshExpression",
-      "Hash": 3384650566,
+      "Hash": 3036977415,
       "Fields": [
         {
-          "Name": "substructCount",
-          "FieldType": "S32"
+          "Name": "matExpressionCount",
+          "FieldType": "S32",
+          "Flag": "StructSize",
+          "FlagTarget": "materialExpressionsList"
         },
         {
-          "Name": "substructLength",
-          "FieldType": "S32"
+          "Name": "matExpressionSize",
+          "FieldType": "U32"
         },
         {
           "Name": "indicesCount",
           "FieldType": "S32"
         },
         {
+          "Name": "expressionBits",
+          "FieldType": "U32",
+          "IsArray": true,
+          "FixedLength": 1,
+          "Flag": "BitSet",
+          "FlagTarget": "25"
+        },
+        {
+          "Name": "unkn1",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
+        },
+        {
+          "Name": "unkn2",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
+        },
+        {
+          "Name": "unkn3",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
+        },
+        {
           "Name": "unkn4",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn5_0",
-          "FieldType": "U32"
+          "Name": "unkn5",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn5_1",
-          "FieldType": "U32"
+          "Name": "unkn6",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn5_2",
-          "FieldType": "U32"
+          "Name": "unkn7",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn5_3",
-          "FieldType": "U32"
+          "Name": "unkn8",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn5_4",
-          "FieldType": "U32"
+          "Name": "unkn9",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn5_5",
-          "FieldType": "U32"
+          "Name": "unkn10",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn5_6",
-          "FieldType": "U32"
+          "Name": "unkn11",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn5_7",
-          "FieldType": "U32"
+          "Name": "unkn12",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn5_8",
-          "FieldType": "U32"
+          "Name": "unkn13",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn5_9",
-          "FieldType": "U32"
+          "Name": "unkn14",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn5_10",
-          "FieldType": "U32"
+          "Name": "unkn15",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn5_11",
-          "FieldType": "U32"
+          "Name": "unkn16",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn5_12",
-          "FieldType": "U32"
+          "Name": "unkn17",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn5_13",
-          "FieldType": "U32"
+          "Name": "unkn18",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn5_14",
-          "FieldType": "U32"
+          "Name": "unkn19",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn5_15",
-          "FieldType": "U32"
+          "Name": "unkn20",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn5_16",
-          "FieldType": "U32"
-        },
-        {
-          "Name": "unkn5_17",
-          "FieldType": "U32"
-        },
-        {
-          "Name": "unkn5_18",
-          "FieldType": "U32"
-        },
-        {
-          "Name": "unkn5_19",
-          "FieldType": "U32"
-        },
-        {
-          "Name": "unkn5_20",
-          "FieldType": "U32"
+          "Name": "unkn21",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "expressions",
           "FieldType": "Object",
-          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionContainer"
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionList"
         },
         {
           "Name": "materialExpressionsList",
           "FieldType": "Object",
-          "Classname": "RszTool.Efx.Structs.Common.EFXMaterialExpression1",
+          "Classname": "RszTool.Efx.Structs.Common.EFXMaterialExpression",
           "IsArray": true
         },
         {
-          "Name": "indices",
+          "Name": "materialIndices",
           "FieldType": "U32",
           "IsArray": true
         }
@@ -2473,44 +2338,55 @@
       "TypeID": 32,
       "Name": "TypeRibbonFollowExpression",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypeRibbonFollowExpression",
-      "Hash": 3108951601,
+      "Hash": 983864330,
       "Fields": [
         {
-          "Name": "unkn1_0",
-          "FieldType": "U32"
+          "Name": "expressionBits",
+          "FieldType": "U32",
+          "IsArray": true,
+          "FixedLength": 1,
+          "Flag": "BitSet",
+          "FlagTarget": "17"
         },
         {
-          "Name": "unkn1_1",
-          "FieldType": "U32"
+          "Name": "unkn1",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_2",
-          "FieldType": "U32"
+          "Name": "unkn2",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_3",
-          "FieldType": "U32"
+          "Name": "unkn3",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_4",
-          "FieldType": "U32"
+          "Name": "unkn4",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_5",
-          "FieldType": "U32"
+          "Name": "unkn5",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_6",
-          "FieldType": "U32"
+          "Name": "unkn6",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_7",
-          "FieldType": "U32"
+          "Name": "unkn7",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "expressions",
           "FieldType": "Object",
-          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionContainer"
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionList"
         }
       ]
     },
@@ -2518,51 +2394,55 @@
       "TypeID": 33,
       "Name": "TypeRibbonLengthExpression",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypeRibbonLengthExpression",
-      "Hash": 3719972859,
+      "Hash": 3327420779,
       "Fields": [
         {
+          "Name": "expressionBits",
+          "FieldType": "U32",
+          "IsArray": true,
+          "FixedLength": 1,
+          "Flag": "BitSet",
+          "FlagTarget": "19"
+        },
+        {
           "Name": "unkn1",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "unkn2",
           "FieldType": "S32",
-          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "unkn3",
           "FieldType": "S32",
-          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "unkn4",
           "FieldType": "S32",
-          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "unkn5",
           "FieldType": "S32",
-          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "unkn6",
           "FieldType": "S32",
-          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "unkn7",
           "FieldType": "S32",
-          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
-        },
-        {
-          "Name": "unkn8",
-          "FieldType": "S32",
-          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "expressions",
           "FieldType": "Object",
-          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionContainer"
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionList"
         }
       ]
     },
@@ -2570,44 +2450,55 @@
       "TypeID": 34,
       "Name": "TypeRibbonChainExpression",
       "Classname": "RszTool.Efx.Structs.RERT.EFXAttributeTypeRibbonChainExpression",
-      "Hash": 4097316511,
+      "Hash": 3475520176,
       "Fields": [
         {
-          "Name": "unkn0",
-          "FieldType": "U32"
+          "Name": "expressionBits",
+          "FieldType": "U32",
+          "IsArray": true,
+          "FixedLength": 1,
+          "Flag": "BitSet",
+          "FlagTarget": "17"
         },
         {
           "Name": "unkn1",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "unkn2",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "unkn3",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "unkn4",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "unkn5",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "unkn6",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "unkn7",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "expressions",
           "FieldType": "Object",
-          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionContainer"
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionList"
         }
       ]
     },
@@ -2615,44 +2506,55 @@
       "TypeID": 35,
       "Name": "TypeRibbonFixEndExpression",
       "Classname": "RszTool.Efx.Structs.DMC5.EFXAttributeTypeRibbonFixEndExpression",
-      "Hash": 2121139644,
+      "Hash": 670896277,
       "Fields": [
         {
-          "Name": "ukn1_0",
-          "FieldType": "U32"
+          "Name": "expressionBits",
+          "FieldType": "U32",
+          "IsArray": true,
+          "FixedLength": 1,
+          "Flag": "BitSet",
+          "FlagTarget": "17"
         },
         {
           "Name": "ukn1_1",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "ukn1_2",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "ukn1_3",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "ukn1_4",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "ukn1_5",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "ukn1_6",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "ukn1_7",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "expressions",
           "FieldType": "Object",
-          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionContainer"
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionList"
         }
       ]
     },
@@ -2832,88 +2734,110 @@
       "TypeID": 38,
       "Name": "TypePolygonExpression",
       "Classname": "RszTool.Efx.Structs.DMC5.EFXAttributeTypePolygonExpression",
-      "Hash": 735313572,
+      "Hash": 1146154674,
       "Fields": [
         {
-          "Name": "unkn0",
-          "FieldType": "U32"
+          "Name": "expressionBits",
+          "FieldType": "U32",
+          "IsArray": true,
+          "FixedLength": 1,
+          "Flag": "BitSet",
+          "FlagTarget": "19"
         },
         {
           "Name": "unkn1",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "unkn2",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "unkn3",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "unkn4",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "unkn5",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "unkn6",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "unkn7",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "unkn8",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "unkn9",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "unkn10",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "unkn11",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "unkn12",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "unkn13",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "unkn14",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "unkn15",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "unkn16",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "unkn17",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "unkn18",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "expressions",
           "FieldType": "Object",
-          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionContainer"
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionList"
         }
       ]
     },
@@ -3133,72 +3057,90 @@
       "TypeID": 42,
       "Name": "TypeNoDrawExpression",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypeNoDrawExpression",
-      "Hash": 1628893827,
+      "Hash": 68390400,
       "Fields": [
         {
-          "Name": "unkn0",
-          "FieldType": "U32"
+          "Name": "expressionBits",
+          "FieldType": "U32",
+          "IsArray": true,
+          "FixedLength": 1,
+          "Flag": "BitSet",
+          "FlagTarget": "16"
         },
         {
           "Name": "unkn1",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "unkn2",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "unkn3",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "unkn4",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "unkn5",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "unkn6",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "unkn7",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "unkn8",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "unkn9",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "unkn10",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "unkn11",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "unkn12",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "unkn13",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "unkn14",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "expressions",
           "FieldType": "Object",
-          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionContainer"
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionList"
         }
       ]
     },
@@ -3266,48 +3208,60 @@
       "TypeID": 45,
       "Name": "Velocity2DExpression",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeVelocity2DExpression",
-      "Hash": 3084033971,
+      "Hash": 4097219097,
       "Fields": [
         {
-          "Name": "unkn0",
-          "FieldType": "U32"
+          "Name": "expressionBits",
+          "FieldType": "U32",
+          "IsArray": true,
+          "FixedLength": 1,
+          "Flag": "BitSet",
+          "FlagTarget": "13"
         },
         {
           "Name": "unkn1",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "unkn2",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "unkn3",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "unkn4",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "unkn5",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "unkn6",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "unkn7",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "unkn8",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "expressions",
           "FieldType": "Object",
-          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionContainer"
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionList"
         }
       ]
     },
@@ -3435,64 +3389,80 @@
       "TypeID": 48,
       "Name": "Velocity3DExpression",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeVelocity3DExpression",
-      "Hash": 2271843608,
+      "Hash": 3882092499,
       "Fields": [
         {
-          "Name": "unkn1_0",
-          "FieldType": "U32"
+          "Name": "expressionBits",
+          "FieldType": "U32",
+          "IsArray": true,
+          "FixedLength": 1,
+          "Flag": "BitSet",
+          "FlagTarget": "19"
         },
         {
-          "Name": "indicesCount",
-          "FieldType": "U32"
+          "Name": "unkn1",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_2",
-          "FieldType": "U32"
+          "Name": "unkn2",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_3",
-          "FieldType": "U32"
+          "Name": "unkn3",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_4",
-          "FieldType": "U32"
+          "Name": "unkn4",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_5",
-          "FieldType": "U32"
+          "Name": "unkn5",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_6",
-          "FieldType": "U32"
+          "Name": "unkn6",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_7",
-          "FieldType": "U32"
+          "Name": "unkn7",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_8",
-          "FieldType": "U32"
+          "Name": "unkn8",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_9",
-          "FieldType": "U32"
+          "Name": "unkn9",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_10",
-          "FieldType": "U32"
+          "Name": "unkn10",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_11",
-          "FieldType": "U32"
+          "Name": "unkn11",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_12",
-          "FieldType": "U32"
+          "Name": "unkn12",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "expressions",
           "FieldType": "Object",
-          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionContainer"
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionList"
         }
       ]
     },
@@ -3576,64 +3546,80 @@
       "TypeID": 51,
       "Name": "RotateAnimExpression",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeRotateAnimExpression",
-      "Hash": 3569475257,
+      "Hash": 3311260368,
       "Fields": [
         {
-          "Name": "ukn1_0",
-          "FieldType": "U32"
+          "Name": "expressionBits",
+          "FieldType": "U32",
+          "IsArray": true,
+          "FixedLength": 1,
+          "Flag": "BitSet",
+          "FlagTarget": "12"
         },
         {
           "Name": "ukn1_1",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "ukn1_2",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "ukn1_3",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "ukn1_4",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "ukn1_5",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "ukn1_6",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "ukn1_7",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "ukn1_8",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "ukn1_9",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "ukn1_10",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "ukn1_11",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "ukn1_12",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "expressions",
           "FieldType": "Object",
-          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionContainer"
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionList"
         }
       ]
     },
@@ -3729,24 +3715,30 @@
       "TypeID": 54,
       "Name": "ScaleAnimExpression",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeScaleAnimExpression",
-      "Hash": 1165423643,
+      "Hash": 2168408940,
       "Fields": [
         {
+          "Name": "expressionBits",
+          "FieldType": "U32",
+          "IsArray": true,
+          "FixedLength": 1,
+          "Flag": "BitSet",
+          "FlagTarget": "8"
+        },
+        {
           "Name": "unkn1",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "unkn2",
-          "FieldType": "U32"
-        },
-        {
-          "Name": "unkn3",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "expressions",
           "FieldType": "Object",
-          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionContainer"
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionList"
         }
       ]
     },
@@ -3814,72 +3806,90 @@
       "TypeID": 56,
       "Name": "VanishArea3DExpression",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeVanishArea3DExpression",
-      "Hash": 34702781,
+      "Hash": 204744000,
       "Fields": [
         {
-          "Name": "unkn1_0",
-          "FieldType": "U32"
+          "Name": "expressionBits",
+          "FieldType": "U32",
+          "IsArray": true,
+          "FixedLength": 1,
+          "Flag": "BitSet",
+          "FlagTarget": "14"
         },
         {
-          "Name": "unkn1_1",
-          "FieldType": "U32"
+          "Name": "unkn1",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_2",
-          "FieldType": "U32"
+          "Name": "unkn2",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_3",
-          "FieldType": "U32"
+          "Name": "unkn3",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_4",
-          "FieldType": "U32"
+          "Name": "unkn4",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_5",
-          "FieldType": "U32"
+          "Name": "unkn5",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_6",
-          "FieldType": "U32"
+          "Name": "unkn6",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_7",
-          "FieldType": "U32"
+          "Name": "unkn7",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_8",
-          "FieldType": "U32"
+          "Name": "unkn8",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_9",
-          "FieldType": "U32"
+          "Name": "unkn9",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_10",
-          "FieldType": "U32"
+          "Name": "unkn10",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_11",
-          "FieldType": "U32"
+          "Name": "unkn11",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_12",
-          "FieldType": "U32"
+          "Name": "unkn12",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_13",
-          "FieldType": "U32"
+          "Name": "unkn13",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_14",
-          "FieldType": "U32"
+          "Name": "unkn14",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "expressions",
           "FieldType": "Object",
-          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionContainer"
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionList"
         }
       ]
     },
@@ -3931,28 +3941,35 @@
       "TypeID": 58,
       "Name": "LifeExpression",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeLifeExpression",
-      "Hash": 3972589880,
+      "Hash": 2666868103,
       "Fields": [
         {
-          "Name": "unkn1_0",
-          "FieldType": "U32"
+          "Name": "expressionBits",
+          "FieldType": "U32",
+          "IsArray": true,
+          "FixedLength": 1,
+          "Flag": "BitSet",
+          "FlagTarget": "6"
         },
         {
-          "Name": "unkn1_1",
-          "FieldType": "U32"
+          "Name": "unkn1",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_2",
-          "FieldType": "U32"
+          "Name": "unkn2",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_3",
-          "FieldType": "U32"
+          "Name": "unkn3",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "expressions",
           "FieldType": "Object",
-          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionContainer"
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionList"
         }
       ]
     },
@@ -4036,40 +4053,50 @@
       "TypeID": 61,
       "Name": "UVSequenceExpression",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeUVSequenceExpression",
-      "Hash": 183730621,
+      "Hash": 2383087961,
       "Fields": [
         {
-          "Name": "unkn1_0",
-          "FieldType": "U32"
+          "Name": "expressionBits",
+          "FieldType": "U32",
+          "IsArray": true,
+          "FixedLength": 1,
+          "Flag": "BitSet",
+          "FlagTarget": "6"
         },
         {
-          "Name": "unkn1_1",
-          "FieldType": "U32"
+          "Name": "unkn1",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_2",
-          "FieldType": "U32"
+          "Name": "unkn2",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_3",
-          "FieldType": "U32"
+          "Name": "unkn3",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_4",
-          "FieldType": "U32"
+          "Name": "unkn4",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_5",
-          "FieldType": "U32"
+          "Name": "unkn5",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_6",
-          "FieldType": "U32"
+          "Name": "unkn6",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "expressions",
           "FieldType": "Object",
-          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionContainer"
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionList"
         }
       ]
     },
@@ -4640,34 +4667,28 @@
     "TextureUnitExpression": {
       "TypeID": 64,
       "Name": "TextureUnitExpression",
-      "Classname": "RszTool.Efx.Structs.RERT.EFXAttributeTextureUnitExpression",
-      "Hash": 3173162448,
+      "Classname": "RszTool.Efx.Structs.DD2.EFXAttributeTextureUnitExpression",
+      "Hash": 2021771254,
       "Fields": [
         {
-          "Name": "ukn0",
-          "FieldType": "ukn_type"
-        },
-        {
-          "Name": "ukn1",
-          "FieldType": "U32"
-        },
-        {
-          "Name": "ukn2",
-          "FieldType": "ukn_type"
-        },
-        {
-          "Name": "ukn3",
-          "FieldType": "ukn_type"
-        },
-        {
-          "Name": "expressionArgs",
+          "Name": "expressionBits",
           "FieldType": "U32",
-          "IsArray": true
+          "IsArray": true,
+          "FixedLength": 4,
+          "Flag": "BitSet",
+          "FlagTarget": "114"
+        },
+        {
+          "Name": "assignTypes",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType",
+          "IsArray": true,
+          "FixedLength": 114
         },
         {
           "Name": "expressions",
           "FieldType": "Object",
-          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionContainer"
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionList"
         }
       ]
     },
@@ -4735,36 +4756,45 @@
       "TypeID": 67,
       "Name": "EmitterShape2DExpression",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeEmitterShape2DExpression",
-      "Hash": 637727175,
+      "Hash": 2552039894,
       "Fields": [
         {
-          "Name": "unkn1_0",
-          "FieldType": "U32"
+          "Name": "expressionBits",
+          "FieldType": "U32",
+          "IsArray": true,
+          "FixedLength": 1,
+          "Flag": "BitSet",
+          "FlagTarget": "5"
         },
         {
-          "Name": "unkn1_1",
-          "FieldType": "U32"
+          "Name": "unkn1",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_2",
-          "FieldType": "U32"
+          "Name": "unkn2",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_3",
-          "FieldType": "U32"
+          "Name": "unkn3",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_4",
-          "FieldType": "U32"
+          "Name": "unkn4",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_5",
-          "FieldType": "U32"
+          "Name": "unkn5",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "expressions",
           "FieldType": "Object",
-          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapper1"
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionList"
         }
       ]
     },
@@ -4852,51 +4882,55 @@
       "TypeID": 69,
       "Name": "EmitterShape3DExpression",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeEmitterShape3DExpression",
-      "Hash": 3230425866,
+      "Hash": 505239567,
       "Fields": [
         {
-          "Name": "unkn1_0",
-          "FieldType": "U32"
+          "Name": "expressionBits",
+          "FieldType": "U32",
+          "IsArray": true,
+          "FixedLength": 1,
+          "Flag": "BitSet",
+          "FlagTarget": "9"
         },
         {
           "Name": "rangeXMin",
           "FieldType": "S32",
-          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "rangeXMax",
           "FieldType": "S32",
-          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "rangeYMin",
           "FieldType": "S32",
-          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "rangeYMax",
           "FieldType": "S32",
-          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "rangeZMin",
           "FieldType": "S32",
-          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "rangeZMax",
           "FieldType": "S32",
-          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "unkn1_7",
           "FieldType": "S32",
-          "Classname": "RszTool.Efx.Structs.RE4.ValueExpressionType"
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "expressions",
           "FieldType": "Object",
-          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionContainer"
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionList"
         }
       ]
     },
@@ -5068,68 +5102,24 @@
       "TypeID": 74,
       "Name": "TexelChannelOperatorClip",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTexelChannelOperatorClip",
-      "Hash": 3894855075,
+      "Hash": 2034193092,
       "Fields": [
         {
-          "Name": "unkn0",
-          "FieldType": "U32"
+          "Name": "clipBits",
+          "FieldType": "U32",
+          "IsArray": true,
+          "FixedLength": 1,
+          "Flag": "BitSet",
+          "FlagTarget": "1"
         },
         {
           "Name": "unkn1",
           "FieldType": "U32"
         },
         {
-          "Name": "unkn2",
-          "FieldType": "U32"
-        },
-        {
-          "Name": "unkn3",
-          "FieldType": "F32"
-        },
-        {
-          "Name": "unkn4",
-          "FieldType": "U32"
-        },
-        {
-          "Name": "unkn5",
-          "FieldType": "U32"
-        },
-        {
-          "Name": "unkn6",
-          "FieldType": "U32"
-        },
-        {
-          "Name": "substruct1Length",
-          "FieldType": "S32",
-          "Flag": "StructSize",
-          "FlagTarget": "substruct1"
-        },
-        {
-          "Name": "substruct2Length",
-          "FieldType": "S32",
-          "Flag": "StructSize",
-          "FlagTarget": "substruct2"
-        },
-        {
-          "Name": "substruct3Length",
-          "FieldType": "S32",
-          "Flag": "StructSize",
-          "FlagTarget": "substruct3"
-        },
-        {
-          "Name": "substruct1",
-          "FieldType": "S32",
-          "IsArray": true
-        },
-        {
-          "Name": "substruct2",
-          "FieldType": "S32",
-          "IsArray": true
-        },
-        {
-          "Name": "substruct3",
-          "FieldType": "F32",
-          "IsArray": true
+          "Name": "clipData",
+          "FieldType": "Object",
+          "Classname": "RszTool.Efx.Structs.Common.EfxClipData"
         }
       ]
     },
@@ -5317,68 +5307,85 @@
       "TypeID": 77,
       "Name": "TypeStrainRibbonExpression",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypeStrainRibbonExpression",
-      "Hash": 2790248329,
+      "Hash": 2149410419,
       "Fields": [
         {
-          "Name": "unkn1_0",
-          "FieldType": "U32"
+          "Name": "expressionBits",
+          "FieldType": "U32",
+          "IsArray": true,
+          "FixedLength": 1,
+          "Flag": "BitSet",
+          "FlagTarget": "15"
         },
         {
-          "Name": "unkn1_1",
-          "FieldType": "U32"
+          "Name": "unkn1",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_2",
-          "FieldType": "U32"
+          "Name": "unkn2",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_3",
-          "FieldType": "U32"
+          "Name": "unkn3",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_4",
-          "FieldType": "U32"
+          "Name": "unkn4",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_5",
-          "FieldType": "U32"
+          "Name": "unkn5",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_6",
-          "FieldType": "U32"
+          "Name": "unkn6",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_7",
-          "FieldType": "U32"
+          "Name": "unkn7",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_8",
-          "FieldType": "U32"
+          "Name": "unkn8",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_9",
-          "FieldType": "U32"
+          "Name": "unkn9",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_10",
-          "FieldType": "U32"
+          "Name": "unkn10",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_11",
-          "FieldType": "U32"
+          "Name": "unkn11",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_12",
-          "FieldType": "U32"
+          "Name": "unkn12",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_13",
-          "FieldType": "U32"
+          "Name": "unkn13",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "expressions",
           "FieldType": "Object",
-          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapper1"
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionList"
         }
       ]
     },
@@ -5730,20 +5737,25 @@
       "TypeID": 80,
       "Name": "ShaderSettingsExpression",
       "Classname": "RszTool.Efx.Structs.DMC5.EFXAttributeShaderSettingsExpression",
-      "Hash": 1670107683,
+      "Hash": 1826021495,
       "Fields": [
         {
-          "Name": "ukn0",
-          "FieldType": "U32"
+          "Name": "expressionBits",
+          "FieldType": "U32",
+          "IsArray": true,
+          "FixedLength": 1,
+          "Flag": "BitSet",
+          "FlagTarget": "12"
         },
         {
           "Name": "ukn1",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "expressions",
           "FieldType": "Object",
-          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionContainer"
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionList"
         }
       ]
     },
@@ -5894,24 +5906,30 @@
       "TypeID": 88,
       "Name": "FadeByAngleExpression",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeFadeByAngleExpression",
-      "Hash": 3182029474,
+      "Hash": 1939347167,
       "Fields": [
         {
-          "Name": "unkn0",
-          "FieldType": "U32"
+          "Name": "expressionBits",
+          "FieldType": "U32",
+          "IsArray": true,
+          "FixedLength": 1,
+          "Flag": "BitSet",
+          "FlagTarget": "2"
         },
         {
           "Name": "unkn1",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "unkn2",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "expressions",
           "FieldType": "Object",
-          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapper1"
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionList"
         }
       ]
     },
@@ -5975,32 +5993,40 @@
       "TypeID": 91,
       "Name": "FadeByDepthExpression",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeFadeByDepthExpression",
-      "Hash": 53551622,
+      "Hash": 201044460,
       "Fields": [
         {
-          "Name": "unkn1_0",
-          "FieldType": "U32"
+          "Name": "expressionBits",
+          "FieldType": "U32",
+          "IsArray": true,
+          "FixedLength": 1,
+          "Flag": "BitSet",
+          "FlagTarget": "4"
         },
         {
-          "Name": "unkn1_1",
-          "FieldType": "U32"
+          "Name": "unkn1",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_2",
-          "FieldType": "U32"
+          "Name": "unkn2",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_3",
-          "FieldType": "U32"
+          "Name": "unkn3",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_4",
-          "FieldType": "U32"
+          "Name": "unkn4",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "expressions",
           "FieldType": "Object",
-          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionContainer"
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionList"
         }
       ]
     },
@@ -6344,188 +6370,230 @@
       "TypeID": 97,
       "Name": "TypeNodeBillboardExpression",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypeNodeBillboardExpression",
-      "Hash": 2969088214,
+      "Hash": 1204065860,
       "Fields": [
         {
-          "Name": "unkn1_0",
-          "FieldType": "U32"
+          "Name": "expressionBits",
+          "FieldType": "U32",
+          "IsArray": true,
+          "FixedLength": 2,
+          "Flag": "BitSet",
+          "FlagTarget": "42"
         },
         {
-          "Name": "unkn1_1",
-          "FieldType": "U32"
+          "Name": "unkn1",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_2",
-          "FieldType": "U32"
+          "Name": "unkn2",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_3",
-          "FieldType": "U32"
+          "Name": "unkn3",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_4",
-          "FieldType": "U32"
+          "Name": "unkn4",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_5",
-          "FieldType": "U32"
+          "Name": "unkn5",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_6",
-          "FieldType": "U32"
+          "Name": "unkn6",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_7",
-          "FieldType": "U32"
+          "Name": "unkn7",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_8",
-          "FieldType": "U32"
+          "Name": "unkn8",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_9",
-          "FieldType": "U32"
+          "Name": "unkn9",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_10",
-          "FieldType": "U32"
+          "Name": "unkn10",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_11",
-          "FieldType": "U32"
+          "Name": "unkn11",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_12",
-          "FieldType": "U32"
+          "Name": "unkn12",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_13",
-          "FieldType": "U32"
+          "Name": "unkn13",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_14",
-          "FieldType": "U32"
+          "Name": "unkn14",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_15",
-          "FieldType": "U32"
+          "Name": "unkn15",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_16",
-          "FieldType": "U32"
+          "Name": "unkn16",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_17",
-          "FieldType": "U32"
+          "Name": "unkn17",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_18",
-          "FieldType": "U32"
+          "Name": "unkn18",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_19",
-          "FieldType": "U32"
+          "Name": "unkn19",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_20",
-          "FieldType": "U32"
+          "Name": "unkn20",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_21",
-          "FieldType": "U32"
+          "Name": "unkn21",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_22",
-          "FieldType": "U32"
+          "Name": "unkn22",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_23",
-          "FieldType": "U32"
+          "Name": "unkn23",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_24",
-          "FieldType": "U32"
+          "Name": "unkn24",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_25",
-          "FieldType": "U32"
+          "Name": "unkn25",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_26",
-          "FieldType": "U32"
+          "Name": "unkn26",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_27",
-          "FieldType": "U32"
+          "Name": "unkn27",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_28",
-          "FieldType": "U32"
+          "Name": "unkn28",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_29",
-          "FieldType": "U32"
+          "Name": "unkn29",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_30",
-          "FieldType": "U32"
+          "Name": "unkn30",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_31",
-          "FieldType": "U32"
+          "Name": "unkn31",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_32",
-          "FieldType": "U32"
+          "Name": "unkn32",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_33",
-          "FieldType": "U32"
+          "Name": "unkn33",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_34",
-          "FieldType": "U32"
+          "Name": "unkn34",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_35",
-          "FieldType": "U32"
+          "Name": "unkn35",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_36",
-          "FieldType": "U32"
+          "Name": "unkn36",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_37",
-          "FieldType": "U32"
+          "Name": "unkn37",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_38",
-          "FieldType": "U32"
+          "Name": "unkn38",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_39",
-          "FieldType": "U32"
+          "Name": "unkn39",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_40",
-          "FieldType": "U32"
+          "Name": "unkn40",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_41",
-          "FieldType": "U32"
+          "Name": "unkn41",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_42",
-          "FieldType": "U32"
-        },
-        {
-          "Name": "unkn1_43",
-          "FieldType": "U32"
+          "Name": "unkn42",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "expressions",
           "FieldType": "Object",
-          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapper1"
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionList"
         }
       ]
     },
@@ -6927,68 +6995,24 @@
       "TypeID": 103,
       "Name": "PtTransform3DClip",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributePtTransform3DClip",
-      "Hash": 699659932,
+      "Hash": 1813631460,
       "Fields": [
         {
-          "Name": "unkn0",
-          "FieldType": "U32"
+          "Name": "clipBits",
+          "FieldType": "U32",
+          "IsArray": true,
+          "FixedLength": 1,
+          "Flag": "BitSet",
+          "FlagTarget": "9"
         },
         {
           "Name": "unkn1",
           "FieldType": "U32"
         },
         {
-          "Name": "unkn2",
-          "FieldType": "S32"
-        },
-        {
-          "Name": "unkn3",
-          "FieldType": "F32"
-        },
-        {
-          "Name": "unkn4",
-          "FieldType": "U32"
-        },
-        {
-          "Name": "unkn5",
-          "FieldType": "U32"
-        },
-        {
-          "Name": "unkn6",
-          "FieldType": "U32"
-        },
-        {
-          "Name": "substruct1Length",
-          "FieldType": "S32",
-          "Flag": "StructSize",
-          "FlagTarget": "substruct1"
-        },
-        {
-          "Name": "substruct2Length",
-          "FieldType": "S32",
-          "Flag": "StructSize",
-          "FlagTarget": "substruct2"
-        },
-        {
-          "Name": "substruct3Length",
-          "FieldType": "S32",
-          "Flag": "StructSize",
-          "FlagTarget": "substruct3"
-        },
-        {
-          "Name": "substruct1",
-          "FieldType": "S32",
-          "IsArray": true
-        },
-        {
-          "Name": "substruct2",
-          "FieldType": "S32",
-          "IsArray": true
-        },
-        {
-          "Name": "substruct3",
-          "FieldType": "F32",
-          "IsArray": true
+          "Name": "clipData",
+          "FieldType": "Object",
+          "Classname": "RszTool.Efx.Structs.Common.EfxClipData"
         }
       ]
     },
@@ -7024,68 +7048,24 @@
       "TypeID": 105,
       "Name": "PtTransform2DClip",
       "Classname": "RszTool.Efx.Structs.RE8.EFXAttributePtTransform2DClip",
-      "Hash": 1863299599,
+      "Hash": 3032996277,
       "Fields": [
         {
-          "Name": "unkn0",
-          "FieldType": "U32"
+          "Name": "clipBits",
+          "FieldType": "U32",
+          "IsArray": true,
+          "FixedLength": 1,
+          "Flag": "BitSet",
+          "FlagTarget": "4"
         },
         {
-          "Name": "null1",
-          "FieldType": "U32"
+          "Name": "unkn1",
+          "FieldType": "ukn_type"
         },
         {
-          "Name": "unkn2",
-          "FieldType": "S32"
-        },
-        {
-          "Name": "unkn3",
-          "FieldType": "F32"
-        },
-        {
-          "Name": "unkn4",
-          "FieldType": "U32"
-        },
-        {
-          "Name": "unkn5",
-          "FieldType": "U32"
-        },
-        {
-          "Name": "null6",
-          "FieldType": "U32"
-        },
-        {
-          "Name": "substruct1Length",
-          "FieldType": "S32",
-          "Flag": "StructSize",
-          "FlagTarget": "substruct1"
-        },
-        {
-          "Name": "substruct2Length",
-          "FieldType": "S32",
-          "Flag": "StructSize",
-          "FlagTarget": "substruct2"
-        },
-        {
-          "Name": "substruct3Length",
-          "FieldType": "S32",
-          "Flag": "StructSize",
-          "FlagTarget": "substruct3"
-        },
-        {
-          "Name": "substruct1",
-          "FieldType": "S32",
-          "IsArray": true
-        },
-        {
-          "Name": "substruct2",
-          "FieldType": "S32",
-          "IsArray": true
-        },
-        {
-          "Name": "substruct3",
-          "FieldType": "F32",
-          "IsArray": true
+          "Name": "clipData",
+          "FieldType": "Object",
+          "Classname": "RszTool.Efx.Structs.Common.EfxClipData"
         }
       ]
     },
@@ -7117,68 +7097,24 @@
       "TypeID": 107,
       "Name": "PtVelocity3DClip",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributePtVelocity3DClip",
-      "Hash": 2823731395,
+      "Hash": 1891913664,
       "Fields": [
         {
-          "Name": "unkn0",
-          "FieldType": "U32"
+          "Name": "clipBits",
+          "FieldType": "U32",
+          "IsArray": true,
+          "FixedLength": 1,
+          "Flag": "BitSet",
+          "FlagTarget": "4"
         },
         {
           "Name": "unkn1",
           "FieldType": "U32"
         },
         {
-          "Name": "unkn2",
-          "FieldType": "S32"
-        },
-        {
-          "Name": "unkn3",
-          "FieldType": "F32"
-        },
-        {
-          "Name": "unkn4",
-          "FieldType": "U32"
-        },
-        {
-          "Name": "unkn5",
-          "FieldType": "U32"
-        },
-        {
-          "Name": "unkn6",
-          "FieldType": "U32"
-        },
-        {
-          "Name": "substruct1Length",
-          "FieldType": "S32",
-          "Flag": "StructSize",
-          "FlagTarget": "substruct1"
-        },
-        {
-          "Name": "substruct2Length",
-          "FieldType": "S32",
-          "Flag": "StructSize",
-          "FlagTarget": "substruct2"
-        },
-        {
-          "Name": "substruct3Length",
-          "FieldType": "S32",
-          "Flag": "StructSize",
-          "FlagTarget": "substruct3"
-        },
-        {
-          "Name": "substruct1",
-          "FieldType": "S32",
-          "IsArray": true
-        },
-        {
-          "Name": "substruct2",
-          "FieldType": "S32",
-          "IsArray": true
-        },
-        {
-          "Name": "substruct3",
-          "FieldType": "F32",
-          "IsArray": true
+          "Name": "clipData",
+          "FieldType": "Object",
+          "Classname": "RszTool.Efx.Structs.Common.EfxClipData"
         }
       ]
     },
@@ -7410,69 +7346,24 @@
       "TypeID": 113,
       "Name": "PtColorClip",
       "Classname": "RszTool.Efx.Structs.DMC5.EFXAttributePtColorClip",
-      "Hash": 3122581435,
+      "Hash": 2987418434,
       "Fields": [
         {
-          "Name": "secChunkID",
+          "Name": "clipBits",
+          "FieldType": "U32",
+          "IsArray": true,
+          "FixedLength": 1,
+          "Flag": "BitSet",
+          "FlagTarget": "4"
+        },
+        {
+          "Name": "unkn1",
           "FieldType": "U32"
         },
         {
-          "Name": "unkn2",
-          "FieldType": "U32"
-        },
-        {
-          "Name": "loop",
-          "FieldType": "S32",
-          "Classname": "RszTool.Efx.Structs.DMC5.Cycle_Loop"
-        },
-        {
-          "Name": "loopTime",
-          "FieldType": "F32"
-        },
-        {
-          "Name": "unkn3",
-          "FieldType": "U32"
-        },
-        {
-          "Name": "unkn4",
-          "FieldType": "U32"
-        },
-        {
-          "Name": "unkn5",
-          "FieldType": "U32"
-        },
-        {
-          "Name": "substruct1Length",
-          "FieldType": "S32",
-          "Flag": "StructSize",
-          "FlagTarget": "substruct1"
-        },
-        {
-          "Name": "substruct2Length",
-          "FieldType": "S32",
-          "Flag": "StructSize",
-          "FlagTarget": "substruct2"
-        },
-        {
-          "Name": "substruct3Length",
-          "FieldType": "S32",
-          "Flag": "StructSize",
-          "FlagTarget": "substruct3"
-        },
-        {
-          "Name": "substruct1",
-          "FieldType": "S32",
-          "IsArray": true
-        },
-        {
-          "Name": "substruct2",
-          "FieldType": "S32",
-          "IsArray": true
-        },
-        {
-          "Name": "substruct3",
-          "FieldType": "F32",
-          "IsArray": true
+          "Name": "clipData",
+          "FieldType": "Object",
+          "Classname": "RszTool.Efx.Structs.Common.EfxColorClipData"
         }
       ]
     },
@@ -7504,68 +7395,24 @@
       "TypeID": 115,
       "Name": "PtUvSequenceClip",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributePtUvSequenceClip",
-      "Hash": 513941497,
+      "Hash": 2602981756,
       "Fields": [
         {
-          "Name": "unkn0",
-          "FieldType": "U32"
+          "Name": "clipBits",
+          "FieldType": "U32",
+          "IsArray": true,
+          "FixedLength": 1,
+          "Flag": "BitSet",
+          "FlagTarget": "2"
         },
         {
           "Name": "unkn1",
           "FieldType": "U32"
         },
         {
-          "Name": "unkn2",
-          "FieldType": "S32"
-        },
-        {
-          "Name": "unkn3",
-          "FieldType": "F32"
-        },
-        {
-          "Name": "unkn4",
-          "FieldType": "U32"
-        },
-        {
-          "Name": "unkn5",
-          "FieldType": "U32"
-        },
-        {
-          "Name": "unkn6",
-          "FieldType": "U32"
-        },
-        {
-          "Name": "substruct1Length",
-          "FieldType": "S32",
-          "Flag": "StructSize",
-          "FlagTarget": "substruct1"
-        },
-        {
-          "Name": "substruct2Length",
-          "FieldType": "S32",
-          "Flag": "StructSize",
-          "FlagTarget": "substruct2"
-        },
-        {
-          "Name": "substruct3Length",
-          "FieldType": "S32",
-          "Flag": "StructSize",
-          "FlagTarget": "substruct3"
-        },
-        {
-          "Name": "substruct1",
-          "FieldType": "S32",
-          "IsArray": true
-        },
-        {
-          "Name": "substruct2",
-          "FieldType": "S32",
-          "IsArray": true
-        },
-        {
-          "Name": "substruct3",
-          "FieldType": "F32",
-          "IsArray": true
+          "Name": "clipData",
+          "FieldType": "Object",
+          "Classname": "RszTool.Efx.Structs.Common.EfxClipData"
         }
       ]
     },
@@ -7711,62 +7558,24 @@
       "TypeID": 117,
       "Name": "MeshEmitterClip",
       "Classname": "RszTool.Efx.Structs.DMC5.EFXAttributeMeshEmitterClip",
-      "Hash": 120600241,
+      "Hash": 1725417143,
       "Fields": [
         {
-          "Name": "unkn0",
-          "FieldType": "U32"
+          "Name": "clipBits",
+          "FieldType": "U32",
+          "IsArray": true,
+          "FixedLength": 1,
+          "Flag": "BitSet",
+          "FlagTarget": "8"
         },
         {
           "Name": "unkn1",
           "FieldType": "U32"
         },
         {
-          "Name": "unkn2",
-          "FieldType": "U32"
-        },
-        {
-          "Name": "unkn3",
-          "FieldType": "F32"
-        },
-        {
-          "Name": "unkn4",
-          "FieldType": "U32"
-        },
-        {
-          "Name": "unkn5",
-          "FieldType": "U32"
-        },
-        {
-          "Name": "unkn6",
-          "FieldType": "U32"
-        },
-        {
-          "Name": "part2Size",
-          "FieldType": "U32"
-        },
-        {
-          "Name": "part3Size",
-          "FieldType": "U32"
-        },
-        {
-          "Name": "part4Size",
-          "FieldType": "U32"
-        },
-        {
-          "Name": "part2",
-          "FieldType": "U8",
-          "IsArray": true
-        },
-        {
-          "Name": "part3",
-          "FieldType": "U8",
-          "IsArray": true
-        },
-        {
-          "Name": "part4",
-          "FieldType": "U8",
-          "IsArray": true
+          "Name": "clipData",
+          "FieldType": "Object",
+          "Classname": "RszTool.Efx.Structs.Common.EfxClipData"
         }
       ]
     },
@@ -7774,80 +7583,100 @@
       "TypeID": 118,
       "Name": "MeshEmitterExpression",
       "Classname": "RszTool.Efx.Structs.DMC5.EFXAttributeMeshEmitterExpression",
-      "Hash": 964068873,
+      "Hash": 1238783767,
       "Fields": [
         {
-          "Name": "unkn0",
-          "FieldType": "U32"
+          "Name": "expressionBits",
+          "FieldType": "U32",
+          "IsArray": true,
+          "FixedLength": 1,
+          "Flag": "BitSet",
+          "FlagTarget": "16"
         },
         {
           "Name": "unkn1",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "unkn2",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "unkn3",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "unkn4",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "unkn5",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "unkn6",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "unkn7",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "unkn8",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "unkn9",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "unkn10",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "unkn11",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "unkn12",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "unkn13",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "unkn14",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "unkn15",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "unkn16",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "expressions",
           "FieldType": "Object",
-          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapper1"
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionList"
         }
       ]
     },
@@ -7931,68 +7760,24 @@
       "TypeID": 120,
       "Name": "VectorFieldParameterClip",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeVectorFieldParameterClip",
-      "Hash": 1240412539,
+      "Hash": 3391602352,
       "Fields": [
         {
-          "Name": "unkn0",
-          "FieldType": "U32"
+          "Name": "clipBits",
+          "FieldType": "U32",
+          "IsArray": true,
+          "FixedLength": 1,
+          "Flag": "BitSet",
+          "FlagTarget": "13"
         },
         {
           "Name": "unkn1",
           "FieldType": "U32"
         },
         {
-          "Name": "unkn2",
-          "FieldType": "S32"
-        },
-        {
-          "Name": "unkn3",
-          "FieldType": "F32"
-        },
-        {
-          "Name": "unkn4",
-          "FieldType": "U32"
-        },
-        {
-          "Name": "unkn5",
-          "FieldType": "U32"
-        },
-        {
-          "Name": "unkn6",
-          "FieldType": "U32"
-        },
-        {
-          "Name": "substruct1Length",
-          "FieldType": "S32",
-          "Flag": "StructSize",
-          "FlagTarget": "substruct1"
-        },
-        {
-          "Name": "substruct2Length",
-          "FieldType": "S32",
-          "Flag": "StructSize",
-          "FlagTarget": "substruct2"
-        },
-        {
-          "Name": "substruct3Length",
-          "FieldType": "S32",
-          "Flag": "StructSize",
-          "FlagTarget": "substruct3"
-        },
-        {
-          "Name": "substruct1",
-          "FieldType": "S32",
-          "IsArray": true
-        },
-        {
-          "Name": "substruct2",
-          "FieldType": "S32",
-          "IsArray": true
-        },
-        {
-          "Name": "substruct3",
-          "FieldType": "F32",
-          "IsArray": true
+          "Name": "clipData",
+          "FieldType": "Object",
+          "Classname": "RszTool.Efx.Structs.Common.EfxClipData"
         }
       ]
     },
@@ -8000,96 +7785,120 @@
       "TypeID": 121,
       "Name": "VectorFieldParameterExpression",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeVectorFieldParameterExpression",
-      "Hash": 3373346170,
+      "Hash": 2395105282,
       "Fields": [
         {
-          "Name": "unkn1_0",
-          "FieldType": "U32"
+          "Name": "expressionBits",
+          "FieldType": "U32",
+          "IsArray": true,
+          "FixedLength": 1,
+          "Flag": "BitSet",
+          "FlagTarget": "20"
         },
         {
-          "Name": "unkn1_1",
-          "FieldType": "U32"
+          "Name": "unkn1",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_2",
-          "FieldType": "U32"
+          "Name": "unkn2",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_3",
-          "FieldType": "U32"
+          "Name": "unkn3",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_4",
-          "FieldType": "U32"
+          "Name": "unkn4",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_5",
-          "FieldType": "U32"
+          "Name": "unkn5",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_6",
-          "FieldType": "U32"
+          "Name": "unkn6",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_7",
-          "FieldType": "U32"
+          "Name": "unkn7",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_8",
-          "FieldType": "U32"
+          "Name": "unkn8",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_9",
-          "FieldType": "U32"
+          "Name": "unkn9",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_10",
-          "FieldType": "U32"
+          "Name": "unkn10",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_11",
-          "FieldType": "U32"
+          "Name": "unkn11",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_12",
-          "FieldType": "U32"
+          "Name": "unkn12",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_13",
-          "FieldType": "U32"
+          "Name": "unkn13",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_14",
-          "FieldType": "U32"
+          "Name": "unkn14",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_15",
-          "FieldType": "U32"
+          "Name": "unkn15",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_16",
-          "FieldType": "U32"
+          "Name": "unkn16",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_17",
-          "FieldType": "U32"
+          "Name": "unkn17",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_18",
-          "FieldType": "U32"
+          "Name": "unkn18",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_19",
-          "FieldType": "U32"
+          "Name": "unkn19",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_20",
-          "FieldType": "U32"
+          "Name": "unkn20",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "expressions",
           "FieldType": "Object",
-          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionContainer"
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionList"
         }
       ]
     },
@@ -8200,8 +8009,8 @@
     "WindInfluence3DDelayFrame": {
       "TypeID": 128,
       "Name": "WindInfluence3DDelayFrame",
-      "Classname": "RszTool.Efx.Structs.RERT.EFXAttributeWindInfluence3DDelayFrame",
-      "Hash": 1710047468,
+      "Classname": "RszTool.Efx.Structs.DD2.EFXAttributeWindInfluence3DDelayFrame",
+      "Hash": 1061148931,
       "Fields": [
         {
           "Name": "frameDelay",
@@ -8293,68 +8102,24 @@
       "TypeID": 131,
       "Name": "AttractorClip",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeAttractorClip",
-      "Hash": 751849198,
+      "Hash": 623526413,
       "Fields": [
         {
-          "Name": "unkn0",
-          "FieldType": "U32"
+          "Name": "clipBits",
+          "FieldType": "U32",
+          "IsArray": true,
+          "FixedLength": 1,
+          "Flag": "BitSet",
+          "FlagTarget": "7"
         },
         {
           "Name": "unkn1",
           "FieldType": "U32"
         },
         {
-          "Name": "unkn2",
-          "FieldType": "U32"
-        },
-        {
-          "Name": "unkn3",
-          "FieldType": "F32"
-        },
-        {
-          "Name": "unkn4",
-          "FieldType": "U32"
-        },
-        {
-          "Name": "unkn5",
-          "FieldType": "U32"
-        },
-        {
-          "Name": "unkn6",
-          "FieldType": "U32"
-        },
-        {
-          "Name": "substruct1Length",
-          "FieldType": "S32",
-          "Flag": "StructSize",
-          "FlagTarget": "substruct1"
-        },
-        {
-          "Name": "substruct2Length",
-          "FieldType": "S32",
-          "Flag": "StructSize",
-          "FlagTarget": "substruct2"
-        },
-        {
-          "Name": "substruct3Length",
-          "FieldType": "S32",
-          "Flag": "StructSize",
-          "FlagTarget": "substruct3"
-        },
-        {
-          "Name": "substruct1",
-          "FieldType": "S32",
-          "IsArray": true
-        },
-        {
-          "Name": "substruct2",
-          "FieldType": "S32",
-          "IsArray": true
-        },
-        {
-          "Name": "substruct3",
-          "FieldType": "F32",
-          "IsArray": true
+          "Name": "clipData",
+          "FieldType": "Object",
+          "Classname": "RszTool.Efx.Structs.Common.EfxClipData"
         }
       ]
     },
@@ -8362,56 +8127,70 @@
       "TypeID": 132,
       "Name": "AttractorExpression",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeAttractorExpression",
-      "Hash": 3827529554,
+      "Hash": 3884929897,
       "Fields": [
         {
-          "Name": "unkn1_0",
-          "FieldType": "U32"
+          "Name": "expressionBits",
+          "FieldType": "U32",
+          "IsArray": true,
+          "FixedLength": 1,
+          "Flag": "BitSet",
+          "FlagTarget": "10"
         },
         {
-          "Name": "unkn1_1",
-          "FieldType": "U32"
+          "Name": "unkn1",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_2",
-          "FieldType": "U32"
+          "Name": "unkn2",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_3",
-          "FieldType": "U32"
+          "Name": "unkn3",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_4",
-          "FieldType": "U32"
+          "Name": "unkn4",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_5",
-          "FieldType": "U32"
+          "Name": "unkn5",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_6",
-          "FieldType": "U32"
+          "Name": "unkn6",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_7",
-          "FieldType": "U32"
+          "Name": "unkn7",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_8",
-          "FieldType": "U32"
+          "Name": "unkn8",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_9",
-          "FieldType": "U32"
+          "Name": "unkn9",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_10",
-          "FieldType": "U32"
+          "Name": "unkn10",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "expressions",
           "FieldType": "Object",
-          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionContainer"
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionList"
         }
       ]
     },
@@ -8475,44 +8254,55 @@
       "TypeID": 135,
       "Name": "TypeGpuBillboardExpression",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypeGpuBillboardExpression",
-      "Hash": 2404852873,
+      "Hash": 3605576697,
       "Fields": [
         {
-          "Name": "unkn1_0",
-          "FieldType": "U32"
+          "Name": "expressionBits",
+          "FieldType": "U32",
+          "IsArray": true,
+          "FixedLength": 1,
+          "Flag": "BitSet",
+          "FlagTarget": "18"
         },
         {
-          "Name": "unkn1_1",
-          "FieldType": "U32"
+          "Name": "unkn1",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_2",
-          "FieldType": "U32"
+          "Name": "unkn2",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_3",
-          "FieldType": "U32"
+          "Name": "unkn3",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_4",
-          "FieldType": "U32"
+          "Name": "unkn4",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_5",
-          "FieldType": "U32"
+          "Name": "unkn5",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_6",
-          "FieldType": "U32"
+          "Name": "unkn6",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_7",
-          "FieldType": "U32"
+          "Name": "unkn7",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "expressions",
           "FieldType": "Object",
-          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionContainer"
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionList"
         }
       ]
     },
@@ -8908,92 +8698,115 @@
       "TypeID": 140,
       "Name": "TypeGpuMeshExpression",
       "Classname": "RszTool.Efx.Structs.RE8.EFXAttributeTypeGpuMeshExpression",
-      "Hash": 1725339164,
+      "Hash": 2598395674,
       "Fields": [
         {
-          "Name": "unkn1_0",
-          "FieldType": "U32"
+          "Name": "expressionBits",
+          "FieldType": "U32",
+          "IsArray": true,
+          "FixedLength": 1,
+          "Flag": "BitSet",
+          "FlagTarget": "19"
         },
         {
-          "Name": "unkn1_1",
-          "FieldType": "U32"
+          "Name": "unkn1",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_2",
-          "FieldType": "U32"
+          "Name": "unkn2",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_3",
-          "FieldType": "U32"
+          "Name": "unkn3",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_4",
-          "FieldType": "U32"
+          "Name": "unkn4",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_5",
-          "FieldType": "U32"
+          "Name": "unkn5",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_6",
-          "FieldType": "U32"
+          "Name": "unkn6",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_7",
-          "FieldType": "U32"
+          "Name": "unkn7",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_8",
-          "FieldType": "U32"
+          "Name": "unkn8",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_9",
-          "FieldType": "U32"
+          "Name": "unkn9",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_10",
-          "FieldType": "U32"
+          "Name": "unkn10",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_11",
-          "FieldType": "U32"
+          "Name": "unkn11",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_12",
-          "FieldType": "U32"
+          "Name": "unkn12",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_13",
-          "FieldType": "U32"
+          "Name": "unkn13",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_14",
-          "FieldType": "U32"
+          "Name": "unkn14",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_15",
-          "FieldType": "U32"
+          "Name": "unkn15",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_16",
-          "FieldType": "U32"
+          "Name": "unkn16",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_17",
-          "FieldType": "U32"
+          "Name": "unkn17",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_18",
-          "FieldType": "U32"
+          "Name": "unkn18",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
-          "Name": "unkn1_19",
-          "FieldType": "U32"
+          "Name": "unkn19",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionAssignType"
         },
         {
           "Name": "expressions",
           "FieldType": "Object",
-          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapper1"
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionList"
         }
       ]
     },
@@ -9663,11 +9476,15 @@
       "TypeID": 157,
       "Name": "ProceduralDistortionClip",
       "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeProceduralDistortionClip",
-      "Hash": 1500124135,
+      "Hash": 507403730,
       "Fields": [
         {
-          "Name": "unkn0",
-          "FieldType": "U32"
+          "Name": "clipBits",
+          "FieldType": "U32",
+          "IsArray": true,
+          "FixedLength": 1,
+          "Flag": "BitSet",
+          "FlagTarget": "1"
         },
         {
           "Name": "unkn1",
@@ -9678,91 +9495,151 @@
           "FieldType": "S32"
         },
         {
-          "Name": "unkn3",
-          "FieldType": "F32"
-        },
-        {
-          "Name": "unkn4",
-          "FieldType": "U32"
-        },
-        {
-          "Name": "unkn5",
-          "FieldType": "U32"
-        },
-        {
-          "Name": "unkn6",
-          "FieldType": "U32"
-        },
-        {
-          "Name": "substruct1Length",
-          "FieldType": "S32",
-          "Flag": "StructSize",
-          "FlagTarget": "substruct1"
-        },
-        {
-          "Name": "substruct2Length",
-          "FieldType": "S32",
-          "Flag": "StructSize",
-          "FlagTarget": "substruct2"
-        },
-        {
-          "Name": "substruct3Length",
-          "FieldType": "S32",
-          "Flag": "StructSize",
-          "FlagTarget": "substruct3"
-        },
-        {
-          "Name": "substruct1",
-          "FieldType": "S32",
-          "IsArray": true
-        },
-        {
-          "Name": "substruct2",
-          "FieldType": "S32",
-          "IsArray": true
-        },
-        {
-          "Name": "substruct3",
-          "FieldType": "F32",
-          "IsArray": true
+          "Name": "clipData",
+          "FieldType": "Object",
+          "Classname": "RszTool.Efx.Structs.Common.EfxClipData"
         }
       ]
     }
   },
   "Structs": {
-    "RszTool.Efx.Structs.Common.EFXExpressionContainer": {
+    "RszTool.Efx.Structs.Common.EFXExpressionList": {
       "Name": "",
-      "Classname": "RszTool.Efx.Structs.Common.EFXExpressionContainer",
-      "Hash": 2095313355,
-      "Fields": [
-        {
-          "Name": "solverSize",
-          "FieldType": "U32"
-        }
-      ]
-    },
-    "RszTool.Efx.Structs.Common.EFXExpressionListWrapper2": {
-      "Name": "",
-      "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapper2",
-      "Hash": 588654632,
+      "Classname": "RszTool.Efx.Structs.Common.EFXExpressionList",
+      "Hash": 3024749369,
       "Fields": [
         {
           "Name": "expressions",
           "FieldType": "Object",
-          "Classname": "RszTool.Efx.Structs.Common.EFXExpression3",
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionObject",
           "IsArray": true
         }
       ]
     },
-    "RszTool.Efx.Structs.Common.EFXExpressionListWrapper1": {
+    "RszTool.Efx.Structs.Common.EfxClipData": {
       "Name": "",
-      "Classname": "RszTool.Efx.Structs.Common.EFXExpressionListWrapper1",
-      "Hash": 578465836,
+      "Classname": "RszTool.Efx.Structs.Common.EfxClipData",
+      "Hash": 831684977,
       "Fields": [
         {
-          "Name": "expressions",
-          "FieldType": "Object",
-          "Classname": "RszTool.Efx.Structs.Common.EFXExpression",
+          "Name": "loopType",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.EfxClipPlaybackType"
+        },
+        {
+          "Name": "clipDuration",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "clipCount",
+          "FieldType": "S32",
+          "Flag": "StructSize",
+          "FlagTarget": "clips"
+        },
+        {
+          "Name": "frameCount",
+          "FieldType": "S32",
+          "Flag": "StructSize",
+          "FlagTarget": "frames"
+        },
+        {
+          "Name": "substruct3Count",
+          "FieldType": "S32",
+          "Flag": "StructSize",
+          "FlagTarget": "substruct3"
+        },
+        {
+          "Name": "clipDataSize",
+          "FieldType": "S32"
+        },
+        {
+          "Name": "frameDataSize",
+          "FieldType": "S32"
+        },
+        {
+          "Name": "substruct3Size",
+          "FieldType": "S32"
+        },
+        {
+          "Name": "clips",
+          "FieldType": "Struct",
+          "Classname": "RszTool.Efx.Structs.Common.EfxClipHeader",
+          "IsArray": true
+        },
+        {
+          "Name": "frames",
+          "FieldType": "Struct",
+          "Classname": "RszTool.Efx.Structs.Common.EfxFloatClipFrame",
+          "IsArray": true
+        },
+        {
+          "Name": "substruct3",
+          "FieldType": "Struct",
+          "Classname": "RszTool.Efx.Structs.Common.EfxClip_Struct3",
+          "IsArray": true
+        }
+      ]
+    },
+    "RszTool.Efx.Structs.Common.EfxColorClipData": {
+      "Name": "",
+      "Classname": "RszTool.Efx.Structs.Common.EfxColorClipData",
+      "Hash": 2847253881,
+      "Fields": [
+        {
+          "Name": "loopType",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.EfxClipPlaybackType"
+        },
+        {
+          "Name": "clipDuration",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "clipCount",
+          "FieldType": "S32",
+          "Flag": "StructSize",
+          "FlagTarget": "clips"
+        },
+        {
+          "Name": "frameCount",
+          "FieldType": "S32",
+          "Flag": "StructSize",
+          "FlagTarget": "frames"
+        },
+        {
+          "Name": "substruct3Count",
+          "FieldType": "S32",
+          "Flag": "StructSize",
+          "FlagTarget": "substruct3"
+        },
+        {
+          "Name": "clipDataSize",
+          "FieldType": "S32"
+        },
+        {
+          "Name": "frameDataSize",
+          "FieldType": "S32"
+        },
+        {
+          "Name": "substruct3Size",
+          "FieldType": "S32"
+        },
+        {
+          "Name": "clips",
+          "FieldType": "Struct",
+          "Classname": "RszTool.Efx.Structs.Common.EfxClipHeader",
+          "IsArray": true
+        },
+        {
+          "Name": "frames",
+          "FieldType": "Struct",
+          "Classname": "RszTool.Efx.Structs.Common.EfxColorClipFrame",
+          "IsArray": true
+        },
+        {
+          "Name": "substruct3",
+          "FieldType": "Struct",
+          "Classname": "RszTool.Efx.Structs.Common.EfxClip_Struct3",
           "IsArray": true
         }
       ]
@@ -9901,6 +9778,111 @@
         }
       ]
     },
+    "RszTool.Efx.Structs.Common.EfxMaterialClipData": {
+      "Name": "",
+      "Classname": "RszTool.Efx.Structs.Common.EfxMaterialClipData",
+      "Hash": 3654035598,
+      "Fields": [
+        {
+          "Name": "loopType",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.EfxClipPlaybackType"
+        },
+        {
+          "Name": "clipDuration",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "clipCount",
+          "FieldType": "S32",
+          "Flag": "StructSize",
+          "FlagTarget": "clips"
+        },
+        {
+          "Name": "frameCount",
+          "FieldType": "S32",
+          "Flag": "StructSize",
+          "FlagTarget": "frames"
+        },
+        {
+          "Name": "substruct3Count",
+          "FieldType": "S32",
+          "Flag": "StructSize",
+          "FlagTarget": "substruct3"
+        },
+        {
+          "Name": "clipDataSize",
+          "FieldType": "S32"
+        },
+        {
+          "Name": "frameDataSize",
+          "FieldType": "S32"
+        },
+        {
+          "Name": "substruct3Size",
+          "FieldType": "S32"
+        },
+        {
+          "Name": "indicesCount",
+          "FieldType": "S32",
+          "Flag": "StructSize",
+          "FlagTarget": "indices"
+        },
+        {
+          "Name": "clips",
+          "FieldType": "Struct",
+          "Classname": "RszTool.Efx.Structs.Common.EfxClipHeader",
+          "IsArray": true
+        },
+        {
+          "Name": "frames",
+          "FieldType": "Struct",
+          "Classname": "RszTool.Efx.Structs.Common.EfxFloatClipFrame",
+          "IsArray": true
+        },
+        {
+          "Name": "substruct3",
+          "FieldType": "Struct",
+          "Classname": "RszTool.Efx.Structs.Common.EfxClip_Struct3",
+          "IsArray": true
+        },
+        {
+          "Name": "mdfProperties",
+          "FieldType": "Struct",
+          "Classname": "RszTool.Efx.Structs.Common.EfxMaterialClip_Struct4",
+          "IsArray": true
+        },
+        {
+          "Name": "indices",
+          "FieldType": "U32",
+          "IsArray": true
+        }
+      ]
+    },
+    "RszTool.Efx.Structs.Common.EFXMaterialExpressionList": {
+      "Name": "",
+      "Classname": "RszTool.Efx.Structs.Common.EFXMaterialExpressionList",
+      "Hash": 1368582565,
+      "Fields": [
+        {
+          "Name": "indexCount",
+          "FieldType": "S32",
+          "Flag": "StructSize",
+          "FlagTarget": "indices"
+        },
+        {
+          "Name": "expressions",
+          "FieldType": "Object",
+          "Classname": "RszTool.Efx.Structs.Common.EFXMaterialExpression",
+          "IsArray": true
+        },
+        {
+          "Name": "indices",
+          "FieldType": "U32",
+          "IsArray": true
+        }
+      ]
+    },
     "RszTool.Efx.Structs.Common.MdfProperty": {
       "Name": "",
       "Classname": "RszTool.Efx.Structs.Common.MdfProperty",
@@ -9930,115 +9912,55 @@
         {
           "Name": "propertyValue",
           "FieldType": "U8",
+          "IsArray": true,
+          "FixedLength": 16
+        }
+      ]
+    },
+    "RszTool.Efx.Structs.Common.EFXMaterialExpression": {
+      "Name": "",
+      "Classname": "RszTool.Efx.Structs.Common.EFXMaterialExpression",
+      "Hash": 1667418793,
+      "Fields": [
+        {
+          "Name": "unkn1",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn2",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "mdfPropertyHash",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "propertyComponentIndex",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "parameterCount",
+          "FieldType": "S32",
+          "Flag": "StructSize",
+          "FlagTarget": "parameters"
+        },
+        {
+          "Name": "componentsCount",
+          "FieldType": "S32",
+          "Flag": "StructSize",
+          "FlagTarget": "components"
+        },
+        {
+          "Name": "parameters",
+          "FieldType": "Struct",
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionParameterName",
           "IsArray": true
-        }
-      ]
-    },
-    "RszTool.Efx.Structs.RE4.EFXAttributeTypeMeshClip+MeshClip_Struct1": {
-      "Name": "",
-      "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypeMeshClip+MeshClip_Struct1",
-      "Hash": 325219947,
-      "Fields": [
-        {
-          "Name": "unkn0",
-          "FieldType": "U32"
         },
         {
-          "Name": "unkn1",
-          "FieldType": "U32"
-        }
-      ]
-    },
-    "RszTool.Efx.Structs.RE4.EFXAttributeTypeMeshClip+MeshClip_Struct2": {
-      "Name": "",
-      "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypeMeshClip+MeshClip_Struct2",
-      "Hash": 1791411186,
-      "Fields": [
-        {
-          "Name": "unkn0",
-          "FieldType": "F32"
-        },
-        {
-          "Name": "unkn1",
-          "FieldType": "U32"
-        },
-        {
-          "Name": "unkn2",
-          "FieldType": "F32"
-        }
-      ]
-    },
-    "RszTool.Efx.Structs.RE4.EFXAttributeTypeMeshClip+MeshClip_Struct3": {
-      "Name": "",
-      "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypeMeshClip+MeshClip_Struct3",
-      "Hash": 3744931286,
-      "Fields": [
-        {
-          "Name": "unkn0",
-          "FieldType": "F32"
-        },
-        {
-          "Name": "unkn1",
-          "FieldType": "F32"
-        },
-        {
-          "Name": "unkn2",
-          "FieldType": "F32"
-        },
-        {
-          "Name": "unkn3",
-          "FieldType": "F32"
-        }
-      ]
-    },
-    "RszTool.Efx.Structs.RE4.EFXAttributeTypeMeshClip+MeshClip_Struct4": {
-      "Name": "",
-      "Classname": "RszTool.Efx.Structs.RE4.EFXAttributeTypeMeshClip+MeshClip_Struct4",
-      "Hash": 1389561200,
-      "Fields": [
-        {
-          "Name": "hash",
-          "FieldType": "U32"
-        },
-        {
-          "Name": "unkn1",
-          "FieldType": "U32"
-        },
-        {
-          "Name": "unkn2",
-          "FieldType": "U32"
-        },
-        {
-          "Name": "unkn3",
-          "FieldType": "S32"
-        }
-      ]
-    },
-    "RszTool.Efx.Structs.Common.EFXMaterialExpression1": {
-      "Name": "",
-      "Classname": "RszTool.Efx.Structs.Common.EFXMaterialExpression1",
-      "Hash": 406121688,
-      "Fields": [
-        {
-          "Name": "unkn1",
-          "FieldType": "U32"
-        },
-        {
-          "Name": "unkn2",
-          "FieldType": "U32"
-        },
-        {
-          "Name": "hash3",
-          "FieldType": "U32"
-        },
-        {
-          "Name": "unkn4",
-          "FieldType": "U32"
-        },
-        {
-          "Name": "expression",
+          "Name": "components",
           "FieldType": "Object",
-          "Classname": "RszTool.Efx.Structs.Common.EFXExpression"
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionData",
+          "IsArray": true
         }
       ]
     },
@@ -10067,10 +9989,10 @@
         }
       ]
     },
-    "RszTool.Efx.Structs.Common.EFXExpression3": {
+    "RszTool.Efx.Structs.Common.EFXExpressionObject": {
       "Name": "",
-      "Classname": "RszTool.Efx.Structs.Common.EFXExpression3",
-      "Hash": 386213223,
+      "Classname": "RszTool.Efx.Structs.Common.EFXExpressionObject",
+      "Hash": 140910744,
       "Fields": [
         {
           "Name": "parameterCount",
@@ -10083,10 +10005,6 @@
           "FieldType": "S32",
           "Flag": "StructSize",
           "FlagTarget": "components"
-        },
-        {
-          "Name": "struct3Count",
-          "FieldType": "U32"
         },
         {
           "Name": "parameters",
@@ -10102,34 +10020,141 @@
         }
       ]
     },
-    "RszTool.Efx.Structs.Common.EFXExpression": {
+    "RszTool.Efx.Structs.Common.EfxClipHeader": {
       "Name": "",
-      "Classname": "RszTool.Efx.Structs.Common.EFXExpression",
-      "Hash": 2962117085,
+      "Classname": "RszTool.Efx.Structs.Common.EfxClipHeader",
+      "Hash": 630838826,
       "Fields": [
         {
-          "Name": "parameterCount",
+          "Name": "frameCount",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "unkn1",
+          "FieldType": "U32"
+        }
+      ]
+    },
+    "RszTool.Efx.Structs.Common.EfxFloatClipFrame": {
+      "Name": "",
+      "Classname": "RszTool.Efx.Structs.Common.EfxFloatClipFrame",
+      "Hash": 1588047703,
+      "Fields": [
+        {
+          "Name": "frameTime",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "type",
           "FieldType": "S32",
-          "Flag": "StructSize",
-          "FlagTarget": "parameters"
+          "Classname": "RszTool.Efx.Structs.Common.FrameInterpolationType"
         },
         {
-          "Name": "componentsCount",
+          "Name": "value",
+          "FieldType": "F32"
+        }
+      ]
+    },
+    "RszTool.Efx.Structs.Common.EfxClip_Struct3": {
+      "Name": "",
+      "Classname": "RszTool.Efx.Structs.Common.EfxClip_Struct3",
+      "Hash": 1193766209,
+      "Fields": [
+        {
+          "Name": "unkn0",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn1",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn2",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "unkn3",
+          "FieldType": "F32"
+        }
+      ]
+    },
+    "RszTool.Efx.Structs.Common.EfxColorClipFrame": {
+      "Name": "",
+      "Classname": "RszTool.Efx.Structs.Common.EfxColorClipFrame",
+      "Hash": 4249927476,
+      "Fields": [
+        {
+          "Name": "frameTime",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "type",
           "FieldType": "S32",
-          "Flag": "StructSize",
-          "FlagTarget": "components"
+          "Classname": "RszTool.Efx.Structs.Common.FrameInterpolationType"
         },
         {
-          "Name": "parameters",
-          "FieldType": "Struct",
-          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionParameterName",
-          "IsArray": true
+          "Name": "value",
+          "FieldType": "S32"
+        }
+      ]
+    },
+    "RszTool.Efx.Structs.Common.EfxMaterialClip_Struct4": {
+      "Name": "",
+      "Classname": "RszTool.Efx.Structs.Common.EfxMaterialClip_Struct4",
+      "Hash": 1000133550,
+      "Fields": [
+        {
+          "Name": "mdfPropertyHash",
+          "FieldType": "U32"
         },
         {
-          "Name": "components",
+          "Name": "unkn1",
+          "FieldType": "S32"
+        },
+        {
+          "Name": "unkn2",
+          "FieldType": "S32"
+        },
+        {
+          "Name": "unkn3",
+          "FieldType": "S32"
+        }
+      ]
+    },
+    "RszTool.Efx.Structs.Common.EFXExpressionParameterName": {
+      "Name": "",
+      "Classname": "RszTool.Efx.Structs.Common.EFXExpressionParameterName",
+      "Hash": 2266357963,
+      "Fields": [
+        {
+          "Name": "parameterNameHash",
+          "FieldType": "U32"
+        },
+        {
+          "Name": "constantValue",
+          "FieldType": "F32"
+        },
+        {
+          "Name": "source",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionParameterSource"
+        }
+      ]
+    },
+    "RszTool.Efx.Structs.Common.EFXExpressionData": {
+      "Name": "",
+      "Classname": "RszTool.Efx.Structs.Common.EFXExpressionData",
+      "Hash": 216915483,
+      "Fields": [
+        {
+          "Name": "type",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ExpressionComponentStorageType"
+        },
+        {
+          "Name": "data",
           "FieldType": "Object",
-          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionData",
-          "IsArray": true
+          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionDataBase"
         }
       ]
     },
@@ -10251,41 +10276,6 @@
         }
       ]
     },
-    "RszTool.Efx.Structs.Common.EFXExpressionParameterName": {
-      "Name": "",
-      "Classname": "RszTool.Efx.Structs.Common.EFXExpressionParameterName",
-      "Hash": 3335832803,
-      "Fields": [
-        {
-          "Name": "parameterNameHash",
-          "FieldType": "U32"
-        },
-        {
-          "Name": "unkn1",
-          "FieldType": "U32"
-        },
-        {
-          "Name": "unkn2",
-          "FieldType": "U32"
-        }
-      ]
-    },
-    "RszTool.Efx.Structs.Common.EFXExpressionData": {
-      "Name": "",
-      "Classname": "RszTool.Efx.Structs.Common.EFXExpressionData",
-      "Hash": 2292740793,
-      "Fields": [
-        {
-          "Name": "type",
-          "FieldType": "U32"
-        },
-        {
-          "Name": "data",
-          "FieldType": "Object",
-          "Classname": "RszTool.Efx.Structs.Common.EFXExpressionDataBase"
-        }
-      ]
-    },
     "RszTool.Efx.Structs.Common.EFXExpressionDataBase": {
       "Name": "",
       "Classname": "RszTool.Efx.Structs.Common.EFXExpressionDataBase",
@@ -10318,11 +10308,12 @@
     "RszTool.Efx.Structs.Common.EFXExpressionDataUnaryOperator": {
       "Name": "",
       "Classname": "RszTool.Efx.Structs.Common.EFXExpressionDataUnaryOperator",
-      "Hash": 3147563358,
+      "Hash": 4154610991,
       "Fields": [
         {
           "Name": "value",
-          "FieldType": "U32"
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.UnaryExpressionOperator"
         }
       ]
     },
@@ -10351,45 +10342,21 @@
     }
   },
   "Enums": {
-    "RszTool.Efx.Structs.RE4.ValueExpressionType": {
+    "RszTool.Efx.Structs.Common.ExpressionAssignType": {
       "Items": [
         {
-          "Name": "Unknown"
+          "Name": "Add"
         },
         {
-          "Name": "Unknown1",
+          "Name": "Subtract",
           "Value": 1
         },
         {
-          "Name": "Constant",
+          "Name": "Multiply",
           "Value": 2
         },
         {
-          "Name": "Unknown3",
-          "Value": 3
-        },
-        {
-          "Name": "Expression",
-          "Value": 4
-        }
-      ],
-      "BackingType": "System.Int32"
-    },
-    "RszTool.Efx.Structs.RE4.ExpressionOperator": {
-      "Items": [
-        {
-          "Name": "Addition"
-        },
-        {
-          "Name": "Subtraction",
-          "Value": 1
-        },
-        {
-          "Name": "Multiplication",
-          "Value": 2
-        },
-        {
-          "Name": "Division",
+          "Name": "Divide",
           "Value": 3
         },
         {
@@ -10419,14 +10386,21 @@
       ],
       "BackingType": "System.Int32"
     },
-    "RszTool.Efx.Structs.DMC5.Cycle_Loop": {
+    "RszTool.Efx.Structs.Common.EfxClipPlaybackType": {
       "Items": [
         {
-          "Name": "NOT_LOOP",
+          "Name": "Unknown"
+        },
+        {
+          "Name": "NonLooping",
           "Value": 2
         },
         {
-          "Name": "LOOP",
+          "Name": "Type4",
+          "Value": 4
+        },
+        {
+          "Name": "Looping",
           "Value": -1
         }
       ],
@@ -10497,8 +10471,80 @@
       ],
       "BackingType": "System.Int32"
     },
+    "RszTool.Efx.Structs.Common.FrameInterpolationType": {
+      "Items": [
+        {
+          "Name": "Type1",
+          "Value": 1
+        },
+        {
+          "Name": "Type2",
+          "Value": 2
+        },
+        {
+          "Name": "Type3",
+          "Value": 3
+        },
+        {
+          "Name": "Type5",
+          "Value": 5
+        },
+        {
+          "Name": "Type13",
+          "Value": 13
+        }
+      ],
+      "BackingType": "System.Int32"
+    },
+    "RszTool.Efx.Structs.Common.ExpressionParameterSource": {
+      "Items": [
+        {
+          "Name": "Parameter"
+        },
+        {
+          "Name": "Constant",
+          "Value": 1
+        },
+        {
+          "Name": "External",
+          "Value": 2
+        },
+        {
+          "Name": "Unknown",
+          "Value": -1
+        }
+      ],
+      "BackingType": "System.Int32"
+    },
+    "RszTool.Efx.Structs.Common.ExpressionComponentStorageType": {
+      "Items": [
+        {
+          "Name": "Float"
+        },
+        {
+          "Name": "BinaryOperator",
+          "Value": 1
+        },
+        {
+          "Name": "UnaryOperator",
+          "Value": 2
+        },
+        {
+          "Name": "Function",
+          "Value": 3
+        },
+        {
+          "Name": "ParameterHash",
+          "Value": 4
+        }
+      ],
+      "BackingType": "System.Int32"
+    },
     "RszTool.Efx.Structs.Common.BinaryExpressionOperator": {
       "Items": [
+        {
+          "Name": "Max"
+        },
         {
           "Name": "Add",
           "Value": 1
@@ -10516,12 +10562,16 @@
           "Value": 4
         },
         {
-          "Name": "ClampMax",
+          "Name": "Min",
           "Value": 5
-        },
+        }
+      ],
+      "BackingType": "System.Int32"
+    },
+    "RszTool.Efx.Structs.Common.UnaryExpressionOperator": {
+      "Items": [
         {
-          "Name": "UknSix",
-          "Value": 6
+          "Name": "Negation"
         }
       ],
       "BackingType": "System.Int32"
@@ -10568,15 +10618,15 @@
           "Value": 10
         },
         {
-          "Name": "Ternary15",
+          "Name": "Lerp",
           "Value": 15
         },
         {
-          "Name": "Ternary16",
+          "Name": "InvLerp",
           "Value": 16
         },
         {
-          "Name": "Ternary17",
+          "Name": "Clamp",
           "Value": 17
         }
       ],

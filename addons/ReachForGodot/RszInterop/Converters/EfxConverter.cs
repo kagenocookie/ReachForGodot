@@ -178,6 +178,10 @@ public class EfxConverter : SceneRszAssetConverter<EfxResource, EfxFile, EfxRoot
             return ConvertSingleEfxValue(info, value, version);
         }
 
+        if (info.Flag == EfxFieldFlags.BitSet) {
+            return Variant.CreateFrom(((BitSet)value).Bits);
+        }
+
         var arr = new Godot.Collections.Array();
 
         if (value is object[] array) {
@@ -328,6 +332,10 @@ public class EfxConverter : SceneRszAssetConverter<EfxResource, EfxFile, EfxRoot
     {
         if (!info.IsArray) {
             return ExportSingleEfXValue(value, info, targetType, version);
+        }
+
+        if (info.Flag == EfxFieldFlags.BitSet) {
+            return new BitSet(info.FixedLength, value.AsInt32Array());
         }
 
         var sourceArray = value.AsGodotArray();

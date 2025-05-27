@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Godot;
 using RszTool;
 using RszTool.Common;
+using RszTool.Mdf;
 
 public class MdfConverter : RszAssetConverter<MaterialDefinitionResource, MdfFile, MaterialDefinitionResource>
 {
@@ -68,10 +69,10 @@ public class MdfConverter : RszAssetConverter<MaterialDefinitionResource, MdfFil
 
     public override Task<bool> Export(MaterialDefinitionResource source, MdfFile file)
     {
-        file.MatDatas = new List<MdfFile.MatData>(source.Materials?.Length ?? 0);
+        file.MatDatas = new List<MatData>(source.Materials?.Length ?? 0);
         if (source.Materials == null) return Task.FromResult(true);
 
-        file.Header.Data = new MdfFile.HeaderStruct() {
+        file.Header.Data = new MdfHeaderStruct() {
             magic = MdfFile.Magic,
             matCount = (short)source.Materials.Length,
             mdfVersion = 1,
@@ -79,7 +80,7 @@ public class MdfConverter : RszAssetConverter<MaterialDefinitionResource, MdfFil
 
         for (int i = 0; i < source.Materials.Length; ++i) {
             var mat = source.Materials[i];
-            var matData = new MdfFile.MatData(new MdfFile.MatHeader(FileOption.Version) {
+            var matData = new MatData(new MatHeader(FileOption.Version) {
                 matName = mat.MaterialName,
                 mmtrPath = mat.MasterMaterial?.Asset?.ExportedFilename,
                 paramCount = mat.Params?.Values?.Count ?? 0,
@@ -96,7 +97,7 @@ public class MdfConverter : RszAssetConverter<MaterialDefinitionResource, MdfFil
 
             if (mat.Textures != null) {
                 foreach (var (name, tex) in mat.Textures) {
-                    matData.TexHeaders.Add(new MdfFile.TexHeader(FileOption.Version) {
+                    matData.TexHeaders.Add(new TexHeader(FileOption.Version) {
                         texType = name,
                         asciiHash = MurMur3HashUtils.GetAsciiHash(name),
                         hash = MurMur3HashUtils.GetHash(name),
@@ -106,7 +107,7 @@ public class MdfConverter : RszAssetConverter<MaterialDefinitionResource, MdfFil
             }
 
             if (mat.Params?.Values != null) {
-                matData.ParamHeaders = new List<MdfFile.ParamHeader>(mat.Params.Values.Count);
+                matData.ParamHeaders = new List<ParamHeader>(mat.Params.Values.Count);
                 for (var p = 0; p < mat.Params.Values.Count; p++) {
                     var paramValue = mat.Params.Values[p];
                     System.Numerics.Vector4 vec;
@@ -119,7 +120,7 @@ public class MdfConverter : RszAssetConverter<MaterialDefinitionResource, MdfFil
                         throw new Exception($"Invalid param [{p}] '{mat.Params.Names![p]}': {paramValue}");
                     }
 
-                    matData.ParamHeaders.Add(new MdfFile.ParamHeader(FileOption.Version) {
+                    matData.ParamHeaders.Add(new ParamHeader(FileOption.Version) {
                         componentCount = mat.Params.ValueCounts![p],
                         paramName = mat.Params.Names![p],
                         parameter = vec,
@@ -135,7 +136,7 @@ public class MdfConverter : RszAssetConverter<MaterialDefinitionResource, MdfFil
                         continue;
                     }
 
-                    matData.GpbfHeaders.Add((new MdfFile.GpbfHeader(name), new MdfFile.GpbfHeader() { name = resource.Asset.ExportedFilename, asciiHash = 1 }));
+                    matData.GpbfHeaders.Add((new GpbfHeader(name), new GpbfHeader() { name = resource.Asset.ExportedFilename, asciiHash = 1 }));
                 }
             }
         }

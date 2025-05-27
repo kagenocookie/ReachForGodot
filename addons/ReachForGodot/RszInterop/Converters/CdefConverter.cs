@@ -10,16 +10,6 @@ public class CdefConverter : ResourceConverter<CollisionDefinitionResource, Cdef
 
     public override CdefFile CreateFile(FileHandler fileHandler) => new CdefFile(fileHandler);
 
-    private static Godot.Color ConvertColor(uint rgba)
-    {
-        return Godot.Color.Color8(
-            (byte)(rgba & 0xff),
-            (byte)((rgba & 0xff00) >> 8),
-            (byte)((rgba & 0xff0000) >> 16),
-            (byte)((rgba & 0xff000000) >> 24)
-        );
-    }
-
     public override Task<bool> Import(CdefFile file, CollisionDefinitionResource target)
     {
         target.Layers = new CollisionLayerDefinition[file.Header.layerCount];
@@ -29,12 +19,14 @@ public class CdefConverter : ResourceConverter<CollisionDefinitionResource, Cdef
             target.Layers[i] = new CollisionLayerDefinition() {
                 Name = src.name,
                 Guid = src.guid,
-                Color = ConvertColor(src.colorRgba),
+                Color = src.color.ToGodot(),
                 Value1 = src.ukn1,
                 Value2 = src.ukn2,
                 Value3 = src.ukn3,
                 Value4 = src.ukn4,
                 ResourceName = src.name,
+                Bits1 = (uint)(file.Bits[i] & 0xffffffff),
+                Bits2 = (uint)((file.Bits[i] >> 32) & 0xffffffff),
             };
         }
 
@@ -51,7 +43,7 @@ public class CdefConverter : ResourceConverter<CollisionDefinitionResource, Cdef
             Guid = src.guid,
             Name = src.name,
             ResourceName = src.name,
-            Color = ConvertColor(src.colorRgba),
+            Color = src.color.ToGodot(),
         }).ToArray();
 
         target.Attributes = file.Attributes.Select(src => new CollisionAttributeDefinition() {
@@ -64,7 +56,7 @@ public class CdefConverter : ResourceConverter<CollisionDefinitionResource, Cdef
             Guid = src.guid,
             Name = src.name,
             ResourceName = src.name,
-            Color = ConvertColor(src.colorRgba),
+            Color = src.color.ToGodot(),
             Description = src.description,
             MaskBits = src.maskBits,
             Value1 = src.ukn1,

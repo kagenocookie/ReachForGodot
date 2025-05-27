@@ -17,4 +17,6 @@ public partial class CollisionLayerDefinition : Resource
     [Export] public uint Value2 { get; set; }
     [Export] public uint Value3 { get; set; }
     [Export] public uint Value4 { get; set; }
+    [Export(PropertyHint.Layers3DPhysics)] public uint Bits1 { get; set; }
+    [Export(PropertyHint.Layers3DPhysics)] public uint Bits2 { get; set; }
 }

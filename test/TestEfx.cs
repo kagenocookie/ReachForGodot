@@ -5,6 +5,7 @@ using Chickensoft.GoDotTest;
 using Godot;
 using RszTool;
 using RszTool.Efx;
+using RszTool.Efx.Structs.Common;
 using RszTool.Efx.Structs.RE4;
 using RszTool.Tools;
 using Shouldly;
@@ -106,11 +107,11 @@ public partial class TestEfx : TestBase
 
         // GD.Print(string.Join("\n", actionContainingEfx.Select(t => t.FileHandler.FilePath)));
 
-        // var matches = DevTools.FindEfxAttributes<EFXAttributeTypeMeshExpression>(EfxAttributeType.TypeMeshExpression,
+        // var matches = DevTools.FindEfxAttributes<EFXAttributeTransform3DClip>(EfxAttributeType.Transform3DClip,
         //     // (attr) => attr.substructCount > 0 || attr.indicesCount > 0,
         //     // (attr) => attr.expressions?.solverSize > 0
         //     // (attr) => attr.expression3 != null
-        //     (attr) => attr.materialExpressions is EFXMaterialExpressionListWrapper1 xx1 && xx1.expressions.Any(ex => ex.expression?.componentsCount > 40)
+        //     (attr) => attr.clipData.substruct3Count > 0
         //     // SupportedGame.ResidentEvil2RT
         //     // SupportedGame.ResidentEvil2RT, SupportedGame.ResidentEvil3RT, SupportedGame.ResidentEvil7RT, SupportedGame.DevilMayCry5, SupportedGame.ResidentEvil4
         //     // SupportedGame.ResidentEvil4
@@ -120,8 +121,32 @@ public partial class TestEfx : TestBase
         // ;
         // GD.Print(string.Join("\n", matches.Select(t => t.file.FileHandler.FilePath).Distinct()));
 
+        // var matches = DevTools.FindEfxByAttribute(attr => attr is IExpressionAttribute exprAttr && exprAttr.Expression != null &&
+        //     BitOperations.PopCount(Convert.ToUInt32(attr.GetType().GetField(EfxTools.GetFieldInfo(attr.GetType(), attr.Version).First().name)!.GetValue(attr))) != exprAttr.Expression.ExpressionCount);
+        // var matches = DevTools.FindEfxByAttribute<ValueTaskParentOptionsExpression(attr => attr is IExpressionAttribute exprAttr && exprAttr.Expression != null && exprAttr.Expression.Expressions.Any(exp => exp.Components.Count() > 40));
         // var matches = DevTools.FindEfxByAttribute(attr => attr is IExpressionAttribute exprAttr && exprAttr.Expression != null && exprAttr.Expression.Expressions.Any(exp => exp.Components.Count() > 40));
-        // GD.Print(string.Join("\n", matches.Select(t => t.FileHandler.FilePath).Distinct()));
+        // var matches = DevTools.FindEfxByAttribute(attr => attr is IClipAttribute clipAttr && true == clipAttr.Clip.frames?.Any(f => f.value.GetMostLikelyValueTypeObject() is int));
+        // var matches = DevTools.FindEfxAttributes<IClipAttribute>(attr => attr is IClipAttribute clipAttr && clipAttr.GetType().Name.Contains("ColorClip") && true == clipAttr.Clip.frames?.Any(f => f.value.GetMostLikelyValueTypeObject() is float));
+        // var matches = DevTools.FindEfxAttributes<EFXAttributeTextureUnitExpression>(a => true);
+        // // var matches = DevTools.FindEfxAttributes<IMaterialClipAttribute>(
+        // // var matches = DevTools.FindEfxAttributes<EFXAttributeTypeStrainRibbonMaterialClip>(
+        // // //     attr => attr.clipData.frames != null && attr.clipData.clips != null
+        // // //     && attr.clipData.clips.Length != BitOperations.PopCount(attr.colorChannelBits)
+        // // //     // && attr.unkn0
+        // // // );
+        // //     attr => attr.MaterialClip.frames != null && attr.MaterialClip.clips != null
+        // //     // && attr.clipBits < 0xf00
+        // //     // && attr.MaterialClip.mdfPropertyCount > 0
+        // //     // && attr.MaterialClip.mdfProperties.Length != (attr.MaterialClip.mdfPropertyCount == 0 ? attr.MaterialClip.clipCount : attr.MaterialClip.mdfPropertyCount)
+        // //     // && attr.unkn0
+        // // );
+        // // var matches = DevTools.FindEfxAttributes<IClipAttribute>(attr => attr is IClipAttribute clipAttr && clipAttr.Clip.frames != null && clipAttr.Clip.clips != null
+        // //     // && clipAttr.Clip.frames.Any(f => f.value.GetMostLikelyValueTypeObject() is int)
+        // //     && clipAttr.Clip.clips.Any(f => f.unkn1 != 3)
+        // // );
+
+        // // GD.Print(string.Join("\n", matches.Select(t => t.FileHandler.FilePath).Distinct()));
+        // GD.Print(string.Join("\n", matches.Select(t => t.file.FileHandler.FilePath + ": " + t.matchedAttribute).Distinct()));
 
         // using var file = new EfxFile(new FileHandler("E:/mods/dd2/REtool/re_chunk_000/natives/stm/gui/mastermaterial/ui03/ui030201/ui_dust_full_01.efx.4064419"));
         // using var file = new EfxFile(new FileHandler("E:/mods/re4/chunks/natives/stm/_chainsaw/vfx/effecteditor/efd_character/efd_ch_common/efd_0015_ch_common_damage_smoke_acid_0000.efx.3539837"));
@@ -129,10 +154,11 @@ public partial class TestEfx : TestBase
         // file.Read();
         // Debug.Break();
 
-        await FullReadTest();
+        // await FullExpressionParseTest();
+        // await FullReadTest();
         // await DumpEfxAttributeUsageList();
         // await DumpEfxStructValueLists<EFXAttributeFluidSimulator2D>();
-        // await DumpEfxStructValueLists();
+        await DumpEfxStructValueLists();
 
 
         var fieldInconsistencies = await FindInconsistentEfXFields();
@@ -162,7 +188,7 @@ public partial class TestEfx : TestBase
             try {
                 file.Read();
                 file.FileHandler.Position.ShouldBe(file.FileHandler.Stream.Length, "File was not fully read");
-                // file.ParseExpressions();
+                file.ParseExpressions();
             } catch (Exception e) {
                 GD.PrintErr("Failed file " + Path.GetFileName(filepath) + ": " + e.Message + "/n" + filepath);
                 return;
@@ -178,6 +204,59 @@ public partial class TestEfx : TestBase
         // }, null, SupportedGame.DragonsDogma2);
         // }, null, SupportedGame.ResidentEvil7);
         // }, null, SupportedGame.ResidentEvil4);
+    }
+
+    private static async Task FullExpressionParseTest()
+    {
+        var converter = new AssetConverter(GodotImportOptions.testImport);
+        await ExecuteFullReadTest("efx", async (game, fileOption, filepath) => {
+            using var file = new EfxFile(new FileHandler(filepath));
+            try {
+                file.Read();
+                file.FileHandler.Position.ShouldBe(file.FileHandler.Stream.Length, "File was not fully read");
+                file.ParseExpressions();
+                foreach (var a in file.GetAttributesAndActions(true)) {
+                    if (a is IExpressionAttribute expr1 && expr1.Expression?.ParsedExpressions != null) {
+                        VerifyExpressionCorrectness(game, filepath, file, expr1.Expression);
+                    }
+                    if (a is IMaterialExpressionAttribute expr2 && expr2.MaterialExpressions?.ParsedExpressions != null) {
+                        VerifyExpressionCorrectness(game, filepath, file, expr2.MaterialExpressions);
+                    }
+                }
+            } catch (Exception e) {
+                GD.PrintErr("Failed file " + Path.GetFileName(filepath) + ": " + e.Message + "/n" + filepath);
+                return;
+            }
+
+            void VerifyExpressionCorrectness(SupportedGame game, string filepath, EfxFile file, EFXExpressionContainer a)
+            {
+                var parsedlist = (a as EFXExpressionList)?.ParsedExpressions ?? (a as EFXMaterialExpressionList)!.ParsedExpressions!;
+                var srclist = (a as EFXExpressionList)?.Expressions ?? (a as EFXMaterialExpressionList)!.Expressions!;
+                for (var i = 0; i < parsedlist.Count; i++) {
+                    var srcExp = srclist.ElementAt(i);
+                    var parsed = parsedlist[i];
+                    var originalStr = parsed.ToString();
+
+                    // if (srcExp.components.Count > 1) Console.WriteLine(originalStr);
+                    var tree = EfxExpressionParser.Parse(originalStr, parsed.parameters);
+                    var reParsedStr = tree.ToString();
+                    // TODO: properly handle material expression additional fields
+                    reParsedStr.ShouldBe(originalStr);
+                    var reFlattened = file.FlattenExpressionTree(tree);
+                    reFlattened.parameters?.OrderBy(p => p.parameterNameHash).ShouldBeEquivalentTo(srcExp.parameters?.OrderBy(p => p.parameterNameHash));
+                    // we can't do full 100% per-component comparison because we lost parentheses during the tostring conversion
+                    // in other words, `a + (b + c)` would get re-serialized as `(a + b) + c`, which isn't a meaningful difference content wise but would serialize differently
+                    if (game == SupportedGame.DevilMayCry5 && (
+                        Path.GetFileName(filepath.AsSpan()).SequenceEqual("efd_03_l03_018_00.efx.1769672") ||
+                        Path.GetFileName(filepath.AsSpan()).SequenceEqual("efd_03_l03_011_00.efx.1769672")
+                    )) {
+                        // let these be incomplete because they're the only files that have this issue
+                    } else {
+                        reFlattened.components.Count.ShouldBe(srcExp.components.Count);
+                    }
+                }
+            }
+        }, null, DevTools.EfxSupportedGames);
     }
 
     private static async Task<Dictionary<Type, Dictionary<string, (HashSet<string> values, HashSet<string> filepaths)>>> FindInconsistentEfXFields()
@@ -225,6 +304,8 @@ public partial class TestEfx : TestBase
                         (Math.Abs(flt) > 100000000 || flt != 0 && BitConverter.SingleToUInt32Bits(flt) < 1000)
                     ) {
                         AddInconsistency(attrType, f.Name, new ukn(flt).ToString(), filepath);
+                    } else if (f.FieldType.IsEnum && !f.FieldType.IsEnumDefined(f.GetValue(a)!)) {
+                        AddInconsistency(attrType, f.Name, new ukn(Convert.ToInt32(f.GetValue(a))).ToString(), filepath);
                     }
                 }
             }

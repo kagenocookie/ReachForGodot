@@ -70,6 +70,17 @@ public partial class AssetImportInspectorPlugin : EditorInspectorPlugin, ISerial
                 ? [ new LabelledPathSetting(ProjectSettings.GlobalizePath(importable.Asset.AssetFilename)) ]
                 : PathUtils.FindFileSourceFolders(importable.Asset.AssetFilename, ReachForGodot.GetAssetConfig(importable.Game)).ToArray();
 
+            if (fileSources.Length == 0) {
+                if (!FileUnpacker.TryExtractFile(importable.Asset.AssetFilename, config)) {
+                    var importSection = container.GetNode<Container>("%ImportSection");
+                    emptyLabel = new Label() { Text = "File could not be found in any source paths nor extracted from paks. It can't be re-imported." };
+                    importSection.GetParent().AddChild(emptyLabel);
+                    importSection.GetParent().MoveChild(emptyLabel, importSection.GetIndex());
+                } else {
+                    fileSources = PathUtils.FindFileSourceFolders(importable.Asset.AssetFilename, ReachForGodot.GetAssetConfig(importable.Game)).ToArray();
+                }
+            }
+
             var sourceOption = sourcesContainer.RequireChildByType<OptionButton>();
             var openSourceBtn = container.GetNode<Button>("%ShowImportSourceBtn");
             if (fileSources.Length > 1) {
@@ -93,11 +104,8 @@ public partial class AssetImportInspectorPlugin : EditorInspectorPlugin, ISerial
                 var source = sourceOption.Selected == -1 ? fileSources.FirstOrDefault() : fileSources[sourceOption.Selected];
                 var config = ReachForGodot.GetAssetConfig(importable.Game);
                 if (source == null) {
-                    if (!FileUnpacker.TryExtractFile(importable.Asset!.AssetFilename, config)) {
-                        GD.PrintErr("Could not determine file source path. Verify it is present in the chunk or additional folders");
-                        return;
-                    }
-                    source = null;
+                    GD.PrintErr("Could not determine file source path. Verify it is present in the chunk or additional folders");
+                    return;
                 }
                 var isFullPath = Path.IsPathRooted(source) && File.Exists(source);
 
