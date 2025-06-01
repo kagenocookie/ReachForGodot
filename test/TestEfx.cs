@@ -7,7 +7,6 @@ using RszTool;
 using RszTool.Efx;
 using RszTool.Efx.Structs.Basic;
 using RszTool.Efx.Structs.Common;
-using RszTool.Efx.Structs.DD2;
 using RszTool.Efx.Structs.Field;
 using RszTool.Efx.Structs.Main;
 using RszTool.Efx.Structs.Misc;
@@ -118,7 +117,7 @@ public partial class TestEfx : TestBase
                     and not EFXAttributeTypeRibbonChainExpression
                     and not EFXAttributeNoiseExpression
                     and not EFXAttributeEmitterShape2DExpression
-                    and not EFXAttributeUnknownDD2_117Expression
+                    and not EFXAttributePtAngularVelocity2DExpression
                     and not EFXAttributeUnitCullingExpression
                     and not EFXAttributeTypeLightning3DExpression
                     and not EFXAttributeTypeRibbonParticleExpression
@@ -128,14 +127,14 @@ public partial class TestEfx : TestBase
                     and not EFXAttributeTypeGpuRibbonLengthExpression
                     and not EFXAttributeTypeStrainRibbonExpression
                     and not EFXAttributeTypeGpuPolygonExpression
-                    and not EFXAttributeUnknownDD2_232Expression
+                    and not EFXAttributeProceduralDistortionExpression
                     and not EFXAttributeMeshEmitterExpression
                     and not EFXAttributeTypeLightning3DMaterialExpression
                     and not EFXAttributeTypeBillboard3DMaterialExpression
                     and not EFXAttributeTypeRibbonFollowExpression
                     and not EFXAttributeTypePolygonExpression
                     and not EFXAttributeVelocity3DExpression
-                    and not EFXAttributeUnknownDD2_239RgbColorExpression
+                    and not EFXAttributeRgbCommonExpression
                     and not EFXAttributeRotateAnimExpression
                     and not EFXAttributeUVSequenceExpression
                     and not EFXAttributeVelocity2DExpression
@@ -264,7 +263,7 @@ public partial class TestEfx : TestBase
         // Debug.Break();
 
         // await FullExpressionParseTest();
-        // await FullReadTest();
+        await FullReadTest();
         await DumpEfxAttributeUsageList();
         // await DumpEfxStructValueLists<EFXAttributeSpawn>();
         await DumpEfxStructValueLists();

@@ -2900,18 +2900,18 @@
       "TypeID": 47,
       "Name": "TypeStrainRibbon",
       "Classname": "RszTool.Efx.Structs.Main.EFXAttributeTypeStrainRibbonV1",
-      "Hash": 2268968080,
+      "Hash": 1467768902,
       "Fields": [
         {
           "Name": "ukn1",
           "FieldType": "U32"
         },
         {
-          "Name": "color0",
+          "Name": "color1",
           "FieldType": "Color"
         },
         {
-          "Name": "color1",
+          "Name": "color2",
           "FieldType": "Color"
         },
         {

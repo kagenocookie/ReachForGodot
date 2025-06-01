@@ -1615,7 +1615,7 @@
       "TypeID": 22,
       "Name": "TypeRibbonChain",
       "Classname": "RszTool.Efx.Structs.Main.EFXAttributeTypeRibbonChain",
-      "Hash": 1650076793,
+      "Hash": 4168516890,
       "Fields": [
         {
           "Name": "unkn1",
@@ -1667,19 +1667,8 @@
         },
         {
           "Name": "unkn2_9_1",
-          "FieldType": "U8"
-        },
-        {
-          "Name": "unkn2_9_2",
-          "FieldType": "U8"
-        },
-        {
-          "Name": "unkn2_9_3",
-          "FieldType": "U8"
-        },
-        {
-          "Name": "unkn2_9_4",
-          "FieldType": "U8"
+          "FieldType": "Struct",
+          "Classname": "RszTool.Efx.Structs.Common.ByteSet"
         },
         {
           "Name": "unkn2_10",
@@ -3844,18 +3833,18 @@
       "TypeID": 55,
       "Name": "TypeStrainRibbon",
       "Classname": "RszTool.Efx.Structs.Main.EFXAttributeTypeStrainRibbonV1",
-      "Hash": 4041196982,
+      "Hash": 2327543727,
       "Fields": [
         {
           "Name": "ukn1",
           "FieldType": "U32"
         },
         {
-          "Name": "color0",
+          "Name": "color1",
           "FieldType": "Color"
         },
         {
-          "Name": "color1",
+          "Name": "color2",
           "FieldType": "Color"
         },
         {
@@ -3987,15 +3976,15 @@
           "FieldType": "F32"
         },
         {
-          "Name": "ukn3_3",
+          "Name": "color3",
           "FieldType": "Color"
         },
         {
-          "Name": "ukn3_4",
+          "Name": "color4",
           "FieldType": "Color"
         },
         {
-          "Name": "ukn3_5",
+          "Name": "color5",
           "FieldType": "Color"
         },
         {
@@ -6795,7 +6784,7 @@
       "TypeID": 116,
       "Name": "ProceduralDistortionClip",
       "Classname": "RszTool.Efx.Structs.Misc.EFXAttributeProceduralDistortionClip",
-      "Hash": 2461618805,
+      "Hash": 2527635451,
       "Fields": [
         {
           "Name": "clipBits",
@@ -6803,15 +6792,11 @@
           "IsArray": true,
           "FixedLength": 1,
           "Flag": "BitSet",
-          "FlagTarget": "1"
+          "FlagTarget": "7"
         },
         {
           "Name": "unkn1",
-          "FieldType": "U32"
-        },
-        {
-          "Name": "unkn2",
-          "FieldType": "S32"
+          "FieldType": "ukn_type"
         },
         {
           "Name": "clipData",
@@ -7224,6 +7209,29 @@
         }
       ]
     },
+    "RszTool.Efx.Structs.Common.ByteSet": {
+      "Name": "",
+      "Classname": "RszTool.Efx.Structs.Common.ByteSet",
+      "Hash": 4238638751,
+      "Fields": [
+        {
+          "Name": "b1",
+          "FieldType": "U8"
+        },
+        {
+          "Name": "b2",
+          "FieldType": "U8"
+        },
+        {
+          "Name": "b3",
+          "FieldType": "U8"
+        },
+        {
+          "Name": "b4",
+          "FieldType": "U8"
+        }
+      ]
+    },
     "RszTool.Efx.Structs.Basic.TextureUnitData": {
       "Name": "",
       "Classname": "RszTool.Efx.Structs.Basic.TextureUnitData",
@@ -7384,29 +7392,6 @@
         {
           "Name": "unkn39",
           "FieldType": "F32"
-        }
-      ]
-    },
-    "RszTool.Efx.Structs.Common.ByteSet": {
-      "Name": "",
-      "Classname": "RszTool.Efx.Structs.Common.ByteSet",
-      "Hash": 4238638751,
-      "Fields": [
-        {
-          "Name": "b1",
-          "FieldType": "U8"
-        },
-        {
-          "Name": "b2",
-          "FieldType": "U8"
-        },
-        {
-          "Name": "b3",
-          "FieldType": "U8"
-        },
-        {
-          "Name": "b4",
-          "FieldType": "U8"
         }
       ]
     },
