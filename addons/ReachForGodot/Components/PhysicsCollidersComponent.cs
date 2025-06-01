@@ -223,17 +223,18 @@ public partial class PhysicsCollidersComponent : REComponent, IVisualREComponent
         collider.SetField(ColliderShapeField, shape);
 
         colliders.Add(collider);
-        ImportColliders();
+        ImportColliders(colliders.Count - 1);
         return collider;
     }
 
-    private Task ImportColliders()
+    private Task ImportColliders(int index = -1)
     {
         Debug.Assert(colliderRoot != null);
         var colliders = GetField(CollidersList).AsGodotArray<REObject>();
         int n = 1;
         foreach (var coll in colliders) {
             var basename = "Collider_" + n++;
+            if (index != -1 && n - 2 != index) continue;
             var shape = coll.GetField(ColliderShapeField).As<REObject>();
             CollisionShape3D? collider = FindOrCreateCollider(colliderRoot, basename, shape);
             if (shape == null) {
