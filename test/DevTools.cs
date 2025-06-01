@@ -78,7 +78,7 @@ public static class DevTools
 
     public static List<EfxFile> FindEfxByAttribute(Func<EFXAttribute, bool> filter, params SupportedGame[] games)
     {
-        return FindEfxWhere((f, _) => f.Entries.Any(e => e.Attributes.Any(filter)), games);
+        return FindEfxWhere(f => f.Entries.Any(e => e.Attributes.Any(filter)), games);
     }
 
     public static List<EfxFile> FindEfxByAttributeType(EfxAttributeType type, params SupportedGame[] games)
@@ -92,10 +92,10 @@ public static class DevTools
 
     public static List<EfxFile> FindEfxByAttributeType<TAttr>(EfxAttributeType type, params SupportedGame[] games) where TAttr : EFXAttribute
     {
-        return FindEfxWhere((f, _) => f.Entries.Any(e => e.Attributes.Any(a => a is TAttr && a.type == type)), games);
+        return FindEfxWhere(f => f.Entries.Any(e => e.Attributes.Any(a => a is TAttr && a.type == type)), games);
     }
 
-    public static List<EfxFile> FindEfxWhere(Func<EfxFile, bool, bool> filter, params SupportedGame[] games)
+    public static List<EfxFile> FindEfxWhere(Func<EfxFile, bool> filter, params SupportedGame[] games)
     {
         if (games.Length == 0) games = ReachForGodot.ConfiguredGames.ToArray();
 
@@ -134,19 +134,17 @@ public static class DevTools
         }
     }
 
-    public static List<EfxFile> FindEfxWhere(Func<EfxFile, bool, bool> filter, SupportedGame game)
+    public static List<EfxFile> FindEfxWhere(Func<EfxFile, bool> filter, SupportedGame game)
     {
         return ReachForGodotPlugin.SelectFilesWhere(game, "efx", (g, opt, filepath) => {
             var file = new EfxFile(new FileHandler(filepath));
             try {
                 file.Read();
-                if (filter.Invoke(file, true)) {
+                if (filter.Invoke(file)) {
                     return file;
                 }
             } catch (Exception) {
-                if (filter.Invoke(file, false)) {
-                    return file;
-                }
+                // ignore
             }
 
             return null;

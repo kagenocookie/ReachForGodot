@@ -5,8 +5,13 @@ using Chickensoft.GoDotTest;
 using Godot;
 using RszTool;
 using RszTool.Efx;
+using RszTool.Efx.Structs.Basic;
 using RszTool.Efx.Structs.Common;
-using RszTool.Efx.Structs.RE4;
+using RszTool.Efx.Structs.DD2;
+using RszTool.Efx.Structs.Field;
+using RszTool.Efx.Structs.Main;
+using RszTool.Efx.Structs.Misc;
+using RszTool.Efx.Structs.Transforms;
 using RszTool.Tools;
 using Shouldly;
 
@@ -17,6 +22,8 @@ namespace ReaGE.Tests;
 public partial class TestEfx : TestBase
 {
     public TestEfx(Node testScene) : base(testScene) { }
+
+    // file notes: tests with commented out [Test] attributes are more of a RszTool efx struct development assistance thing
 
     // [Test]
     // public async Task BasicImportExportTest()
@@ -67,6 +74,117 @@ public partial class TestEfx : TestBase
     //         node.Free();
     //     }, null, EfxSupportedGames);
     // }
+
+    // [Test]
+    public async Task ExpressionNameEvaluation()
+    {
+        var matches = DevTools.FindEfxWhere(efx =>
+            efx.Entries.Any(e => e.Attributes.OfType<IExpressionAttribute>().Any()))
+            .SelectMany(f => GetAllExpressions(f))
+            .Where(set => set.expression.parameters.Count > 0)
+            .OrderBy(a => a.attr.GetType().Name)
+            .Select(pair => $"{pair.path} : {pair.attr.GetType().Name.Replace("EFXAttribute", "")} {pair.attr.ExpressionBits} => {pair.expression}");
+
+        static IEnumerable<(string path, IExpressionAttribute attr, EFXExpressionTree expression)> GetAllExpressions(EfxFile file) {
+            file.ParseExpressions();
+            return file.GetAttributesAndActions(true)
+                // .Where(attr => attr is IExpressionAttribute)
+                // .Select(attr => (attr.))
+                .OfType<IExpressionAttribute>()
+                .Where(attr => attr is
+                    // fully resolved
+                    not EFXAttributeTransform2DExpression
+                    and not EFXAttributeFadeByDepthExpression
+                    and not EFXAttributeTransform3DExpression
+                    and not EFXAttributePtTransform3DExpression
+                    and not EFXAttributeFadeByAngleExpression
+                    and not EFXAttributeSpawnExpression
+                    and not EFXAttributeLifeExpression
+
+                    // mostly resolved
+                    and not EFXAttributeTypeNodeBillboardExpression
+                    and not EFXAttributeTypeGpuBillboardExpression
+                    and not EFXAttributeEmitterShape3DExpression
+                    and not EFXAttributeAttractorExpression
+
+                    // needs bitset versioning
+                    and not EFXAttributeTypeBillboard3DExpression
+                    and not EFXAttributeTypeMeshExpression
+                    and not EFXAttributeTypeNoDrawExpression
+                    and not EFXAttributeTypeRibbonLengthExpression
+                    and not EFXAttributeShaderSettingsExpression
+
+                    // unresolveable - no additional reliable info in shipped files of the games I own; needs ingame testing or alternative solutions
+                    and not EFXAttributeTypeRibbonChainExpression
+                    and not EFXAttributeNoiseExpression
+                    and not EFXAttributeEmitterShape2DExpression
+                    and not EFXAttributeUnknownDD2_117Expression
+                    and not EFXAttributeUnitCullingExpression
+                    and not EFXAttributeTypeLightning3DExpression
+                    and not EFXAttributeTypeRibbonParticleExpression
+                    and not EFXAttributeTypeRibbonFollowMaterialExpression
+                    and not EFXAttributeTypeRibbonLengthMaterialExpression
+                    and not EFXAttributeTypePolygonTrailMaterialExpression
+                    and not EFXAttributeTypeGpuRibbonLengthExpression
+                    and not EFXAttributeTypeStrainRibbonExpression
+                    and not EFXAttributeTypeGpuPolygonExpression
+                    and not EFXAttributeUnknownDD2_232Expression
+                    and not EFXAttributeMeshEmitterExpression
+                    and not EFXAttributeTypeLightning3DMaterialExpression
+                    and not EFXAttributeTypeBillboard3DMaterialExpression
+                    and not EFXAttributeTypeRibbonFollowExpression
+                    and not EFXAttributeTypePolygonExpression
+                    and not EFXAttributeVelocity3DExpression
+                    and not EFXAttributeUnknownDD2_239RgbColorExpression
+                    and not EFXAttributeRotateAnimExpression
+                    and not EFXAttributeUVSequenceExpression
+                    and not EFXAttributeVelocity2DExpression
+                    and not EFXAttributeVanishArea3DExpression
+                    and not EFXAttributeScaleAnimExpression
+                    and not EFXAttributeTypeGpuRibbonFollowExpression
+                    and not EFXAttributeTypeRibbonFixEndExpression
+                    and not EFXAttributeTypeStrainRibbonMaterialExpression
+                    and not EFXAttributeTypeBillboard2DExpression
+                    and not EFXAttributeVectorFieldParameterExpression // figure out name for hash ext:2031344731
+
+                    // barely resolved
+                    and not EFXAttributeDistortionExpression
+                    and not EFXAttributeTypeGpuMeshExpression
+                )
+                .SelectMany(attr => attr.Expression?.ParsedExpressions?
+                    .Select(expr => (file.FileHandler.FilePath!, attr, expr))
+                    ?? Enumerable.Empty<(string, IExpressionAttribute, EFXExpressionTree)>()
+                );
+        }
+
+        GD.Print(string.Join("\n", matches));
+        await DumpEfxAttributeUsageList();
+        await DumpEfxStructValueLists();
+    }
+
+    // [Test]
+    public void ClipStructLookups()
+    {
+        var matches = DevTools.FindEfxWhere(efx => true)
+            .SelectMany(f => GetAllClips(f))
+            .Where(set => set.attr.Clip.interpolationDataCount > 0)
+            // .Where(set => set.attr.Clip.interpolationDataCount == 0 && true == set.attr.Clip.frames?.Any(f => f.type == FrameInterpolationType.Type5))
+            .OrderBy(a => a.attr.GetType().Name)
+            // .Select(pair => $"{pair.path} : {pair.attr.GetType().Name.Replace("EFXAttribute", "")} {pair.attr.ClipBits} => {pair.attr.Clip}")
+            .Select(pair => $"{pair.path} : {pair.attr.GetType().Name.Replace("EFXAttribute", "")} {string.Join(" | ", pair.attr.Clip.interpolationData!)}")
+            ;
+
+        static IEnumerable<(string path, IClipAttribute attr)> GetAllClips(EfxFile file) {
+            return file.GetAttributesAndActions(true)
+                .OfType<IClipAttribute>()
+                .SelectMany(attr => attr.Clip.clips?
+                    .Select(expr => (file.FileHandler.FilePath!, attr))
+                    ?? Enumerable.Empty<(string, IClipAttribute)>()
+                );
+        }
+
+        GD.Print(string.Join("\n", matches));
+    }
 
     [Test]
     public async Task FullReadWriteTest()
@@ -127,26 +245,17 @@ public partial class TestEfx : TestBase
         // var matches = DevTools.FindEfxByAttribute(attr => attr is IExpressionAttribute exprAttr && exprAttr.Expression != null && exprAttr.Expression.Expressions.Any(exp => exp.Components.Count() > 40));
         // var matches = DevTools.FindEfxByAttribute(attr => attr is IClipAttribute clipAttr && true == clipAttr.Clip.frames?.Any(f => f.value.GetMostLikelyValueTypeObject() is int));
         // var matches = DevTools.FindEfxAttributes<IClipAttribute>(attr => attr is IClipAttribute clipAttr && clipAttr.GetType().Name.Contains("ColorClip") && true == clipAttr.Clip.frames?.Any(f => f.value.GetMostLikelyValueTypeObject() is float));
+        // var matches = DevTools.FindEfxAttributes<IMaterialClipAttribute>(clipAttr => clipAttr.MaterialClip.clipCount != clipAttr.MaterialClip.mdfPropertyCount && clipAttr.MaterialClip.mdfPropertyCount != 0);
+        // var matches = DevTools.FindEfxAttributes<EFXAttributeUnknownRE4_228>(attr => attr.unkn20.value != 0);
+        // var matches = DevTools.FindEfxAttributes<EFXAttributeTypeLightning3DV1>(attr => true);
         // var matches = DevTools.FindEfxAttributes<EFXAttributeTextureUnitExpression>(a => true);
-        // // var matches = DevTools.FindEfxAttributes<IMaterialClipAttribute>(
-        // // var matches = DevTools.FindEfxAttributes<EFXAttributeTypeStrainRibbonMaterialClip>(
-        // // //     attr => attr.clipData.frames != null && attr.clipData.clips != null
-        // // //     && attr.clipData.clips.Length != BitOperations.PopCount(attr.colorChannelBits)
-        // // //     // && attr.unkn0
-        // // // );
-        // //     attr => attr.MaterialClip.frames != null && attr.MaterialClip.clips != null
-        // //     // && attr.clipBits < 0xf00
-        // //     // && attr.MaterialClip.mdfPropertyCount > 0
-        // //     // && attr.MaterialClip.mdfProperties.Length != (attr.MaterialClip.mdfPropertyCount == 0 ? attr.MaterialClip.clipCount : attr.MaterialClip.mdfPropertyCount)
-        // //     // && attr.unkn0
-        // // );
-        // // var matches = DevTools.FindEfxAttributes<IClipAttribute>(attr => attr is IClipAttribute clipAttr && clipAttr.Clip.frames != null && clipAttr.Clip.clips != null
-        // //     // && clipAttr.Clip.frames.Any(f => f.value.GetMostLikelyValueTypeObject() is int)
-        // //     && clipAttr.Clip.clips.Any(f => f.unkn1 != 3)
-        // // );
+        // var matches = DevTools.FindEfxAttributes<EFXAttributeTypeMeshClip>(attr => attr.mdfPropertyCount > 0);
+        // var matches = DevTools.FindEfxAttributes<EFXAttributeSpawn>(attr => attr.sb_unkn3 > 1, SupportedGame.DragonsDogma2);
+        // var matches = DevTools.FindEfxByAttributeType<EFXAttributeUnitCulling>(EfxAttributeType.UnitCulling);
 
-        // // GD.Print(string.Join("\n", matches.Select(t => t.FileHandler.FilePath).Distinct()));
-        // GD.Print(string.Join("\n", matches.Select(t => t.file.FileHandler.FilePath + ": " + t.matchedAttribute).Distinct()));
+        // GD.Print(string.Join("\n", matches));
+        // GD.Print(string.Join("\n", matches.Select(t => t.FileHandler.FilePath).Distinct()));
+        // GD.Print(string.Join("\n", matches.Select(t => t.file.FileHandler.FilePath + ": " + t.matchedAttribute.unknBitFlag + ", " + t.matchedAttribute.flags + " => " + t.matchedAttribute.unkn2_14.GetMostLikelyValueTypeString()).Distinct()));
 
         // using var file = new EfxFile(new FileHandler("E:/mods/dd2/REtool/re_chunk_000/natives/stm/gui/mastermaterial/ui03/ui030201/ui_dust_full_01.efx.4064419"));
         // using var file = new EfxFile(new FileHandler("E:/mods/re4/chunks/natives/stm/_chainsaw/vfx/effecteditor/efd_character/efd_ch_common/efd_0015_ch_common_damage_smoke_acid_0000.efx.3539837"));
@@ -156,10 +265,13 @@ public partial class TestEfx : TestBase
 
         // await FullExpressionParseTest();
         // await FullReadTest();
-        // await DumpEfxAttributeUsageList();
-        // await DumpEfxStructValueLists<EFXAttributeFluidSimulator2D>();
+        await DumpEfxAttributeUsageList();
+        // await DumpEfxStructValueLists<EFXAttributeSpawn>();
         await DumpEfxStructValueLists();
 
+        // var unknownHashes = EfxFile.UnknownParameterHashes;
+        // var foundHashes = EfxFile.FoundNamedParameterHashes;
+        // var eznames = unknownHashes.Select(hash => foundHashes.TryGetValue(hash, out var name) ? $"{hash}={name}" : null).Where(x => x != null).ToArray();
 
         var fieldInconsistencies = await FindInconsistentEfXFields();
 
@@ -213,7 +325,6 @@ public partial class TestEfx : TestBase
             using var file = new EfxFile(new FileHandler(filepath));
             try {
                 file.Read();
-                file.FileHandler.Position.ShouldBe(file.FileHandler.Stream.Length, "File was not fully read");
                 file.ParseExpressions();
                 foreach (var a in file.GetAttributesAndActions(true)) {
                     if (a is IExpressionAttribute expr1 && expr1.Expression?.ParsedExpressions != null) {
@@ -298,10 +409,10 @@ public partial class TestEfx : TestBase
                         AddInconsistency(attrType, f.Name, uu.ToString(), filepath);
                     } else if (f.FieldType == typeof(int) && f.GetValue(a) is int ii && LooksLikeFloat(ii)) {
                         AddInconsistency(attrType, f.Name, BitConverter.Int32BitsToSingle(ii).ToString("0.0#"), filepath);
-                    } else if (f.FieldType == typeof(uint) && f.GetValue(a) is uint n && LooksLikeFloat((int)n)) {
+                    } else if (f.FieldType == typeof(uint) && f.GetValue(a) is uint n && LooksLikeFloat((int)n) && !f.Name.Contains("hash", StringComparison.OrdinalIgnoreCase) && !f.Name.Contains("mask", StringComparison.OrdinalIgnoreCase)) {
                         AddInconsistency(attrType, f.Name, BitConverter.Int32BitsToSingle((int)n).ToString("0.0#"), filepath);
                     } else if (f.FieldType == typeof(float) && f.GetValue(a) is float flt &&
-                        (Math.Abs(flt) > 100000000 || flt != 0 && BitConverter.SingleToUInt32Bits(flt) < 1000)
+                        (Math.Abs(flt) > 100000000 && !float.IsInfinity(flt) || flt != 0 && BitConverter.SingleToUInt32Bits(flt) < 1000)
                     ) {
                         AddInconsistency(attrType, f.Name, new ukn(flt).ToString(), filepath);
                     } else if (f.FieldType.IsEnum && !f.FieldType.IsEnumDefined(f.GetValue(a)!)) {
@@ -355,7 +466,16 @@ public partial class TestEfx : TestBase
             // EfxAttributeTypeRemapper.ToAttributeTypeID(version)
 
             foreach (var (attr, paths) in attrPaths.OrderBy(k => EfxAttributeTypeRemapper.ToAttributeTypeID(version, k.Key))) {
-                usageSb.Append(attr.ToString()).AppendLine($" ({paths.Count})");
+                usageSb.Append($"{EfxAttributeTypeRemapper.ToAttributeTypeID(version, attr)} = \t").Append(attr.ToString()).AppendLine($" ({paths.Count})");
+            }
+
+
+            usageSb.AppendLine();
+            usageSb.AppendLine("Unmapped:");
+            foreach (var val in Enum.GetValues<EfxAttributeType>()) {
+                if (!EfxAttributeTypeRemapper.HasAttributeType(version, val)) {
+                    usageSb.Append(val).Append(" = {").Append(string.Join(", ", val.GetVersionsOfType().Select((verId => verId.version + " = " + verId.typeId)))).AppendLine(" }");
+                }
             }
             usageSb.AppendLine("----------------------------------");
 

@@ -6,7 +6,7 @@ using Godot;
 using ReaGE.EFX;
 using RszTool;
 using RszTool.Efx;
-using RszTool.Efx.Structs.RE4;
+using RszTool.Efx.Structs.Basic;
 
 public class EfxConverter : SceneRszAssetConverter<EfxResource, EfxFile, EfxRootNode>
 {
