@@ -208,11 +208,11 @@ public partial class SceneFolder : Node3D, IRszContainer, IImportableAsset
     }
 
     IEnumerable<(string label, GodotImportOptions importMode)> IImportableAsset.SupportedImportTypes => [
-        ("Placeholders only", GodotImportOptions.placeholderImport),
+        ("Discard and reimport this scene", GodotImportOptions.forceReimportThisStructure),
+        ("Discard and reimport nested scenes", GodotImportOptions.forceReimportStructure),
         ("Import this scene missing objects", GodotImportOptions.thisFolderOnly),
         ("Import nested missing objects", GodotImportOptions.importMissing),
-        ("Discard and reimport nested scenes", GodotImportOptions.forceReimportStructure),
-        ("Discard and reimport this scene", GodotImportOptions.forceReimportThisStructure),
+        ("Placeholders only", GodotImportOptions.placeholderImport),
         ("Force reimport all resources", GodotImportOptions.fullReimport),
     ];
 }

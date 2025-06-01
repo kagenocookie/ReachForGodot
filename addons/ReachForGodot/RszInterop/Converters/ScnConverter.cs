@@ -243,7 +243,7 @@ public class ScnConverter : SceneRszAssetConverter<SceneResource, ScnFile, Scene
                         }
                     }
                 } else {
-                    if (child.As<REObject>() is REObject childObj) {
+                    if (child.TryCast<REObject>(out var childObj)) {
                         ReconstructScnGameObjectRefs(childObj, component, gameobj, root);
                     }
                 }

@@ -78,8 +78,12 @@ public partial class PhysicsCollidersComponent : REComponent, IVisualREComponent
         .Resource<ColliderHeightFieldResource>()
         .Conditions(list => list.FirstOrDefault(f => f.RszField.type is RszFieldType.String or RszFieldType.Resource));
 
+    public Godot.Collections.Array<REObject> Colliders => GetField(CollidersList).AsGodotArray<REObject>();
+
     [ExportToolButton("Generate collider nodes")]
     private Callable GenerateColliderNodesBtn => Callable.From(() => { _ = GenerateColliderNodes(); });
+    [ExportToolButton("Add collider")]
+    private Callable AddColliderBtn => Callable.From(() => { _ = AddCollider(); });
 
     public StaticBody3D? GetOrFindContainerNode()
     {
@@ -126,7 +130,7 @@ public partial class PhysicsCollidersComponent : REComponent, IVisualREComponent
     {
         colliderRoot = GetOrFindContainerNode();
         if (colliderRoot == null) return;
-        var colliders = GetField(CollidersList).AsGodotArray<REObject>();
+        var colliders = Colliders;
         if (colliders == null) {
             SetField(CollidersList.Get(this), colliders = new Godot.Collections.Array<REObject>());
         }
@@ -182,19 +186,45 @@ public partial class PhysicsCollidersComponent : REComponent, IVisualREComponent
                 shape.ResetProperties();
             }
             if (collider == null) {
-                collider = new REObject(game, "via.physics.Collider");
                 var firstCollider = colliders.FirstOrDefault();
                 if (firstCollider == null) {
+                    collider = new REObject(game, "via.physics.Collider");
                     collider.ResetProperties();
                     warning = true;
                 } else {
-                    collider.ShallowCopyFrom(firstCollider);
+                    collider = firstCollider.DeepClone();
                 }
                 colliders.Add(collider);
             }
 
             collider.SetField(ColliderShapeField, shape);
         }
+    }
+
+    public REObject AddCollider(REObject? shape = null)
+    {
+        GetOrFindContainerNode();
+        Godot.Collections.Array<REObject> colliders = Colliders;
+        REObject collider;
+        var firstCollider = colliders.FirstOrDefault();
+        if (firstCollider == null) {
+            collider = new REObject(Game, "via.physics.Collider");
+            collider.ResetProperties();
+        } else {
+            collider = firstCollider.DeepClone();
+        }
+        if (shape == null) {
+            shape = new REObject(Game, "via.physics.BoxShape", true);
+            var obb = shape.GetField(BoxShape).As<OrientedBoundingBox>();
+            obb.extent = Vector3.One;
+            obb.coord = Projection.Identity;
+            shape.SetField(BoxShape, obb);
+        }
+        collider.SetField(ColliderShapeField, shape);
+
+        colliders.Add(collider);
+        ImportColliders();
+        return collider;
     }
 
     private Task ImportColliders()

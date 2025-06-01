@@ -360,6 +360,17 @@ public static class GodotObjectExtensions
         }
     }
 
+    public static bool TryCast<TObj>(this Variant variant, [MaybeNullWhen(false)] out TObj obj) where TObj : GodotObject
+    {
+        obj = variant.AsGodotObject() as TObj;
+        return obj != null;
+    }
+
+    public static bool Is<TObj>(this Variant variant) where TObj : GodotObject
+    {
+        return variant.AsGodotObject() is TObj;
+    }
+
     /// <summary>
     /// Transforms a direction from world space to local space. The opposite of Transform.TransformDirection.
     /// </summary>

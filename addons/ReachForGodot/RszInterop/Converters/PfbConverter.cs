@@ -262,7 +262,7 @@ public class PfbConverter : SceneRszAssetConverter<PrefabResource, PfbFile, Pref
                         }
                     }
                 } else {
-                    if (child.As<REObject>() is REObject childObj) {
+                    if (child.TryCast<REObject>(out var childObj)) {
                         ReconstructPfbGameObjectRefs(file, childObj, component, root);
                     }
                 }

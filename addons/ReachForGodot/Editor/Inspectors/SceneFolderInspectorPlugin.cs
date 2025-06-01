@@ -71,7 +71,7 @@ public partial class SceneFolderInspectorPlugin : EditorInspectorPlugin, ISerial
                         return;
                     }
 
-                    var importPath = instanceScene.Asset.GetImportFilepath(ReachForGodot.GetAssetConfig(instanceScene.Game));
+                    var importPath = PathUtils.GetAssetImportPath(instanceScene.Asset, SupportedFileFormats.Scene, ReachForGodot.GetAssetConfig(instanceScene.Game));
                     if (importPath == null) {
                         GD.PrintErr("Could not determine filepath");
                         return;

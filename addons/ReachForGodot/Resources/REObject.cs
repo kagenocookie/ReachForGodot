@@ -164,7 +164,7 @@ public partial class REObject : Resource
                 continue;
             }
             if (source.__Data.TryGetValue(field.SerializedName, out var srcVal)) {
-                if (srcVal.VariantType == Variant.Type.Object && srcVal.As<REObject>() is REObject) {
+                if (srcVal.VariantType == Variant.Type.Object && srcVal.Is<REObject>()) {
                     __Data[field.SerializedName] = srcVal;
                 } else {
                     __Data[field.SerializedName] = Variant.CreateTakingOwnershipOfDisposableValue(srcVal.CopyNativeVariant());
@@ -298,13 +298,13 @@ public partial class REObject : Resource
             if (slashpos == -1) {
                 return (this, field, index);
             }
-            if (index < array.Count && array[index].As<REObject>() is REObject child) {
+            if (index < array.Count && array[index].TryCast<REObject>(out var child)) {
                 // nested object array field
                 return child.GetFieldByPath(valuePath.Slice(slashpos + 1));
             }
         } else {
             // nested plain field
-            if (__Data.TryGetValue(field, out var sub) && sub.As<REObject>() is REObject subObj) {
+            if (__Data.TryGetValue(field, out var sub) && sub.As<GodotObject>() is REObject subObj) {
                 return subObj.GetFieldByPath(valuePath.Slice(dotOrSlash + 1));
             }
         }
@@ -395,7 +395,7 @@ public partial class REObject : Resource
                     }
                 }
             } else {
-                if (field.RszField.type is RszFieldType.Object && value.As<REObject>() is REObject obj) {
+                if (field.RszField.type is RszFieldType.Object && value.TryCast<REObject>(out var obj)) {
                     if (obj.Game == SupportedGame.Unknown) {
                         obj.Game = Game;
                     }
@@ -404,7 +404,7 @@ public partial class REObject : Resource
                         __Data[property] = new REObject(Game, field.RszField.original_type, true);
                     }
                 }
-                if (field.RszField.type is RszFieldType.UserData && value.As<UserdataResource>() is UserdataResource user) {
+                if (field.RszField.type is RszFieldType.UserData && value.TryCast<UserdataResource>(out var user)) {
                     if (user.Game == SupportedGame.Unknown) {
                         user.Game = Game;
                     }

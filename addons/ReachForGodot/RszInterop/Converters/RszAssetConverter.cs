@@ -37,7 +37,7 @@ public abstract class RszAssetConverter<TResource, TFile, TAsset> : RszToolConve
 
         Debug.Assert(instance.RSZUserData == null, "Attempted to assign userdata to object field");
 
-        obj = new REObject(Game, instance.RszClass.name);
+        obj = new REObject(Game, instance.RszClass.name) { ResourceLocalToScene = true };
         objectSourceInstances[obj] = instance;
         return ApplyObjectValues(obj, instance);
     }
@@ -480,6 +480,7 @@ public abstract class RszAssetConverter<TResource, TFile, TAsset> : RszToolConve
                 // if the component was created but not actually added to the gameobject yet, do so now
                 gameObject.AddComponent(componentInfo);
             }
+            componentInfo.ResourceLocalToScene = true;
         } else {
             componentInfo = new REComponentPlaceholder(Game, classname);
             gameObject.AddComponent(componentInfo);
