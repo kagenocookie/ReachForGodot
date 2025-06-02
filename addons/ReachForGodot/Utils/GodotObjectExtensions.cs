@@ -264,16 +264,26 @@ public static class GodotObjectExtensions
         return child;
     }
 
-    public static void SetRecursiveOwner(this Node node, Node owner, Node? sourceOwner = null)
+    public static void SetRecursiveOwner(this Node node, Node owner)
     {
         if (node != owner) node.Owner = owner;
         foreach (var child in node.GetChildren()) {
-            if (sourceOwner != null && child.Owner != sourceOwner) continue;
-            if (sourceOwner == null && string.IsNullOrEmpty(child.SceneFilePath)) {
-                SetRecursiveOwner(child, owner, sourceOwner);
+            if (string.IsNullOrEmpty(child.SceneFilePath)) {
+                SetRecursiveOwner(child, owner);
             } else {
                 child.Owner = owner;
             }
+        }
+    }
+
+    public static void FixRecursiveOwners(this Node node, Node newOwner, Node currentOwner)
+    {
+        if (node != newOwner) node.Owner = newOwner;
+        foreach (var child in node.GetChildren()) {
+            if (child.Owner == currentOwner) {
+                child.Owner = newOwner;
+            }
+            child.FixRecursiveOwners(newOwner, currentOwner);
         }
     }
 

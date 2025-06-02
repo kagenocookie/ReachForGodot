@@ -223,11 +223,11 @@ public partial class PhysicsCollidersComponent : REComponent, IVisualREComponent
         collider.SetField(ColliderShapeField, shape);
 
         colliders.Add(collider);
-        ImportColliders(colliders.Count - 1);
+        ImportColliders(colliders.Count - 1, GameObject.FindRootRszOwnerNode());
         return collider;
     }
 
-    private Task ImportColliders(int index = -1)
+    private Task ImportColliders(int index = -1, Node? owner = null)
     {
         Debug.Assert(colliderRoot != null);
         var colliders = GetField(CollidersList).AsGodotArray<REObject>();
@@ -237,6 +237,9 @@ public partial class PhysicsCollidersComponent : REComponent, IVisualREComponent
             if (index != -1 && n - 2 != index) continue;
             var shape = coll.GetField(ColliderShapeField).As<REObject>();
             CollisionShape3D? collider = FindOrCreateCollider(colliderRoot, basename, shape);
+            if (owner != null) {
+                collider.Owner = owner;
+            }
             if (shape == null) {
                 GD.Print("Missing collider shape " + n + " at " + Path);
                 continue;
@@ -253,9 +256,9 @@ public partial class PhysicsCollidersComponent : REComponent, IVisualREComponent
         if (collider == null) {
             collider = new CollisionShape3D() { Name = basename + "_" + shape?.ClassBaseName };
             parent.AddChild(collider);
+            collider.Owner = parent.Owner;
         }
 
-        collider.Owner = parent.Owner;
         if (shape != null) {
             ImportColliderShape(shape, collider);
         }

@@ -22,6 +22,23 @@ public static class ReachExtensions
         return FindRszOwner(node) as Node;
     }
 
+    public static Node? FindRootRszOwnerNode(this Node node)
+    {
+        var sceneRoot = EditorInterface.Singleton.GetEditedSceneRoot();
+        if (sceneRoot.IsAncestorOf(node) && sceneRoot is IRszContainer) {
+            return sceneRoot;
+        }
+        var owner = FindRszOwnerNode(node);
+        if (owner != null) {
+            Node? nextOwner;
+            do {
+                nextOwner = FindRszOwnerNode(owner);
+                if (nextOwner != null) owner = nextOwner;
+            } while (nextOwner != null);
+        }
+        return owner;
+    }
+
     public static string StringOrDefault(this string? str, string fallback)
     {
         return string.IsNullOrEmpty(str) ? fallback : str;

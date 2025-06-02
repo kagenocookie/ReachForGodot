@@ -58,7 +58,7 @@ public static class ObjectTemplateManager
         }
 
         if (owner != null) {
-            clone.SetRecursiveOwner(owner, clone);
+            clone.FixRecursiveOwners(owner, clone);
         }
         return clone;
     }

@@ -78,7 +78,7 @@ public partial class SceneFolderInspectorPlugin : EditorInspectorPlugin, ISerial
                     }
 
                     var res = ResourceLoader.Exists(importPath) ? ResourceLoader.Load<PackedScene>(importPath) : new PackedScene();
-                    instanceScene.SetRecursiveOwner(instanceScene, instanceScene.Owner);
+                    instanceScene.FixRecursiveOwners(instanceScene, instanceScene.Owner);
                     res.Pack(instanceScene);
                     res.SaveOrReplaceResource(importPath);
                     GD.Print("Updated scene resource: " + importPath);
