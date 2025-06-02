@@ -1,0 +1,81 @@
+[gd_scene load_steps=2 format=3 uid="uid://bdqdqxa5fvaka"]
+
+[ext_resource type="Script" uid="uid://cg3ussm3wikje" path="res://addons/ReachForGodot/Editor/Inspectors/Efx/ExpressionField.cs" id="1_y3nhc"]
+
+[node name="VBoxContainer" type="VBoxContainer"]
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 89.0
+grow_horizontal = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+script = ExtResource("1_y3nhc")
+
+[node name="HBoxMain" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Labels" type="HBoxContainer" parent="HBoxMain"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CheckBox" type="CheckBox" parent="HBoxMain/Labels"]
+layout_mode = 2
+size_flags_vertical = 0
+
+[node name="Label" type="Label" parent="HBoxMain/Labels"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+text = "color"
+clip_text = true
+text_overrun_behavior = 3
+
+[node name="OptionButton" type="OptionButton" parent="HBoxMain"]
+layout_mode = 2
+size_flags_vertical = 0
+item_count = 6
+popup/item_0/text = "Add"
+popup/item_0/id = 0
+popup/item_1/text = "Subtract"
+popup/item_1/id = 1
+popup/item_2/text = "Multiply"
+popup/item_2/id = 2
+popup/item_3/text = "Divide"
+popup/item_3/id = 3
+popup/item_4/text = "Assign"
+popup/item_4/id = 4
+popup/item_5/text = "ForceWord"
+popup/item_5/id = 5
+
+[node name="TextEdit" type="TextEdit" parent="HBoxMain"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.5
+text = "tests
+sdfsdf"
+scroll_fit_content_height = true
+
+[node name="EditControls" type="HBoxContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+alignment = 2
+
+[node name="ErrorText" type="Label" parent="EditControls"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+text = "Syntax error: "
+
+[node name="ButtonCancel" type="Button" parent="EditControls"]
+layout_mode = 2
+text = "Revert"
+
+[node name="ButtonConfirm" type="Button" parent="EditControls"]
+layout_mode = 2
+text = "Confirm"
+
+[connection signal="toggled" from="HBoxMain/Labels/CheckBox" to="." method="OnToggled"]
+[connection signal="item_selected" from="HBoxMain/OptionButton" to="." method="OnAssignTypeChanged"]
+[connection signal="text_changed" from="HBoxMain/TextEdit" to="." method="OnExpressionTextChanged"]
+[connection signal="pressed" from="EditControls/ButtonCancel" to="." method="RevertExpression"]
+[connection signal="pressed" from="EditControls/ButtonConfirm" to="." method="ConfirmExpression"]

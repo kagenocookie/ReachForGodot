@@ -139,6 +139,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
             new AssetImportInspectorPlugin(),
             new AssetExportInspectorPlugin(),
             new GameObjectInspectorPlugin(),
+            new EfxInspectorPlugin(),
         ];
         foreach (var i in inspectors) AddInspectorPlugin(i);
 

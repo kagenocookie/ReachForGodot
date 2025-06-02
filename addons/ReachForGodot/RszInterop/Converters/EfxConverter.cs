@@ -160,7 +160,7 @@ public class EfxConverter : SceneRszAssetConverter<EfxResource, EfxFile, EfxRoot
         }
     }
 
-    private EfxObject AssignObject(EfxObject target, object source, EfxClassInfo? info = null)
+    public EfxObject AssignObject(EfxObject target, object source, EfxClassInfo? info = null)
     {
         info ??= target.TypeInfo;
         foreach (var f in info.FieldInfos) {
@@ -252,13 +252,7 @@ public class EfxConverter : SceneRszAssetConverter<EfxResource, EfxFile, EfxRoot
 
         foreach (var srcExpr in source.ExpressionParameters) {
             file.ExpressionParameters ??= new();
-            file.ExpressionParameters.Add(new EFXExpressionParameter() {
-                type = srcExpr.ParameterType,
-                value1 = srcExpr.ParameterType == EfxExpressionParameterType.Color ? RszTypeConverter.SwapEndianness(srcExpr.RawValueF.X) : srcExpr.RawValueF.X,
-                value2 = srcExpr.RawValueF.Y,
-                value3 = srcExpr.RawValueF.Z,
-                name = srcExpr.originalName,
-            });
+            file.ExpressionParameters.Add(srcExpr.GetExported());
         }
 
         foreach (var param in source.FieldParameterValues) {
@@ -316,26 +310,31 @@ public class EfxConverter : SceneRszAssetConverter<EfxResource, EfxFile, EfxRoot
         return outAttr;
     }
 
-    private void ExportObject(object target, EfxObject data)
+    public void ExportObject(object target, EfxObject data)
     {
         var info = data.TypeInfo;
 
         foreach (var f in info.FieldInfos) {
             var fieldinfo = info.Fields[f.Name];
             var srcValue = data.GetField(fieldinfo);
-            var outValue = ExportEfXValue(srcValue, fieldinfo, f.FieldType, data.Version);
+            var outValue = ExportEfXValue(srcValue, fieldinfo, f.FieldType, data.Version, f.GetValue(target));
             f.SetValue(target, outValue);
         }
     }
 
-    private object? ExportEfXValue(Variant value, EfxFieldInfo info, Type targetType, EfxVersion version)
+    private object? ExportEfXValue(Variant value, EfxFieldInfo info, Type targetType, EfxVersion version, object? currentValue)
     {
         if (!info.IsArray) {
             return ExportSingleEfXValue(value, info, targetType, version);
         }
 
         if (info.Flag == EfxFieldFlags.BitSet) {
-            return new BitSet(info.FixedLength, value.AsInt32Array());
+            if (currentValue is BitSet bs) {
+                bs.Bits = value.AsInt32Array();
+            } else {
+                bs = new BitSet(int.Parse(info.FlagTarget ?? "32"), value.AsInt32Array());
+            }
+            return bs;
         }
 
         var sourceArray = value.AsGodotArray();

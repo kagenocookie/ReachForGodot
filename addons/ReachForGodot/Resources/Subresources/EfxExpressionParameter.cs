@@ -2,6 +2,7 @@ namespace ReaGE;
 
 using Godot;
 using Godot.Collections;
+using RszTool.Common;
 using RszTool.Efx;
 
 [GlobalClass, Tool]
@@ -33,6 +34,19 @@ public partial class EfxExpressionParameter : Resource
     }
 
     [Export] public string? originalName;
+    private uint _nameHash;
+    public uint NameHash => (_nameHash != 0 || originalName == null ? _nameHash : _nameHash = MurMur3HashUtils.GetAsciiHash(originalName));
+
+    public EFXExpressionParameter GetExported()
+    {
+        return new EFXExpressionParameter() {
+            type = this.ParameterType,
+            value1 = this.ParameterType == EfxExpressionParameterType.Color ? RszTypeConverter.SwapEndianness(this.RawValueF.X) : this.RawValueF.X,
+            value2 = this.RawValueF.Y,
+            value3 = this.RawValueF.Z,
+            name = this.originalName,
+        };
+    }
 
     public override void _ValidateProperty(Dictionary property)
     {

@@ -4,7 +4,7 @@ using Godot;
 using RszTool.Efx;
 
 [GlobalClass, Tool, Icon("res://addons/ReachForGodot/icons/efx_small.png")]
-public partial class EfxRootNode : Node3D, IImportableAsset, IExportableAsset
+public partial class EfxRootNode : Node3D, IImportableAsset, IExportableAsset, IExpressionParameterSource
 {
     [Export] public SupportedGame Game { get; set; }
     [Export] public EfxVersion Version { get; set; }
@@ -26,4 +26,12 @@ public partial class EfxRootNode : Node3D, IImportableAsset, IExportableAsset
 
     public IEnumerable<EfxNode> Entries => this.FindChildrenByType<EfxNode>();
     public IEnumerable<EfxActionNode> Actions => this.FindChildrenByType<EfxActionNode>().Where(e => e is not EfxNode);
+
+    public EFXExpressionParameter? FindParameterByHash(uint hash)
+    {
+        foreach (var p in ExpressionParameters) {
+            if (p.NameHash == hash) return p.GetExported();
+        }
+        return null;
+    }
 }

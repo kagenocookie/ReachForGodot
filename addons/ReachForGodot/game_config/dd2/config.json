@@ -1,0 +1,54 @@
+{
+    "CollisionDefinition": "config/collision/towercollision.cdef.7",
+    "Filepaths": {
+        "Bookmarks": {
+            "Weapons": {
+                "Swords": "character/wp/wp00",
+                "Shields": "character/wp/wp01",
+                "Greatswords": "character/wp/wp02",
+                "Daggers": "character/wp/wp03",
+                "Bows": "character/wp/wp04",
+                "Magick Bows": "character/wp/wp05",
+                "Quivers": "character/wp/wp06",
+                "Staves": "character/wp/wp07",
+                "Archistaves": "character/wp/wp08",
+                "Duospears": "character/wp/wp09",
+                "Censers": "character/wp/wp10",
+                "Arrows": "character/wp/wp11"
+            },
+            "Equipment": {
+                "Backpack": "character/_kit/_equipment/backpack",
+                "Helm": "character/_kit/_equipment/helm",
+                "Mantle": "character/_kit/_equipment/mantle",
+                "Tops": "character/_kit/_equipment/tops",
+                "Facewear": "character/_kit/_equipment/facewear",
+                "Lantern": "character/_kit/_equipment/lantern",
+                "Pants": "character/_kit/_equipment/pants",
+                "Underwear": "character/_kit/_equipmentunderwear/"
+            },
+            "Character Customization": {
+                "Beard": "character/_kit/beard",
+                "Body": "character/_kit/body",
+                "Bodyhair": "character/_kit/bodyhair",
+                "Dirt": "character/_kit/dirt",
+                "Eyebrows": "character/_kit/eyebrows",
+                "Eyelashes": "character/_kit/eyelashes",
+                "Eyes": "character/_kit/eyes",
+                "Freckles": "character/_kit/freckles",
+                "Fur": "character/_kit/fur",
+                "Hair": "character/_kit/hair",
+                "Head": "character/_kit/head",
+                "Makeup": "character/_kit/makeup",
+                "Nosemask": "character/_kit/nosemask",
+                "Scar": "character/_kit/scar",
+                "Special_scar": "character/_kit/special_scar",
+                "Tattoo": "character/_kit/tattoo",
+                "Wound": "character/_kit/wound"
+            }
+        },
+        "Labels": [
+            { "Path": "AppData", "Label": "Main scn and user data files" },
+            { "Path": "AppDataBack", "Label": "Unmoored world scn changes" }
+        ]
+    }
+}

@@ -276,14 +276,14 @@ public static class GodotObjectExtensions
         }
     }
 
-    public static void FixRecursiveOwners(this Node node, Node newOwner, Node currentOwner)
+    public static void FixRecursiveOwners(this Node node, Node newOwner, Node previousOwner)
     {
         if (node != newOwner) node.Owner = newOwner;
         foreach (var child in node.GetChildren()) {
-            if (child.Owner == currentOwner) {
+            if (child.Owner == previousOwner) {
                 child.Owner = newOwner;
             }
-            child.FixRecursiveOwners(newOwner, currentOwner);
+            child.FixRecursiveOwners(newOwner, previousOwner);
         }
     }
 

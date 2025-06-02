@@ -1,6 +1,7 @@
 namespace ReaGE;
 
 using System;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using Godot;
 using Godot.Collections;
@@ -12,6 +13,7 @@ public partial class EfxObject : Resource
 {
     [Export] public EfxVersion Version { get; set; }
     protected string? _classname;
+    protected string? _classBasename;
 
     /// <summary>
     /// The classname that this REObject represents. The setter should be used only during initialization and otherwise changed with ChangeClassname to ensure everything is setup properly.
@@ -27,18 +29,34 @@ public partial class EfxObject : Resource
                 } else {
                     _classname = value;
                 }
+                _classBasename = value?.Substring(value.LastIndexOf('.') + 1);
+                if (_classBasename?.StartsWith("EFXAttribute") == true) _classBasename = _classBasename.Replace("EFXAttribute", "");
             }
         }
     }
 
-    public string? ClassBaseName
+    public string? ClassBaseName => _classBasename ?? _classname;
+    public string[] ClassTags => GetClassTags(_classname);
+
+    private object? _runtimeObject;
+    public object? RuntimeObject
     {
         get {
-            var cls = _classname?.Substring(_classname.LastIndexOf('.') + 1);
-            if (cls?.StartsWith("EFXAttribute") == true) return cls.Replace("EFXAttribute", "");
-            return cls;
+            if (_runtimeObject != null || _classname == null) return _runtimeObject;
+            _runtimeObject = Activator.CreateInstance(Type.GetType(_classname, true, false)!);
+            if (_runtimeObject?.GetType().GetField("Version") is FieldInfo fi) {
+                fi.SetValue(_runtimeObject, Version);
+            }
+            return _runtimeObject;
+        }
+        set {
+            _runtimeObject = value;
+            if (value != null && value.GetType().FullName != _classname) {
+                Classname = value.GetType().FullName;
+            }
         }
     }
+    public T? RuntimeObjectAs<T>() where T : class => RuntimeObject as T;
 
     [Export] protected Godot.Collections.Dictionary<StringName, Variant> __Data = new();
 
@@ -46,9 +64,9 @@ public partial class EfxObject : Resource
     public bool IsValid => Version != EfxVersion.Unknown && !string.IsNullOrEmpty(Classname) && (cache != null || TypeCache.EfxStructExists(Version, Classname));
     public EfxClassInfo TypeInfo => cache ??= SetupTypeInfo(Classname ?? throw new Exception("Missing classname at " + ResourcePath));
 
-    private static readonly List<string> EmptyStringList = new(0);
-    private List<string> subclasses = EmptyStringList;
-    public List<string> AllowedSubclasses => subclasses;
+    private static Dictionary<string, string[]> classTags = new();
+    public const string ClassTagExpressionContainer = "ExpressionContainer";
+    public const string ClassTagExpressionList = "ExpressionList";
 
     private EfxClassInfo? cache;
 
@@ -77,6 +95,21 @@ public partial class EfxObject : Resource
         _classname = classname;
         UpdateResourceName();
         if (initializeImmediately) ResetProperties();
+    }
+
+    public static string[] GetClassTags(string? classname)
+    {
+        if (classname == null) return System.Array.Empty<string>();
+        if (classTags.TryGetValue(classname, out var tags)) return tags;
+
+        tags = System.Array.Empty<string>();
+        if (classname.EndsWith("Expression") && classname.Contains(".EFXAttribute")) {
+            tags = [ClassTagExpressionContainer];
+        } else if (classname.EndsWith("ExpressionList")) {
+            tags = [ClassTagExpressionList];
+        }
+        classTags[classname] = tags;
+        return tags;
     }
 
     public void ChangeClassname(string newClassname)
@@ -290,15 +323,6 @@ public partial class EfxObject : Resource
         cache ??= SetupTypeInfo(Classname);
         return cache.PropertyList;
     }
-
-    // public void SetBaseClass(string baseclass)
-    // {
-    //     if (string.IsNullOrEmpty(baseclass)) {
-    //         subclasses = EmptyStringList;
-    //         return;
-    //     }
-    //     subclasses = TypeCache.GetSubclasses(Version, baseclass);
-    // }
 
     public override Variant _Get(StringName property)
     {

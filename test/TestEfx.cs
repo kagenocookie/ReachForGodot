@@ -348,7 +348,7 @@ public partial class TestEfx : TestBase
                     var originalStr = parsed.ToString();
 
                     // if (srcExp.components.Count > 1) Console.WriteLine(originalStr);
-                    var tree = EfxExpressionParser.Parse(originalStr, parsed.parameters);
+                    var tree = EfxExpressionStringParser.Parse(originalStr, parsed.parameters);
                     var reParsedStr = tree.ToString();
                     // TODO: properly handle material expression additional fields
                     reParsedStr.ShouldBe(originalStr);
