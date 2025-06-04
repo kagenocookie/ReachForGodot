@@ -46,6 +46,7 @@ public partial class AssetReference : Resource
 
     public string? FindSourceFile(AssetConfig config) => PathUtils.FindSourceFilePath(AssetFilename, config);
     public string? GetImportFilepath(AssetConfig config) => PathUtils.GetLocalizedImportPath(AssetFilename, config);
+    public string GetFilenameWithExtensions(AssetConfig config) => PathUtils.AppendFileVersion(Path.GetFileName(_assetFilename), config);
 
     public void OpenSourceFile(SupportedGame game)
     {

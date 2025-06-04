@@ -73,6 +73,15 @@ public static partial class PathUtils
         return filepath;
     }
 
+    public static bool IsSameExtension(string? path1, string? path2)
+    {
+        if (path1 == null || path2 == null) return false;
+
+        var p1 = GetFilenameExtensionWithoutSuffixes(path1);
+        var p2 = GetFilenameExtensionWithoutSuffixes(path2);
+        return p1.SequenceEqual(p2);
+    }
+
     private static int GetFilenameExtensionStartIndex(ReadOnlySpan<char> filename)
     {
         var dot = filename.LastIndexOf('.');
@@ -527,6 +536,7 @@ public static partial class PathUtils
 
     public static string? ResolveExportPath(string? basePath, string? assetPath, SupportedGame game)
     {
+        if (Path.IsPathRooted(basePath) && IsSameExtension(basePath, assetPath)) return basePath;
         if (assetPath?.StartsWith("res://") == true) {
             if (basePath == null || basePath.StartsWith(ProjectSettings.LocalizePath("res://"))) {
                 assetPath = ProjectSettings.GlobalizePath(assetPath);
