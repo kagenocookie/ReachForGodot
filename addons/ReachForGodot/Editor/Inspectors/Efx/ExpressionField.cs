@@ -24,8 +24,8 @@ public partial class ExpressionField : Control
         edit = this.RequireChildByTypeRecursive<TextEdit>();
         var assign = this.RequireChildByTypeRecursive<OptionButton>();
         assign.Selected = assignType == ExpressionAssignType.ForceWord ? 5 : (int)assignType;
+        this.RequireChildByTypeRecursive<CheckBox>().ButtonPressed = toggled;
         if (expression != null) {
-            this.RequireChildByTypeRecursive<CheckBox>().ButtonPressed = true;
             var expr = expression;
             edit.Text = originalExpression = expression.ToString();
         } else {

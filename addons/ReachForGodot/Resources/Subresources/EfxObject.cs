@@ -44,8 +44,11 @@ public partial class EfxObject : Resource
         get {
             if (_runtimeObject != null || _classname == null) return _runtimeObject;
             _runtimeObject = Activator.CreateInstance(Type.GetType(_classname, true, false)!);
-            if (_runtimeObject?.GetType().GetField("Version") is FieldInfo fi) {
-                fi.SetValue(_runtimeObject, Version);
+            if (_runtimeObject != null) {
+                if (_runtimeObject.GetType().GetField("Version") is FieldInfo fi) {
+                    fi.SetValue(_runtimeObject, Version);
+                }
+                AssetConverter.Instance.Efx.ExportObject(_runtimeObject, this);
             }
             return _runtimeObject;
         }
@@ -66,7 +69,10 @@ public partial class EfxObject : Resource
 
     private static Dictionary<string, string[]> classTags = new();
     public const string ClassTagExpressionContainer = "ExpressionContainer";
+    public const string ClassTagClipContainer = "ClipContainer";
     public const string ClassTagExpressionList = "ExpressionList";
+
+    public readonly static float ClipFps = 30;
 
     private EfxClassInfo? cache;
 
@@ -107,6 +113,8 @@ public partial class EfxObject : Resource
             tags = [ClassTagExpressionContainer];
         } else if (classname.EndsWith("ExpressionList")) {
             tags = [ClassTagExpressionList];
+        } else if (classname.EndsWith("Clip")) {
+            tags = [ClassTagClipContainer];
         }
         classTags[classname] = tags;
         return tags;

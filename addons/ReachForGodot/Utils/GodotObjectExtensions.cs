@@ -190,6 +190,16 @@ public static class GodotObjectExtensions
         }
     }
 
+    public static void FreeAllChildrenAfterIndex(this Node node, int index)
+    {
+        var children = node.GetChildCount();
+        for (int i = index; i < children; ++i) {
+            var child = node.GetChild(index);
+            node.RemoveChild(child);
+            child.QueueFree();
+        }
+    }
+
     public static void FreeAllChildrenImmediately(this Node node)
     {
         foreach (var child in node.GetChildren()) {

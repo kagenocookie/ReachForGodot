@@ -1,12 +1,14 @@
 #if TOOLS
 using System.Reflection;
 using Godot;
+using ReaGE.EFX;
 using RszTool.Efx;
 using RszTool.Efx.Structs.Common;
+using RszTool.Efx.Structs.Misc;
 
 namespace ReaGE;
 
-[CustomInspectorBaseTypes(typeof(EfxObject))]
+[CustomInspectorBaseTypes(typeof(EfxAttributeNode))]
 public partial class EfxInspectorPlugin : CommonInspectorPluginBase
 {
     private Dictionary<string, OverrideInfo> overridesBegin = new();
@@ -19,7 +21,9 @@ public partial class EfxInspectorPlugin : CommonInspectorPluginBase
 
     protected override string? GetIdentifier(GodotObject target)
     {
-        if (target is not EfxObject efx) return null;
+        if (target is not EfxAttributeNode efxNode) return null;
+        if (efxNode.Data is not EfxObject efx) return null;
+
         var tags = efx.ClassTags;
         if (tags.Length != 0) return tags[0];
 
@@ -27,17 +31,40 @@ public partial class EfxInspectorPlugin : CommonInspectorPluginBase
         return basename;
     }
 
-    [CustomInspectorTarget("UnitCulling")]
-    protected void HandleUnitCulling_Begin(EfxObject target)
+    [CustomInspectorTarget(EfxObject.ClassTagClipContainer)]
+    protected bool ClipContainer_Begin(EfxAttributeNode node)
     {
-        AddCustomControl(new Button() { Text = "Unit Culling TEST" });
+        if (node.Data!.RuntimeObject is IClipAttribute attr) {
+            var owner = EditorInterface.Singleton.GetEditedSceneRoot();
+            if (owner is not IExpressionParameterSource efxroot) {
+                AddCustomControl(new Label() { Text = "Active scene root is not a valid EFX parameter source" });
+                return false;
+            }
+            if (!attr.Clip.IsParsed) {
+                attr.Clip.ParseClip();
+            }
+
+            AddCustomControl(new Label() { Text = "Clip Edit Controls" });
+            var clipPlayer = node.FindChildByType<EfxClipAnimationPlayer>();
+            if (clipPlayer == null) {
+                clipPlayer = new EfxClipAnimationPlayer() { Name = "ClipPlayer" };
+                node.AddChild(clipPlayer);
+                clipPlayer.Owner = node.Owner;
+            }
+            clipPlayer.Setup(attr.Clip.ParsedClip, attr, node, this);
+        }
+        return false;
+    }
+    [CustomInspectorTarget(EfxObject.ClassTagExpressionContainer)]
+    protected bool ExpressionContainer_Begin(EfxAttributeNode target)
+    {
+        return ExpressionContainer_Begin(target.Data!, target);
     }
 
-    [CustomInspectorTarget(EfxObject.ClassTagExpressionContainer)]
-    protected bool ExpressionContainer_Begin(EfxObject target)
+    protected bool ExpressionContainer_Begin(EfxObject target, EfxAttributeNode node)
     {
         if (target.RuntimeObject is IExpressionAttribute attr) {
-            var owner = EditorInterface.Singleton.GetEditedSceneRoot();
+            var owner = node.GetOwner();
             if (owner is not IExpressionParameterSource efxroot) {
                 AddCustomControl(new Label() { Text = "Active scene root is not a valid EFX parameter source" });
                 return false;
@@ -76,11 +103,11 @@ public partial class EfxInspectorPlugin : CommonInspectorPluginBase
                 };
                 ctrl.ExpressionConfirmed += (text) => {
                     var index = attr.ExpressionBits.GetBitInsertIndex(myBitIndex);
-                    var parsed = EfxExpressionStringParser.Parse(text, attr.Expression.Expressions[index].parameters ?? new(0));
-                    attr.Expression.Expressions[index].parameters = parsed.parameters.ToList();
-                    EfxExpressionTreeUtils.FlattenExpressions(attr.Expression.Expressions[index].components, parsed, efxroot);
+                    var parsed = EfxExpressionStringParser.Parse(text, attr.Expression.expressions[index].parameters ?? new(0));
+                    attr.Expression.expressions[index].parameters = parsed.parameters.ToList();
+                    EfxExpressionTreeUtils.FlattenExpressions(attr.Expression.expressions[index].components, parsed, efxroot);
                     attr.Expression.ParsedExpressions[index] = parsed;
-                    AssetConverter.Instance.Efx.AssignObject(target.Get("expressions").As<EfxObject>(), attr.Expression);
+                    AssetConverter.Instance.Efx.ImportObject(target.Get("expressions").As<EfxObject>(), attr.Expression);
                 };
                 ctrl.ExpressionToggled += (toggle) => {
                     var isSet = attr.ExpressionBits.HasBit(myBitIndex);
@@ -90,14 +117,14 @@ public partial class EfxInspectorPlugin : CommonInspectorPluginBase
                     attr.ExpressionBits.SetBit(myBitIndex, toggle);
                     if (toggle) {
                         // add new empty expression
-                        attr.Expression.Expressions.Insert(index, new EFXExpressionObject(target.Version));
+                        attr.Expression.expressions.Insert(index, new EFXExpressionObject(target.Version));
                         attr.Expression.ParsedExpressions.Insert(index, new EFXExpressionTree());
                     } else {
                         // remove expression
-                        attr.Expression.Expressions.RemoveAt(index);
+                        attr.Expression.expressions.RemoveAt(index);
                         attr.Expression.ParsedExpressions.RemoveAt(index);
                     }
-                    AssetConverter.Instance.Efx.AssignObject(target.Get("expressions").As<EfxObject>(), attr.Expression);
+                    AssetConverter.Instance.Efx.ImportObject(target.Get("expressions").As<EfxObject>(), attr.Expression);
                     target.Set("expressionBits", attr.ExpressionBits.Bits);
                     target.NotifyPropertyListChanged();
                 };

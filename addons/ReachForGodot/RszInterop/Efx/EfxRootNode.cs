@@ -11,7 +11,8 @@ public partial class EfxRootNode : Node3D, IImportableAsset, IExportableAsset, I
     [Export] public AssetReference? Asset { get; set; }
     [Export] public Godot.Collections.Array<EfxFieldParameter> FieldParameterValues = new();
     [Export] public Godot.Collections.Array<EfxExpressionParameter> ExpressionParameters = new();
-    // public EfxResource? Resource { get; set; }
+    [Export] public Godot.Collections.Array<EfxUvar> UvarGroups = new();
+
     private EfxResource? _resource;
     public EfxResource? Resource {
         get => _resource ??= Importer.FindOrImportResource<EfxResource>(Asset, ReachForGodot.GetAssetConfig(Game), !string.IsNullOrEmpty(SceneFilePath));

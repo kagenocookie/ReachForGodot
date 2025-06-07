@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Chickensoft.GoDotTest;
 using Godot;
 using RszTool;
+using RszTool.Common;
 using RszTool.Efx;
 using RszTool.Efx.Structs.Basic;
 using RszTool.Efx.Structs.Common;
@@ -167,10 +168,11 @@ public partial class TestEfx : TestBase
         var matches = DevTools.FindEfxWhere(efx => true)
             .SelectMany(f => GetAllClips(f))
             .Where(set => set.attr.Clip.interpolationDataCount > 0)
+            // .Where(set => set.attr.Clip.frames?.Any(f => f.type == FrameInterpolationType.Type13) == true && set.attr.Clip.interpolationData?.Any() == true)
             // .Where(set => set.attr.Clip.interpolationDataCount == 0 && true == set.attr.Clip.frames?.Any(f => f.type == FrameInterpolationType.Type5))
             .OrderBy(a => a.attr.GetType().Name)
             // .Select(pair => $"{pair.path} : {pair.attr.GetType().Name.Replace("EFXAttribute", "")} {pair.attr.ClipBits} => {pair.attr.Clip}")
-            .Select(pair => $"{pair.path} : {pair.attr.GetType().Name.Replace("EFXAttribute", "")} {string.Join(" | ", pair.attr.Clip.interpolationData!)}")
+            .Select(pair => $"{pair.path} : {pair.attr.GetType().Name.Replace("EFXAttribute", "")} {string.Join(" | ", pair.attr.Clip.clips!)}")
             ;
 
         static IEnumerable<(string path, IClipAttribute attr)> GetAllClips(EfxFile file) {
@@ -190,30 +192,7 @@ public partial class TestEfx : TestBase
     {
         Thread.CurrentThread.CurrentCulture = System.Globalization.CultureInfo.InvariantCulture;
 
-        // var testfieldtypes = DevTools.FindEfxStructCandidate(exactLengthMatch: false, EfxVersion.DD2,
-        //     typeof(uint),
-        //     typeof(float),
-        //     typeof(float),
-        //     typeof(float),
-        //     typeof(float), // color1
-        //     typeof(float),
-        //     typeof(float),
-        //     typeof(float),
-        //     typeof(float), //unkn7,
-        //     typeof(float),
-        //     typeof(float),
-        //     typeof(float),
-        //     typeof(float),
-        //     typeof(float),
-        //     typeof(float),
-        //     typeof(float),
-        //     typeof(float),
-        //     typeof(float),
-        //     typeof(float)
-        // ).ToList();
-
-
-        // var actionContainingEfx = DevTools.FindEfxWhere((efx, success) => efx.Actions.Count > 0);
+        // var actionContainingEfx = DevTools.FindEfxWhere((efx) => efx.UvarGroups.Any(ug => ug.uvarType > 1));
         // var actionContainingEfx = DevTools.FindEfxWhere((efx, success) =>
         //     efx.Entries
         //         .Any(e =>
@@ -222,7 +201,7 @@ public partial class TestEfx : TestBase
         //         )
         //     );
 
-        // GD.Print(string.Join("\n", actionContainingEfx.Select(t => t.FileHandler.FilePath)));
+        // GD.Print(string.Join("\n", actionContainingEfx.Select(t => t.FileHandler.FilePath + " : " + t.UvarGroups[0].uvarType +" + " + t.UvarGroups[1].uvarType)));
 
         // var matches = DevTools.FindEfxAttributes<EFXAttributeTransform3DClip>(EfxAttributeType.Transform3DClip,
         //     // (attr) => attr.substructCount > 0 || attr.indicesCount > 0,
@@ -256,10 +235,6 @@ public partial class TestEfx : TestBase
         // GD.Print(string.Join("\n", matches.Select(t => t.FileHandler.FilePath).Distinct()));
         // GD.Print(string.Join("\n", matches.Select(t => t.file.FileHandler.FilePath + ": " + t.matchedAttribute.unknBitFlag + ", " + t.matchedAttribute.flags + " => " + t.matchedAttribute.unkn2_14.GetMostLikelyValueTypeString()).Distinct()));
 
-        // using var file = new EfxFile(new FileHandler("E:/mods/dd2/REtool/re_chunk_000/natives/stm/gui/mastermaterial/ui03/ui030201/ui_dust_full_01.efx.4064419"));
-        // using var file = new EfxFile(new FileHandler("E:/mods/re4/chunks/natives/stm/_chainsaw/vfx/effecteditor/efd_character/efd_ch_common/efd_0015_ch_common_damage_smoke_acid_0000.efx.3539837"));
-        // using var file = new EfxFile(new FileHandler("J:/mods/re4/chunks/natives/stm/_anotherorder/vfx/effecteditor/efd_character/efd_ao_chc3/efd_0015_ao_chc3_hold_dead_0000.efx.3539837"));
-        // file.Read();
         // Debug.Break();
 
         // await FullExpressionParseTest();

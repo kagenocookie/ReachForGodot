@@ -62,6 +62,15 @@ public class EfxConverter : SceneRszAssetConverter<EfxResource, EfxFile, EfxRoot
             entry.RegenerateNodeName();
         }
 
+        target.UvarGroups.Clear();
+        foreach (var uvar in file.UvarGroups) {
+            target.UvarGroups.Add(new EfxUvar() {
+                type = uvar.uvarType,
+                filepath = uvar.path,
+                group = uvar.group,
+            });
+        }
+
         foreach (var srcAction in file.Actions) {
             var action = target.Actions.FirstOrDefault(e => e.OriginalName == srcAction.name);
             if (action == null) {
@@ -142,7 +151,7 @@ public class EfxConverter : SceneRszAssetConverter<EfxResource, EfxFile, EfxRoot
             attr.Data = new EfxObject(target.Version, cacheInfo);
         }
 
-        AssignObject(attr.Data, srcAttr, cacheInfo);
+        ImportObject(attr.Data, srcAttr, cacheInfo);
 
         if (srcAttr is EFXAttributePlayEmitter emitter && emitter.efxrData != null) {
             var childRoot = attr.FindChild("Effect");
@@ -160,7 +169,7 @@ public class EfxConverter : SceneRszAssetConverter<EfxResource, EfxFile, EfxRoot
         }
     }
 
-    public EfxObject AssignObject(EfxObject target, object source, EfxClassInfo? info = null)
+    public EfxObject ImportObject(EfxObject target, object source, EfxClassInfo? info = null)
     {
         info ??= target.TypeInfo;
         foreach (var f in info.FieldInfos) {
@@ -204,7 +213,7 @@ public class EfxConverter : SceneRszAssetConverter<EfxResource, EfxFile, EfxRoot
         switch (info.FieldType) {
             case RszFieldType.Object:
             case RszFieldType.Struct:
-                return AssignObject(new EfxObject(version, value?.GetType().FullName ?? info.Classname), value!);
+                return ImportObject(new EfxObject(version, value?.GetType().FullName ?? info.Classname), value!);
             default:
                 if (value is UndeterminedFieldType ukn) return ukn.value;
                 return RszTypeConverter.FromRszValueSingleValue(info.FieldType, value, Game, info.Classname);
@@ -251,12 +260,10 @@ public class EfxConverter : SceneRszAssetConverter<EfxResource, EfxFile, EfxRoot
         }
 
         foreach (var srcExpr in source.ExpressionParameters) {
-            file.ExpressionParameters ??= new();
             file.ExpressionParameters.Add(srcExpr.GetExported());
         }
 
         foreach (var param in source.FieldParameterValues) {
-            file.FieldParameterValues ??= new();
             file.FieldParameterValues.Add(new EFXFieldParameterValue() {
                 unkn0 = param.unkn1,
                 unkn2 = param.unkn2,
@@ -270,6 +277,14 @@ public class EfxConverter : SceneRszAssetConverter<EfxResource, EfxFile, EfxRoot
                 value_ukn6 = param.unkn10,
                 name = param.name,
                 filePath = param.filePath,
+            });
+        }
+
+        foreach (var uvar in source.UvarGroups) {
+            file.UvarGroups.Add(new EFXUvarGroup() {
+                uvarType = uvar.type,
+                path = uvar.filepath,
+                group = uvar.group,
             });
         }
 

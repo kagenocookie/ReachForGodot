@@ -1209,7 +1209,7 @@
       "TypeID": 19,
       "Name": "TypeMeshExpression",
       "Classname": "RszTool.Efx.Structs.Main.EFXAttributeTypeMeshExpression",
-      "Hash": 1349511993,
+      "Hash": 3926133529,
       "Fields": [
         {
           "Name": "matExpressionCount",
@@ -1219,7 +1219,9 @@
         },
         {
           "Name": "matExpressionSize",
-          "FieldType": "U32"
+          "FieldType": "U32",
+          "Flag": "StructSize",
+          "FlagTarget": "materialExpressionsList"
         },
         {
           "Name": "expressionBits",
@@ -5993,7 +5995,7 @@
       "TypeID": 92,
       "Name": "PtColorClip",
       "Classname": "RszTool.Efx.Structs.Pt.EFXAttributePtColorClip",
-      "Hash": 2540200031,
+      "Hash": 2719708272,
       "Fields": [
         {
           "Name": "clipBits",
@@ -6010,7 +6012,7 @@
         {
           "Name": "clipData",
           "FieldType": "Object",
-          "Classname": "RszTool.Efx.Structs.Common.EfxColorClipData"
+          "Classname": "RszTool.Efx.Structs.Common.EfxClipData"
         }
       ]
     },
@@ -7001,7 +7003,7 @@
     "RszTool.Efx.Structs.Common.EfxClipData": {
       "Name": "",
       "Classname": "RszTool.Efx.Structs.Common.EfxClipData",
-      "Hash": 3304639468,
+      "Hash": 1176404587,
       "Fields": [
         {
           "Name": "loopType",
@@ -7032,15 +7034,21 @@
         },
         {
           "Name": "clipDataSize",
-          "FieldType": "S32"
+          "FieldType": "S32",
+          "Flag": "StructSize",
+          "FlagTarget": "clips"
         },
         {
           "Name": "frameDataSize",
-          "FieldType": "S32"
+          "FieldType": "S32",
+          "Flag": "StructSize",
+          "FlagTarget": "frames"
         },
         {
           "Name": "interpolationDataSize",
-          "FieldType": "S32"
+          "FieldType": "S32",
+          "Flag": "StructSize",
+          "FlagTarget": "interpolationData"
         },
         {
           "Name": "clips",
@@ -7051,7 +7059,7 @@
         {
           "Name": "frames",
           "FieldType": "Struct",
-          "Classname": "RszTool.Efx.Structs.Common.EfxFloatClipFrame",
+          "Classname": "RszTool.Efx.Structs.Common.EfxClipFrame",
           "IsArray": true
         },
         {
@@ -7095,7 +7103,7 @@
     "RszTool.Efx.Structs.Common.EfxMaterialClipData": {
       "Name": "",
       "Classname": "RszTool.Efx.Structs.Common.EfxMaterialClipData",
-      "Hash": 37525383,
+      "Hash": 1073296070,
       "Fields": [
         {
           "Name": "loopType",
@@ -7126,15 +7134,21 @@
         },
         {
           "Name": "clipDataSize",
-          "FieldType": "S32"
+          "FieldType": "S32",
+          "Flag": "StructSize",
+          "FlagTarget": "clips"
         },
         {
           "Name": "frameDataSize",
-          "FieldType": "S32"
+          "FieldType": "S32",
+          "Flag": "StructSize",
+          "FlagTarget": "frames"
         },
         {
           "Name": "interpolationDataSize",
-          "FieldType": "S32"
+          "FieldType": "S32",
+          "Flag": "StructSize",
+          "FlagTarget": "interpolationData"
         },
         {
           "Name": "clips",
@@ -7145,7 +7159,7 @@
         {
           "Name": "frames",
           "FieldType": "Struct",
-          "Classname": "RszTool.Efx.Structs.Common.EfxFloatClipFrame",
+          "Classname": "RszTool.Efx.Structs.Common.EfxClipFrame",
           "IsArray": true
         },
         {
@@ -7420,70 +7434,6 @@
         }
       ]
     },
-    "RszTool.Efx.Structs.Common.EfxColorClipData": {
-      "Name": "",
-      "Classname": "RszTool.Efx.Structs.Common.EfxColorClipData",
-      "Hash": 1025241076,
-      "Fields": [
-        {
-          "Name": "loopType",
-          "FieldType": "S32",
-          "Classname": "RszTool.Efx.Structs.Common.EfxClipPlaybackType"
-        },
-        {
-          "Name": "clipDuration",
-          "FieldType": "F32"
-        },
-        {
-          "Name": "clipCount",
-          "FieldType": "S32",
-          "Flag": "StructSize",
-          "FlagTarget": "clips"
-        },
-        {
-          "Name": "frameCount",
-          "FieldType": "S32",
-          "Flag": "StructSize",
-          "FlagTarget": "frames"
-        },
-        {
-          "Name": "interpolationDataCount",
-          "FieldType": "S32",
-          "Flag": "StructSize",
-          "FlagTarget": "interpolationData"
-        },
-        {
-          "Name": "clipDataSize",
-          "FieldType": "S32"
-        },
-        {
-          "Name": "frameDataSize",
-          "FieldType": "S32"
-        },
-        {
-          "Name": "interpolationDataSize",
-          "FieldType": "S32"
-        },
-        {
-          "Name": "clips",
-          "FieldType": "Struct",
-          "Classname": "RszTool.Efx.Structs.Common.EfxClipHeader",
-          "IsArray": true
-        },
-        {
-          "Name": "frames",
-          "FieldType": "Struct",
-          "Classname": "RszTool.Efx.Structs.Common.EfxColorClipFrame",
-          "IsArray": true
-        },
-        {
-          "Name": "interpolationData",
-          "FieldType": "Struct",
-          "Classname": "RszTool.Efx.Structs.Common.EfxClipInterpolationTangents",
-          "IsArray": true
-        }
-      ]
-    },
     "RszTool.Efx.Structs.Common.EFXExpressionObject": {
       "Name": "",
       "Classname": "RszTool.Efx.Structs.Common.EFXExpressionObject",
@@ -7518,22 +7468,23 @@
     "RszTool.Efx.Structs.Common.EfxClipHeader": {
       "Name": "",
       "Classname": "RszTool.Efx.Structs.Common.EfxClipHeader",
-      "Hash": 630838826,
+      "Hash": 3869831274,
       "Fields": [
         {
           "Name": "frameCount",
-          "FieldType": "U32"
+          "FieldType": "S32"
         },
         {
-          "Name": "unkn1",
-          "FieldType": "U32"
+          "Name": "valueType",
+          "FieldType": "S32",
+          "Classname": "RszTool.Efx.Structs.Common.ClipValueType"
         }
       ]
     },
-    "RszTool.Efx.Structs.Common.EfxFloatClipFrame": {
+    "RszTool.Efx.Structs.Common.EfxClipFrame": {
       "Name": "",
-      "Classname": "RszTool.Efx.Structs.Common.EfxFloatClipFrame",
-      "Hash": 1588047703,
+      "Classname": "RszTool.Efx.Structs.Common.EfxClipFrame",
+      "Hash": 1302548059,
       "Fields": [
         {
           "Name": "frameTime",
@@ -7553,22 +7504,22 @@
     "RszTool.Efx.Structs.Common.EfxClipInterpolationTangents": {
       "Name": "",
       "Classname": "RszTool.Efx.Structs.Common.EfxClipInterpolationTangents",
-      "Hash": 3969932744,
+      "Hash": 2309027264,
       "Fields": [
         {
-          "Name": "value1",
+          "Name": "out_x",
           "FieldType": "F32"
         },
         {
-          "Name": "value2",
+          "Name": "out_y",
           "FieldType": "F32"
         },
         {
-          "Name": "value3",
+          "Name": "in_x",
           "FieldType": "F32"
         },
         {
-          "Name": "value4",
+          "Name": "in_y",
           "FieldType": "F32"
         }
       ]
@@ -7748,26 +7699,6 @@
           "Name": "data",
           "FieldType": "U8",
           "IsArray": true
-        }
-      ]
-    },
-    "RszTool.Efx.Structs.Common.EfxColorClipFrame": {
-      "Name": "",
-      "Classname": "RszTool.Efx.Structs.Common.EfxColorClipFrame",
-      "Hash": 4249927476,
-      "Fields": [
-        {
-          "Name": "frameTime",
-          "FieldType": "F32"
-        },
-        {
-          "Name": "type",
-          "FieldType": "S32",
-          "Classname": "RszTool.Efx.Structs.Common.FrameInterpolationType"
-        },
-        {
-          "Name": "value",
-          "FieldType": "S32"
         }
       ]
     },
@@ -7966,8 +7897,24 @@
       ],
       "BackingType": "System.Int32"
     },
+    "RszTool.Efx.Structs.Common.ClipValueType": {
+      "Items": [
+        {
+          "Name": "Int",
+          "Value": 3
+        },
+        {
+          "Name": "Float",
+          "Value": 5
+        }
+      ],
+      "BackingType": "System.Int32"
+    },
     "RszTool.Efx.Structs.Common.FrameInterpolationType": {
       "Items": [
+        {
+          "Name": "Unknown"
+        },
         {
           "Name": "Type1",
           "Value": 1
@@ -7981,7 +7928,7 @@
           "Value": 3
         },
         {
-          "Name": "Type5",
+          "Name": "Bezier",
           "Value": 5
         },
         {

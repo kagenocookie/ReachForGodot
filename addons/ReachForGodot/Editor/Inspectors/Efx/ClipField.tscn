@@ -1,0 +1,133 @@
+[gd_scene load_steps=2 format=3 uid="uid://icgwv8ppocw3"]
+
+[ext_resource type="Script" uid="uid://cux8ps2qversj" path="res://addons/ReachForGodot/Editor/Inspectors/Efx/ClipField.cs" id="1_fwg1d"]
+
+[node name="ClipField" type="VBoxContainer"]
+anchors_preset = 10
+anchor_right = 1.0
+grow_horizontal = 2
+script = ExtResource("1_fwg1d")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 2
+
+[node name="Labels" type="HBoxContainer" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CheckBox" type="CheckBox" parent="HBoxContainer/Labels"]
+layout_mode = 2
+size_flags_vertical = 0
+
+[node name="Label" type="Label" parent="HBoxContainer/Labels"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+text = "color"
+clip_text = true
+text_overrun_behavior = 3
+
+[node name="ClipType" type="OptionButton" parent="HBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 0
+item_count = 2
+popup/item_0/text = "Float"
+popup/item_0/id = 0
+popup/item_1/text = "Int"
+popup/item_1/id = 1
+
+[node name="Button" type="Button" parent="HBoxContainer"]
+layout_mode = 2
+text = "Expand"
+
+[node name="Expanded" type="VBoxContainer" parent="."]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="Frames" type="VBoxContainer" parent="Expanded"]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Expanded/Frames"]
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Expanded/Frames/VBoxContainer"]
+layout_mode = 2
+
+[node name="Button" type="Button" parent="Expanded/Frames/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+text = "X"
+
+[node name="Label" type="Label" parent="Expanded/Frames/VBoxContainer/HBoxContainer"]
+custom_minimum_size = Vector2(30, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 0.5
+text = "Frame 1"
+
+[node name="Frame" type="SpinBox" parent="Expanded/Frames/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+allow_greater = true
+
+[node name="Value" type="SpinBox" parent="Expanded/Frames/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+allow_greater = true
+
+[node name="HandleType" type="OptionButton" parent="Expanded/Frames/VBoxContainer/HBoxContainer"]
+layout_mode = 2
+item_count = 5
+popup/item_0/text = "Type1"
+popup/item_0/id = 0
+popup/item_1/text = "Type2"
+popup/item_1/id = 1
+popup/item_2/text = "Type3"
+popup/item_2/id = 2
+popup/item_3/text = "Bezier"
+popup/item_3/id = 3
+popup/item_4/text = "Type13"
+popup/item_4/id = 4
+
+[node name="HandleTangents" type="HBoxContainer" parent="Expanded/Frames/VBoxContainer"]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Expanded/Frames/VBoxContainer/HandleTangents"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Handles"
+
+[node name="in_x" type="SpinBox" parent="Expanded/Frames/VBoxContainer/HandleTangents"]
+layout_mode = 2
+min_value = -100.0
+max_value = 0.0
+step = 0.01
+allow_lesser = true
+
+[node name="in_y" type="SpinBox" parent="Expanded/Frames/VBoxContainer/HandleTangents"]
+layout_mode = 2
+min_value = -100.0
+step = 0.1
+allow_greater = true
+allow_lesser = true
+
+[node name="out_x" type="SpinBox" parent="Expanded/Frames/VBoxContainer/HandleTangents"]
+layout_mode = 2
+step = 0.01
+allow_greater = true
+
+[node name="out_y" type="SpinBox" parent="Expanded/Frames/VBoxContainer/HandleTangents"]
+layout_mode = 2
+min_value = -100.0
+page = 0.1
+allow_greater = true
+allow_lesser = true
+
+[node name="AddFrameBtn" type="Button" parent="Expanded"]
+layout_mode = 2
+text = "Add frame"
+
+[connection signal="toggled" from="HBoxContainer/Labels/CheckBox" to="." method="OnToggle"]
+[connection signal="item_selected" from="HBoxContainer/ClipType" to="." method="OnClipTypeChanged"]
+[connection signal="pressed" from="HBoxContainer/Button" to="." method="ToggleExpansion"]
+[connection signal="pressed" from="Expanded/AddFrameBtn" to="." method="AddFrame"]

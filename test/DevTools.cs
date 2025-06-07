@@ -22,7 +22,6 @@ public static class DevTools
         SupportedGame.ResidentEvil7RT,
         // SupportedGame.MonsterHunterRise,
         // SupportedGame.StreetFighter6,
-        // SupportedGame.DragonsDogma2,
         // SupportedGame.MonsterHunterWilds,
     ];
 
@@ -115,23 +114,6 @@ public static class DevTools
 
         //     return null;
         // }).Select(a => a.Item1).ToList();
-    }
-
-    public static IEnumerable<Type> FindEfxStructCandidate(bool exactLengthMatch, EfxVersion version, params Type[] types)
-    {
-        foreach (var instanceType in EfxAttributeTypeRemapper.GetAllEfxAttributeInstanceTypes()) {
-            var fields = EfxTools.GetFieldInfo(instanceType, version);
-            if (fields  == null) continue;
-
-            var it = fields.GetEnumerator();
-            var match = true;
-            foreach (var t in types) {
-                if (!it.MoveNext()) { match = false; break; }
-                if (it.Current.type != typeof(ukn) && t != typeof(ukn) && it.Current.type != t) { match = false; break;  }
-            }
-
-            if (match && (!exactLengthMatch || types.Length == fields.Count())) yield return instanceType;
-        }
     }
 
     public static List<EfxFile> FindEfxWhere(Func<EfxFile, bool> filter, SupportedGame game)
