@@ -8,11 +8,8 @@ using RszTool;
 using RszTool.Efx;
 using RszTool.Efx.Structs.Basic;
 
-public class EfxConverter : SceneRszAssetConverter<EfxResource, EfxFile, EfxRootNode>
+public class EfxConverter : SceneResourceConverter<EfxResource, EfxFile, EfxRootNode>
 {
-    public override EfxResource CreateOrReplaceResourcePlaceholder(AssetReference reference)
-        => SetupResource(new EfxResource(), reference);
-
     public override EfxFile CreateFile(FileHandler fileHandler) => new EfxFile(fileHandler);
 
     protected override void PreCreateScenePlaceholder(EfxRootNode node, EfxResource target)
@@ -21,19 +18,20 @@ public class EfxConverter : SceneRszAssetConverter<EfxResource, EfxFile, EfxRoot
     }
 
     public override Task<bool> Import(EfxFile file, EfxRootNode target)
-        => Task.FromResult(ImportSync(file, target));
-
-    public bool ImportSync(EfxFile file, EfxRootNode target)
     {
-
-        if (file.Header == null) return false;
-
         var resource = target.Asset != null ? target.Resource : null;
         if (resource == null) {
             resource = new EfxResource();
             if (WritesEnabled && target.Asset != null) resource.SaveOrReplaceResource(target.Asset.GetImportFilepath(Config)!);
             target.Resource = resource;
         }
+        return Task.FromResult(ImportSync(file, resource, target));
+    }
+
+    public bool ImportSync(EfxFile file, EfxResource resource, EfxRootNode target)
+    {
+        if (file.Header == null) return false;
+
         target.LockNode(true);
         target.Version = file.Header.Version;
         target.Flags = file.Header.uknFlag;
@@ -165,7 +163,7 @@ public class EfxConverter : SceneRszAssetConverter<EfxResource, EfxFile, EfxRoot
                 attr.AddChild(childEfx);
                 childEfx.Owner = target;
             }
-            ImportSync(emitter.efxrData, childEfx);
+            ImportSync(emitter.efxrData, new EfxResource(), childEfx);
         }
     }
 

@@ -34,7 +34,7 @@ public partial class TestCollisionFiles : TestBase
     public async Task DefReadTest()
     {
         var converter = new AssetConverter(GodotImportOptions.testImport);
-        await ExecuteFullReadTest("def", async (game, fileOption, filepath) => {
+        await ExecuteFullReadTest("def", (game, fileOption, filepath) => {
             using var file = new DefFile(new FileHandler(filepath));
             file.Read();
         });
@@ -85,7 +85,7 @@ public partial class TestCollisionFiles : TestBase
     public async Task CollisionHFReadTest()
     {
         var converter = new AssetConverter(GodotImportOptions.testImport);
-        await ExecuteFullReadTest("chf", async (game, fileOption, filepath) => {
+        await ExecuteFullReadTest("chf", (game, fileOption, filepath) => {
             using var file = new CHFFile(new FileHandler(filepath));
             file.Read();
         });
@@ -95,7 +95,7 @@ public partial class TestCollisionFiles : TestBase
     public async Task HFReadTest()
     {
         var converter = new AssetConverter(GodotImportOptions.testImport);
-        await ExecuteFullReadTest("hf", async (game, fileOption, filepath) => {
+        await ExecuteFullReadTest("hf", (game, fileOption, filepath) => {
             using var file = new HFFile(new FileHandler(filepath));
             file.Read();
         });

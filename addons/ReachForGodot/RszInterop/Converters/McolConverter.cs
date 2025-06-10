@@ -6,8 +6,10 @@ using RszTool;
 using RszTool.Bvh;
 using Shouldly;
 
-// public class McolConverter : ResourceConverter<MeshColliderResource, McolFile>, ISynchronousConverter<MeshColliderResource, McolFile>
-public class McolConverter : SceneResourceConverter<MeshColliderResource, McolFile, McolRoot>, ISynchronousConverter<MeshColliderResource, McolFile>
+public class McolConverter :
+    SceneResourceConverter<MeshColliderResource, McolFile, McolRoot>,
+    ISynchronousConverter<MeshColliderResource, McolFile>,
+    ISynchronousConverter<McolRoot, McolFile>
 {
     private static readonly Color[] McolLayerColors = [
         Colors.White, Colors.Blue, Colors.Green, Colors.Red, Colors.Magenta,
@@ -21,9 +23,6 @@ public class McolConverter : SceneResourceConverter<MeshColliderResource, McolFi
     ];
 
     private const float MaxPartId = 256;
-
-    public override MeshColliderResource CreateOrReplaceResourcePlaceholder(AssetReference reference)
-        => SetupResource(new MeshColliderResource(), reference);
 
     public override McolFile CreateFile(FileHandler fileHandler) => new McolFile(fileHandler);
 
@@ -53,7 +52,7 @@ public class McolConverter : SceneResourceConverter<MeshColliderResource, McolFi
 
     public Task<bool> Import(McolFile file, MeshColliderResource target)
     {
-        return Task.FromResult(ImportSync(file, target));
+        return Task.FromResult(ImportSync(file, target, target.Instantiate() ?? CreateScenePlaceholder(target).Instantiate<McolRoot>()));
     }
 
     // public Task<bool> Export(MeshColliderResource source, McolFile file)
@@ -63,7 +62,7 @@ public class McolConverter : SceneResourceConverter<MeshColliderResource, McolFi
 
     public override Task<bool> Import(McolFile file, McolRoot target)
     {
-        return Task.FromResult(ImportSync(file, target));
+        return Task.FromResult(ImportSync(file, target.Resource!, target));
     }
 
     public override Task<bool> Export(McolRoot source, McolFile file)
@@ -87,17 +86,17 @@ public class McolConverter : SceneResourceConverter<MeshColliderResource, McolFi
         return true;
     }
 
-    public bool ImportSync(McolFile file, McolRoot root)
-    {
-        return ImportSync(file, root.Resource!, root);
-    }
-
+    public bool ImportSync(McolFile file, McolRoot target) => ImportSync(file, target.Resource!);
     public bool ImportSync(McolFile file, MeshColliderResource target)
     {
-        var root = target.Instantiate() ?? new McolRoot() {
-            Name = !string.IsNullOrEmpty(target.ResourceName) ? target.ResourceName : target.Asset?.BaseFilename.ToString() ?? "mcol"
-        };
-        return ImportSync(file, target, root);
+        var root = target.Instantiate() ?? CreateScenePlaceholder(target).Instantiate<McolRoot>();
+
+        if (!ImportSync(file, target, root)) return false;
+        if (target.ImportedResource == null || EditorInterface.Singleton.GetEditedSceneRoot() != root) {
+            PostImport(target, root);
+        }
+
+        return true;
     }
 
     public bool ImportSync(McolFile file, MeshColliderResource target, McolRoot root)
@@ -116,7 +115,7 @@ public class McolConverter : SceneResourceConverter<MeshColliderResource, McolFi
             root.AddChild(origin = new Node3D() { Name = "Center" });
             origin.Owner = root;
         }
-        origin.Position = file.bvh.tree?.bounds.Center.ToGodot() ?? new Vector3();
+        origin.Position = file.bvh.ReadBounds().Center.ToGodot();
         colliderRoot.FreeAllChildrenImmediately();
 
         Mesh mesh = ImportMesh(file.bvh);
@@ -124,7 +123,6 @@ public class McolConverter : SceneResourceConverter<MeshColliderResource, McolFi
             // use mesh from the exported gltf instead of the generated one directly
             var meshScene = ExportToGltf(mesh, root, target, root.Asset!.GetImportFilepathChangeExtension(Config, ".gltf")!, false);
             target.Mesh = meshScene;
-            // var newMeshNode = meshScene.Instantiate<MeshInstance3D>();
             var newMeshNode = meshScene.Instantiate<MeshInstance3D>(PackedScene.GenEditState.Instance);
             newMeshNode.Name = "Mesh";
             var meshnode = root.MeshContainerNode;
@@ -158,16 +156,6 @@ public class McolConverter : SceneResourceConverter<MeshColliderResource, McolFi
         // we don't really care about the tree since it just gets built off of the mesh and colliders anyway, could be helpful for debugging though
         // GenerateAabbPreviews(file.bvh, root);
 
-        if (target.ImportedResource == null || EditorInterface.Singleton.GetEditedSceneRoot() != root) {
-            target.ImportedResource = root.ToPackedScene();
-            if (WritesEnabled) {
-                target.ImportedResource.SaveOrReplaceResource(PathUtils.GetAssetImportPath(target.Asset, SupportedFileFormats.MeshCollider, Config)!);
-            }
-        }
-
-        if (WritesEnabled) {
-            target.SaveOrReplaceResource(target.ResourcePath);
-        }
         return true;
     }
 

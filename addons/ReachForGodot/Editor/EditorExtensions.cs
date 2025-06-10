@@ -26,7 +26,7 @@ public static class EditorExtensions
     {
         var scene = new PackedScene();
         scene.Pack(node);
-        node.SetRecursiveOwner(node);
+        if (fixOwners) node.SetRecursiveOwner(node);
         return scene;
     }
 

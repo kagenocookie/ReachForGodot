@@ -5,9 +5,6 @@ using RszTool;
 
 public class CdefConverter : ResourceConverter<CollisionDefinitionResource, CdefFile>
 {
-    public override CollisionDefinitionResource CreateOrReplaceResourcePlaceholder(AssetReference reference)
-        => SetupResource(new CollisionDefinitionResource(), reference);
-
     public override CdefFile CreateFile(FileHandler fileHandler) => new CdefFile(fileHandler);
 
     public override Task<bool> Import(CdefFile file, CollisionDefinitionResource target)

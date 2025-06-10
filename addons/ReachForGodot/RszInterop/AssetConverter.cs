@@ -137,50 +137,49 @@ public class AssetConverter
         if (asset is REResource reres) {
             switch (reres.ResourceType) {
                 case SupportedFileFormats.Scene:
-                    return asset is SceneResource scnRes ? Scn.ImportFromFile(scnRes) : Scn.ImportFromFile(filepath);
+                    return Scn.ImportFromFile(filepath, (SceneResource)asset);
                 case SupportedFileFormats.Prefab:
-                    return asset is PrefabResource pfbRes ? Pfb.ImportFromFile(pfbRes) : Pfb.ImportFromFile(filepath);
+                    return Pfb.ImportFromFile(filepath, (PrefabResource)asset);
                 case SupportedFileFormats.Rcol:
-                    return asset is RcolResource rcolRes ? Rcol.ImportFromFile(rcolRes) : Rcol.ImportFromFile(filepath);
+                    return Rcol.ImportFromFile(filepath, (RcolResource)asset);
                 case SupportedFileFormats.Efx:
-                    return asset is EfxResource efxRes ? Efx.ImportFromFile(efxRes) : Efx.ImportFromFile(filepath);
-
+                    return Efx.ImportFromFile(filepath, (EfxResource)asset);
                 case SupportedFileFormats.Userdata:
-                    return User.ImportFromFile(filepath, asset as UserdataResource);
+                    return User.ImportFromFile(filepath, (UserdataResource)asset);
                 case SupportedFileFormats.Foliage:
-                    return Fol.ImportFromFile(filepath, asset as FoliageResource);
+                    return Fol.ImportFromFile(filepath, (FoliageResource)asset);
                 case SupportedFileFormats.Mesh:
                     return Mesh.ImportAsset((MeshResource)reres, filepath);
                 case SupportedFileFormats.Texture:
                     return Texture.ImportAsset((TextureResource)reres, filepath);
                 case SupportedFileFormats.MaterialDefinition:
-                    return Mdf2.ImportFromFile(filepath, asset as MaterialDefinitionResource);
+                    return Mdf2.ImportFromFile(filepath, (MaterialDefinitionResource)asset);
                 case SupportedFileFormats.Uvar:
-                    return Uvar.ImportFromFile(filepath, asset as UvarResource);
+                    return Uvar.ImportFromFile(filepath, (UvarResource)asset);
                 case SupportedFileFormats.MotionBank:
-                    return Motbank.ImportFromFile(filepath, asset as MotionBankResource);
+                    return Motbank.ImportFromFile(filepath, (MotionBankResource)asset);
                 case SupportedFileFormats.CollisionDefinition:
-                    return Cdef.ImportFromFile(filepath, asset as CollisionDefinitionResource);
+                    return Cdef.ImportFromFile(filepath, (CollisionDefinitionResource)asset);
                 case SupportedFileFormats.CollisionFilter:
-                    return Cfil.ImportFromFile(filepath, asset as CollisionFilterResource);
+                    return Cfil.ImportFromFile(filepath, (CollisionFilterResource)asset);
                 case SupportedFileFormats.CollisionMaterial:
-                    return Cmat.ImportFromFile(filepath, asset as CollisionMaterialResource);
+                    return Cmat.ImportFromFile(filepath, (CollisionMaterialResource)asset);
                 case SupportedFileFormats.ColliderHeightField:
-                    return Chf.ImportFromFile(filepath, asset as ColliderHeightFieldResource);
+                    return Chf.ImportFromFile(filepath, (ColliderHeightFieldResource)asset);
                 case SupportedFileFormats.MeshCollider:
-                    return Task.FromResult(Mcol.ImportFromFile(filepath, (asset as MeshColliderResource)?.Instantiate(), asset as MeshColliderResource));
+                    return Mcol.ImportFromFile(filepath, (MeshColliderResource)asset);
                 default:
                     GD.PrintErr("Import currently unsupported for resource type " + reres.ResourceType);
                     return Task.FromResult(false);
             }
         } else if (asset is PrefabNode pfb) {
-            return Pfb.ImportFromFile(filepath, pfb);
+            return Pfb.ImportFromFileToInstance(filepath, pfb);
         } else if (asset is SceneFolder scn) {
-            return Scn.ImportFromFile(filepath, scn);
+            return Scn.ImportFromFileToInstance(filepath, scn);
         } else if (asset is RcolRootNode rcol) {
-            return Rcol.ImportFromFile(filepath, rcol);
+            return Rcol.ImportFromFileToInstance(filepath, rcol);
         } else if (asset is EfxRootNode efx) {
-            return Efx.ImportFromFile(filepath, efx);
+            return Efx.ImportFromFileToInstance(filepath, efx);
         } else if (asset is McolRoot mcol) {
             return Task.FromResult(Mcol.ImportFromFile(filepath, mcol, mcol.Resource));
         } else {

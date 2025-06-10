@@ -6,9 +6,6 @@ using RszTool;
 
 public class UvarConverter : ResourceConverter<UvarResource, UVarFile>
 {
-    public override UvarResource CreateOrReplaceResourcePlaceholder(AssetReference reference)
-        => SetupResource(new UvarResource(), reference);
-
     public override UVarFile CreateFile(FileHandler fileHandler) => new UVarFile(fileHandler);
 
     public override async Task<bool> Import(UVarFile file, UvarResource target)

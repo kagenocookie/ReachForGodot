@@ -29,6 +29,8 @@ public abstract partial class TestBase : TestClass
         return ReachForGodot.GetAssetConfig(game);
     }
 
+    protected static SupportedGame[] GamesExcept(params SupportedGame[] excluded) => ReachForGodot.GameList.Except(excluded).ToArray();
+
     protected static (string, RszFileOption) ResolveRszFile(SupportedGame game, string filepath)
     {
         var path = PathUtils.FindSourceFilePath(filepath, GetConfig(game));
@@ -58,14 +60,15 @@ public abstract partial class TestBase : TestClass
         }
     }
 
-    protected static async Task<TExported?> ExportToMemory<TResource, TExported, TImported>(
-        RszToolConverter<TResource, TExported, TImported> converter,
-        TImported resource,
+    protected static async Task<TExported?> ExportToMemory<TResource, TExported, TImported, TImportedInstance>(
+        RszToolConverter<TResource, TExported, TImported, TImportedInstance> converter,
+        TImportedInstance resource,
         int fileVersion
     )
         where TImported : GodotObject
+        where TImportedInstance : GodotObject
         where TExported : BaseFile
-        where TResource : REResource
+        where TResource : REResource, new()
     {
         var f = converter.CreateFile(new FileHandler(new MemoryStream()) { FileVersion = fileVersion });
         return await converter.Export(resource, f) && f.Write() ? f : null;
@@ -75,12 +78,12 @@ public abstract partial class TestBase : TestClass
         string extension,
         Action<SupportedGame, RszFileOption, string> action,
         Dictionary<SupportedGame, int>? expectedFails = null,
-        params SupportedGame[] skipGames)
+        params SupportedGame[] whitelistGames)
     {
         return ExecuteFullReadTest(extension, (g, o, f) => {
             action.Invoke(g, o, f);
             return Task.CompletedTask;
-        }, expectedFails, skipGames);
+        }, expectedFails, whitelistGames);
     }
 
     protected static async Task ExecuteFullReadTest(

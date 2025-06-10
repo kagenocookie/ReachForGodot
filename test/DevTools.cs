@@ -3,8 +3,6 @@ using RszTool;
 using RszTool.Efx;
 using RszTool.Tools;
 
-using ukn = RszTool.UndeterminedFieldType;
-
 namespace ReaGE.Tests;
 
 public static class DevTools

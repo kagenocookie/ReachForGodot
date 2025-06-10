@@ -5,9 +5,6 @@ using RszTool;
 
 public class HfConverter : ResourceConverter<HeightFieldResource, HFFile>
 {
-    public override HeightFieldResource CreateOrReplaceResourcePlaceholder(AssetReference reference)
-        => SetupResource(new HeightFieldResource(), reference);
-
     public override HFFile CreateFile(FileHandler fileHandler) => new HFFile(fileHandler);
 
     public override Task<bool> Import(HFFile file, HeightFieldResource target)

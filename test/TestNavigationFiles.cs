@@ -19,7 +19,7 @@ public partial class TestNavigationFiles : TestBase
     [Test]
     public async Task NavmeshReadTest()
     {
-        await ExecuteFullReadTest("ainvm", async (game, fileOption, filepath) => {
+        await ExecuteFullReadTest("ainvm", (game, fileOption, filepath) => {
             using var file = HandleAimpFile(game, fileOption, filepath);
         });
     }
@@ -27,7 +27,7 @@ public partial class TestNavigationFiles : TestBase
     [Test]
     public async Task MapPointReadTest()
     {
-        await ExecuteFullReadTest("aimap", async (game, fileOption, filepath) => {
+        await ExecuteFullReadTest("aimap", (game, fileOption, filepath) => {
             using var file = HandleAimpFile(game, fileOption, filepath);
         });
     }
@@ -35,7 +35,7 @@ public partial class TestNavigationFiles : TestBase
     [Test]
     public async Task WaypointReadTest()
     {
-        await ExecuteFullReadTest("aiwayp", async (game, fileOption, filepath) => {
+        await ExecuteFullReadTest("aiwayp", (game, fileOption, filepath) => {
             using var file = HandleAimpFile(game, fileOption, filepath);
         });
     }
@@ -43,7 +43,7 @@ public partial class TestNavigationFiles : TestBase
     [Test]
     public async Task VolumeSpaceReadTest()
     {
-        await ExecuteFullReadTest("aivspc", async (game, fileOption, filepath) => {
+        await ExecuteFullReadTest("aivspc", (game, fileOption, filepath) => {
             using var file = HandleAimpFile(game, fileOption, filepath);
         });
     }
@@ -51,7 +51,7 @@ public partial class TestNavigationFiles : TestBase
     [Test]
     public async Task WaypointManagerReadTest()
     {
-        await ExecuteFullReadTest("aiwaypmgr", async (game, fileOption, filepath) => {
+        await ExecuteFullReadTest("aiwaypmgr", (game, fileOption, filepath) => {
             using var file = HandleAimpFile(game, fileOption, filepath);
         });
     }
@@ -59,7 +59,7 @@ public partial class TestNavigationFiles : TestBase
     [Test]
     public async Task NavmeshManagerReadTest()
     {
-        await ExecuteFullReadTest("ainvmmgr", async (game, fileOption, filepath) => {
+        await ExecuteFullReadTest("ainvmmgr", (game, fileOption, filepath) => {
             using var file = HandleAimpFile(game, fileOption, filepath);
         });
     }

@@ -15,7 +15,7 @@ using RszTool.Efx.Structs.Transforms;
 using RszTool.Tools;
 using Shouldly;
 
-using ukn = RszTool.UndeterminedFieldType;
+using Ukn = RszTool.UndeterminedFieldType;
 
 namespace ReaGE.Tests;
 
@@ -269,7 +269,7 @@ public partial class TestEfx : TestBase
     private static async Task FullReadTest()
     {
         var converter = new AssetConverter(GodotImportOptions.testImport);
-        await ExecuteFullReadTest("efx", async (game, fileOption, filepath) => {
+        await ExecuteFullReadTest("efx", (game, fileOption, filepath) => {
             using var file = new EfxFile(new FileHandler(filepath));
             try {
                 file.Read();
@@ -295,7 +295,7 @@ public partial class TestEfx : TestBase
     private static async Task FullExpressionParseTest()
     {
         var converter = new AssetConverter(GodotImportOptions.testImport);
-        await ExecuteFullReadTest("efx", async (game, fileOption, filepath) => {
+        await ExecuteFullReadTest("efx", (game, fileOption, filepath) => {
             using var file = new EfxFile(new FileHandler(filepath));
             try {
                 file.Read();
@@ -363,7 +363,7 @@ public partial class TestEfx : TestBase
         }
 
         var converter = new AssetConverter(GodotImportOptions.testImport);
-        await ExecuteFullReadTest("efx", async (game, fileOption, filepath) => {
+        await ExecuteFullReadTest("efx", (game, fileOption, filepath) => {
             using var file = new EfxFile(new FileHandler(filepath));
             try {
                 file.Read();
@@ -379,7 +379,7 @@ public partial class TestEfx : TestBase
                 var attrType = a.GetType();
                 var fields = attrType.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
                 foreach (var f in fields) {
-                    if (f.FieldType == typeof(ukn) && f.GetValue(a) is ukn uu && uu.value != 0) {
+                    if (f.FieldType == typeof(Ukn) && f.GetValue(a) is Ukn uu && uu.value != 0) {
                         AddInconsistency(attrType, f.Name, uu.ToString(), filepath);
                     } else if (f.FieldType == typeof(int) && f.GetValue(a) is int ii && LooksLikeFloat(ii)) {
                         AddInconsistency(attrType, f.Name, BitConverter.Int32BitsToSingle(ii).ToString("0.0#"), filepath);
@@ -388,9 +388,9 @@ public partial class TestEfx : TestBase
                     } else if (f.FieldType == typeof(float) && f.GetValue(a) is float flt &&
                         (Math.Abs(flt) > 100000000 && !float.IsInfinity(flt) || flt != 0 && BitConverter.SingleToUInt32Bits(flt) < 1000)
                     ) {
-                        AddInconsistency(attrType, f.Name, new ukn(flt).ToString(), filepath);
+                        AddInconsistency(attrType, f.Name, new Ukn(flt).ToString(), filepath);
                     } else if (f.FieldType.IsEnum && !f.FieldType.IsEnumDefined(f.GetValue(a)!)) {
-                        AddInconsistency(attrType, f.Name, new ukn(Convert.ToInt32(f.GetValue(a))).ToString(), filepath);
+                        AddInconsistency(attrType, f.Name, new Ukn(Convert.ToInt32(f.GetValue(a))).ToString(), filepath);
                     }
                 }
             }
@@ -411,7 +411,7 @@ public partial class TestEfx : TestBase
     private static async Task DumpEfxAttributeUsageList()
     {
         var attributeTypeUsages = new Dictionary<EfxVersion, Dictionary<EfxAttributeType, HashSet<string>>>();
-        await ExecuteFullReadTest("efx", async (game, fileOption, filepath) => {
+        await ExecuteFullReadTest("efx", (game, fileOption, filepath) => {
             using var file = new EfxFile(new FileHandler(filepath));
             try {
                 file.Read();
@@ -471,7 +471,7 @@ public partial class TestEfx : TestBase
     private static async Task DumpEfxStructValueLists(Type? targetType = null)
     {
         var dict = new Dictionary<Type, Dictionary<string, Dictionary<EfxVersion, HashSet<string>>>>();
-        await ExecuteFullReadTest("efx", async (game, fileOption, filepath) => {
+        await ExecuteFullReadTest("efx", (game, fileOption, filepath) => {
             using var file = new EfxFile(new FileHandler(filepath));
             try {
                 file.Read();
@@ -509,11 +509,11 @@ public partial class TestEfx : TestBase
                         values[file.Header!.Version] = fieldValues = new();
                     }
                     var value = fi.GetValue(target);
-                    if (value is int i) fieldValues.Add(new ukn(i).GetMostLikelyValueTypeString());
-                    else if (value is uint u) fieldValues.Add(new ukn(u).GetMostLikelyValueTypeString());
-                    else if (value is float f) fieldValues.Add(new ukn(f).GetMostLikelyValueTypeString());
-                    else if (value is RszTool.via.Color c) fieldValues.Add(new ukn(c.rgba).GetMostLikelyValueTypeString());
-                    else if (value is ukn uu) fieldValues.Add(uu.GetMostLikelyValueTypeString());
+                    if (value is int i) fieldValues.Add(new Ukn(i).GetMostLikelyValueTypeString());
+                    else if (value is uint u) fieldValues.Add(new Ukn(u).GetMostLikelyValueTypeString());
+                    else if (value is float f) fieldValues.Add(new Ukn(f).GetMostLikelyValueTypeString());
+                    else if (value is RszTool.via.Color c) fieldValues.Add(new Ukn(c.rgba).GetMostLikelyValueTypeString());
+                    else if (value is Ukn uu) fieldValues.Add(uu.GetMostLikelyValueTypeString());
                     else {
                         fieldValues.Add(value?.ToString() ?? "NULL");
                         if (value != null && fi.FieldType.IsAssignableTo(typeof(BaseModel))) {

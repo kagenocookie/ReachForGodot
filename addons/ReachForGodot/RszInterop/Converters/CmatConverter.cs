@@ -5,9 +5,6 @@ using RszTool;
 
 public class CmatConverter : ResourceConverter<CollisionMaterialResource, CmatFile>
 {
-    public override CollisionMaterialResource CreateOrReplaceResourcePlaceholder(AssetReference reference)
-        => SetupResource(new CollisionMaterialResource(), reference);
-
     public override CmatFile CreateFile(FileHandler fileHandler) => new CmatFile(fileHandler);
 
     public override Task<bool> Import(CmatFile file, CollisionMaterialResource target)

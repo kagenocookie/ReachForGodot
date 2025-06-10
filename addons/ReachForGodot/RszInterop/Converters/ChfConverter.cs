@@ -6,9 +6,6 @@ using RszTool;
 
 public class ChfConverter : ResourceConverter<ColliderHeightFieldResource, CHFFile>, ISynchronousConverter<ColliderHeightFieldResource, CHFFile>
 {
-    public override ColliderHeightFieldResource CreateOrReplaceResourcePlaceholder(AssetReference reference)
-        => SetupResource(new ColliderHeightFieldResource(), reference);
-
     public override CHFFile CreateFile(FileHandler fileHandler) => new CHFFile(fileHandler);
 
     public override Task<bool> Import(CHFFile file, ColliderHeightFieldResource target)

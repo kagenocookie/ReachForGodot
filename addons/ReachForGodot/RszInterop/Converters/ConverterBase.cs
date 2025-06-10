@@ -12,7 +12,8 @@ public abstract class ConverterBase<TResource, TExported, TAsset>
     public AssetConfig Config => Convert.AssetConfig;
     public bool WritesEnabled => Convert.Options.allowWriting;
 
-    public virtual TAsset? GetImportedAssetFromResource(TResource resource) => resource != null ? resource as TAsset ?? throw new NotImplementedException() : null;
+    public virtual TAsset? GetImportedAssetFromResource(TResource resource)
+        => resource != null ? resource as TAsset ?? throw new NotImplementedException() : null;
 
     public TResource CreateOrReplaceResourcePlaceholder(string resolvedFilepath)
     {
@@ -47,14 +48,7 @@ public abstract class ConverterBase<TResource, TExported, TAsset>
         }
     }
 
-    protected TRes SetupResource<TRes>(TRes resource, AssetReference reference) where TRes : REResource
-    {
-        resource.Game = Game;
-        resource.Asset = reference;
-        return resource;
-    }
-
-    protected TRes SetupRszContainer<TRes>(TRes resource, AssetReference reference) where TRes : IRszContainer
+    protected TRes SetupResource<TRes>(TRes resource, AssetReference reference) where TRes : IAssetPointer
     {
         resource.Game = Game;
         resource.Asset = reference;
@@ -101,12 +95,23 @@ public abstract class ConverterBase<TResource, TExported, TAsset>
     }
 }
 
-public abstract class DataConverter<TResource, TExported, TAsset> : ConverterBase<TResource, TExported, TAsset>
+public abstract class DataConverter<TResource, TExported, TAsset, TAssetInstance> : ConverterBase<TResource, TExported, TAsset>
     where TAsset : GodotObject
-    where TResource : Resource
+    where TAssetInstance : GodotObject
+    where TResource : REResource, new()
 {
-    public abstract Task<bool> Import(TExported file, TAsset target);
-    public abstract Task<bool> Export(TAsset source, TExported file);
+    public virtual TAssetInstance? GetInstanceFromAsset(TAsset? asset)
+        => typeof(TAsset) == typeof(TAssetInstance) ? asset as TAssetInstance :
+        asset is PackedScene scene ? scene.Instantiate<TAssetInstance>()
+        : throw new NotImplementedException();
+
+    public abstract Task<bool> Import(TExported file, TAssetInstance target);
+    public abstract Task<bool> Export(TAssetInstance source, TExported file);
+
+    public override TResource CreateOrReplaceResourcePlaceholder(AssetReference reference)
+    {
+        return SetupResource(new TResource(), reference);
+    }
 
     protected static bool PostExport(bool success, string outputFile)
     {

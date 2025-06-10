@@ -6,11 +6,8 @@ using RszTool;
 using RszTool.Common;
 using RszTool.Mdf;
 
-public class MdfConverter : RszAssetConverter<MaterialDefinitionResource, MdfFile, MaterialDefinitionResource>
+public class MdfConverter : RszAssetConverter<MaterialDefinitionResource, MdfFile, MaterialDefinitionResource, MaterialDefinitionResource>
 {
-    public override MaterialDefinitionResource CreateOrReplaceResourcePlaceholder(AssetReference reference)
-        => SetupResource(new MaterialDefinitionResource(), reference);
-
     public override MdfFile CreateFile(FileHandler fileHandler) => new MdfFile(FileOption, fileHandler);
 
     public override Task<bool> Import(MdfFile file, MaterialDefinitionResource target)

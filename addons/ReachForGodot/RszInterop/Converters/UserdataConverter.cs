@@ -4,11 +4,8 @@ using System.Threading.Tasks;
 using Godot;
 using RszTool;
 
-public class UserdataConverter : RszAssetConverter<UserdataResource, UserFile, UserdataResource>
+public class UserdataConverter : RszAssetConverter<UserdataResource, UserFile, UserdataResource, UserdataResource>
 {
-    public override UserdataResource CreateOrReplaceResourcePlaceholder(AssetReference reference)
-        => SetupResource(new UserdataResource(), reference);
-
     public override UserFile CreateFile(FileHandler fileHandler) => new UserFile(FileOption, fileHandler);
 
     public override Task<bool> Import(UserFile file, UserdataResource target)

@@ -5,9 +5,6 @@ using RszTool;
 
 public class CfilConverter : ResourceConverter<CollisionFilterResource, CfilFile>
 {
-    public override CollisionFilterResource CreateOrReplaceResourcePlaceholder(AssetReference reference)
-        => SetupResource(new CollisionFilterResource(), reference);
-
     public override CfilFile CreateFile(FileHandler fileHandler) => new CfilFile(fileHandler);
 
     public override Task<bool> Import(CfilFile file, CollisionFilterResource target)

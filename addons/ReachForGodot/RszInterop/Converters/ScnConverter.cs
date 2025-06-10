@@ -19,9 +19,11 @@ public class ScnConverter : SceneRszAssetConverter<SceneResource, ScnFile, Scene
         return new ScnFile(Convert.FileOption, fileHandler);
     }
 
-    protected override void PreCreateScenePlaceholder(SceneFolder node, SceneResource target)
+    protected override void PostImport(SceneResource resource, SceneFolder instance)
     {
-        node.LockNode(true);
+        if (WritesEnabled && !instance.IsInsideTree()) {
+            CreateOrReplaceSceneResource(instance, instance.Asset!);
+        }
     }
 
     public override Task<bool> Export(SceneFolder source, ScnFile file)
@@ -185,10 +187,6 @@ public class ScnConverter : SceneRszAssetConverter<SceneResource, ScnFile, Scene
         Convert.EndBatch(batch);
 
         Log(" Finished scene tree " + target.Name);
-        if (WritesEnabled && !target.IsInsideTree()) {
-            CreateOrReplaceRszSceneResource(target, target.Asset!);
-        }
-
         return true;
     }
 

@@ -5,9 +5,6 @@ using RszTool;
 
 public class MotbankConverter : ResourceConverter<MotionBankResource, MotbankFile>
 {
-    public override MotionBankResource CreateOrReplaceResourcePlaceholder(AssetReference reference)
-        => SetupResource(new MotionBankResource(), reference);
-
     public override MotbankFile CreateFile(FileHandler fileHandler) => new MotbankFile(fileHandler);
 
     public override Task<bool> Import(MotbankFile file, MotionBankResource target)

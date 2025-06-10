@@ -5,9 +5,6 @@ using RszTool;
 
 public class FoliageConverter : ResourceConverter<FoliageResource, FolFile>
 {
-    public override FoliageResource CreateOrReplaceResourcePlaceholder(AssetReference reference)
-        => SetupResource(new FoliageResource(), reference);
-
     public override FolFile CreateFile(FileHandler fileHandler) => new FolFile(fileHandler);
 
     public override Task<bool> Import(FolFile file, FoliageResource target)
