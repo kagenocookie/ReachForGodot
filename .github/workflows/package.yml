@@ -50,7 +50,7 @@ jobs:
         7z a -mx=9 ReachForGodot.zip *
 
     - name: Upload files to release
-      uses: softprops/action-gh-release@v2
+      uses: softprops/action-gh-release@v2.3.1
       if: startsWith(github.ref, 'refs/tags/')
       with:
         files: "output/*.zip"
