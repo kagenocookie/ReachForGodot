@@ -1,6 +1,5 @@
 namespace ReaGE;
 
-using System.Runtime.Versioning;
 using System.Threading.Tasks;
 using Godot;
 using RszTool;

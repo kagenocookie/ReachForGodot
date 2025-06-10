@@ -4,7 +4,6 @@ using Godot;
 using ReaGE.EFX;
 using RszTool.Efx;
 using RszTool.Efx.Structs.Common;
-using RszTool.Efx.Structs.Misc;
 
 namespace ReaGE;
 

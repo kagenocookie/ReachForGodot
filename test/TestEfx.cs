@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Chickensoft.GoDotTest;
 using Godot;
 using RszTool;
-using RszTool.Common;
 using RszTool.Efx;
 using RszTool.Efx.Structs.Basic;
 using RszTool.Efx.Structs.Common;

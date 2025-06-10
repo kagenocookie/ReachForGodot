@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Godot;
 using RszTool;
 using RszTool.Bvh;
-using Shouldly;
 
 public class McolConverter :
     SceneResourceConverter<MeshColliderResource, McolFile, McolRoot>,

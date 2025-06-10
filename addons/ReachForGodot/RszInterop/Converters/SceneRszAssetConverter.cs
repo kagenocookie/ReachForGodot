@@ -1,6 +1,5 @@
 namespace ReaGE;
 
-using System.Threading.Tasks;
 using Godot;
 
 public abstract class SceneRszAssetConverter<TResource, TFile, TRootNode> : RszAssetConverter<TResource, TFile, PackedScene, TRootNode>

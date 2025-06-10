@@ -1,8 +1,6 @@
 namespace ReaGE.Physics;
 
-using System;
 using Godot;
-using Godot.Collections;
 
 [GlobalClass, Tool]
 public partial class RszCollisionShape3D : CollisionShape3D
