@@ -722,6 +722,7 @@ public static partial class PathUtils
                     return sourcePath + ".glb";
                 case SupportedFileFormats.Texture:
                     return sourcePath + ".dds";
+                case SupportedFileFormats.MeshCollider:
                 case SupportedFileFormats.Rcol:
                 case SupportedFileFormats.Scene:
                 case SupportedFileFormats.Prefab:

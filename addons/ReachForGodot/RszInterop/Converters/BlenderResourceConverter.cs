@@ -11,7 +11,7 @@ public abstract class BlenderResourceConverter<TResource, TAsset> : ConverterBas
     private static CancellationTokenSource? cancellationTokenSource;
     private const int blenderTimeoutMs = 30000;
 
-    public override TAsset? GetResourceImportedObject(TResource resource) => resource.ImportedResource as TAsset;
+    public override TAsset? GetImportedAssetFromResource(TResource resource) => resource.ImportedResource as TAsset;
 
     private static bool _hasShownNoBlenderWarning = false;
     private static readonly string EmptyBlend = ProjectSettings.GlobalizePath("res://addons/ReachForGodot/.gdignore/empty.blend");

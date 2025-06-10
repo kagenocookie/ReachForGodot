@@ -39,7 +39,7 @@ public partial class RequestSetCollisionShape3D : CollisionShape3D
         shape.Info.IgnoreTagBits = IgnoreTagBits;
         shape.Info.Attribute = Attribute;
         shape.Info.shapeType = RcolShapeType;
-        shape.shape = RequestSetCollisionShape3D.Shape3DToRszShape(Shape, this, RcolShapeType, game);
+        shape.shape = RequestSetCollisionShape3D.ConvertShapeToRsz(Shape, this, RcolShapeType, game);
         return shape;
     }
 
@@ -78,6 +78,22 @@ public partial class RequestSetCollisionShape3D : CollisionShape3D
                 collider.Shape = new BoxShape3D() { Size = aabb.Size };
                 collider.Position = aabb.Position;
                 break;
+            case RszTool.Rcol.ShapeType.Mesh:
+                var mcol = shape.As<MeshColliderResource>();
+                if (mcol.IsEmpty) {
+                    if (AssetConverter.InstanceForGame(mcol.Game).Mcol.ImportSync(mcol)) {
+                        ResourceSaver.Save(mcol);
+                    }
+                }
+                if (mcol.CachedVertexCount > 2500) {
+                    // don't do preview for large mesh colliders to help with performance
+                    collider.Shape = null;
+                    return;
+                }
+
+                var mesh = mcol.GetMesh();
+                collider.Shape = mesh?.CreateTrimeshShape();
+                break;
             case RszTool.Rcol.ShapeType.HeightField:
                 var hf = shape.As<ColliderHeightFieldResource>();
                 if (hf.IsEmpty) {
@@ -101,6 +117,38 @@ public partial class RequestSetCollisionShape3D : CollisionShape3D
         }
     }
 
+    public static void ApplyShape(CollisionShape3D collider, RszTool.via.Sphere sphere)
+    {
+        if (collider.Shape is not SphereShape3D shape) {
+            collider.Shape = shape = new SphereShape3D();
+        }
+        shape.Radius = sphere.r;
+        collider.Position = sphere.pos.ToGodot();
+    }
+
+    public static void ApplyShape(CollisionShape3D collider, RszTool.via.OBB obb)
+    {
+        if (collider.Shape is not BoxShape3D shape) {
+            collider.Shape = shape = new BoxShape3D();
+        }
+        shape.Size = obb.Extent.ToGodot() * 2;
+        collider.Transform = (Transform3D)obb.Coord.ToProjection();
+    }
+
+    public static void ApplyShape(CollisionShape3D collider, RszTool.via.Capsule capsule)
+    {
+        if (collider.Shape is not CapsuleShape3D shape) {
+            collider.Shape = shape = new CapsuleShape3D();
+        }
+        var p0 = capsule.p0.ToGodot();
+        var p1 = capsule.p1.ToGodot();
+        // RE format capsule: p0 and p1 are placed at the cylinder center, whereas godot places it at the far end of the capsule, which is why we need to add the radius
+        shape.Height = p0.DistanceTo(p1) + capsule.r * 2;
+        shape.Radius = capsule.r;
+        collider.Position = (p0 + p1) / 2;
+        collider.Rotation = (p1 - p0).DirectionToQuaternion(Vector3.Up).GetEuler();
+    }
+
     private static void FixNegativeAabb(ref Aabb aabb)
     {
         var p = aabb.Position;
@@ -112,31 +160,43 @@ public partial class RequestSetCollisionShape3D : CollisionShape3D
         aabb.Size = s;
     }
 
-    public static object? Shape3DToRszShape(Shape3D godotShape, Node3D node, RszTool.Rcol.ShapeType shapeType, SupportedGame game)
+    public static RszTool.via.Sphere ConvertShapeToRsz(Node3D node, SphereShape3D sphere)
+        => new RszTool.via.Sphere() { pos = node.Position.ToRsz(), R = sphere.Radius };
+
+    public static RszTool.via.Capsule ConvertShapeToRsz(Node3D node, CapsuleShape3D capsule)
+    {
+        var cap = new RszTool.via.Capsule() { r = capsule.Radius };
+        var center = node.Position;
+        var up = node.Transform.Basis.Y.Normalized();
+        cap.p0 = (center - up * (0.5f * capsule.Height - capsule.Radius)).ToRsz();
+        cap.p1 = (center + up * (0.5f * capsule.Height - capsule.Radius)).ToRsz();
+        return cap;
+    }
+    public static RszTool.via.OBB ConvertShapeToRsz(Node3D node, BoxShape3D box)
+    {
+        var obb = new RszTool.via.OBB();
+        obb.Extent = box.Size.ToRsz();
+        obb.Coord = new Projection(node.Transform).ToRsz();
+        return obb;
+    }
+    public static RszTool.via.AABB ConvertShapeToRszAabb(Node3D node, BoxShape3D box)
+    {
+        return new Aabb(node.Position, box.Size).ToRsz();
+    }
+
+    public static object? ConvertShapeToRsz(Shape3D godotShape, Node3D node, RszTool.Rcol.ShapeType shapeType, SupportedGame game)
     {
         switch (shapeType) {
             case RszTool.Rcol.ShapeType.Aabb:
-                var box = (BoxShape3D)godotShape;
-                return new Aabb(node.Position, box.Size).ToRsz();
+                return ConvertShapeToRszAabb(node, (BoxShape3D)godotShape);
             case RszTool.Rcol.ShapeType.Box:
-                var obb = new RszTool.via.OBB();
-                var box2 = (BoxShape3D)godotShape;
-                obb.Extent = box2.Size.ToRsz();
-                obb.Coord = new Projection(node.Transform).ToRsz();
-                return obb;
+                return ConvertShapeToRsz(node, (BoxShape3D)godotShape);
             case RszTool.Rcol.ShapeType.Sphere:
             case RszTool.Rcol.ShapeType.ContinuousSphere:
-                var sphere = (SphereShape3D)godotShape;
-                return new RszTool.via.Sphere() { pos = node.Position.ToRsz(), R = sphere.Radius };
+                return ConvertShapeToRsz(node, (SphereShape3D)godotShape);
             case RszTool.Rcol.ShapeType.Capsule:
             case RszTool.Rcol.ShapeType.ContinuousCapsule:
-                var capsule = (CapsuleShape3D)godotShape;
-                var cap = new RszTool.via.Capsule() { r = capsule.Radius };
-                var center = node.Position;
-                var up = node.Transform.Basis.Y.Normalized();
-                cap.p0 = (center - up * (0.5f * capsule.Height - capsule.Radius)).ToRsz();
-                cap.p1 = (center + up * (0.5f * capsule.Height - capsule.Radius)).ToRsz();
-                return cap;
+                return ConvertShapeToRsz(node, (CapsuleShape3D)godotShape);
             case RszTool.Rcol.ShapeType.HeightField:
                 // nothing to do - show default error in case of rcol calls since those probably don't support CHF
             default:

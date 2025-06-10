@@ -3,6 +3,7 @@ namespace ReaGE;
 using System.Globalization;
 using System.Threading.Tasks;
 using Godot;
+using ReaGE.Physics;
 using RszTool;
 
 [GlobalClass, Tool, REComponentClass("via.physics.Colliders")]
@@ -236,7 +237,7 @@ public partial class PhysicsCollidersComponent : REComponent, IVisualREComponent
             var basename = "Collider_" + n++;
             if (index != -1 && n - 2 != index) continue;
             var shape = coll.GetField(ColliderShapeField).As<REObject>();
-            CollisionShape3D? collider = FindOrCreateCollider(colliderRoot, basename, shape);
+            CollisionShape3D? collider = FindOrCreateCollider(colliderRoot, basename, n - 2, shape);
             if (owner != null) {
                 collider.Owner = owner;
             }
@@ -250,11 +251,11 @@ public partial class PhysicsCollidersComponent : REComponent, IVisualREComponent
         return Task.CompletedTask;
     }
 
-    private CollisionShape3D FindOrCreateCollider(StaticBody3D parent, string basename, REObject? shape)
+    private CollisionShape3D FindOrCreateCollider(StaticBody3D parent, string basename, int index, REObject? shape)
     {
         var collider = parent.FindChildWhere<CollisionShape3D>(c => c.Name.ToString().StartsWith(basename));
         if (collider == null) {
-            collider = new CollisionShape3D() { Name = basename + "_" + shape?.ClassBaseName };
+            collider = new RszCollisionShape3D() { Name = basename + "_" + shape?.ClassBaseName, ColliderIndex = index };
             parent.AddChild(collider);
             collider.Owner = parent.Owner;
         }
@@ -269,8 +270,10 @@ public partial class PhysicsCollidersComponent : REComponent, IVisualREComponent
     {
         switch (shape.Classname) {
             case "via.physics.MeshShape":
-                // var mcol = shape.GetField(MeshShape).As<REResource>();
-                // collider.Shape = new ConvexPolygonShape3D();
+                RequestSetCollisionShape3D.ApplyShape(collider, RszTool.Rcol.ShapeType.Mesh, shape.GetField(MeshShape));
+                if (collider is RszCollisionShape3D rszCollider) {
+                    rszCollider.MeshCollider = shape.GetField(MeshShape).As<MeshColliderResource>();
+                }
                 break;
             case "via.physics.SphereShape":
             case "via.physics.ContinuousSphereShape":
@@ -292,7 +295,7 @@ public partial class PhysicsCollidersComponent : REComponent, IVisualREComponent
                 var basename = collider.Name;
                 foreach (var subshape in shapes.Select(sh => sh.GetField(CompoundShapeInstanceShape).As<REObject>())) {
                     if (subcount > 0) {
-                        var newcoll = FindOrCreateCollider(collider.GetParent<StaticBody3D>(), basename + "_" + subcount++, subshape);
+                        var newcoll = FindOrCreateCollider(collider.GetParent<StaticBody3D>(), basename + "_" + subcount++, subcount - 1, subshape);
                     } else {
                         collider.Name = basename + "_" + subcount++;
                         ImportColliderShape(subshape, collider);

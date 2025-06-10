@@ -72,6 +72,9 @@ public class AssetConverter
     private EfxConverter? _efx;
     public EfxConverter Efx => _efx ??= new EfxConverter() { Convert = this };
 
+    private McolConverter? _mcol;
+    public McolConverter Mcol => _mcol ??= new McolConverter() { Convert = this };
+
     private RszFileOption? _fileOption;
     public RszFileOption FileOption => _fileOption ??= TypeCache.CreateRszFileOptions(AssetConfig);
 
@@ -141,6 +144,7 @@ public class AssetConverter
                     return asset is RcolResource rcolRes ? Rcol.ImportFromFile(rcolRes) : Rcol.ImportFromFile(filepath);
                 case SupportedFileFormats.Efx:
                     return asset is EfxResource efxRes ? Efx.ImportFromFile(efxRes) : Efx.ImportFromFile(filepath);
+
                 case SupportedFileFormats.Userdata:
                     return User.ImportFromFile(filepath, asset as UserdataResource);
                 case SupportedFileFormats.Foliage:
@@ -163,8 +167,10 @@ public class AssetConverter
                     return Cmat.ImportFromFile(filepath, asset as CollisionMaterialResource);
                 case SupportedFileFormats.ColliderHeightField:
                     return Chf.ImportFromFile(filepath, asset as ColliderHeightFieldResource);
+                case SupportedFileFormats.MeshCollider:
+                    return Task.FromResult(Mcol.ImportFromFile(filepath, (asset as MeshColliderResource)?.Instantiate(), asset as MeshColliderResource));
                 default:
-                    GD.PrintErr("Currently unsupported import for resource type " + reres.ResourceType);
+                    GD.PrintErr("Import currently unsupported for resource type " + reres.ResourceType);
                     return Task.FromResult(false);
             }
         } else if (asset is PrefabNode pfb) {
@@ -175,6 +181,8 @@ public class AssetConverter
             return Rcol.ImportFromFile(filepath, rcol);
         } else if (asset is EfxRootNode efx) {
             return Efx.ImportFromFile(filepath, efx);
+        } else if (asset is McolRoot mcol) {
+            return Task.FromResult(Mcol.ImportFromFile(filepath, mcol, mcol.Resource));
         } else {
             GD.PrintErr("Currently unsupported import for object type " + asset.GetType());
             return Task.FromResult(false);
@@ -203,6 +211,8 @@ public class AssetConverter
                     return Rcol.ExportToFile(((RcolResource)reres).Instantiate()!, outputPath);
                 case SupportedFileFormats.Efx:
                     return Efx.ExportToFile(((EfxResource)reres).Instantiate()!, outputPath);
+                case SupportedFileFormats.MeshCollider:
+                    return Mcol.ExportToFile(((MeshColliderResource)reres).Instantiate()!, outputPath);
                 case SupportedFileFormats.Userdata:
                     return User.ExportToFile((UserdataResource)reres, outputPath);
                 case SupportedFileFormats.Foliage:
@@ -233,6 +243,8 @@ public class AssetConverter
             return Rcol.ExportToFile(rcol, outputPath);
         } else if (resource is EfxRootNode efx) {
             return Efx.ExportToFile(efx, outputPath);
+        } else if (resource is McolRoot mcol) {
+            return Mcol.ExportToFile(mcol, outputPath);
         } else {
             GD.PrintErr("Currently unsupported export for object type " + resource.GetType());
             return Task.FromResult(false);

@@ -12,7 +12,7 @@ public abstract class ConverterBase<TResource, TExported, TAsset>
     public AssetConfig Config => Convert.AssetConfig;
     public bool WritesEnabled => Convert.Options.allowWriting;
 
-    public virtual TAsset? GetResourceImportedObject(TResource resource) => resource != null ? resource as TAsset ?? throw new NotImplementedException() : null;
+    public virtual TAsset? GetImportedAssetFromResource(TResource resource) => resource != null ? resource as TAsset ?? throw new NotImplementedException() : null;
 
     public TResource CreateOrReplaceResourcePlaceholder(string resolvedFilepath)
     {

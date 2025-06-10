@@ -31,6 +31,16 @@ public partial class TestCollisionFiles : TestBase
     }
 
     [Test]
+    public async Task DefReadTest()
+    {
+        var converter = new AssetConverter(GodotImportOptions.testImport);
+        await ExecuteFullReadTest("def", async (game, fileOption, filepath) => {
+            using var file = new DefFile(new FileHandler(filepath));
+            file.Read();
+        });
+    }
+
+    [Test]
     public async Task CfilReadTest()
     {
         var converter = new AssetConverter(GodotImportOptions.testImport);

@@ -38,7 +38,7 @@ public abstract class RszToolConverter<TResource, TExported, TAsset> : DataConve
                 GD.PrintErr("Resource could not be created: " + sourcePath);
                 return false;
             }
-            imported = GetResourceImportedObject(resource);
+            imported = GetImportedAssetFromResource(resource);
             if (imported == null) return false;
         }
 

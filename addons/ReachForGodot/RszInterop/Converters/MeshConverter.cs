@@ -1,6 +1,8 @@
 namespace ReaGE;
 
 using System;
+using System.Globalization;
+using System.Text;
 using System.Threading.Tasks;
 using Godot;
 
@@ -56,5 +58,21 @@ public class MeshConverter : BlenderResourceConverter<MeshResource, PackedScene>
 
             return true;
         });
+    }
+
+    public static void ExportSceneToGltf(Node node, string outputPath)
+    {
+        using var gltf = new GltfDocument();
+        using var state = new GltfState();
+        gltf.AppendFromScene(node, state);
+        gltf.WriteToFilesystem(state, outputPath);
+    }
+
+    public static void ExportMeshToGltf(Mesh mesh, string outputPath)
+    {
+        using var gltf = new GltfDocument();
+        using var state = new GltfState();
+        gltf.AppendFromScene(new MeshInstance3D() { Mesh = mesh }, state);
+        gltf.WriteToFilesystem(state, outputPath);
     }
 }

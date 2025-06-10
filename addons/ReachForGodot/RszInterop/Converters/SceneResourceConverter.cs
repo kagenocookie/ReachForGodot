@@ -3,7 +3,7 @@ namespace ReaGE;
 using System.Threading.Tasks;
 using Godot;
 
-public abstract class SceneRszAssetConverter<TResource, TFile, TRootNode> : RszAssetConverter<TResource, TFile, TRootNode>
+public abstract class SceneResourceConverter<TResource, TFile, TRootNode> : RszToolConverter<TResource, TFile, TRootNode>
     where TRootNode : Node, IImportableAsset, new()
     where TResource : REResourceProxy, new()
     where TFile : RszTool.BaseFile
