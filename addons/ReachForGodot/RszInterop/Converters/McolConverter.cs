@@ -120,9 +120,15 @@ public class McolConverter :
         Mesh mesh = ImportMesh(file.bvh);
         if (WritesEnabled) {
             // use mesh from the exported gltf instead of the generated one directly
-            var meshScene = ExportToGltf(mesh, root, target, root.Asset!.GetImportFilepathChangeExtension(Config, ".gltf")!, false);
-            target.Mesh = meshScene;
-            var newMeshNode = meshScene.Instantiate<MeshInstance3D>(PackedScene.GenEditState.Instance);
+            var meshScene = ExportToGltf(mesh, root, target, root.Asset!.GetImportFilepathChangeExtension(Config, ".glb")!, false);
+            MeshInstance3D newMeshNode;
+            if (meshScene != null) {
+                target.Mesh = meshScene;
+                newMeshNode = meshScene.Instantiate<MeshInstance3D>(PackedScene.GenEditState.Instance);
+            } else {
+                newMeshNode = new MeshInstance3D() { Mesh = mesh };
+                Log("Gltf could not be immediately imported. You may need to reimport the scene");
+            }
             newMeshNode.Name = "Mesh";
             var meshnode = root.MeshContainerNode;
             if (meshnode != null) {
@@ -389,7 +395,8 @@ public class McolConverter :
             foreach (var v in verts) bvh.vertices.Add(v.ToRsz());
 
             for (int k = 0; k < indices.Length; k += 3) {
-                var vi_1 = indices[k] + vertsOffset;
+                var index = indices[k];
+                var vi_1 = index + vertsOffset;
                 var vi_2 = indices[k + 1] + vertsOffset;
                 var vi_3 = indices[k + 2] + vertsOffset;
 
@@ -402,9 +409,9 @@ public class McolConverter :
                     edgeIndex3 = -1,
                 };
                 // NOTE: edges ignored for now, because I can't get them right and they don't seem to make a difference either
-                indexData.info.mask = colors != null ? colors[vi_1].ToRgba32() : uint.MaxValue;
+                indexData.info.mask = colors != null ? colors[index].ToRgba32() : uint.MaxValue;
                 indexData.info.layerIndex = layerIndex;
-                indexData.info.partId = Mathf.RoundToInt(uvs[vi_1].X * MaxPartId);
+                indexData.info.partId = Mathf.RoundToInt(uvs[index].X * MaxPartId);
                 bvh.AddTriangle(indexData);
             }
         }
