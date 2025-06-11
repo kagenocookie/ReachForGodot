@@ -8,7 +8,7 @@ public partial class RszCollisionShape3D : CollisionShape3D
     [Export] public int ColliderIndex { get; set; }
     [Export] public MeshColliderResource? MeshCollider { get; set; }
 
-    [ExportToolButton("Refresh mesh shape. Sometimes Godot caches old mesh & need to reopen editor")]
+    [ExportToolButton("Refresh mesh shape")]
     private Callable BtnRefreshShape => Callable.From(RefreshShape);
 
     private void RefreshShape()

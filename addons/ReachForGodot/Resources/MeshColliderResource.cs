@@ -10,7 +10,8 @@ public partial class MeshColliderResource : REResourceProxy, IExportableAsset
 
     public Mesh? GetMesh()
     {
-        var root = (Mesh ?? ImportedMesh)?.Instantiate();
+        var src = (Mesh ?? ImportedMesh)?.ResourcePath;
+        var root = string.IsNullOrEmpty(src) ? null : ResourceLoader.Load<PackedScene>(src, null, ResourceLoader.CacheMode.Ignore)?.Instantiate();
         var mesh = (root as MeshInstance3D ?? root?.FindChildByTypeRecursive<MeshInstance3D>())?.Mesh;
         root?.QueueFree();
         return mesh;
