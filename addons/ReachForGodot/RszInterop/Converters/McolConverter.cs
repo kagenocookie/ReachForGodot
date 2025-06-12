@@ -395,23 +395,23 @@ public class McolConverter :
             foreach (var v in verts) bvh.vertices.Add(v.ToRsz());
 
             for (int k = 0; k < indices.Length; k += 3) {
-                var index = indices[k];
-                var vi_1 = index + vertsOffset;
-                var vi_2 = indices[k + 1] + vertsOffset;
-                var vi_3 = indices[k + 2] + vertsOffset;
+                var vert1 = indices[k];
+                var vert2 = indices[k + 1];
+                var vert3 = indices[k + 2];
 
+                // storing indices as 1-3-2 and not 1-2-3 because godot and RE winding order is different
                 var indexData = new BvhTriangle() {
-                    posIndex1 = vi_1,
-                    posIndex2 = vi_2,
-                    posIndex3 = vi_3,
+                    posIndex1 = vert1 + vertsOffset,
+                    posIndex2 = vert3 + vertsOffset,
+                    posIndex3 = vert2 + vertsOffset,
                     edgeIndex1 = -1,
                     edgeIndex2 = -1,
                     edgeIndex3 = -1,
                 };
                 // NOTE: edges ignored for now, because I can't get them right and they don't seem to make a difference either
-                indexData.info.mask = colors != null ? colors[index].ToRgba32() : uint.MaxValue;
+                indexData.info.mask = colors != null ? colors[vert1].ToRgba32() : uint.MaxValue;
                 indexData.info.layerIndex = layerIndex;
-                indexData.info.partId = Mathf.RoundToInt(uvs[index].X * MaxPartId);
+                indexData.info.partId = Mathf.RoundToInt(uvs[vert1].X * MaxPartId);
                 bvh.AddTriangle(indexData);
             }
         }
