@@ -80,6 +80,7 @@ public partial class RequestSetCollisionShape3D : CollisionShape3D
                 break;
             case RszTool.Rcol.ShapeType.Mesh:
                 var mcol = shape.As<MeshColliderResource>();
+                if (mcol == null) return;
                 if (mcol.IsEmpty) {
                     if (AssetConverter.InstanceForGame(mcol.Game).Mcol.ImportSync(mcol)) {
                         ResourceSaver.Save(mcol);

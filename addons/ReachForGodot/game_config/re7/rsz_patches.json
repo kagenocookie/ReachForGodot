@@ -8397,14 +8397,6 @@
       }
     ]
   },
-  "app.WeaponGunParameter": {
-    "FieldPatches": [
-      {
-        "Name": "v0",
-        "Type": "Resource"
-      }
-    ]
-  },
   "via.motion.MotionFsmLayer": {
     "FieldPatches": [
       {

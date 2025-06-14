@@ -43,9 +43,8 @@ public abstract class RszAssetConverter<TResource, TFile, TAsset, TAssetInstance
         return ApplyObjectValues(obj, instance);
     }
 
-    protected UserdataResource FindOrCreateEmbeddedUserdata(RSZFile rszFile)
+    protected UserdataResource FindOrCreateEmbeddedUserdata(RszInstance instance)
     {
-        var instance = rszFile.ObjectList[0];
         var assetPath = instance.Values[0] as string;
         string? importPath = null;
         if (!string.IsNullOrEmpty(assetPath)) {
@@ -148,6 +147,9 @@ public abstract class RszAssetConverter<TResource, TFile, TAsset, TAssetInstance
     private Variant ConvertUserdata(RszInstance rsz)
     {
         if (importedObjects.TryGetValue(rsz, out var previousInst)) {
+            if (Game == SupportedGame.ResidentEvil7) {
+                return FindOrCreateEmbeddedUserdata(rsz);
+            }
             return previousInst;
         }
         if (rsz.Index == 0) return new Variant();
@@ -171,10 +173,12 @@ public abstract class RszAssetConverter<TResource, TFile, TAsset, TAssetInstance
             }
         } else if (rsz.RSZUserData is RSZUserDataInfo_TDB_LE_67 ud2) {
             if (ud2.EmbeddedRSZ != null) {
-                return FindOrCreateEmbeddedUserdata(ud2.EmbeddedRSZ);
+                return FindOrCreateEmbeddedUserdata(ud2.EmbeddedRSZ.ObjectList[0]);
             } else {
                 ErrorLog("Embedded userdata is null");
             }
+        } else if (Game == SupportedGame.ResidentEvil7) {
+            return FindOrCreateEmbeddedUserdata(rsz);
         }
         Debug.Assert(string.IsNullOrEmpty(rsz.RszClass.name));
         return new Variant();
@@ -194,7 +198,13 @@ public abstract class RszAssetConverter<TResource, TFile, TAsset, TAssetInstance
             }
         }
         IRSZUserDataInfo userdataInfo;
-        if (Game.UsesEmbeddedUserdata()) {
+        if (Game == SupportedGame.ResidentEvil7) {
+            var path = userdata.Data.GetField(0).AsString();
+            var pathHash = MurMur3HashUtils.GetHash(path);
+            instance = ExportREObject(userdata.Data, rsz, fileOption, container);
+            rsz.InstanceInfoList[instance.Index].userPathHashRe7 = pathHash;
+            return instance;
+        } else if (Game.UsesEmbeddedUserdata()) {
             var path = userdata.Data.GetField(0).AsString();
             var pathHash = MurMur3HashUtils.GetHash(path);
             var info = rsz.RSZUserDataInfoList.OfType<RSZUserDataInfo_TDB_LE_67>().FirstOrDefault(u => u.jsonPathHash == pathHash);
@@ -215,7 +225,6 @@ public abstract class RszAssetConverter<TResource, TFile, TAsset, TAssetInstance
             userdataInfo = info;
         }
 
-        // instance = new RszInstance(rszClass, rsz.InstanceInfoList.Count, userdataInfo, []);
         instance = new RszInstance(rszClass, userdataInfo.InstanceId, userdataInfo, []);
         instance.Index = rsz.InstanceList.Count;
         rsz.InstanceInfoList.Add(new InstanceInfo(fileOption.Version) { ClassName = rszClass.name, CRC = rszClass.crc, typeId = rszClass.typeId });

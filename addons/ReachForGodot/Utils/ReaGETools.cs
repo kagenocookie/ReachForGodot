@@ -70,7 +70,7 @@ public sealed class ResourceFieldFinder : IDisposable
 
     private static bool CheckStringForResource(List<ResourceInfo> resourceList, RszInstance instance, ResourceList resourceFields, RszField field, string? value)
     {
-        if (string.IsNullOrEmpty(value)) return false;
+        if (string.IsNullOrEmpty(value) || value.EndsWith(".json")) return false; // .json == re7/re2/dmc5 userdata json paths, not resources
         var cls = instance.RszClass.name;
         if (resourceFields.nonResources.Contains((cls, field.name))) return false;
 
