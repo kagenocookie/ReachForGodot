@@ -39,9 +39,14 @@ public static class ReachExtensions
         return owner;
     }
 
-    public static string StringOrDefault(this string? str, string fallback)
+    public static string? NullIfEmpty(this string? str)
     {
-        return string.IsNullOrEmpty(str) ? fallback : str;
+        return string.IsNullOrEmpty(str) ? null : str;
+    }
+
+    public static string StringOrDefault(this ReadOnlySpan<char> str, string fallback)
+    {
+        return str.IsEmpty ? fallback : str.ToString();
     }
 
     public static void MarkSceneChangedIfChildOfActiveScene(this Node target)

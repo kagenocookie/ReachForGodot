@@ -185,17 +185,19 @@ public partial class AsyncImporter : Window
     {
         cancellationTokenSource?.Cancel();
         cancellationTokenSource = null;
+        ResourceImportHandler.CancelImports();
         queuedImports.Clear();
         instance?.Hide();
     }
 
     public static Task<Resource?> QueueAssetImport(string originalFilepath, string targetFilepath, SupportedGame game, Func<string, string, Task<bool>?> importAction)
     {
-        var queueItem = queuedImports.FirstOrDefault(qi => qi.originalFilepath == originalFilepath && qi.game == game);
+        var importFilepath = ProjectSettings.LocalizePath(targetFilepath);
+        var queueItem = queuedImports.FirstOrDefault(qi => qi.importFilename == importFilepath);
         if (queueItem == null) {
             queuedImports.Enqueue(queueItem = new ImportQueueItem() {
                 originalFilepath = originalFilepath,
-                importFilename = ProjectSettings.LocalizePath(targetFilepath),
+                importFilename = importFilepath,
                 game = game,
                 importAction = importAction,
             });
@@ -251,23 +253,10 @@ public partial class AsyncImporter : Window
         }
         item.state = ImportState.Importing;
 
-        var fs = EditorInterface.Singleton.GetResourceFilesystem();
-        if (!fs.IsScanning()) {
-            fs.CallDeferred(EditorFileSystem.MethodName.Scan);
-            await Task.Delay(50, cancellationTokenSource.Token);
-            while (fs.IsScanning()) {
-                await Task.Delay(25, cancellationTokenSource.Token);
-            }
-            // a bit of extra delay to give the user a chance to cancel and for the import to hopefully _actually_ finish
-            await Task.Delay(250, cancellationTokenSource.Token);
-        }
-
-        item.state = ImportState.Imported;
-        var res = await AwaitResource(item, cancellationTokenSource.Token);
+        item.resource = await ResourceImportHandler.ImportAsset<Resource>(item.importFilename, cancellationTokenSource.Token).Await();
         item.state = ImportState.Done;
-        item.resource = res;
         ExecutePostImport(item);
-        return res;
+        return item.resource;
     }
 
     private static void ExecutePostImport(ImportQueueItem item)
@@ -283,46 +272,7 @@ public partial class AsyncImporter : Window
     {
         while (queueItem.state <= ImportState.Importing) await Task.Delay(50, token);
 
-        if (queueItem.state == ImportState.Failed) {
-            return null;
-        }
-
-        var fileExistsMs = 0;
-        var hasRetriedScan = false;
-        while (!ResourceLoader.Exists(queueItem.importFilename)) {
-            await Task.Delay(50, token);
-            if (queueItem.state == ImportState.Failed) {
-                return null;
-            }
-            if (File.Exists(ProjectSettings.GlobalizePath(queueItem.importFilename))) {
-                fileExistsMs += 50;
-                if (fileExistsMs > 5000) {
-                    if (!hasRetriedScan && !ReachForGodotPlugin.IsImporting && !EditorInterface.Singleton.GetResourceFilesystem().IsScanning()) {
-                        Importer.QueueFileRescan();
-                        hasRetriedScan = true;
-                        fileExistsMs = 0;
-                    } else if (hasRetriedScan && fileExistsMs > 30_000) {
-                        // give up at this point, it's clearly stuck somehow
-                        GD.PrintErr("Asset import timed out, skipping: " + queueItem.importFilename);
-                        return null;
-                    }
-                }
-            }
-        }
-        Resource? res = null;
-        var attempts = 10;
-        while (attempts-- > 0 && res == null) {
-            try {
-                res = ResourceLoader.Load<Resource>(queueItem.importFilename);
-            } catch (Exception) {
-                await Task.Delay(100, token);
-            }
-        }
-
-        if (attempts < 0) {
-            GD.PrintErr("Asset import timed out: " + queueItem.importFilename);
-        }
-
-        return res;
+        var resourceToken = ResourceImportHandler.ImportAsset<Resource>(queueItem.importFilename, token);
+        return await resourceToken.Await();
     }
 }

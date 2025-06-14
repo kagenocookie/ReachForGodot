@@ -68,7 +68,7 @@ public partial class GameObject : Node3D, ISerializationListener, ICloneable
 
     public void Clear()
     {
-        this.ClearChildren();
+        this.QueueFreeRemoveChildren();
         _components?.Clear();
     }
 

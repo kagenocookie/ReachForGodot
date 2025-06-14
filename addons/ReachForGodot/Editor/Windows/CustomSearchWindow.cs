@@ -187,7 +187,7 @@ public partial class CustomSearchWindow : Window
     private void ClearResults()
     {
         Results.Clear();
-        resultsContainer.ClearChildren();
+        resultsContainer.QueueFreeChildren();
     }
 
     private void OnFilterUpdated(string text)

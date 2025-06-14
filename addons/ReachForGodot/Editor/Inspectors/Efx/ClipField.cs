@@ -65,7 +65,7 @@ public partial class ClipField : Control
         }
 
         if (data == null) {
-            frameContainer.FreeAllChildren();
+            frameContainer.QueueFreeChildren();
             return;
         }
         var children = frameContainer.GetChildCount();
@@ -212,7 +212,7 @@ public partial class ClipField : Control
 
     protected override void Dispose(bool disposing)
     {
-        base.Dispose(disposing);
         frameItem?.QueueFree();
+        base.Dispose(disposing);
     }
 }

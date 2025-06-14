@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Godot;
 
 [GlobalClass, Tool, ResourceHolder("pfb", SupportedFileFormats.Prefab)]
-public partial class PrefabResource : REResourceProxy, IExportableAsset
+public partial class PrefabResource : REResourceProxy, IImportableAsset, IExportableAsset
 {
     public PackedScene? Scene => ImportedResource as PackedScene;
     public PrefabNode? Instantiate() => Scene?.Instantiate<PrefabNode>();
@@ -24,4 +24,6 @@ public partial class PrefabResource : REResourceProxy, IExportableAsset
     {
         return ImportedResource ??= CreateImporter(options).Pfb.CreateScenePlaceholder(this);
     }
+
+    IEnumerable<(string label, GodotImportOptions importMode)> IImportableAsset.SupportedImportTypes => PrefabNode.ImportTypes;
 }

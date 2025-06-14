@@ -50,7 +50,7 @@ public class RcolConverter : SceneRszAssetConverter<RcolResource, RcolFile, Rcol
             group.LayerGuid = srcGroup.Info.LayerGuid;
             group.Data = srcGroup.Info.UserData == null ? null : CreateOrGetObject(srcGroup.Info.UserData);
 
-            group.ClearChildren();
+            group.QueueFreeRemoveChildren();
             foreach (var srcShape in srcGroup.Shapes) {
                 var shapeNode = new RequestSetCollisionShape3D();
                 shapeNode.Guid = srcShape.Info.Guid;

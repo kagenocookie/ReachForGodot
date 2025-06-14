@@ -23,7 +23,7 @@ public partial class Foliage : REComponent
         await foliage.EnsureImported(true);
         if (foliage.Groups == null) return;
 
-        GameObject.ClearChildren();
+        GameObject.QueueFreeRemoveChildren();
 
         int childCount = 0;
         foreach (var group in foliage.Groups) {

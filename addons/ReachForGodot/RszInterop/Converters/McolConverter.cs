@@ -25,35 +25,6 @@ public class McolConverter :
 
     public override McolFile CreateFile(FileHandler fileHandler) => new McolFile(fileHandler);
 
-    public bool ImportFromFile(string sourcePath, McolRoot? imported, MeshColliderResource? resource)
-    {
-        Clear();
-        var file = CreateFile(new FileHandler(sourcePath));
-        if (!LoadFile(file)) return false;
-        resource ??= imported?.Resource ?? Importer.FindOrImportResource<MeshColliderResource>(sourcePath, Config, WritesEnabled);
-        if (resource == null) {
-            GD.PrintErr("Resource could not be created: " + sourcePath);
-            return false;
-        }
-        if (imported == null) {
-            resource.ImportedResource ??= Importer.FindOrImportAsset<PackedScene>(resource.Asset!.AssetFilename, Config, WritesEnabled);
-            // resource.ImportedResource ??= Importer.FindOrImportAsset<PackedScene>(sourcePath, Config, WritesEnabled);
-            imported = resource.Instantiate();
-            if (imported == null) return false;
-        }
-
-        if (!ImportSync(file, resource, imported)) return false;
-        // if (!await Import(file, imported)) return false;
-        // TODO save imported resource
-        Clear();
-        return true;
-    }
-
-    public Task<bool> Import(McolFile file, MeshColliderResource target)
-    {
-        return Task.FromResult(ImportSync(file, target, target.Instantiate() ?? CreateScenePlaceholder(target).Instantiate<McolRoot>()));
-    }
-
     // public Task<bool> Export(MeshColliderResource source, McolFile file)
     // {
     //     return Task.FromResult(false);
@@ -61,7 +32,7 @@ public class McolConverter :
 
     public override Task<bool> Import(McolFile file, McolRoot target)
     {
-        return Task.FromResult(ImportSync(file, target.Resource!, target));
+        return Import(file, target.Resource!, target);
     }
 
     public override Task<bool> Export(McolRoot source, McolFile file)
@@ -79,7 +50,7 @@ public class McolConverter :
         file.bvh = RebuildBvhFromMesh(mesh, source);
         if (resource.Layers != null) {
             foreach (var layer in resource.Layers) {
-                file.bvh.stringTable.Add((layer.MainString ?? string.Empty, layer.SubString));
+                file.bvh.stringTable.Add((layer.MainString ?? string.Empty, string.IsNullOrEmpty(layer.SubString) ? null : layer.SubString));
             }
         }
         return true;
@@ -90,7 +61,10 @@ public class McolConverter :
     {
         var root = target.Instantiate() ?? CreateScenePlaceholder(target).Instantiate<McolRoot>();
 
-        if (!ImportSync(file, target, root)) return false;
+        var task = Import(file, target, root);
+        if (!task.IsCompleted) return false; // import did not complete synchronously, fail it
+        if (!task.Result) return false; // import failed altogether
+
         if (target.ImportedResource == null || EditorInterface.Singleton.GetEditedSceneRoot() != root) {
             PostImport(target, root);
         }
@@ -98,7 +72,7 @@ public class McolConverter :
         return true;
     }
 
-    public bool ImportSync(McolFile file, MeshColliderResource target, McolRoot root)
+    public async Task<bool> Import(McolFile file, MeshColliderResource target, McolRoot root)
     {
         var colliderRoot = root.ColliderRoot;
 
@@ -115,12 +89,18 @@ public class McolConverter :
             origin.Owner = root;
         }
         origin.Position = file.bvh.ReadBounds().Center.ToGodot();
-        colliderRoot.FreeAllChildrenImmediately();
+        colliderRoot.QueueFreeRemoveChildren();
 
-        Mesh mesh = ImportMesh(file.bvh);
+        target.Layers = file.bvh.stringTable.Select((tb, i) => new McolMaterialData() {
+            MainString = tb.main,
+            SubString = tb.sub,
+            Material = new StandardMaterial3D() { ResourceName = LayerToMaterialName(i, tb.main), AlbedoColor = McolLayerColors[i] },
+        }).ToArray();
+
+        Mesh mesh = ImportMesh(file.bvh, target.Layers);
         if (WritesEnabled) {
             // use mesh from the exported gltf instead of the generated one directly
-            var meshScene = ExportToGltf(mesh, root, target, root.Asset!.GetImportFilepathChangeExtension(Config, ".glb")!, false);
+            var meshScene = await ExportToGltf(mesh, root, target, root.Asset!.GetImportFilepathChangeExtension(Config, ".glb")!, false);
             MeshInstance3D newMeshNode;
             if (meshScene != null) {
                 target.Mesh = meshScene;
@@ -150,12 +130,6 @@ public class McolConverter :
         }
         ImportColliders(file.bvh, colliderRoot);
 
-        target.Layers = file.bvh.stringTable.Select((tb, i) => new McolMaterialData() {
-            MainString = tb.main,
-            SubString = tb.sub,
-            Material = new StandardMaterial3D() { ResourceName = LayerToMaterialName(i, tb.main), AlbedoColor = McolLayerColors[i] },
-        }).ToArray();
-
         target.CachedVertexCount = file.bvh.vertices.Count;
 
         // we don't really care about the tree since it just gets built off of the mesh and colliders anyway, could be helpful for debugging though
@@ -172,7 +146,7 @@ public class McolConverter :
             root.AddChild(treeRoot = new StaticBody3D() { Name = "Tree" });
             treeRoot.Owner = root;
         }
-        treeRoot.FreeAllChildrenImmediately();
+        treeRoot.QueueFreeRemoveChildren();
         if (bvh.tree?.entries.Count <= 500) {
             int i = 0;
             foreach (var entry in bvh.tree.entries) {
@@ -201,7 +175,7 @@ public class McolConverter :
         return matname;
     }
 
-    private static ArrayMesh ImportMesh(BvhData file)
+    private static ArrayMesh ImportMesh(BvhData file, McolMaterialData[] materials)
     {
         ArrayMesh mesh = new ArrayMesh();
 
@@ -209,9 +183,8 @@ public class McolConverter :
         for (int m = 0; m < submeshCount; m++) {
             var surf = new SurfaceTool();
             surf.Begin(Mesh.PrimitiveType.Triangles);
-            var matname = LayerToMaterialName(m, file.stringTable[m].main);
-            var mat = new StandardMaterial3D() { ResourceName = matname };
-            mat.AlbedoColor = new Color(McolLayerColors[m]);
+            var layer = materials[m];
+            var mat = layer.Material;
             surf.SetMaterial(mat);
             var verts = file.vertices;
             var faces = file.triangles;
@@ -264,18 +237,18 @@ public class McolConverter :
         }
     }
 
-    public static PackedScene ExportToGltf(McolRoot root, string outputPath, bool includeColliders)
+    public static Task<PackedScene> ExportToGltf(McolRoot root, string outputPath, bool includeColliders)
     {
         var resource = root.Resource ?? new MeshColliderResource();
         var mesh = root?.MeshNode?.Mesh;
         if (root == null || mesh == null) {
-            return new PackedScene();
+            return Task.FromResult(new PackedScene());
         }
 
         return ExportToGltf(mesh, root, resource, outputPath, includeColliders);
     }
 
-    private static PackedScene ExportToGltf(Mesh mesh, McolRoot root, MeshColliderResource resource, string outputPath, bool includeColliders)
+    private static async Task<PackedScene> ExportToGltf(Mesh mesh, McolRoot root, MeshColliderResource resource, string outputPath, bool includeColliders)
     {
         var doc = new GltfDocument();
         var state = new GltfState();
@@ -345,16 +318,15 @@ public class McolConverter :
             doc.AppendFromScene(capsulesRoot, state);
             doc.AppendFromScene(boxesRoot, state);
         }
-        doc.WriteToFilesystem(state, outputPath);
-        exportMeshInst.QueueFree();
-
-        if (ResourceLoader.Exists(outputPath)) {
-            EditorInterface.Singleton.GetResourceFilesystem().ReimportFiles([outputPath]);
-        } else {
-            EditorInterface.Singleton.GetResourceFilesystem().UpdateFile(outputPath);
-            EditorInterface.Singleton.GetResourceFilesystem().ReimportFiles([outputPath]);
+        var error = doc.WriteToFilesystem(state, outputPath);
+        if (error != Error.Ok) {
+            GD.PrintErr("Failed to write mcol gltf: " + error);
+            return exportMeshInst.ToPackedScene();
         }
-        return ResourceLoader.Load<PackedScene>(outputPath);
+
+        var result = await ResourceImportHandler.ImportAsset<PackedScene>(outputPath).Await() ?? exportMeshInst.ToPackedScene();
+        exportMeshInst.QueueFree();
+        return result;
     }
 
     public BvhData RebuildBvhFromMesh(Mesh mesh, McolRoot root)
@@ -362,24 +334,8 @@ public class McolConverter :
         var bvh = new BvhData(new FileHandler() { FileVersion = PathUtils.GetFileFormatVersion(SupportedFileFormats.MeshCollider, Config.Paths) });
         bvh.tree = new BvhTree();
 
-        foreach (var collider in root.ColliderRoot.FindChildrenByType<CollisionShape3D>()) {
-            var name = collider.Name.ToString();
-            var data = ColliderData.Parse(name);
-            switch (collider.Shape) {
-                case SphereShape3D sphere:
-                    data.ApplyToObjectInfo(bvh.AddCollider(RequestSetCollisionShape3D.ConvertShapeToRsz(collider, sphere)).info);
-                    break;
-                case CapsuleShape3D capsule:
-                    data.ApplyToObjectInfo(bvh.AddCollider(RequestSetCollisionShape3D.ConvertShapeToRsz(collider, capsule)).info);
-                    break;
-                case BoxShape3D box:
-                    data.ApplyToObjectInfo(bvh.AddCollider(RequestSetCollisionShape3D.ConvertShapeToRsz(collider, box)).info);
-                    break;
-                default:
-                    GD.PrintErr("Unsupported mcol shape type " + collider.Shape.GetType());
-                    break;
-            }
-        }
+        // mcol shapes need to be added in sorted by type since the bounds contain indexes
+        // triangles > spheres > capsules > boxes
 
         var surfCount = mesh.GetSurfaceCount();
 
@@ -415,6 +371,23 @@ public class McolConverter :
                 bvh.AddTriangle(indexData);
             }
         }
+
+        var colliders = root.ColliderRoot.FindChildrenByType<CollisionShape3D>().ToList();
+
+        AddColliders<SphereShape3D> (colliders, bvh, (collider, sphere,  data) => data.ApplyToObjectInfo(bvh.AddCollider(RequestSetCollisionShape3D.ConvertShapeToRsz(collider, sphere)).info));
+        AddColliders<CapsuleShape3D>(colliders, bvh, (collider, capsule, data) => data.ApplyToObjectInfo(bvh.AddCollider(RequestSetCollisionShape3D.ConvertShapeToRsz(collider, capsule)).info));
+        AddColliders<BoxShape3D>    (colliders, bvh, (collider, box,     data) => data.ApplyToObjectInfo(bvh.AddCollider(RequestSetCollisionShape3D.ConvertShapeToRsz(collider, box)).info));
+        static void AddColliders<TShape>(List<CollisionShape3D> colliders, BvhData bvh, Action<Node3D, TShape, ColliderData> func)
+        {
+            foreach (var collider in colliders) {
+                if (collider.Shape is TShape shape) {
+                    var name = collider.Name.ToString();
+                    var data = ColliderData.Parse(name);
+                    func.Invoke(collider, shape, data);
+                }
+            }
+        }
+
         bvh.BuildTree();
         return bvh;
     }

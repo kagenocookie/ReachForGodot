@@ -183,10 +183,11 @@ public static class GodotObjectExtensions
         return null;
     }
 
-    public static void FreeAllChildren(this Node node)
+    public static void QueueFreeChildren(this Node node)
     {
-        foreach (var child in node.GetChildren()) {
-            child.QueueFree();
+        var i = node.GetChildCount();
+        while (--i >= 0) {
+            node.GetChild(i).QueueFree();
         }
     }
 
@@ -200,26 +201,24 @@ public static class GodotObjectExtensions
         }
     }
 
-    public static void FreeAllChildrenImmediately(this Node node)
-    {
-        foreach (var child in node.GetChildren()) {
-            child.Free();
-        }
-    }
-
-    public static void ClearChildren(this Node node)
-    {
-        ClearChildren(node, (_) => true);
-    }
-
-    public static void ClearChildren(this Node node, Func<Node, bool> filter)
+    public static void QueueFreeRemoveChildren(this Node node)
     {
         var i = node.GetChildCount();
         while (--i >= 0) {
-            var child = node.GetChild(i);
+            var child = node.GetChild(0);
+            node.RemoveChild(child);
+            child.QueueFree();
+        }
+    }
+
+    public static void QueueFreeRemoveChildrenWhere(this Node node, Func<Node, bool> filter)
+    {
+        var i = node.GetChildCount();
+        while (--i >= 0) {
+            var child = node.GetChild(0);
             if (filter.Invoke(child)) {
                 node.RemoveChild(child);
-                child.Free();
+                child.QueueFree();
             }
         }
     }

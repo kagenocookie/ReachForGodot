@@ -84,13 +84,9 @@ public class Importer
         }
 
         if (ResourceLoader.Exists(importPath)) {
-            try {
-                var resource = ResourceLoader.Load<Resource>(importPath) as T;
-                if (resource != null) return resource;
-                GD.PrintErr("Failed to load imported resource, re-importing: " + importPath);
-            } catch (Exception e) {
-                GD.PrintErr("Failed to load imported resource, re-importing: " + importPath, e);
-            }
+            var resource = ResourceLoader.Load(importPath);
+            if (resource is T castResource) return castResource;
+            GD.PrintErr("Failed to load imported resource, re-importing: " + importPath);
         }
 
         var sourcePath = PathUtils.FindSourceFilePath(chunkRelativeFilepath, config, saveAssetToFilesystem);
@@ -124,20 +120,6 @@ public class Importer
         var importPath = ProjectSettings.LocalizePath(outputFilePath);
         newres.SaveOrReplaceResource(importPath);
         return newres;
-    }
-
-    public static void QueueFileRescan()
-    {
-        var fs = EditorInterface.Singleton.GetResourceFilesystem();
-        if (!fs.IsScanning()) fs.CallDeferred(EditorFileSystem.MethodName.Scan);
-    }
-
-    public static void ForceEditorImportNewFile(string file)
-    {
-        QueueFileRescan();
-        // var fs = EditorInterface.Singleton.GetResourceFilesystem();
-        // fs.CallDeferred(EditorFileSystem.MethodName.UpdateFile, file);
-        // fs.CallDeferred(EditorFileSystem.MethodName.ReimportFiles, new Godot.Collections.Array<string>(new[] { file }));
     }
 
     private static void TrySaveResource(Resource res, string? filepath)

@@ -30,10 +30,10 @@ public static class EditorExtensions
         return scene;
     }
 
-    public static PackedScene SaveAsScene(this Node node, string outputPath)
+    public static PackedScene SaveAsScene(this Node node, string importPath)
     {
         var scene = ToPackedScene(node);
-        var err = scene.SaveOrReplaceResource(outputPath);
+        var err = scene.SaveOrReplaceResource(importPath);
         if (err != Error.Ok) {
             GD.PrintErr("Failed to save scene: " + err);
         }
@@ -42,7 +42,7 @@ public static class EditorExtensions
 
     public static Error SaveOrReplaceResource(this Resource resource, string importFilepath)
     {
-        if (ResourceLoader.Exists(importFilepath)) {
+        if (ResourceLoader.Exists(importFilepath) && resource.ResourcePath != importFilepath) {
             resource.TakeOverPath(importFilepath);
         } else {
             Directory.CreateDirectory(ProjectSettings.GlobalizePath(importFilepath).GetBaseDir());

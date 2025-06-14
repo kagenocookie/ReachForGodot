@@ -10,7 +10,9 @@ public partial class PrefabNode : GameObject, IRszContainer, IImportableAsset
     public bool IsEmpty => GetChildCount() == 0 && (Components == null || Components.Count == 0);
     public new string Path => $"{Asset?.AssetFilename}:{Name}";
 
-    IEnumerable<(string label, GodotImportOptions importMode)> IImportableAsset.SupportedImportTypes => [
+    IEnumerable<(string label, GodotImportOptions importMode)> IImportableAsset.SupportedImportTypes => ImportTypes;
+
+    public static readonly IEnumerable<(string label, GodotImportOptions importMode)> ImportTypes = [
         ("Import anything missing", GodotImportOptions.importTreeChanges),
         ("Discard and reimport structure", GodotImportOptions.forceReimportStructure),
         ("Fully reimport all resources", GodotImportOptions.fullReimport),

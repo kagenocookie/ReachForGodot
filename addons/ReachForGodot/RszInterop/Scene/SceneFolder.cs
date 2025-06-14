@@ -109,7 +109,7 @@ public partial class SceneFolder : Node3D, IRszContainer, IImportableAsset
 
     public void Clear()
     {
-        this.ClearChildren();
+        this.QueueFreeRemoveChildren();
         Resources = Array.Empty<REResource>();
     }
 
@@ -207,7 +207,9 @@ public partial class SceneFolder : Node3D, IRszContainer, IImportableAsset
         return action.ActiveInstance!;
     }
 
-    IEnumerable<(string label, GodotImportOptions importMode)> IImportableAsset.SupportedImportTypes => [
+    IEnumerable<(string label, GodotImportOptions importMode)> IImportableAsset.SupportedImportTypes => ImportTypes;
+
+    public static readonly IEnumerable<(string label, GodotImportOptions importMode)> ImportTypes = [
         ("Discard and reimport this scene", GodotImportOptions.forceReimportThisStructure),
         ("Discard and reimport nested scenes", GodotImportOptions.forceReimportStructure),
         ("Import this scene missing objects", GodotImportOptions.thisFolderOnly),

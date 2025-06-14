@@ -36,7 +36,7 @@ public abstract class BlenderResourceConverter<TResource, TAsset> : ConverterBas
         }
         var importFilepath = PathUtils.GetAssetImportPath(sourceFilePath, resource.ResourceType, Config);
 
-        if (sourceFilePath == null || !IsSupportedFile(sourceFilePath)) {
+        if (sourceFilePath == null || !IsSupportedFile(sourceFilePath) || importFilepath == null) {
             GD.PrintErr("Unsupported file " + sourceFilePath);
             return null;
         }
@@ -46,38 +46,11 @@ public abstract class BlenderResourceConverter<TResource, TAsset> : ConverterBas
         Directory.CreateDirectory(Path.GetFullPath(outputPath.GetBaseDir()));
         var assetExisted = File.Exists(outputPath) && ResourceLoader.Exists(importFilepath);
         var updatedResource = await AsyncImporter.QueueAssetImport(sourceFilePath, outputPath, Game, ExecuteImport);
-        if (!string.IsNullOrEmpty(updatedResource?.ResourcePath)) {
-            resource.ImportedResource = ResourceLoader.Load<Resource>(updatedResource.ResourcePath);
-        }
-        if (!string.IsNullOrEmpty(resource.ResourcePath)) {
+        resource.ImportedResource = updatedResource;
+        if (WritesEnabled && !string.IsNullOrEmpty(resource.ResourcePath)) {
             ResourceSaver.Save(resource);
-            EditorInterface.Singleton.GetResourceFilesystem().UpdateFile(resource.ResourcePath);
         }
-        if (assetExisted) {
-            ReimportExistingFile(outputPath);
-        } else {
-            ForceEditorImportNewFiles();
-        }
-        return resource.ImportedResource;
-    }
-
-    protected static void QueueFileRescan()
-    {
-        var fs = EditorInterface.Singleton.GetResourceFilesystem();
-        if (!fs.IsScanning()) fs.CallDeferred(EditorFileSystem.MethodName.Scan);
-    }
-
-    protected static void ForceEditorImportNewFiles()
-    {
-        QueueFileRescan();
-    }
-
-    protected static void ReimportExistingFile(string file)
-    {
-        // var fs = EditorInterface.Singleton.GetResourceFilesystem();
-        // fs.CallDeferred(EditorFileSystem.MethodName.UpdateFile, file);
-        // fs.CallDeferred(EditorFileSystem.MethodName.ReimportFiles, new Godot.Collections.Array<string>(new[] { file }));
-        QueueFileRescan();
+        return updatedResource;
     }
 
     protected async Task ExecuteBlenderScript(string script, bool background)

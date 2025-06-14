@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Godot;
 
 [GlobalClass, Tool, ResourceHolder("scn", SupportedFileFormats.Scene)]
-public partial class SceneResource : REResourceProxy, IExportableAsset
+public partial class SceneResource : REResourceProxy, IImportableAsset, IExportableAsset
 {
     public PackedScene? Scene => ImportedResource as PackedScene;
     public SceneFolder? Instantiate() => Scene?.Instantiate<SceneFolder>();
@@ -24,4 +24,6 @@ public partial class SceneResource : REResourceProxy, IExportableAsset
     {
         return ImportedResource ??= CreateImporter(options).Scn.CreateScenePlaceholder(this);
     }
+
+    IEnumerable<(string label, GodotImportOptions importMode)> IImportableAsset.SupportedImportTypes => SceneFolder.ImportTypes;
 }

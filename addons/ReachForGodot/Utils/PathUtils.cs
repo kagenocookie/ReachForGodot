@@ -273,6 +273,14 @@ public static partial class PathUtils
     /// <summary>
     /// Gets the path that a resource's asset file will get imported to. This is the mesh/texture/audio/other linked resource, and not the main resource file.
     /// </summary>
+    public static string? GetAssetImportPath(string? sourcePath, AssetConfig config)
+    {
+        var format = GetFileFormat(sourcePath).format;
+        return GetAssetImportPath(sourcePath, format, config);
+    }
+    /// <summary>
+    /// Gets the path that a resource's asset file will get imported to. This is the mesh/texture/audio/other linked resource, and not the main resource file.
+    /// </summary>
     public static string? GetAssetImportPath(string? sourcePath, SupportedFileFormats format, AssetConfig config)
     {
         if (sourcePath == null) return null;

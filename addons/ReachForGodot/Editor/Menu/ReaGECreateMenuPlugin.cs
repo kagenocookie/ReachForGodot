@@ -69,7 +69,7 @@ public partial class ReaGECreateMenuPlugin : EditorContextMenuPlugin
             }
 
             obj.SaveAsScene(outputPath);
-            Importer.QueueFileRescan();
+            await ResourceImportHandler.EnsureImported<PackedScene>(outputPath) ;
         }
     }
 }

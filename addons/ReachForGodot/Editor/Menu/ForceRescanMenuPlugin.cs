@@ -15,7 +15,8 @@ public partial class ForceRescanMenuPlugin : EditorContextMenuPlugin
 
     private void DoRescan()
     {
-        Importer.QueueFileRescan();
+        var fs = EditorInterface.Singleton.GetResourceFilesystem();
+        if (!fs.IsScanning()) fs.CallDeferred(EditorFileSystem.MethodName.Scan);
     }
 }
 #endif

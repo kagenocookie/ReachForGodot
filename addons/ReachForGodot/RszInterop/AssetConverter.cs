@@ -181,7 +181,7 @@ public class AssetConverter
         } else if (asset is EfxRootNode efx) {
             return Efx.ImportFromFileToInstance(filepath, efx);
         } else if (asset is McolRoot mcol) {
-            return Task.FromResult(Mcol.ImportFromFile(filepath, mcol, mcol.Resource));
+            return Mcol.ImportFromFileToInstance(filepath, mcol);
         } else {
             GD.PrintErr("Currently unsupported import for object type " + asset.GetType());
             return Task.FromResult(false);

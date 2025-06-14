@@ -33,7 +33,6 @@ public class TextureConverter : BlenderResourceConverter<TextureResource, Textur
                 if (convertedFilepath != outputPath) {
                     File.Move(convertedFilepath, outputPath, true);
                 }
-                QueueFileRescan();
                 return true;
             } else {
                 // array textures and supported stuff... not sure how to handle those

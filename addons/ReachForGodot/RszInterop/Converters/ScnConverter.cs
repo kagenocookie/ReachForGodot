@@ -22,7 +22,10 @@ public class ScnConverter : SceneRszAssetConverter<SceneResource, ScnFile, Scene
     protected override void PostImport(SceneResource resource, SceneFolder instance)
     {
         if (WritesEnabled && !instance.IsInsideTree()) {
-            CreateOrReplaceSceneResource(instance, instance.Asset!);
+            resource.ImportedResource = CreateOrReplaceSceneResource(instance, instance.Asset!);
+            if (!string.IsNullOrEmpty(resource.ResourcePath)) {
+                resource.SaveOrReplaceResource(resource.ResourcePath);
+            }
         }
     }
 
@@ -366,20 +369,24 @@ public class ScnConverter : SceneRszAssetConverter<SceneResource, ScnFile, Scene
                 return;
             }
             int nodeCount = 0;
-            var newInstance = scene.Instantiate<SceneFolder>();
+            var newInstance = scene.Instantiate<SceneFolder>(PackedScene.GenEditState.Instance);
             if (!batch.finishedFolders.Contains(folder) && Convert.Options.linkedScenes) {
-                var importPath = folder.Asset?.GetImportFilepath(Config);
-                var childFullPath = folder.Asset?.FindSourceFile(Config);
+                if (!folder.Asset.IsImportableAsset(Config, out var assetImportPath)) {
+                    ErrorLog("Invalid folder source file " + folder.Asset);
+                    return;
+                }
+
                 await RegenerateFromSourceFile(newInstance);
                 Convert.Context.UpdateUIStatus();
                 folder.KnownBounds = newInstance.KnownBounds;
-                scene.Pack(newInstance);
                 nodeCount = newInstance.NodeCount;
 
-                if (importPath == null || childFullPath == null) {
-                    ErrorLog("Invalid folder source file " + folder.Asset?.ToString());
-                    return;
+                scene.Pack(newInstance);
+                if (string.IsNullOrEmpty(scene.ResourcePath)) {
+                    GD.PrintErr("Empty res path lol");
                 }
+                scene.SaveOrReplaceResource(scene.ResourcePath.NullIfEmpty() ?? assetImportPath);
+                newInstance = scene.Instantiate<SceneFolder>(PackedScene.GenEditState.Instance);
             }
             batch.finishedFolders.Add(folder);
             newInstance.CopyDataFrom(folder);

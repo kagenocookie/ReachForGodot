@@ -144,29 +144,17 @@ public partial class AssetBrowser : Resource
         return Task.WhenAll(files.Select(f => ImportSingleAsset(f, config)));
     }
 
-    private static bool ImportByRelativePath(string file, AssetConfig config)
-    {
-        var sourcePath = PathUtils.GetFilepathWithoutNativesFolder(file);
-        var resolvedPath = PathUtils.FindSourceFilePath(sourcePath, config);
-        if (resolvedPath != null) {
-            return Importer.ImportResource(sourcePath, config) != null;
-        }
-        return false;
-    }
-
     private static async Task ImportSingleAsset(string file, AssetConfig config)
     {
         Debug.Assert(config != null);
         if (!file.StartsWith(config.Paths.ChunkPath)) {
             config.Paths.SourcePathOverride = PathUtils.GetSourceFileBasePath(file, config);
         }
+        var converter = new AssetConverter(config, GodotImportOptions.forceReimportThisStructure);
         try {
             var res = Importer.ImportResource(file, config);
-            if (res is REResourceProxy resp) {
-                await resp.Import(true);
-                ResourceSaver.Save(resp);
-            } else if (res is UserdataResource ud) {
-                ud.Reimport();
+            if (res is IImportableAsset importable) {
+                await converter.ImportAssetAsync(importable, file);
             }
         } finally {
             config.Paths.SourcePathOverride = null;

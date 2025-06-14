@@ -12,6 +12,10 @@ public partial class MeshColliderResource : REResourceProxy, IExportableAsset
     {
         var src = (Mesh ?? ImportedMesh)?.ResourcePath;
         var root = string.IsNullOrEmpty(src) ? null : ResourceLoader.Load<PackedScene>(src, null, ResourceLoader.CacheMode.Ignore)?.Instantiate();
+        if (root is McolRoot mcolRoot && mcolRoot.IsEmpty) {
+            // setting this to null will force a reimport whenever the user next requests something from the resource
+            ImportedResource = null;
+        }
         var mesh = (root as MeshInstance3D ?? root?.FindChildByTypeRecursive<MeshInstance3D>())?.Mesh;
         root?.QueueFree();
         return mesh;

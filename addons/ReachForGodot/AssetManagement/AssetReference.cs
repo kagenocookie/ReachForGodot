@@ -44,6 +44,12 @@ public partial class AssetReference : Resource
         return dot == -1 ? false : AssetFilename.AsSpan().Slice(0, dot).SequenceEqual(compare);
     }
 
+    public bool IsImportableAsset(AssetConfig config, [MaybeNullWhen(false)] out string assetImportPath)
+    {
+        assetImportPath = PathUtils.GetAssetImportPath(_assetFilename, config);
+        return assetImportPath != null && FindSourceFile(config) != null;
+    }
+
     public string? FindSourceFile(AssetConfig config) => PathUtils.FindSourceFilePath(AssetFilename, config);
     public string? GetImportFilepath(AssetConfig config) => PathUtils.GetLocalizedImportPath(AssetFilename, config);
     public string GetFilenameWithExtensions(AssetConfig config) => PathUtils.AppendFileVersion(Path.GetFileName(_assetFilename), config);

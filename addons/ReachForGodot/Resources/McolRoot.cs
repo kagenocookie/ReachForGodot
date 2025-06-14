@@ -10,7 +10,7 @@ public partial class McolRoot : Node, IExportableAsset, IImportableAsset
 
     public MeshColliderResource? Resource => Importer.FindOrImportResource<MeshColliderResource>(Asset, ReachForGodot.GetAssetConfig(Game), !string.IsNullOrEmpty(SceneFilePath));
 
-    bool IImportableAsset.IsEmpty => this.GetChildCount() == 0;
+    public bool IsEmpty => this.GetChildCount() == 0;
 
     [ExportToolButton("Export all colliders to GLTF")]
     public Callable BtnExportFullMesh => Callable.From(ExportFullMesh);

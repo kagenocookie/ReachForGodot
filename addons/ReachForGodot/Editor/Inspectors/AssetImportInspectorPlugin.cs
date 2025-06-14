@@ -142,6 +142,8 @@ public partial class AssetImportInspectorPlugin : EditorInspectorPlugin, ISerial
             GD.PrintErr("Source file not found");
             return;
         }
+        var importFilepath = PathUtils.GetAssetImportPath(sourceFilepath, config);
+        var isRoot = root == EditorInterface.Singleton.GetEditedSceneRoot();
 
         IImportableAsset asset = root;
         if (root is SceneFolder scn) {
@@ -170,6 +172,9 @@ public partial class AssetImportInspectorPlugin : EditorInspectorPlugin, ISerial
             await converter.ImportAssetAsync(asset, sourceFilepath);
             if (asset is Node node) {
                 EditorInterface.Singleton.EditNode(node);
+                if (!isRoot && node is SceneFolder or PrefabNode && !string.IsNullOrEmpty(importFilepath)) {
+                    node.SaveAsScene(importFilepath);
+                }
             }
             GD.Print("Resource reimport finished in " + sw.Elapsed);
             if (root is SceneFolderProxy proxy) {

@@ -50,7 +50,7 @@ public class EfxConverter : SceneResourceConverter<EfxResource, EfxFile, EfxRoot
             entry.Assignment = srcEntry.entryAssignment;
             entry.LockNode(true);
 
-            entry.FreeAllChildrenImmediately();
+            entry.QueueFreeRemoveChildren();
 
             foreach (var srcAttr in srcEntry.Attributes) {
                 ImportAttribute(file, target, entry, srcAttr);

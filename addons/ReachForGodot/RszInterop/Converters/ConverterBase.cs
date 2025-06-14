@@ -73,25 +73,18 @@ public abstract class ConverterBase<TResource, TExported, TAsset>
 
     protected PackedScene CreateOrReplaceSceneResource<TRoot>(TRoot root, AssetReference path) where TRoot : Node, new()
     {
-        root.Name = path.BaseFilename.ToString().StringOrDefault("Unnamed");
+        root.Name = path.BaseFilename.StringOrDefault("Unnamed");
         var scene = root.ToPackedScene(false);
         var importFilepath = PathUtils.GetAssetImportPath(path.AssetFilename, PathUtils.GetFileFormat(path.AssetFilename).format, Config);
         if (importFilepath == null) return scene;
 
-        return Convert.Options.allowWriting ? SaveOrReplaceResource(scene, importFilepath) : scene;
-    }
-
-    protected TRes SaveOrReplaceResource<TRes>(TRes newResource, string importFilepath) where TRes : Resource
-    {
-        Log("Saving resource " + importFilepath);
-        Convert.AddResource(importFilepath, newResource);
-        var status = newResource.SaveOrReplaceResource(importFilepath);
-        if (status == Error.Ok) {
-            Importer.QueueFileRescan();
-        } else {
-            ErrorLog($"Failed to save resource {importFilepath}:\n{status}");
+        if (Convert.Options.allowWriting) {
+            var status = scene.SaveOrReplaceResource(importFilepath);
+            if (status != Error.Ok) {
+                ErrorLog($"Failed to save scene {importFilepath}:\n{status}");
+            }
         }
-        return newResource;
+        return scene;
     }
 }
 

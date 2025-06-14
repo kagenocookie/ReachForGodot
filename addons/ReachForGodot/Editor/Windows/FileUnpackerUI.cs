@@ -76,7 +76,7 @@ public partial class FileUnpackerUI : Window
     {
         var config = ReachForGodot.GetAssetConfig(Game);
         if (!config.IsValid) return;
-        ExtensionButtonsContainer?.ClearChildren(c => c is CheckButton);
+        ExtensionButtonsContainer?.QueueFreeRemoveChildrenWhere(c => c is CheckButton);
         if (string.IsNullOrEmpty(config.Paths.FilelistPath)) {
             FileSystem = new FileListFileSystem(Array.Empty<string>());
             return;

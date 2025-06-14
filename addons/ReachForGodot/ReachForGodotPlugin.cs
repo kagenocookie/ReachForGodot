@@ -60,63 +60,20 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
     private PopupMenu? toolMenuDev;
     private AssetBrowser? browser;
 
+    private ResourceImportHandler importHandler = null!;
+
     static ReachForGodotPlugin()
     {
         System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(TypeCache).TypeHandle);
     }
 
-    #region Backup code
-    // TODO: revisit after https://github.com/godotengine/godot/issues/104937 is fixed
-    public static bool IsImporting { get; private set; }
-    // public static List<string> PostImportReimportfiles = new();
-    // public static List<string> PostImportUpdateFiles = new();
-    // public static readonly Queue<Action> ExecuteOnMainThreadList = new();
-
-    private void OnImporting(string[] files)
-    {
-        IsImporting = true;
-    }
-    private void OnStopImporting(string[] files)
-    {
-        IsImporting = false;
-        // TODO: revisit after https://github.com/godotengine/godot/issues/104937 is fixed
-        // if (PostImportReimportfiles.Count > 0) {
-        //     var fs = EditorInterface.Singleton.GetResourceFilesystem();
-        //     var list = PostImportReimportfiles.ToArray();
-        //     var updateFiles = PostImportUpdateFiles.ToArray();
-
-        //     GD.Print("Post-import reimporting:\n" + string.Join("\n", list));
-        //     PostImportReimportfiles.Clear();
-        //     PostImportUpdateFiles.Clear();
-        //     // fs.CallDeferred(EditorFileSystem.MethodName.ReimportFiles, list);
-        //     // fs.ReimportFiles(list);
-        //     foreach (var f in updateFiles) {
-        //         // fs.UpdateFile(f);
-        //         fs.CallDeferred(EditorFileSystem.MethodName.UpdateFile, f);
-        //     }
-        // }
-    }
-
-    // public override void _Process(double delta)
-    // {
-    //     while (ExecuteOnMainThreadList.Count != 0) {
-    //         var next = ExecuteOnMainThreadList.Dequeue();
-    //         try {
-    //             next.Invoke();
-    //         } catch (Exception e) {
-    //             GD.PrintErr("Main thread exec failed: " + e.Message);
-    //         }
-    //     }
-    // }
-    #endregion
 
     public override void _EnterTree()
     {
         _pluginInstance = this;
         AddSettings();
-        var fs = EditorInterface.Singleton.GetResourceFilesystem();
-        fs.ResourcesReimporting += OnImporting;
-        fs.ResourcesReimported += OnStopImporting;
+        importHandler = ResourceImportHandler.Instance;
+        importHandler.Init();
 
 #if REAGE_DEV
         toolMenuDev = new PopupMenu() { Title = "Reach for Godot Dev" };
@@ -505,6 +462,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
 
     public override void _ExitTree()
     {
+        importHandler.Cleanup();
         RemoveToolMenuItem(toolMenu.Title);
         if (toolMenuDev != null) RemoveToolMenuItem(toolMenuDev.Title);
         RemoveToolMenuItem(DonateButtonText);
@@ -515,10 +473,6 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
         foreach (var importer in sceneImporters) RemoveSceneFormatImporterPlugin(importer);
         foreach (var importer in importers) RemoveImportPlugin(importer);
         foreach (var gen in previewGenerators) EditorInterface.Singleton.GetResourcePreviewer().RemovePreviewGenerator(gen);
-
-        var fs = EditorInterface.Singleton.GetResourceFilesystem();
-        fs.ResourcesReimporting -= OnImporting;
-        fs.ResourcesReimported -= OnStopImporting;
     }
 
     private void AddSettings()
