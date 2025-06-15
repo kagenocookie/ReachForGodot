@@ -46,7 +46,7 @@ public class McolConverter :
 
     public bool ExportSync(McolRoot source, MeshColliderResource resource, McolFile file)
     {
-        var mesh = source.MeshNode!.Mesh;
+        var mesh = resource.GetMesh();
         file.bvh = RebuildBvhFromMesh(mesh, source);
         if (resource.Layers != null) {
             foreach (var layer in resource.Layers) {
@@ -104,7 +104,8 @@ public class McolConverter :
             MeshInstance3D newMeshNode;
             if (meshScene != null) {
                 target.Mesh = meshScene;
-                newMeshNode = meshScene.Instantiate<MeshInstance3D>(PackedScene.GenEditState.Instance);
+                var sceneNode = meshScene.Instantiate<Node3D>(PackedScene.GenEditState.Instance);
+                newMeshNode = sceneNode as MeshInstance3D ?? sceneNode.RequireChildByTypeRecursive<MeshInstance3D>();
             } else {
                 newMeshNode = new MeshInstance3D() { Mesh = mesh };
                 Log("Gltf could not be immediately imported. You may need to reimport the scene");
@@ -329,7 +330,7 @@ public class McolConverter :
         return result;
     }
 
-    public BvhData RebuildBvhFromMesh(Mesh mesh, McolRoot root)
+    public BvhData RebuildBvhFromMesh(Mesh? mesh, McolRoot root)
     {
         var bvh = new BvhData(new FileHandler() { FileVersion = PathUtils.GetFileFormatVersion(SupportedFileFormats.MeshCollider, Config.Paths) });
         bvh.tree = new BvhTree();
@@ -337,38 +338,42 @@ public class McolConverter :
         // mcol shapes need to be added in sorted by type since the bounds contain indexes
         // triangles > spheres > capsules > boxes
 
-        var surfCount = mesh.GetSurfaceCount();
+        // mcol without a mesh is valid, hence nullable
+        if (mesh != null) {
+            var surfCount = mesh.GetSurfaceCount();
+            var unsetEdgeIndex = Game is SupportedGame.ResidentEvil7 or SupportedGame.DevilMayCry5 or SupportedGame.ResidentEvil2 ? 0 : -1;
 
-        for (int i = 0; i < surfCount; ++i) {
-            var surf = mesh.SurfaceGetArrays(i);
-            var verts = surf[(int)ArrayMesh.ArrayType.Vertex].AsVector3Array();
-            var indices = surf[(int)ArrayMesh.ArrayType.Index].AsInt32Array();
-            var uvs = surf[(int)ArrayMesh.ArrayType.TexUV].AsVector2Array();
-            var colors = surf[(int)ArrayMesh.ArrayType.Color].AsColorArray();
-            var mat = mesh.SurfaceGetMaterial(i);
-            var layerIndex = GetLayerIndexFromMaterialName(mat.ResourceName);
-            var vertsOffset = bvh.vertices.Count; // this should let us seamlessly handle multi-surface meshes
-            foreach (var v in verts) bvh.vertices.Add(v.ToRsz());
+            for (int i = 0; i < surfCount; ++i) {
+                var surf = mesh.SurfaceGetArrays(i);
+                var verts = surf[(int)ArrayMesh.ArrayType.Vertex].AsVector3Array();
+                var indices = surf[(int)ArrayMesh.ArrayType.Index].AsInt32Array();
+                var uvs = surf[(int)ArrayMesh.ArrayType.TexUV].AsVector2Array();
+                var colors = surf[(int)ArrayMesh.ArrayType.Color].AsColorArray();
+                var mat = mesh.SurfaceGetMaterial(i);
+                var layerIndex = GetLayerIndexFromMaterialName(mat.ResourceName);
+                var vertsOffset = bvh.vertices.Count; // this should let us seamlessly handle multi-surface meshes
+                foreach (var v in verts) bvh.vertices.Add(v.ToRsz());
 
-            for (int k = 0; k < indices.Length; k += 3) {
-                var vert1 = indices[k];
-                var vert2 = indices[k + 1];
-                var vert3 = indices[k + 2];
+                for (int k = 0; k < indices.Length; k += 3) {
+                    var vert1 = indices[k];
+                    var vert2 = indices[k + 1];
+                    var vert3 = indices[k + 2];
 
-                // storing indices as 1-3-2 and not 1-2-3 because godot and RE winding order is different
-                var indexData = new BvhTriangle() {
-                    posIndex1 = vert1 + vertsOffset,
-                    posIndex2 = vert3 + vertsOffset,
-                    posIndex3 = vert2 + vertsOffset,
-                    edgeIndex1 = -1,
-                    edgeIndex2 = -1,
-                    edgeIndex3 = -1,
-                };
-                // NOTE: edges ignored for now, because I can't get them right and they don't seem to make a difference either
-                indexData.info.mask = colors != null ? colors[vert1].ToRgba32() : uint.MaxValue;
-                indexData.info.layerIndex = layerIndex;
-                indexData.info.partId = Mathf.RoundToInt(uvs[vert1].X * MaxPartId);
-                bvh.AddTriangle(indexData);
+                    // storing indices as 1-3-2 and not 1-2-3 because godot and RE winding order is different
+                    var indexData = new BvhTriangle() {
+                        posIndex1 = vert1 + vertsOffset,
+                        posIndex2 = vert3 + vertsOffset,
+                        posIndex3 = vert2 + vertsOffset,
+                        edgeIndex1 = unsetEdgeIndex,
+                        edgeIndex2 = unsetEdgeIndex,
+                        edgeIndex3 = unsetEdgeIndex,
+                    };
+                    // NOTE: edges ignored for now, because I can't get them right and they don't seem to make a difference either
+                    indexData.info.mask = colors != null ? colors[vert1].ToRgba32() : uint.MaxValue;
+                    indexData.info.layerIndex = layerIndex;
+                    indexData.info.partId = Mathf.RoundToInt(uvs[vert1].X * MaxPartId);
+                    bvh.AddTriangle(indexData);
+                }
             }
         }
 

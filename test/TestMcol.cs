@@ -15,6 +15,6 @@ public partial class TestMcol : TestBase
         await ExecuteFullReadTest("mcol", (game, fileOption, filepath) => {
             var file = new McolFile(new FileHandler(filepath));
             file.Read();
-        }, null, GamesExcept(SupportedGame.ResidentEvil7));
+        });
     }
 }
