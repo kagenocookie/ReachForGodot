@@ -97,37 +97,39 @@ public class McolConverter :
             Material = new StandardMaterial3D() { ResourceName = LayerToMaterialName(i, tb.main), AlbedoColor = McolLayerColors[i] },
         }).ToArray();
 
-        Mesh mesh = ImportMesh(file.bvh, target.Layers);
-        if (WritesEnabled) {
-            // use mesh from the exported gltf instead of the generated one directly
-            var meshScene = await ExportToGltf(mesh, root, target, root.Asset!.GetImportFilepathChangeExtension(Config, ".glb")!, false);
-            MeshInstance3D newMeshNode;
-            if (meshScene != null) {
-                target.Mesh = meshScene;
-                var sceneNode = meshScene.Instantiate<Node3D>(PackedScene.GenEditState.Instance);
-                newMeshNode = sceneNode as MeshInstance3D ?? sceneNode.RequireChildByTypeRecursive<MeshInstance3D>();
+        if (file.bvh.triangles.Count > 0) {
+            Mesh mesh = ImportMesh(file.bvh, target.Layers);
+            if (WritesEnabled) {
+                // use mesh from the exported gltf instead of the generated one directly
+                var meshScene = await ExportToGltf(mesh, root, target, root.Asset!.GetImportFilepathChangeExtension(Config, ".glb")!, false);
+                MeshInstance3D newMeshNode;
+                if (meshScene != null) {
+                    target.Mesh = meshScene;
+                    var sceneNode = meshScene.Instantiate<Node3D>(PackedScene.GenEditState.Instance);
+                    newMeshNode = sceneNode as MeshInstance3D ?? sceneNode.RequireChildByTypeRecursive<MeshInstance3D>();
+                } else {
+                    newMeshNode = new MeshInstance3D() { Mesh = mesh };
+                    Log("Gltf could not be immediately imported. You may need to reimport the scene");
+                }
+                newMeshNode.Name = "Mesh";
+                var meshnode = root.MeshContainerNode;
+                if (meshnode != null) {
+                    meshnode.ReplaceBy(newMeshNode);
+                    meshnode.QueueFree();
+                } else {
+                    root.AddChild(newMeshNode);
+                }
+                newMeshNode.Owner = root;
+                meshnode = newMeshNode;
             } else {
-                newMeshNode = new MeshInstance3D() { Mesh = mesh };
-                Log("Gltf could not be immediately imported. You may need to reimport the scene");
+                var meshnode = root.MeshNode;
+                if (meshnode == null) {
+                    root.AddChild(meshnode = new MeshInstance3D() { Name = "Mesh" });
+                    meshnode.Owner = root;
+                }
+                meshnode.Mesh = mesh;
+                target.Mesh = meshnode.ToPackedScene(false);
             }
-            newMeshNode.Name = "Mesh";
-            var meshnode = root.MeshContainerNode;
-            if (meshnode != null) {
-                meshnode.ReplaceBy(newMeshNode);
-                meshnode.QueueFree();
-            } else {
-                root.AddChild(newMeshNode);
-            }
-            newMeshNode.Owner = root;
-            meshnode = newMeshNode;
-        } else {
-            var meshnode = root.MeshNode;
-            if (meshnode == null) {
-                root.AddChild(meshnode = new MeshInstance3D() { Name = "Mesh" });
-                meshnode.Owner = root;
-            }
-            meshnode.Mesh = mesh;
-            target.Mesh = meshnode.ToPackedScene(false);
         }
         ImportColliders(file.bvh, colliderRoot);
 

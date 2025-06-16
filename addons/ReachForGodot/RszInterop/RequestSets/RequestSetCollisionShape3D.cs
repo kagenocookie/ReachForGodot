@@ -103,7 +103,7 @@ public partial class RequestSetCollisionShape3D : CollisionShape3D
                     }
                 }
                 collider.Shape = hf.HeightMap;
-                collider.Position = (hf.MinRange + hf.MaxRange) / 2;
+                // collider.Position = (hf.MinRange + hf.MaxRange) / 2;
                 var span = hf.MaxRange - hf.MinRange;
                 if (hf.HeightMap != null && !collider.Position.IsZeroApprox()) {
                     collider.Scale = new Vector3(
