@@ -1,0 +1,21 @@
+{
+    "CollisionDefinition": "_share/config/physics/appcollisiondefinition.cdef.5",
+    "DynamicsDefinition": "_share/config/dynamics/appdynamicsdefinition.def.6",
+    "PakList": [
+        "re_chunk_000.pak",
+        "re_chunk_000.pak.patch_001.pak",
+        "re_chunk_000.pak.patch_002.pak",
+        "re_chunk_000.pak.patch_003.pak",
+        "re_chunk_000.pak.patch_004.pak",
+        "dlc/re_dlc_stm_2109300.pak",
+        "dlc/re_dlc_stm_2109301.pak",
+        "dlc/re_dlc_stm_2109303.pak",
+        "dlc/re_dlc_stm_2109304.pak",
+        "dlc/re_dlc_stm_2109305.pak",
+        "dlc/re_dlc_stm_2109306.pak",
+        "dlc/re_dlc_stm_2109307.pak",
+        "dlc/re_dlc_stm_2109308.pak",
+        "dlc/re_dlc_stm_2109309.pak",
+        "dlc/re_dlc_stm_2109310.pak"
+    ]
+}

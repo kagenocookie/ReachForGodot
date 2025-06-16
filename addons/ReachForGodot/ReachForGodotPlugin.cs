@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using ReaGE.Tools;
 using ReaGE.ContentEditorIntegration;
+using System.Text.Json;
 
 #if REAGE_DEV
 using Chickensoft.GoDotTest;
@@ -22,6 +23,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
     private const string SettingBase = "reach_for_godot";
 
     private const string Setting_BlenderPath = "filesystem/import/blender/blender_path";
+    private const string Setting_GameDir = $"{SettingBase}/paths/{{game}}/game_path";
     private const string Setting_GameChunkPath = $"{SettingBase}/paths/{{game}}/game_chunk_path";
     private const string Setting_Il2cppPath = $"{SettingBase}/paths/{{game}}/il2cpp_dump_file";
     private const string Setting_RszJsonPath = $"{SettingBase}/paths/{{game}}/rsz_json_file";
@@ -29,16 +31,20 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
     private const string Setting_PakFilepath = $"{SettingBase}/paths/{{game}}/pak_priority_list";
     private const string Setting_AdditionalPaths = $"{SettingBase}/paths/{{game}}/additional_paths";
 
+    private const string Setting_BlenderPathOverrides = $"{SettingBase}/general/blender_override_path";
     private const string Setting_ImportMeshMaterials = $"{SettingBase}/general/import_mesh_materials";
     private const string Setting_SceneFolderProxyThreshold = $"{SettingBase}/general/create_scene_proxy_node_threshold";
     private const string Setting_FileUnpackerExe = $"{SettingBase}/general/file_unpacker_executable";
 
-    public static string? BlenderPath => EditorInterface.Singleton.GetEditorSettings().GetSetting(Setting_BlenderPath).AsString();
+    public static string? BlenderPath
+        => EditorInterface.Singleton.GetEditorSettings().GetSetting(Setting_BlenderPathOverrides).AsString().NullIfEmpty()
+            ?? EditorInterface.Singleton.GetEditorSettings().GetSetting(Setting_BlenderPath).AsString();
 
     public static bool IncludeMeshMaterial { get; private set; }
     public static int SceneFolderProxyThreshold { get; private set; }
     public static string? UnpackerExeFilepath { get; private set; }
 
+    private static string GameDirSetting(SupportedGame game) => Setting_GameDir.Replace("{game}", game.ToString());
     private static string ChunkPathSetting(SupportedGame game) => Setting_GameChunkPath.Replace("{game}", game.ToString());
     private static string Il2cppPathSetting(SupportedGame game) => Setting_Il2cppPath.Replace("{game}", game.ToString());
     private static string RszPathSetting(SupportedGame game) => Setting_RszJsonPath.Replace("{game}", game.ToString());
@@ -480,11 +486,13 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
         AddEditorSetting(Setting_ImportMeshMaterials, Variant.Type.Bool, true);
         AddEditorSetting(Setting_SceneFolderProxyThreshold, Variant.Type.Int, 500, PropertyHint.Range, "50,5000,or_greater,hide_slider");
         AddEditorSetting(Setting_FileUnpackerExe, Variant.Type.String, string.Empty, PropertyHint.GlobalFile, "*.exe");
+        AddEditorSetting(Setting_BlenderPathOverrides, Variant.Type.String, string.Empty, PropertyHint.GlobalDir);
         foreach (var game in ReachForGodot.GameList) {
             AddEditorSetting(ChunkPathSetting(game), Variant.Type.String, string.Empty, PropertyHint.GlobalDir);
             AddEditorSetting(Il2cppPathSetting(game), Variant.Type.String, string.Empty, PropertyHint.GlobalFile, "*.json");
             AddEditorSetting(RszPathSetting(game), Variant.Type.String, string.Empty, PropertyHint.GlobalFile, "*.json");
             AddEditorSetting(FilelistPathSetting(game), Variant.Type.String, string.Empty, PropertyHint.GlobalFile);
+            AddEditorSetting(GameDirSetting(game), Variant.Type.String, string.Empty, PropertyHint.GlobalDir);
             AddEditorSetting(AdditionalPathSetting(game), Variant.Type.PackedStringArray, string.Empty, PropertyHint.GlobalDir);
             AddEditorSetting(PakFilepathSetting(game), Variant.Type.PackedStringArray, string.Empty, PropertyHint.GlobalFile, "*.pak");
 
@@ -506,6 +514,13 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
         if (UnpackerExeFilepath == "") UnpackerExeFilepath = null;
         foreach (var game in ReachForGodot.GameList) {
             var pathChunks = PathUtils.GetFilepathWithNativesFolderSuffix(settings.GetSetting(ChunkPathSetting(game)).AsString() ?? string.Empty, game);
+            if (string.IsNullOrWhiteSpace(pathChunks)) {
+                ReachForGodot.SetPaths(game, null);
+                continue;
+            }
+
+            pathChunks = PathUtils.NormalizeSourceFolderPath(pathChunks);
+            var gamedir = settings.GetSetting(GameDirSetting(game)).AsString();
             var pathIl2cpp = settings.GetSetting(Il2cppPathSetting(game)).AsString();
             var pathRsz = settings.GetSetting(RszPathSetting(game)).AsString();
             var pathFilelist = settings.GetSetting(FilelistPathSetting(game)).AsString();
@@ -517,14 +532,46 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
                     var filepath = PathUtils.NormalizeSourceFolderPath((parts.Length >= 2 ? parts[1] : parts[0]));
                     return new LabelledPathSetting(filepath, label);
                 }).ToArray();
-            var paks = settings.GetSetting(PakFilepathSetting(game)).AsStringArray().Select(path => PathUtils.NormalizeFilePath(path)).ToArray();
 
-            if (string.IsNullOrWhiteSpace(pathChunks)) {
-                ReachForGodot.SetPaths(game, null);
-            } else {
-                pathChunks = PathUtils.NormalizeSourceFolderPath(pathChunks);
-                ReachForGodot.SetPaths(game, new GamePaths(game, pathChunks, pathIl2cpp, pathRsz, pathFilelist, additional, paks));
+            var paks = settings.GetSetting(PakFilepathSetting(game)).AsStringArray().Select(path => PathUtils.NormalizeFilePath(path)).ToList();
+            var masterConfigPath = GamePaths.GetMasterConfigFilepath(game);
+            GameMasterConfig? masterConfig = null;
+            if (File.Exists(masterConfigPath)) {
+                using var fs = File.OpenRead(masterConfigPath);
+                masterConfig = JsonSerializer.Deserialize<GameMasterConfig>(fs);
             }
+            if (string.IsNullOrEmpty(gamedir)) {
+                gamedir = PathUtils.NormalizeFilePath(paks.FirstOrDefault()?.GetBaseDir());
+            } else {
+                var prepends = new List<string>();
+                if (masterConfig?.PakList != null) {
+                    foreach (var pak in masterConfig.PakList) {
+                        var path = Path.Combine(gamedir, pak);
+                        if (File.Exists(path)) {
+                            prepends.Add(PathUtils.NormalizeFilePath(path));
+                        }
+                    }
+                } else {
+                    // scan for paks
+                    foreach (var pak in Directory.EnumerateFiles(gamedir, "*.pak", SearchOption.TopDirectoryOnly)) {
+                        var path = Path.Combine(gamedir, pak);
+                        // size 16 = FMM placeholder paks, after this is mods which we probably don't want
+                        // if someone does, they can use the additional paks setting
+                        if (new FileInfo(path).Length <= 32) break;
+                        prepends.Add(PathUtils.NormalizeFilePath(path));
+                    }
+                    var dlcPath = Path.Combine(gamedir, "dlc");
+                    if (Directory.Exists(dlcPath)) {
+                        foreach (var dlcpak in Directory.EnumerateFiles(dlcPath, "*.pak", SearchOption.TopDirectoryOnly)) {
+                            prepends.Add(PathUtils.NormalizeFilePath(Path.Combine(dlcPath, dlcpak)));
+                        }
+                    }
+                }
+                paks.InsertRange(0, prepends);
+            }
+            ReachForGodot.SetPaths(game, new GamePaths(game, pathChunks, gamedir, pathIl2cpp, pathRsz, pathFilelist, additional, paks.Distinct().ToArray()) {
+                MasterConfig = masterConfig,
+            });
         }
         RefreshToolMenu();
     }

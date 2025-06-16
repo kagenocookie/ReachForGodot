@@ -1,0 +1,18 @@
+{
+    "CollisionDefinition": "collision/harawatacollision.cdef.4",
+    "PakList": [
+        "re_chunk_000.pak",
+        "re_chunk_000.pak.patch_001.pak",
+        "re_chunk_000.pak.patch_002.pak",
+        "re_chunk_000.pak.patch_003.pak",
+        "re_chunk_000.pak.patch_004.pak",
+        "re_chunk_000.pak.patch_005.pak",
+        "re_chunk_000.pak.patch_006.pak",
+        "re_chunk_000.pak.patch_007.pak",
+        "re_chunk_000.pak.patch_008.pak",
+        "dlc/re_dlc_stm_529930.pak",
+        "dlc/re_dlc_stm_530610.pak",
+        "dlc/re_dlc_stm_530611.pak",
+        "dlc/re_dlc_stm_564190.pak"
+    ]
+}

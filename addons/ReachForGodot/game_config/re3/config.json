@@ -1,0 +1,9 @@
+{
+    "CollisionDefinition": "escape/collision/ropewaycollisiondefinition.cdef.3",
+    "DynamicsDefinition": "objectroot/dynamics/ropewaydynamicsdefinition.def.5",
+    "PakList": [
+        "re_chunk_000.pak",
+        "re_chunk_000.pak.patch_001.pak",
+        "re_chunk_000.pak.patch_002.pak"
+    ]
+}

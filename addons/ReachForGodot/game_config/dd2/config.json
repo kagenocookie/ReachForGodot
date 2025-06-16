@@ -1,5 +1,33 @@
 {
     "CollisionDefinition": "config/collision/towercollision.cdef.7",
+    "DynamicsDefinition": "config/dynamics/towerdynamics.def.6",
+    "PakList": [
+        "re_chunk_000.pak",
+        "re_chunk_000.pak.patch_001.pak",
+        "re_chunk_000.pak.patch_002.pak",
+        "re_chunk_000.pak.patch_003.pak",
+        "re_chunk_000.pak.patch_004.pak",
+        "re_chunk_000.pak.patch_005.pak",
+        "re_chunk_000.pak.patch_006.pak",
+        "re_chunk_000.pak.patch_007.pak",
+        "re_chunk_000.pak.patch_008.pak",
+        "re_chunk_000.pak.patch_009.pak",
+        "re_chunk_000.pak.patch_010.pak",
+        "re_chunk_000.pak.patch_011.pak",
+        "re_chunk_000.pak.patch_012.pak",
+        "re_chunk_000.pak.patch_013.pak",
+        "dlc/re_dlc_stm_2581000.pak",
+        "dlc/re_dlc_stm_2593170.pak",
+        "dlc/re_dlc_stm_2593180.pak",
+        "dlc/re_dlc_stm_2593190.pak",
+        "dlc/re_dlc_stm_2593200.pak",
+        "dlc/re_dlc_stm_2593210.pak",
+        "dlc/re_dlc_stm_2593220.pak",
+        "dlc/re_dlc_stm_2593230.pak",
+        "dlc/re_dlc_stm_2593240.pak",
+        "dlc/re_dlc_stm_2593250.pak",
+        "dlc/re_dlc_stm_2593260.pak"
+    ],
     "Filepaths": {
         "Bookmarks": {
             "Weapons": {

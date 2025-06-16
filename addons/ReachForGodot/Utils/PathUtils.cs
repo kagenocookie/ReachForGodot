@@ -618,9 +618,10 @@ public static partial class PathUtils
     /// <summary>
     /// Normalize a file path - replace any backslashes (\) with forward slashes (/)
     /// </summary>
-    public static string NormalizeFilePath(string filepath)
+    [return: NotNullIfNotNull(nameof(filepath))]
+    public static string? NormalizeFilePath(string? filepath)
     {
-        return filepath.Replace('\\', '/');
+        return filepath?.Replace('\\', '/');
     }
 
     /// <summary>

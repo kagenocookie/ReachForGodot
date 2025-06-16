@@ -3,11 +3,20 @@ using RszTool;
 
 namespace ReaGE;
 
-public record GamePaths(SupportedGame Game, string ChunkPath, string? Il2cppPath, string? RszJsonPath, string? FilelistPath, LabelledPathSetting[] AdditionalPaths, string[] PakFiles)
-{
-    public GamePaths(SupportedGame game) : this(game, string.Empty, null, null, null, Array.Empty<LabelledPathSetting>(), Array.Empty<string>()) { }
+public record GamePaths(
+    SupportedGame Game,
+    string ChunkPath,
+    string? Gamedir,
+    string? Il2cppPath,
+    string? RszJsonPath,
+    string? FilelistPath,
+    LabelledPathSetting[] AdditionalPaths,
+    string[] PakFiles
+) {
+    public GamePaths(SupportedGame game) : this(game, string.Empty, null, null, null, null, Array.Empty<LabelledPathSetting>(), Array.Empty<string>()) { }
 
     public string? SourcePathOverride { get; set; }
+    public GameMasterConfig? MasterConfig { get; set; }
 
     public static readonly string RszPatchGlobalPath = ProjectSettings.GlobalizePath($"res://addons/ReachForGodot/game_config/global/rsz_patches.json");
 
@@ -19,10 +28,10 @@ public record GamePaths(SupportedGame Game, string ChunkPath, string? Il2cppPath
     public string IgnoredFilesListPath => ProjectSettings.GlobalizePath(GetGameConfigPath(Game, "ignored_files.list"));
     public string TypePatchFilepath => ProjectSettings.GlobalizePath(GetGameConfigPath(Game, "type_patches.json"));
     public string EfxStructsFilepath => ProjectSettings.GlobalizePath(GetGameConfigPath(Game, "efx_structs.json"));
-
-    public string? Gamedir => !(PakFiles?.Length > 0) ? null : PathUtils.NormalizeFilePath(PakFiles.First().GetBaseDir());
+    public string MasterConfigPath => GetMasterConfigFilepath(Game);
 
     public static string GetExtensionVersionsCacheFilepath(SupportedGame game) => ProjectSettings.GlobalizePath(GetGameConfigPath(game, "file_extensions.json"));
+    public static string GetMasterConfigFilepath(SupportedGame game) => ProjectSettings.GlobalizePath(GetGameConfigPath(game, "config.json"));
 
     public static string GetGameConfigPath(SupportedGame game, string subpath)
         => $"res://addons/ReachForGodot/game_config/{game.ToShortName()}/{subpath}";
