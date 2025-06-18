@@ -113,6 +113,9 @@ public abstract class RszAssetConverter<TResource, TFile, TAsset, TAssetInstance
         switch (field.RszField.type) {
             case RszFieldType.UserData:
                 return ConvertUserdata((RszInstance)value);
+            case RszFieldType.Struct:
+                var structInst = (RszInstance)value;
+                return CreateOrGetObject(structInst);
             case RszFieldType.Object:
                 var fieldInst = (RszInstance)value;
                 return fieldInst.Index == 0 ? new Variant() : CreateOrGetObject(fieldInst);
@@ -201,7 +204,7 @@ public abstract class RszAssetConverter<TResource, TFile, TAsset, TAssetInstance
         if (Game == SupportedGame.ResidentEvil7) {
             var path = userdata.Data.GetField(0).AsString();
             var pathHash = MurMur3HashUtils.GetHash(path);
-            instance = ExportREObject(userdata.Data, rsz, fileOption, container);
+            instance = ExportREObject(userdata.Data, rsz, fileOption, container, false);
             rsz.InstanceInfoList[instance.Index].userPathHashRe7 = pathHash;
             return instance;
         } else if (Game.UsesEmbeddedUserdata()) {
@@ -238,7 +241,7 @@ public abstract class RszAssetConverter<TResource, TFile, TAsset, TAssetInstance
         var rszClass = userdata.Data.TypeInfo.RszClass;
         var embedrsz = new RSZFile(fileOption, parentRsz.FileHandler);
         embedrsz.ClearInstances();
-        var embedInstance = ExportREObject(userdata.Data, embedrsz, fileOption, null);
+        var embedInstance = ExportREObject(userdata.Data, embedrsz, fileOption, null, false);
         embedrsz.AddToObjectTable(embedInstance);
         var exportUserdata = new RSZUserDataInfo_TDB_LE_67() {
             instanceId = embedInstance.Index,
@@ -292,9 +295,9 @@ public abstract class RszAssetConverter<TResource, TFile, TAsset, TAssetInstance
         }
     }
 
-    protected RszInstance ExportREObject(REObject target, RSZFile rsz, RszFileOption fileOption, BaseRszFile? container)
+    protected RszInstance ExportREObject(REObject target, RSZFile rsz, RszFileOption fileOption, BaseRszFile? container, bool isStruct = false)
     {
-        if (exportedInstances.TryGetValue(target, out var instance)) {
+        if (!isStruct && exportedInstances.TryGetValue(target, out var instance)) {
             return instance;
         }
         int i = 0;
@@ -303,7 +306,7 @@ public abstract class RszAssetConverter<TResource, TFile, TAsset, TAssetInstance
             throw new ArgumentNullException("Missing root REObject classname " + target.Classname);
         }
         rszClass = target.TypeInfo.RszClass;
-        instance = new RszInstance(rszClass, rsz.InstanceList.Count, null, new object[target.TypeInfo.Fields.Length]);
+        instance = new RszInstance(rszClass, isStruct ? rsz.InstanceList.Count : -1, null, new object[target.TypeInfo.Fields.Length]);
 
         var values = instance.Values;
         foreach (var field in target.TypeInfo.Fields) {
@@ -313,20 +316,22 @@ public abstract class RszAssetConverter<TResource, TFile, TAsset, TAssetInstance
             }
 
             switch (field.RszField.type) {
+                case RszFieldType.Struct:
                 case RszFieldType.Object:
+                    var fieldIsStruct = field.RszField.type == RszFieldType.Struct;
                     if (field.RszField.array) {
                         var array = value.AsGodotArray<REObject>() ?? throw new Exception("Unhandled rsz object array type");
                         var array_refs = new object[array.Count];
                         for (int arr_idx = 0; arr_idx < array.Count; ++arr_idx) {
                             var val = array[arr_idx];
-                            array_refs[arr_idx] = val == null ? 0 : (object)ExportREObject(array[arr_idx], rsz, fileOption, container);
+                            array_refs[arr_idx] = val == null ? 0 : (object)ExportREObject(array[arr_idx], rsz, fileOption, container, fieldIsStruct);
                         }
                         values[i++] = array_refs;
                     } else if (value.VariantType == Variant.Type.Nil) {
                         values[i++] = 0; // index 0 is the null instance entry
                     } else {
                         var obj = value.As<REObject>() ?? throw new Exception("Unhandled rsz object array type");
-                        values[i++] = ExportREObject(obj, rsz, fileOption, container);
+                        values[i++] = ExportREObject(obj, rsz, fileOption, container, fieldIsStruct);
                     }
                     break;
                 case RszFieldType.UserData:
@@ -366,6 +371,7 @@ public abstract class RszAssetConverter<TResource, TFile, TAsset, TAssetInstance
             }
         }
 
+        if (isStruct) return instance;
         instance.Index = rsz.InstanceList.Count;
         rsz.InstanceInfoList.Add(new InstanceInfo(fileOption.Version) { ClassName = rszClass.name, CRC = rszClass.crc, typeId = rszClass.typeId });
         rsz.InstanceList.Add(instance);

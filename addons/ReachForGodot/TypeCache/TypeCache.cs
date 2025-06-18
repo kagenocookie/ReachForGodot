@@ -484,6 +484,7 @@ public static partial class TypeCache
         }
 
         switch (type) {
+            case RszFieldType.Struct:
             case RszFieldType.Object:
                 ResourceHint(refield, nameof(REObject));
                 break;
