@@ -586,7 +586,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
         }
 
         var cleanRszPath = ProjectSettings.GlobalizePath(ReachForGodot.GetUserdataPath("rsz.json", game));
-        if (File.Exists(cleanRszPath) && new FileInfo(cleanRszPath).LastWriteTimeUtc > new FileInfo(pathRsz).LastAccessTimeUtc) {
+        if (File.Exists(cleanRszPath) && new FileInfo(cleanRszPath).LastWriteTimeUtc > new FileInfo(pathRsz).LastWriteTimeUtc) {
             pathRsz = cleanRszPath;
             return;
         }
