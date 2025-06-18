@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using ReaGE.Tools;
 using ReaGE.ContentEditorIntegration;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 
 #if REAGE_DEV
 using Chickensoft.GoDotTest;
@@ -533,6 +534,8 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
                     return new LabelledPathSetting(filepath, label);
                 }).ToArray();
 
+            VerifyRszSource(ref pathRsz, game);
+
             var paks = settings.GetSetting(PakFilepathSetting(game)).AsStringArray().Select(path => PathUtils.NormalizeFilePath(path)).ToList();
             var masterConfigPath = GamePaths.GetMasterConfigFilepath(game);
             GameMasterConfig? masterConfig = null;
@@ -574,6 +577,73 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
             });
         }
         RefreshToolMenu();
+    }
+
+    private static void VerifyRszSource(ref string pathRsz, SupportedGame game)
+    {
+        if (!pathRsz.Contains("reasy", StringComparison.OrdinalIgnoreCase) || !File.Exists(pathRsz)) {
+            return;
+        }
+
+        var cleanRszPath = ProjectSettings.GlobalizePath(ReachForGodot.GetUserdataPath("rsz.json", game));
+        if (File.Exists(cleanRszPath) && new FileInfo(cleanRszPath).LastWriteTimeUtc > new FileInfo(pathRsz).LastAccessTimeUtc) {
+            pathRsz = cleanRszPath;
+            return;
+        }
+
+        GD.Print("Detected REasy sourced rsz dump json file. Attempting to clean up for ReachForGodot use...");
+        using var fs = File.OpenRead(pathRsz);
+        var jsondoc = JsonSerializer.Deserialize<JsonObject>(fs);
+        if (jsondoc == null) {
+            GD.PrintErr("Failed to deserialize file");
+            return;
+        }
+        if (jsondoc.ContainsKey("metadata")) {
+            jsondoc.Remove("metadata");
+        }
+        foreach (var prop in jsondoc) {
+            var item = prop.Value!.AsObject();
+            if (!item.ContainsKey("fields")) continue;
+
+            var name = item["name"]!.GetValue<string>();
+            if (name == "via.physics.SphereShape") {
+                // our tooling expects 1 shape == 1 object, otherwise things get complicated and messy
+                var sphereField = item["fields"]!.AsArray().Where(f => f!["name"]!.GetValue<string>() == "Center").FirstOrDefault();
+                var radiusField = item["fields"]!.AsArray().Where(f => f!["name"]!.GetValue<string>() == "Radius").FirstOrDefault();
+                if (radiusField != null) {
+                    item["fields"]!.AsArray().Remove(radiusField);
+                }
+                if (sphereField != null) {
+                    if (sphereField["size"]!.GetValue<int>() == 12) {
+                        sphereField["name"] = "Sphere";
+                        sphereField["size"] = 16;
+                        sphereField["type"] = "Vec4";
+                        sphereField["original_type"] = "via.vec4";
+                    }
+                }
+            }
+
+            // reasy defines some custom types that we don't care about, remap them to default types
+            foreach (var field in item["fields"]!.AsArray()) {
+                var type = field!["type"]!.GetValue<string>();
+                if (type == "MlShape" || type == "RawBytes") {
+                    field["type"] = "Data";
+                } else if (type == "Bits") {
+                    var size = field["size"]!.GetValue<int>();
+                    if (size == 4) {
+                        field["type"] = "U32";
+                    } else {
+                        throw new Exception("Unhandled Bits type size");
+                    }
+                } else if (type == "Float") {
+                    field["type"] = "F32";
+                }
+            }
+        }
+        using var outfs = File.OpenWrite(cleanRszPath);
+        JsonSerializer.Serialize(outfs, jsondoc);
+        GD.Print("Saved cleaned RSZ template to " + cleanRszPath);
+        pathRsz = cleanRszPath;
     }
 
     private void AddProjectSetting(string name, Variant.Type type, Variant initialValue, PropertyHint hint = PropertyHint.None, string? hintstring = null)

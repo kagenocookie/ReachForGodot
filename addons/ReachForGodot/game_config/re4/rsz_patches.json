@@ -438,6 +438,11 @@
         "FileFormat": "MeshCollider",
         "Name": "Mesh",
         "Type": "Resource"
+      },
+      {
+        "Name": "Resource",
+        "ReplaceName": "Mesh",
+        "Type": "Resource"
       }
     ]
   },
@@ -470,6 +475,11 @@
         "FileFormat": "CollisionFilter",
         "Name": "CollisionFilter",
         "Type": "Resource"
+      },
+      {
+        "Name": "CollisionFilterResource",
+        "ReplaceName": "CollisionFilter",
+        "Type": "Resource"
       }
     ]
   },
@@ -481,6 +491,11 @@
       },
       {
         "Name": "v1",
+        "ReplaceName": "Capsule",
+        "Type": "Capsule"
+      },
+      {
+        "Name": "_Capsule",
         "ReplaceName": "Capsule",
         "Type": "Capsule"
       }
@@ -507,6 +522,11 @@
       },
       {
         "Name": "v1",
+        "ReplaceName": "Box",
+        "Type": "OBB"
+      },
+      {
+        "Name": "OBB",
         "ReplaceName": "Box",
         "Type": "OBB"
       }
@@ -563,6 +583,11 @@
         "FileFormat": "Foliage",
         "Name": "FoliageData",
         "Type": "Resource"
+      },
+      {
+        "Name": "Foliage",
+        "ReplaceName": "FoliageData",
+        "Type": "Resource"
       }
     ]
   },
@@ -594,6 +619,11 @@
         "FileFormat": "MaterialDefinition",
         "Name": "Material",
         "Type": "Resource"
+      },
+      {
+        "Name": "Instance/Transform",
+        "ReplaceName": "Transform",
+        "Type": "Object"
       }
     ]
   },
@@ -614,6 +644,11 @@
       },
       {
         "Name": "MeshGroups",
+        "ReplaceName": "InstanceGroups",
+        "Type": "Object"
+      },
+      {
+        "Name": "InstanceGroup",
         "ReplaceName": "InstanceGroups",
         "Type": "Object"
       }
@@ -1504,6 +1539,11 @@
       },
       {
         "Name": "v1",
+        "ReplaceName": "Shapes",
+        "Type": "Object"
+      },
+      {
+        "Name": "Instances",
         "ReplaceName": "Shapes",
         "Type": "Object"
       }
@@ -6334,6 +6374,11 @@
         "FileFormat": "Rcol",
         "Name": "File",
         "Type": "Resource"
+      },
+      {
+        "Name": "Resource",
+        "ReplaceName": "File",
+        "Type": "Resource"
       }
     ]
   },
@@ -7851,6 +7896,11 @@
     "FieldPatches": [
       {
         "Name": "v1",
+        "ReplaceName": "HeightField",
+        "Type": "Resource"
+      },
+      {
+        "Name": "Resource",
         "ReplaceName": "HeightField",
         "Type": "Resource"
       }

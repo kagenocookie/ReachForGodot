@@ -13,7 +13,7 @@ public partial class SceneFolder : Node3D, IRszContainer, IImportableAsset
     [Export] public bool Update { get; set; } = true;
     [Export] public bool Draw { get; set; } = true;
     [Export] public bool Active { get; set; } = true;
-    [Export] public byte[]? Data { get; set; }
+    [Export] public Vector3 UniversalOffset { get; set; }
     [Export] public string? Tag { get; set; }
     [Export] public string? OriginalName { get; set; }
     [Export] public Aabb KnownBounds { get; set; }
@@ -161,7 +161,7 @@ public partial class SceneFolder : Node3D, IRszContainer, IImportableAsset
         Update = source.Update;
         Draw = source.Draw;
         Active = source.Active;
-        Data = source.Data?.ToArray();
+        UniversalOffset = source.UniversalOffset;
         Tag = source.Tag;
         OriginalName = source.OriginalName;
         KnownBounds = source.KnownBounds;

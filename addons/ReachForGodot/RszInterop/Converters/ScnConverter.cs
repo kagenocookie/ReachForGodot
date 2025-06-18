@@ -99,7 +99,7 @@ public class ScnConverter : SceneRszAssetConverter<SceneResource, ScnFile, Scene
         folderInstance.Values[4] = folder.Active ? (byte)1 : (byte)0;
         folderInstance.Values[5] = linkedSceneFilepath;
         if (folderInstance.Values.Length > 6) {
-            folderInstance.Values[6] = (folder.Data != null && folder.Data.Length > 0) ? folder.Data : new byte[24];
+            folderInstance.Values[6] = folder.UniversalOffset.ToRszPosition();
         }
 
         if (string.IsNullOrEmpty(linkedSceneFilepath)) {
@@ -344,10 +344,12 @@ public class ScnConverter : SceneRszAssetConverter<SceneResource, ScnFile, Scene
         }
 
         subfolder.Tag = folder.Instance!.GetFieldValue("Tag") as string;
-        subfolder.Update = (byte)folder.Instance!.GetFieldValue("Update")! != 0;
-        subfolder.Draw = (byte)folder.Instance!.GetFieldValue("Draw")! != 0;
-        subfolder.Active = (byte)folder.Instance!.GetFieldValue("Select")! != 0;
-        subfolder.Data = folder.Instance!.GetFieldValue("Data") as byte[];
+        subfolder.Update = System.Convert.ToBoolean(folder.Instance!.GetFieldValue("Update"));
+        subfolder.Draw = System.Convert.ToBoolean(folder.Instance!.GetFieldValue("Draw"));
+        subfolder.Active = System.Convert.ToBoolean(folder.Instance!.GetFieldValue("Select"));
+        if (folder.Instance.TryGetFieldValue("UniversalOffset", out var position)) {
+            subfolder.UniversalOffset = ((RszTool.via.Position)position!).ToGodot();
+        }
     }
 
     private async Task AwaitFolderBatch(AssetConverter.FolderBatch batch, bool isRoot)

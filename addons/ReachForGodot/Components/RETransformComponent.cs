@@ -17,11 +17,11 @@ public partial class RETransformComponent : REComponent
 
     public override Task Setup(RszImportType importType)
     {
-        var quat = GetField(1).AsVector4().ToQuaternion();
-        var scale = GetField(2).AsVector4().ToVector3();
+        var quat = GetField(1).VariantToQuaternion();
+        var scale = GetField(2).VariantToVector3();
         GameObject.Transform = new Transform3D(
             new Basis(quat).Scaled(scale),
-            GetField(0).AsVector4().ToVector3()
+            GetField(0).VariantToVector3()
         );
         return Task.CompletedTask;
     }
@@ -29,16 +29,24 @@ public partial class RETransformComponent : REComponent
     public static void ApplyTransform(Node3D node, RszInstance rsz)
     {
         node.Transform = Vector4x3ToTransform(
-            (System.Numerics.Vector4)rsz.Values[0],
-            (System.Numerics.Vector4)rsz.Values[1],
-            (System.Numerics.Vector4)rsz.Values[2]
+            ObjectToVector3(rsz.Values[0]),
+            ObjectToQuaternion(rsz.Values[1]),
+            ObjectToVector3(rsz.Values[2])
         );
     }
 
-    public static Transform3D Vector4x3ToTransform(Vector4 pos, Vector4 rotation, Vector4 scale) => new Transform3D(
-        new Basis(rotation.ToQuaternion()).Scaled(scale.ToVector3()),
-        pos.ToVector3()
-    );
+    private static Quaternion ObjectToQuaternion(object? quat)
+        => quat is System.Numerics.Vector4 v4 ? v4.ToGodot().ToQuaternion() :
+            quat is System.Numerics.Quaternion qq ? qq.ToGodot()
+            : Quaternion.Identity;
+
+    private static Vector3 ObjectToVector3(object? vec)
+        => vec is System.Numerics.Vector4 v4 ? v4.ToGodot().ToVector3() :
+            vec is System.Numerics.Vector3 qq ? qq.ToGodot()
+            : default;
+
+    public static Transform3D Vector4x3ToTransform(Vector3 pos, Quaternion rotation, Vector3 scale)
+        => new Transform3D(new Basis(rotation).Scaled(scale), pos);
 
     public override void PreExport()
     {
@@ -47,7 +55,9 @@ public partial class RETransformComponent : REComponent
         var transform = GameObject.Transform;
         var basis = transform.Basis;
         SetField(TypeInfo.Fields[0], transform.Origin.ToVector4());
-        SetField(TypeInfo.Fields[1], basis.GetRotationQuaternion().ToVector4());
+        SetField(TypeInfo.Fields[1], TypeInfo.Fields[1].RszField.type == RszFieldType.Quaternion
+            ? basis.GetRotationQuaternion()
+            : basis.GetRotationQuaternion().ToVector4());
         SetField(TypeInfo.Fields[2], basis.Scale.ToVector4());
     }
 

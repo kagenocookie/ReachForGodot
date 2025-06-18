@@ -110,9 +110,9 @@ public partial class CompositeMeshComponent : REComponent, IVisualREComponent
             int i = 0;
             foreach (var tr in transforms) {
                 mm.SetInstanceTransform(i++, RETransformComponent.Vector4x3ToTransform(
-                    tr.GetField(ControllerPosition).AsVector4(),
-                    tr.GetField(ControllerRotation).AsVector4(),
-                    tr.GetField(ControllerScale).AsVector4()
+                    tr.GetField(ControllerPosition).VariantToVector3(),
+                    tr.GetField(ControllerRotation).VariantToQuaternion(),
+                    tr.GetField(ControllerScale).VariantToVector3()
                 ));
             }
 

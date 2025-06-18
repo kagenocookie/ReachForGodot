@@ -2055,33 +2055,33 @@
       },
       {
         "Name": "v1",
-        "Type": "S32",
-        "ReplaceName": "MinValue"
+        "ReplaceName": "MinValue",
+        "Type": "S32"
       },
       {
         "Name": "v2",
-        "Type": "F32",
-        "ReplaceName": "MaxValue"
+        "ReplaceName": "MaxValue",
+        "Type": "F32"
       },
       {
         "Name": "v3",
-        "Type": "S32",
-        "ReplaceName": "LoopStartTime"
+        "ReplaceName": "LoopStartTime",
+        "Type": "S32"
       },
       {
         "Name": "v4",
-        "Type": "F32",
-        "ReplaceName": "LoopEndTime"
+        "ReplaceName": "LoopEndTime",
+        "Type": "F32"
       },
       {
         "Name": "v5",
-        "Type": "S32",
-        "ReplaceName": "LoopCount"
+        "ReplaceName": "LoopCount",
+        "Type": "S32"
       },
       {
         "Name": "v6",
-        "Type": "S32",
-        "ReplaceName": "LoopWrapNo"
+        "ReplaceName": "LoopWrapNo",
+        "Type": "S32"
       }
     ]
   },
@@ -7353,6 +7353,10 @@
       {
         "Name": "Path",
         "Type": "String"
+      },
+      {
+        "Name": "UniversalOffset",
+        "Type": "Position"
       }
     ]
   },

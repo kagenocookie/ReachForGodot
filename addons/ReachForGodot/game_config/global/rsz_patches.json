@@ -61,8 +61,13 @@
         "ReplaceName": "Path"
       },
       {
+        "Name": "ScenePath",
+        "ReplaceName": "Path"
+      },
+      {
         "Name": "v6",
-        "ReplaceName": "Data"
+        "ReplaceName": "UniversalOffset",
+        "Type": "Position"
       }
     ]
   },

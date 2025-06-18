@@ -69,11 +69,11 @@ public partial class MakeProxyFolderAction : NodeModificationAction
             }
             realFolder = proxyFolder.RealFolder;
         }
-        var data = proxyFolder.Data;
+        var offset = proxyFolder.UniversalOffset;
         proxyFolder.GetParent().EmplaceChild(proxyFolder, realFolder);
         proxyFolder.ShowLinkedFolder = false;
         ActiveInstance = realFolder;
-        realFolder.Data = data;
+        realFolder.UniversalOffset = offset;
     }
 
     private void ConvertRealToProxy()
@@ -95,12 +95,12 @@ public partial class MakeProxyFolderAction : NodeModificationAction
             proxyFolder.LockNode(true);
         }
 
-        var data = realFolder.Data;
+        var offset = realFolder.UniversalOffset;
         parent.EmplaceChild(realFolder, proxyFolder);
         proxyFolder.RefreshProxiedNode();
         proxyFolder.ShowLinkedFolder = true;
         ActiveInstance = proxyFolder;
-        proxyFolder.Data = data;
+        proxyFolder.UniversalOffset = offset;
     }
 }
 #endif
