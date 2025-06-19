@@ -11,15 +11,13 @@ Integrates various open source tools dealing with RE Engine games and packs them
 
 ## Main features
 - Integration of [RE Mesh Editor](https://github.com/NSACloud/RE-Mesh-Editor) for meshes, a [custom fork of RszTool](https://github.com/kagenocookie/RszTool) with additional file support and fixes, and [ree-pak-rs](https://github.com/eigeen/ree-pak-rs) for on-the-fly PAK file extraction.
-- Direct support for many RE Engine file formats: mesh, tex, pfb, scn, mdf2, efx, rcol, user, cfil, fol, ...
+- Direct support for many RE Engine file formats: mesh, tex, scn, pfb, mdf2, efx, rcol, mcol, uvar, user, ...
 - Default Godot features (3d visualization and editing, resource pickers, data editing UI)
 - PAK content browser and extractor GUI
 - Object template system for easily reusing common components and nested game object structures
 - Detailed info in [wiki](https://github.com/kagenocookie/ReachForGodot/wiki)
 
 ## Supported games
-Should work for any RE engine game, but I can only test what I own
-
 - Dragon's Dogma 2* ([Field/Env ID lookup map](https://kagenocookie.github.io/dd2map/))
 - Devil May Cry 5
 - Resident Evil 2 (RT and non-RT)
@@ -27,9 +25,12 @@ Should work for any RE engine game, but I can only test what I own
 - Resident Evil 4
 - Resident Evil 7 (RT and non-RT)
 - Resident Evil 8
-- Monster Hunter Rise (untested)
-- Street Fighter 6 (untested)
-- Monster Hunter Wilds (untested)
+
+Other RE Engine games should still work but may have issues in some cases, as I don't own them to be able to build the necessary data cache ([guide for anyone interested in contributing](https://github.com/kagenocookie/ReachForGodot/wiki/Adding-support-for-new-games)):
+- Monster Hunter Rise
+- Street Fighter 6
+- Monster Hunter Wilds
+- Other games
 
 \* Many of the terrain meshes use MPLY format meshes which are currently unsupported by RE Mesh Editor and will therefore be loaded as placeholders
 
@@ -37,8 +38,8 @@ Should work for any RE engine game, but I can only test what I own
 - Godot 4.4+ w/ .NET 8.0
 - Blender and [RE Mesh Editor](https://github.com/NSACloud/RE-Mesh-Editor) - used for mesh and texture import; data editing will still work without it, but no meshes will be generated.
 - Either pre-extract all resources somewhere ([guide](https://github.com/Modding-Haven/REEngine-Modding-Documentation/wiki/Extracting-Game-Files)), or configure the **File Unpacker** setting to extract required files on the fly
-- Download the latest RSZ json for the game you're trying to edit, place it wherever
-- The addon stores its own cache of relevant il2cpp json data (`addons/ReachForGodot/game_settings/{game}/il2cpp_cache.json`), but for games that don't have those in the repository or if the game gets updated, the il2cpp dump json for the game you're trying to edit is required to (re-)generate the cache file.
+- Download the latest RSZ json for the game you're trying to edit, place it wherever. For RE4, it's recommended to use the [REasy template](https://github.com/seifhassine/REasy/tree/master/resources/data/dumps) as it has complete names for everything.
+- The addon stores its own cache of relevant il2cpp json data (`addons/ReachForGodot/game_settings/{game}/il2cpp_cache.json`), but for games that don't have that or if the game gets updated, the il2cpp dump json for the game you're trying to edit is required to (re-)generate the cache file.
 
 ## Setup
 <details>
@@ -70,7 +71,7 @@ https://github.com/user-attachments/assets/4ac201b6-41ae-46c4-9772-13dbcc10242a
 - Configure any relevant Editor Settings > `Reach for Godot/General` and `Reach for Godot/Paths/{game name}`
     - **Game chunk path** and **Rsz Json file** are required for most functionality
     - **File list** and **il2cpp Dump file** are needed for new games that don't have cached data in the repository yet or when there's game updates
-    - **File list**, **File Unpacker Executable** and **Pak list** and are needed if you don't have all the assets already extracted and would like them to get auto extracted as needed.
+    - **File list**, **File Unpacker Executable** and **Game path** are needed if you don't have all the assets already extracted and would like them to get auto extracted as needed.
     - Detailed information regarding every available setting is available [here](https://github.com/kagenocookie/ReachForGodot/wiki/Addon-editor-settings)
 
 ### Development setup
@@ -103,10 +104,10 @@ See [the wiki](https://github.com/kagenocookie/ReachForGodot/wiki) for more deta
 - some PFBs with `via.GameObjectRef` fields might not export correctly by default, as they rely on some arcane propertyId values that don't seem to have any direct correlation with RSZ or class data; some cases can be automated fairly accurately, but otherwise need to be manually reversed out of existing pfbs and defined in `addons/ReachForGodot/game_configs/{game}/pfb_ref_props.json` files. Feel free to make a PR adding more of these entries as you come across them
 - there tends to be some godot/c++ errors spewed out while it's doing mass importing of assets, most of them are safe to ignore
 - while the addon does support multiple games in one project, if you're going to import a lot of data, consider making separate projects, because Godot doesn't scale nicely with lots of files. The first time saving the project after opening (and re-opening) also takes a hot minute because from what I can tell, Godot rechecks _all_ files in the project just in case any of them changed.
-- some files might not import or export quite correctly, as the RE_RSZ jsons don't always contain full and correct data. See [support for new games](https://github.com/kagenocookie/ReachForGodot/wiki/Adding-support-for-new-games) for more details in regards to fixing any glaring issues.
 
 ## Credits
 - [NSACloud](https://github.com/NSACloud) - RE Mesh Editor, RE4 EFX file structure
-- [czastack](https://github.com/czastack) - RszTool
+- [chenstack](https://github.com/czastack) - original RszTool
 - [praydog](https://github.com/praydog) - REFramework and related tools
-- [alphazolam](https://github.com/alphazolam) - RE_RSZ and the binary templates
+- [alphaZomega](https://github.com/alphazolam) - RE_RSZ and the binary templates
+- [Battlezone](https://github.com/seifhassine) - misc advice and ideas
