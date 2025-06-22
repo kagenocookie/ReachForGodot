@@ -277,6 +277,7 @@ public static class GodotObjectExtensions
     {
         if (node != owner) node.Owner = owner;
         foreach (var child in node.GetChildren()) {
+            if (child.IsInGroup(EditorResources.IgnoredSceneGroup)) continue;
             if (string.IsNullOrEmpty(child.SceneFilePath)) {
                 SetRecursiveOwner(child, owner);
             } else {
@@ -289,6 +290,7 @@ public static class GodotObjectExtensions
     {
         if (node != newOwner) node.Owner = newOwner;
         foreach (var child in node.GetChildren()) {
+            if (child.IsInGroup(EditorResources.IgnoredSceneGroup)) continue;
             if (child.Owner == previousOwner) {
                 child.Owner = newOwner;
             }

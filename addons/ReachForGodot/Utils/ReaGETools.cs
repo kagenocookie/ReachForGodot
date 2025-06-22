@@ -396,4 +396,34 @@ public static class ReaGETools
             }
         }
     }
+
+    public static IEnumerable<(SupportedGame, string)> FindFilesByFormat(SupportedFileFormats fileFormat, SupportedGame[]? games = null, CancellationToken? token = null)
+    {
+        var list = new FileListFileSystem();
+        foreach (var config in ReachForGodot.AssetConfigs) {
+            if (!config.IsValid || config.Paths.FilelistPath == null) continue;
+            if (games != null && games.Length > 0 && !games.Contains(config.Game)) continue;
+
+            GD.Print("Searching game " + config.Game + " ...");
+
+            list.ReadFileList(config.Paths.FilelistPath);
+            var basepath = PathUtils.GetFilepathWithoutNativesFolder(config.Paths.ChunkPath);
+
+            foreach (var file in list.Files) {
+                if (token?.IsCancellationRequested == true) yield break;
+                if (PathUtils.GetFileFormat(file).format != fileFormat) continue;
+
+                var filepath = Path.Combine(basepath, file);
+
+                if (!File.Exists(filepath)) {
+                    if (!FileUnpacker.TryExtractFile(filepath, config) || !File.Exists(filepath)) {
+                        GD.PrintErr(config.Game + " file not found: " + file);
+                        continue;
+                    }
+                }
+
+                yield return (config.Game, filepath);
+            }
+        }
+    }
 }

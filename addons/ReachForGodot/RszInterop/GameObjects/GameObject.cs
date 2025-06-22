@@ -231,7 +231,7 @@ public partial class GameObject : Node3D, ISerializationListener, ICloneable
         return comp;
     }
 
-    public TComponent? GetComponent<TComponent>() where TComponent : REComponent
+    public TComponent? GetComponent<TComponent>() where TComponent : class
     {
         return Components?.OfType<TComponent>().FirstOrDefault();
     }
@@ -242,7 +242,7 @@ public partial class GameObject : Node3D, ISerializationListener, ICloneable
             ?? AllChildren.Select(ch => ch.GetComponent(classname)).FirstOrDefault(c => c != null);
     }
 
-    public TComponent? GetComponentInChildren<TComponent>() where TComponent : REComponent
+    public TComponent? GetComponentInChildren<TComponent>() where TComponent : class
     {
         return GetComponent<TComponent>()
             ?? AllChildren.Select(ch => ch.GetComponent<TComponent>()).FirstOrDefault(c => c != null);

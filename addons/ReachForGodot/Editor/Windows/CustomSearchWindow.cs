@@ -66,6 +66,7 @@ public partial class CustomSearchWindow : Window
     {
         ComponentInRSZFiles,
         EfxAttributeType,
+        RcolActionName,
     }
 
     public enum SearchTargetType
@@ -248,6 +249,9 @@ public partial class CustomSearchWindow : Window
             case ExternalFileSearchType.EfxAttributeType:
                 Task.Run(() => SearchFilesEFX(SearchedQuery));
                 break;
+            case ExternalFileSearchType.RcolActionName:
+                Task.Run(() => SearchRcolName(SearchedQuery));
+                break;
         }
     }
 
@@ -315,6 +319,32 @@ public partial class CustomSearchWindow : Window
         }
     }
 
+    private void SearchRcolName(string name)
+    {
+        tokenSource.Cancel();
+        tokenSource = new();
+
+        var conv = new AssetConverter(GodotImportOptions.testImport);
+        foreach (var (game, filepath) in ReaGETools.FindFilesByFormat(SupportedFileFormats.Rcol, null, tokenSource.Token)) {
+            conv.Game = game;
+
+            using var f = conv.Rcol.CreateFile(new RszTool.FileHandler(filepath));
+            f.Read();
+            foreach (var set in f.RequestSets) {
+                if (Results.Count >= resultLimit) {
+                    return;
+                }
+
+                if (set.Info.Name.StartsWith(name, StringComparison.OrdinalIgnoreCase)) {
+                    var ui = CreateSearchResultItem(filepath, null);
+                    ui.Pressed += () => {
+                        FileSystemUtils.ShowFileInExplorer(filepath);
+                    };
+                    resultsContainer.CallDeferred(Node.MethodName.AddChild, ui);
+                }
+            }
+        }
+    }
     private void SearchFilesEFX(string attributeType)
     {
         tokenSource.Cancel();
