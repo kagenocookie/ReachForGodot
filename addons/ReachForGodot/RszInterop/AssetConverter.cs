@@ -75,6 +75,9 @@ public class AssetConverter
     private McolConverter? _mcol;
     public McolConverter Mcol => _mcol ??= new McolConverter() { Convert = this };
 
+    private AimpConverter? _aimp;
+    public AimpConverter Aimp => _aimp ??= new AimpConverter() { Convert = this };
+
     private RszFileOption? _fileOption;
     public RszFileOption FileOption => _fileOption ??= TypeCache.CreateRszFileOptions(AssetConfig);
 

@@ -55,3 +55,20 @@ public static class EditorExtensions
         return status;
     }
 }
+
+public static class EditorResources
+{
+    private const string NavmeshMaterial1Path = "res://addons/ReachForGodot/Editor/Gizmo/navmesh1.material";
+    private static Material? _navmeshMat1;
+    public static Material NavmeshMaterial1 => _navmeshMat1 ??= ResourceLoader.Load<Material>(NavmeshMaterial1Path);
+
+    private const string NavmeshMaterial2Path = "res://addons/ReachForGodot/Editor/Gizmo/navmesh2.material";
+    private static Material? _navmeshMat2;
+    public static Material NavmeshMaterial2 => _navmeshMat2 ??= ResourceLoader.Load<Material>(NavmeshMaterial2Path);
+
+    private const string McolMaterialPath = "res://addons/ReachForGodot/Editor/Gizmo/mcol.material";
+    private static Material? _mcolMat;
+    public static Material McolMaterial => _mcolMat ??= ResourceLoader.Load<Material>(McolMaterialPath);
+
+    public static readonly StringName IgnoredSceneGroup = "RFGIgnore";
+}

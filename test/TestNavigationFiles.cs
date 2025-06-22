@@ -9,9 +9,42 @@ public partial class TestNavigationFiles : TestBase
 {
     public TestNavigationFiles(Node testScene) : base(testScene) { }
 
+    private static readonly HashSet<string> AimpCombinations = [];
+
+    private static HashSet<(float, float)> boundsUkns = new();
+    private static HashSet<(int, string)> uknIDs = new();
+
     private static AimpFile HandleAimpFile(SupportedGame game, RszFileOption fileOption, string filepath)
     {
         var file = new AimpFile(fileOption, new FileHandler(filepath));
+        file.Read();
+        var ext = PathUtils.GetFilenameExtensionWithoutSuffixes(filepath).ToString();
+
+        string? s1 = null, s2 = null;
+        if (file.mainContent?.contents != null) {
+            s1 = string.Join('+', file.mainContent.contents.Select(c => c.GetType().Name));
+        }
+        if (file.secondaryContent?.contents != null) {
+            s2 = string.Join('+', file.secondaryContent.contents.Select(c => c.GetType().Name));
+        }
+        AimpCombinations.Add(game.ToShortName() + " " + ext + ": " + (s1 ?? "NONE") + " && " + (s2 ?? "NONE"));
+        if (file.mainContent?.float1 != null) {
+            boundsUkns.Add((file.mainContent.float1, file.mainContent.float2));
+        }
+        if (file.secondaryContent?.float1 != null) {
+            boundsUkns.Add((file.secondaryContent.float1, file.secondaryContent.float2));
+        }
+
+        if (file.Header.uknId != 1) {
+            uknIDs.Add((file.Header.uknId, filepath));
+        }
+        return file;
+    }
+
+    private static AimpFile TestSpecificFile(SupportedGame game, string filepath)
+    {
+        var conv = new AssetConverter(game, GodotImportOptions.directImport);
+        var file = new AimpFile(conv.FileOption, new FileHandler(filepath));
         file.Read();
         return file;
     }
@@ -25,7 +58,7 @@ public partial class TestNavigationFiles : TestBase
     }
 
     [Test]
-    public async Task MapPointReadTest()
+    public async Task AIMapReadTest()
     {
         await ExecuteFullReadTest("aimap", (game, fileOption, filepath) => {
             using var file = HandleAimpFile(game, fileOption, filepath);
@@ -62,5 +95,9 @@ public partial class TestNavigationFiles : TestBase
         await ExecuteFullReadTest("ainvmmgr", (game, fileOption, filepath) => {
             using var file = HandleAimpFile(game, fileOption, filepath);
         });
+
+        GD.Print("AimpCombinations:\n" + string.Join("\n", AimpCombinations));
+        // GD.Print("BoundsFloatsCombinations:\n" + string.Join("\n", boundsUkns));
+        GD.Print("Header uknIDs:\n" + string.Join("\n", uknIDs));
     }
 }

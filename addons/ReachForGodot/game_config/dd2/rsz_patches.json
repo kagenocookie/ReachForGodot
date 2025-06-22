@@ -8281,5 +8281,23 @@
         "Type": "Resource"
       }
     ]
+  },
+  "via.navigation.AIMapSection": {
+    "FieldPatches": [
+      {
+        "Name": "v0_Maps",
+        "ReplaceName": "Maps",
+        "Type": "Object"
+      }
+    ]
+  },
+  "via.navigation.MapHandle": {
+    "FieldPatches": [
+      {
+        "Name": "v1_Resource",
+        "ReplaceName": "Resource",
+        "Type": "Resource"
+      }
+    ]
   }
 }

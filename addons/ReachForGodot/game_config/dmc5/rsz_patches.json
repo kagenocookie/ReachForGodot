@@ -3194,6 +3194,11 @@
       {
         "Name": "v2",
         "Type": "S32"
+      },
+      {
+        "Name": "v0_Shape",
+        "ReplaceName": "Shapes",
+        "Type": "Object"
       }
     ]
   },
@@ -6108,6 +6113,22 @@
         "FileFormat": "Efx",
         "Name": "v0",
         "Type": "Resource"
+      }
+    ]
+  },
+  "via.GameObject": {
+    "FieldPatches": [
+      {
+        "Name": "Update",
+        "Type": "Bool"
+      },
+      {
+        "Name": "Draw",
+        "Type": "Bool"
+      },
+      {
+        "Name": "Timescale",
+        "Type": "F32"
       }
     ]
   }

@@ -94,6 +94,27 @@ public partial class RequestSetCollisionShape3D : CollisionShape3D
 
                 var mesh = mcol.GetMesh();
                 collider.Shape = mesh?.CreateTrimeshShape();
+                var csgRoot = collider.GetChild(0) as CsgCombiner3D;
+                csgRoot?.QueueFreeRemoveChildren();
+                var mcolRoot = mcol.Instantiate();
+                if (mcolRoot != null && mcolRoot.ColliderRoot != null) {
+                    if (csgRoot == null) {
+                        csgRoot = new CsgCombiner3D() { CalculateTangents = false, MaterialOverride = EditorResources.McolMaterial };
+                        collider.AddChild(csgRoot);
+                        csgRoot.AddToGroup(EditorResources.IgnoredSceneGroup);
+                    }
+                    foreach (var coll in mcolRoot.ColliderRoot.FindChildrenByType<CollisionShape3D>()) {
+                        if (coll.Shape is SphereShape3D mcolSphere) {
+                            csgRoot.AddChild(new CsgSphere3D() { Position = coll.Position, Radius = mcolSphere.Radius });
+                        } else if (coll.Shape is BoxShape3D mcolBox) {
+                            csgRoot.AddChild(new CsgBox3D() { Position = coll.Position, Size = mcolBox.Size });
+                        } else if (coll.Shape is CapsuleShape3D mcolCapsule) {
+                            csgRoot.AddChild(new CsgCylinder3D() { Position = coll.Position, Height = mcolCapsule.Height, Radius = mcolCapsule.Radius });
+                        }
+                    }
+                } else {
+                    csgRoot?.QueueFree();
+                }
                 break;
             case RszTool.Rcol.ShapeType.HeightField:
                 var hf = shape.As<ColliderHeightFieldResource>();
