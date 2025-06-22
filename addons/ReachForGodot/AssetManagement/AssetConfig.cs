@@ -1,6 +1,3 @@
-#if TOOLS
-#nullable enable
-
 using Godot;
 
 namespace ReaGE;
@@ -38,6 +35,7 @@ public partial class AssetConfig : Resource
     [Export] public SupportedGame Game = SupportedGame.Unknown;
     [Export(PropertyHint.Dir)] public string AssetDirectory = "assets/";
 
+#if TOOLS
     [ExportToolButton("Import assets...")]
     private Callable ImportBtn => Callable.From(() => ReachForGodotPlugin.Instance.OpenAssetImporterWindow(this));
 
@@ -46,10 +44,10 @@ public partial class AssetConfig : Resource
 
     [ExportToolButton("DEV: Build all RSZ data")]
     private Callable InferRszData => Callable.From(() => { _ = ReachForGodotPlugin.Instance.FetchInferrableRszData(this); });
+#endif
 
     private void InvokeCallback(Callable callable)
     {
         callable.Call();
     }
 }
-#endif

@@ -28,7 +28,7 @@ jobs:
         cd addons/ReachForGodot/RszTool/RszTool
         dotnet publish --no-restore -f net8.0 -c Release -o _out
         mkdir ../../Plugins -f
-        mv _out/RszTool.dll ../../Plugins/
+        mv _out/*.dll ../../Plugins/
 
     - name: Prepare files
       run: |

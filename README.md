@@ -10,7 +10,7 @@ Integrates various open source tools dealing with RE Engine games and packs them
 ![scene example](.gdignore/docs/images/scene.jpg)
 
 ## Main features
-- Integration of [RE Mesh Editor](https://github.com/NSACloud/RE-Mesh-Editor) for meshes, a [custom fork of RszTool](https://github.com/kagenocookie/RszTool) with additional file support and fixes, and [ree-pak-rs](https://github.com/eigeen/ree-pak-rs) for on-the-fly PAK file extraction.
+- Integration of [RE Mesh Editor](https://github.com/NSACloud/RE-Mesh-Editor) for meshes, a [custom fork of RszTool](https://github.com/kagenocookie/RszTool) with additional file support and fixes as well as automatic PAK file extraction.
 - Direct support for many RE Engine file formats: mesh, tex, scn, pfb, mdf2, efx, rcol, mcol, uvar, user, ...
 - Default Godot features (3d visualization and editing, resource pickers, data editing UI)
 - PAK content browser and extractor GUI

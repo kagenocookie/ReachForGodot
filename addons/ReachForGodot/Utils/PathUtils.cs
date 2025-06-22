@@ -440,27 +440,6 @@ public static partial class PathUtils
         return list.Contains(filepath);
     }
 
-    public static IEnumerable<string> FindMissingFiles(string extension, AssetConfig config)
-    {
-        var listfile = config.Paths.FilelistPath;
-        var basepath = GetFilepathWithoutNativesFolder(config.Paths.ChunkPath);
-        if (!File.Exists(listfile) || string.IsNullOrEmpty(basepath)) yield break;
-
-        extension = AppendFileVersion(extension.StartsWith('.') ? extension : "." + extension, config);
-
-        using var f = new StreamReader(File.OpenRead(listfile));
-        while (!f.EndOfStream) {
-            var line = f.ReadLine();
-            if (!string.IsNullOrWhiteSpace(line) && line.EndsWith(extension)) {
-                if (!File.Exists(Path.Combine(basepath, line))) {
-                    yield return GetFilepathWithoutNativesFolder(line);
-                }
-            }
-        }
-    }
-
-    public static bool IsFilepath(this ReadOnlySpan<char> path) => !Path.GetExtension(path).IsEmpty;
-
     /// <summary>
     /// Get a list of possible resolved filepaths for a filename - should handle any .x64 or.x64.en suffixes
     /// </summary>

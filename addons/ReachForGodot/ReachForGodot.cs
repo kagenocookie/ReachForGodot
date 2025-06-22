@@ -30,7 +30,7 @@ public static class ReachForGodot
 
     public static bool IncludeMeshMaterial => ReachForGodotPlugin.IncludeMeshMaterial;
     public static int SceneFolderProxyThreshold => ReachForGodotPlugin.SceneFolderProxyThreshold;
-    public static string? UnpackerExeFilepath => ReachForGodotPlugin.UnpackerExeFilepath;
+    public static int UnpackerMaxThreads => ReachForGodotPlugin.UnpackerMaxThreads;
 
     public static LabelledPathSetting? LastExportPath { get; set; }
 

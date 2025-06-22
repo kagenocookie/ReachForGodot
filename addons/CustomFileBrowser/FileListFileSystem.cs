@@ -101,7 +101,7 @@ public class FileListFileSystem : ICustomFileSystem
         while (endIndex < count) {
             var next = Files[endIndex++];
             if (!next.StartsWith(folderNormalized)) break;
-            if ((list.Count == 0 || !next.StartsWith(list.Last())) && Filter?.Invoke(next) != false) {
+            if ((list.Count == 0 || !next.StartsWith(list.Last()) || next[list.Last().Length] != '/') && Filter?.Invoke(next) != false) {
                 list.Add(GetSubfolderPath(next, folderNormalized).ToString());
             }
         }

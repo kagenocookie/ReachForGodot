@@ -52,6 +52,8 @@
   <ItemGroup>
     <!-- Production dependencies go here! -->
     <PackageReference Include="GodotSharp.SourceGenerators" Version="2.1.1" />
+
+    <PackageReference Include="ZstdSharp.Port" Version="0.8.5" />
   </ItemGroup>
 
   <ItemGroup>

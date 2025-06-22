@@ -35,7 +35,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
     private const string Setting_BlenderPathOverrides = $"{SettingBase}/general/blender_override_path";
     private const string Setting_ImportMeshMaterials = $"{SettingBase}/general/import_mesh_materials";
     private const string Setting_SceneFolderProxyThreshold = $"{SettingBase}/general/create_scene_proxy_node_threshold";
-    private const string Setting_FileUnpackerExe = $"{SettingBase}/general/file_unpacker_executable";
+    private const string Setting_UnpackMaxThreads = $"{SettingBase}/general/unpack_max_threads";
 
     public static string? BlenderPath
         => EditorInterface.Singleton.GetEditorSettings().GetSetting(Setting_BlenderPathOverrides).AsString().NullIfEmpty()
@@ -43,7 +43,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
 
     public static bool IncludeMeshMaterial { get; private set; }
     public static int SceneFolderProxyThreshold { get; private set; }
-    public static string? UnpackerExeFilepath { get; private set; }
+    public static int UnpackerMaxThreads { get; private set; }
 
     private static string GameDirSetting(SupportedGame game) => Setting_GameDir.Replace("{game}", game.ToString());
     private static string ChunkPathSetting(SupportedGame game) => Setting_GameChunkPath.Replace("{game}", game.ToString());
@@ -443,12 +443,13 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
                 if (!hasAttemptedFullExtract && string.IsNullOrEmpty(resolvedFile)) {
                     hasAttemptedFullExtract = true;
                     GD.Print($"Failed to resolve {relativeFilepath}. Attempting unpack of all {curgame} {extension} files if configured");
-                    FileUnpacker.TryExtractFilteredFiles($"\\.{extWithVersion}(?:\\.[^\\/]*)?$", config);
+                    var missing = new List<string>();
+                    FileUnpacker.TryExtractFilteredFiles($"\\.{extWithVersion}(?:\\.[^\\/]*)?$", config, missing);
 
-                    if (PathUtils.FindMissingFiles(extension, config).Any()) {
+                    if (missing.Count > 0) {
                         Directory.CreateDirectory(ProjectSettings.GlobalizePath(ReachForGodot.GetUserdataBasePath("")));
                         var missingFilelistPath = ProjectSettings.GlobalizePath(ReachForGodot.GetUserdataBasePath(config.Paths.ShortName + "_missing_files.list"));
-                        File.WriteAllLines(missingFilelistPath, PathUtils.FindMissingFiles(extension, config));
+                        File.WriteAllLines(missingFilelistPath, missing.Select(m => PathUtils.GetFilepathWithoutNativesFolder(m)));
                         GD.PrintErr("List of missing files has been written to " + missingFilelistPath);
                     }
 
@@ -490,7 +491,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
     {
         AddEditorSetting(Setting_ImportMeshMaterials, Variant.Type.Bool, true);
         AddEditorSetting(Setting_SceneFolderProxyThreshold, Variant.Type.Int, 500, PropertyHint.Range, "50,5000,or_greater,hide_slider");
-        AddEditorSetting(Setting_FileUnpackerExe, Variant.Type.String, string.Empty, PropertyHint.GlobalFile, "*.exe");
+        AddEditorSetting(Setting_UnpackMaxThreads, Variant.Type.Int, 16, PropertyHint.Range, "1,64");
         AddEditorSetting(Setting_BlenderPathOverrides, Variant.Type.String, string.Empty, PropertyHint.GlobalDir);
         foreach (var game in ReachForGodot.GameList) {
             AddEditorSetting(ChunkPathSetting(game), Variant.Type.String, string.Empty, PropertyHint.GlobalDir);
@@ -515,8 +516,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
         var settings = EditorInterface.Singleton.GetEditorSettings();
         IncludeMeshMaterial = settings.GetSetting(Setting_ImportMeshMaterials).AsBool();
         SceneFolderProxyThreshold = settings.GetSetting(Setting_SceneFolderProxyThreshold).AsInt32();
-        UnpackerExeFilepath = settings.GetSetting(Setting_FileUnpackerExe).AsString();
-        if (UnpackerExeFilepath == "") UnpackerExeFilepath = null;
+        UnpackerMaxThreads = settings.GetSetting(Setting_UnpackMaxThreads).AsInt32();
         foreach (var game in ReachForGodot.GameList) {
             var pathChunks = PathUtils.GetFilepathWithNativesFolderSuffix(settings.GetSetting(ChunkPathSetting(game)).AsString() ?? string.Empty, game);
             if (string.IsNullOrWhiteSpace(pathChunks)) {
@@ -550,31 +550,18 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
             if (string.IsNullOrEmpty(gamedir)) {
                 gamedir = PathUtils.NormalizeFilePath(paks.FirstOrDefault()?.GetBaseDir());
             } else {
-                var prepends = new List<string>();
                 if (masterConfig?.PakList != null) {
+                    var prepends = new List<string>();
                     foreach (var pak in masterConfig.PakList) {
                         var path = Path.Combine(gamedir, pak);
                         if (File.Exists(path)) {
                             prepends.Add(PathUtils.NormalizeFilePath(path));
                         }
                     }
+                    paks.InsertRange(0, prepends);
                 } else {
-                    // scan for paks
-                    foreach (var pak in Directory.EnumerateFiles(gamedir, "*.pak", SearchOption.TopDirectoryOnly)) {
-                        var path = Path.Combine(gamedir, pak);
-                        // size 16 = FMM placeholder paks, after this is mods which we probably don't want
-                        // if someone does, they can use the additional paks setting
-                        if (new FileInfo(path).Length <= 32) break;
-                        prepends.Add(PathUtils.NormalizeFilePath(path));
-                    }
-                    var dlcPath = Path.Combine(gamedir, "dlc");
-                    if (Directory.Exists(dlcPath)) {
-                        foreach (var dlcpak in Directory.EnumerateFiles(dlcPath, "*.pak", SearchOption.TopDirectoryOnly)) {
-                            prepends.Add(PathUtils.NormalizeFilePath(Path.Combine(dlcPath, dlcpak)));
-                        }
-                    }
+                    paks.InsertRange(0, PakReader.ScanPakFiles(gamedir));
                 }
-                paks.InsertRange(0, prepends);
             }
             ReachForGodot.SetPaths(game, new GamePaths(game, pathChunks, gamedir, pathIl2cpp, pathRsz, pathFilelist, additional, paks.Distinct().ToArray()) {
                 MasterConfig = masterConfig,
@@ -644,6 +631,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
                 }
             }
         }
+        Directory.CreateDirectory(Path.GetDirectoryName(cleanRszPath)!);
         using var outfs = File.OpenWrite(cleanRszPath);
         JsonSerializer.Serialize(outfs, jsondoc);
         GD.Print("Saved cleaned RSZ template to " + cleanRszPath);
