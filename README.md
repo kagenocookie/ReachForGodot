@@ -35,11 +35,12 @@ Other RE Engine games should still work but may have issues in some cases, as I 
 \* Many of the terrain meshes use MPLY format meshes which are currently unsupported by RE Mesh Editor and will therefore be loaded as placeholders
 
 ## Prerequisites
-- Godot 4.4+ w/ .NET 8.0
-- Blender and [RE Mesh Editor](https://github.com/NSACloud/RE-Mesh-Editor) - used for mesh and texture import; data editing will still work without it, but no meshes will be generated.
-- Either pre-extract all resources somewhere ([guide](https://github.com/Modding-Haven/REEngine-Modding-Documentation/wiki/Extracting-Game-Files)), or configure the **File Unpacker** setting to extract required files on the fly
+- [Godot 4.4+](https://godotengine.org/download/windows/) (.NET build, not the standard one)
+- [.NET 8 SDK](https://dotnet.microsoft.com/en-us/download)
+- [Blender](https://www.blender.org/download/) and [RE Mesh Editor](https://github.com/NSACloud/RE-Mesh-Editor) - used for mesh and texture import; data editing will still work without it, but no meshes will be generated.
+- Either pre-extract all resources somewhere ([guide](https://github.com/Modding-Haven/REEngine-Modding-Documentation/wiki/Extracting-Game-Files)), or configure the **Game path** setting to extract required files on the fly
 - Download the latest RSZ json for the game you're trying to edit, place it wherever. For RE4, it's recommended to use the [REasy template](https://github.com/seifhassine/REasy/tree/master/resources/data/dumps) as it has complete names for everything.
-- The addon stores its own cache of relevant il2cpp json data (`addons/ReachForGodot/game_settings/{game}/il2cpp_cache.json`), but for games that don't have that or if the game gets updated, the il2cpp dump json for the game you're trying to edit is required to (re-)generate the cache file.
+- The addon stores its own cache of relevant il2cpp json data (`addons/ReachForGodot/game_settings/{game}/il2cpp_cache.json`), but for games that aren't fully supported yet or if the game gets updated, the il2cpp dump json for the game you're trying to edit is required to (re-)generate the cache file.
 
 ## Setup
 <details>
@@ -50,11 +51,12 @@ Other RE Engine games should still work but may have issues in some cases, as I 
 https://github.com/user-attachments/assets/4ac201b6-41ae-46c4-9772-13dbcc10242a
 </details>
 
+- If unsure about any part of the setup, follow the setup video above
 - Create a fresh Godot project anywhere
 - [Download the latest release](https://github.com/kagenocookie/ReachForGodot/releases)
 - Extract the `addons` folder into the Godot project (you should end up with a `<project folder>/addons/ReachForGodot` folder)
 - Next, you need to Build the project with the hammer icon in the top right; if it's not available, go under menu: Project > Tools > C# > Create C# solution
-    - you will need to modify the default .csproj file for it to compile, adding the following entries (or copying the [csproj file contents from here](https://github.com/kagenocookie/ReachForGodot/tree/master/.gdignore/docs/example.csproj)):
+    - you will need to modify the default .csproj file for it to compile, adding the following entries (or simply copy the full [csproj file contents from here](https://github.com/kagenocookie/ReachForGodot/tree/master/.gdignore/docs/example.csproj)):
         ```xml
         <PropertyGroup>
             <Nullable>enable</Nullable>
