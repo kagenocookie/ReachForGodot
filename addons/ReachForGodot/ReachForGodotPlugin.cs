@@ -560,7 +560,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
                     }
                     paks.InsertRange(0, prepends);
                 } else {
-                    paks.InsertRange(0, PakReader.ScanPakFiles(gamedir));
+                    paks.InsertRange(0, PakUtils.ScanPakFiles(gamedir));
                 }
             }
             ReachForGodot.SetPaths(game, new GamePaths(game, pathChunks, gamedir, pathIl2cpp, pathRsz, pathFilelist, additional, paks.Distinct().ToArray()) {

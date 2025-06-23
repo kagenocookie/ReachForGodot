@@ -71,4 +71,15 @@ public static class EditorResources
     public static Material McolMaterial => _mcolMat ??= ResourceLoader.Load<Material>(McolMaterialPath);
 
     public static readonly StringName IgnoredSceneGroup = "RFGIgnore";
+
+    public static readonly Color[] LayerColors = [
+        Colors.White, Colors.Blue, Colors.Green, Colors.Red, Colors.Magenta,
+        Colors.Yellow, Colors.AliceBlue, Colors.AntiqueWhite, Colors.Aqua, Colors.Aquamarine,
+        Colors.Beige, Colors.Bisque, Colors.BlanchedAlmond, Colors.BlueViolet, Colors.Brown,
+        Colors.Burlywood, Colors.CadetBlue, Colors.Chartreuse, Colors.Chocolate, Colors.Coral,
+        Colors.CornflowerBlue, Colors.Cornsilk, Colors.Crimson, Colors.Cyan, Colors.DarkBlue,
+        Colors.DarkCyan, Colors.DarkGoldenrod, Colors.DarkGray, Colors.DarkGreen, Colors.DarkKhaki,
+        Colors.DarkMagenta, Colors.DarkOliveGreen, Colors.DarkOrange, Colors.DarkOrchid, Colors.DarkRed,
+        Colors.DarkSalmon, Colors.DarkSeaGreen
+    ];
 }

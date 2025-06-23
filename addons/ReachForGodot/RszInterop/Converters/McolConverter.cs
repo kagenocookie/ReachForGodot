@@ -10,7 +10,7 @@ public class McolConverter :
     ISynchronousConverter<MeshColliderResource, McolFile>,
     ISynchronousConverter<McolRoot, McolFile>
 {
-    private static readonly Color[] McolLayerColors = [
+    public static readonly Color[] LayerColors = [
         Colors.White, Colors.Blue, Colors.Green, Colors.Red, Colors.Magenta,
         Colors.Yellow, Colors.AliceBlue, Colors.AntiqueWhite, Colors.Aqua, Colors.Aquamarine,
         Colors.Beige, Colors.Bisque, Colors.BlanchedAlmond, Colors.BlueViolet, Colors.Brown,
@@ -94,7 +94,7 @@ public class McolConverter :
         target.Layers = file.bvh.stringTable.Select((tb, i) => new McolMaterialData() {
             MainString = tb.main,
             SubString = tb.sub,
-            Material = new StandardMaterial3D() { ResourceName = LayerToMaterialName(i, tb.main), AlbedoColor = McolLayerColors[i] },
+            Material = new StandardMaterial3D() { ResourceName = LayerToMaterialName(i, tb.main), AlbedoColor = LayerColors[i] },
         }).ToArray();
 
         if (file.bvh.triangles.Count > 0) {
@@ -272,7 +272,7 @@ public class McolConverter :
             for (int i = 0; i < resource.Layers!.Length; i++) {
                 var layer = resource.Layers[i];
                 if (!layerMats.TryGetValue(i, out var mat)) {
-                    layerMats[i] = mat = layer.Material ??= new StandardMaterial3D() { ResourceName = LayerToMaterialName(i, layer.MainString!), AlbedoColor = McolLayerColors[i] };
+                    layerMats[i] = mat = layer.Material ??= new StandardMaterial3D() { ResourceName = LayerToMaterialName(i, layer.MainString!), AlbedoColor = LayerColors[i] };
                 }
                 spheresPerLayer[i] = new SphereMesh() { Radius = 0.5f, Height = 1, Rings = 16, RadialSegments = 16, Material = mat };
             }

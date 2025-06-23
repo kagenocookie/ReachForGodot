@@ -55,51 +55,11 @@ public partial class AIMapGizmo : EditorNode3DGizmoPlugin
     {
         foreach (var content in group.contents!) {
             if (content is ContentGroupTriangles triangles) {
-                Debug.Assert(group?.Positions != null);
-                // var linePoints = new Vector3[triangles];
-                var surf = new SurfaceTool();
-                surf.Begin(Mesh.PrimitiveType.Triangles);
-                var vertices = group.Positions;
-                foreach (var tri in triangles.nodes!) {
-                    surf.AddVertex(vertices[tri.index1].Vector3.ToGodot());
-                    surf.AddVertex(vertices[tri.index3].Vector3.ToGodot());
-                    surf.AddVertex(vertices[tri.index2].Vector3.ToGodot());
-                }
-                var mesh = new ArrayMesh();
-                surf.Commit(mesh);
+                var mesh = AimpConverter.ImportMesh(group, triangles);
                 gizmo.AddMesh(mesh, material);
             } else if (content is ContentGroupPolygons polygons) {
-                Debug.Assert(group?.Positions != null);
-                var surf = new SurfaceTool();
-                surf.Begin(Mesh.PrimitiveType.Triangles);
-                var vertices = group.Positions;
-
-                foreach (var poly in polygons.nodes!) {
-                    // var polyVerts = new Vector3[poly.indices!.Length + 1];
-                    // polyVerts[0] = ((poly.min + poly.max) / 2).ToGodot();
-                    // var p = 1;
-                    // for (var i = poly.indices!.Length - 1; i >= 0; i--) {
-                    //     var pt = poly.indices![i];
-                    //     polyVerts[p++] = vertices[pt].Vector3.ToGodot();
-                    // }
-                    var polyVerts = new Vector3[poly.indices!.Length];
-                    var p = 0;
-                    for (var i = poly.indices!.Length - 1; i >= 0; i--) {
-                        var pt = poly.indices![i];
-                        polyVerts[p++] = vertices[pt].Vector3.ToGodot();
-                    }
-                    surf.AddTriangleFan(polyVerts);
-                    // surf.AddVertex()
-                    // poly.indices
-                    // surf.AddVertex(vertices[tri.index1].Vector3.ToGodot());
-                    // surf.AddVertex(vertices[tri.index3].Vector3.ToGodot());
-                    // surf.AddVertex(vertices[tri.index2].Vector3.ToGodot());
-                }
-                var mesh = new ArrayMesh();
-                surf.Commit(mesh);
+                var mesh = AimpConverter.ImportMesh(group, polygons);
                 gizmo.AddMesh(mesh, material);
-            } else if (content is ContentGroupPoints points) {
-
             }
         }
     }
