@@ -77,695 +77,541 @@
     "aimapattr": 34,
     "gcf": 19,
     "sdf": 1905100741,
-    "fxct": 3
+    "fxct": 3,
+    "mov": 1,
+    "bnk": 2,
+    "pck": 3
   },
   "Info": {
     "motbank": {
       "Locales": [],
       "Version": 3,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "mcambank": {
       "Locales": [],
       "Version": 3,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "mcamlist": {
       "Locales": [],
       "Version": 14,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "motfsm2": {
       "Locales": [],
       "Version": 36,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "jmap": {
       "Locales": [],
       "Version": 11,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "motlist": {
       "Locales": [],
       "Version": 99,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "uvar": {
       "Locales": [],
       "Version": 2,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "bhvt": {
       "Locales": [],
       "Version": 34,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "rcol": {
       "Locales": [],
       "Version": 11,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "rdd": {
       "Locales": [],
       "Version": 28019,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "fbxskel": {
       "Locales": [],
       "Version": 3,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "mdf2": {
       "Locales": [],
       "Version": 13,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "mesh": {
       "Locales": [],
       "Version": 1902042334,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "chain": {
       "Locales": [],
       "Version": 24,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "tex": {
       "Locales": [],
       "Version": 190820018,
-      "CanHaveX64": false,
+      "CanHaveStm": true,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "mottree": {
       "Locales": [],
       "Version": 5,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "ucurve": {
       "Locales": [],
       "Version": 34,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "jcns": {
       "Locales": [],
       "Version": 12,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "mot": {
       "Locales": [],
       "Version": 78,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "rtex": {
       "Locales": [],
       "Version": 4,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "cfil": {
       "Locales": [],
       "Version": 7,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "rbs": {
       "Locales": [],
       "Version": 28,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "cdef": {
       "Locales": [],
       "Version": 3,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "scn": {
       "Locales": [],
       "Version": 20,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "tml": {
       "Locales": [],
       "Version": 34,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "user": {
       "Locales": [],
       "Version": 2,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "mcol": {
       "Locales": [],
       "Version": 9018,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "rmesh": {
       "Locales": [],
       "Version": 17008,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "aimap": {
       "Locales": [],
       "Version": 34,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "fsmv2": {
       "Locales": [],
       "Version": 34,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "ies": {
       "Locales": [],
       "Version": 2,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "lprb": {
       "Locales": [],
       "Version": 4,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "prb": {
       "Locales": [],
       "Version": 9,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "msg": {
       "Locales": [],
       "Version": 15,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "1": {
       "Locales": [],
-      "Version": 0,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "pfb": {
       "Locales": [],
       "Version": 17,
-      "CanHaveX64": false,
+      "CanHaveStm": true,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "17": {
       "Locales": [],
-      "Version": 0,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "wcjr": {
       "Locales": [],
       "Version": 2,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "wcv": {
       "Locales": [],
       "Version": 3,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "wcja": {
       "Locales": [],
       "Version": 3,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "wcta": {
       "Locales": [],
       "Version": 3,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "wcsa": {
       "Locales": [],
       "Version": 2,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "wcc": {
       "Locales": [],
       "Version": 2,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "wel": {
       "Locales": [],
       "Version": 11,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "wgs": {
       "Locales": [],
       "Version": 2,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "wss": {
       "Locales": [],
       "Version": 2,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "wtot": {
       "Locales": [],
       "Version": 3,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "wtos": {
       "Locales": [],
       "Version": 1,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "wcmo": {
       "Locales": [],
       "Version": 3,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "cmat": {
       "Locales": [],
       "Version": 3,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "wcp": {
       "Locales": [],
       "Version": 3,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "wcgp": {
       "Locales": [],
       "Version": 5,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "wcggp": {
       "Locales": [],
       "Version": 1,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "wcbk": {
       "Locales": [],
       "Version": 3,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "wcss": {
       "Locales": [],
       "Version": 2,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "wcst": {
       "Locales": [],
       "Version": 5,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "wcsw": {
       "Locales": [],
       "Version": 5,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "wcswn": {
       "Locales": [],
       "Version": 2,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "wcmsw": {
       "Locales": [],
       "Version": 4,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "2": {
       "Locales": [],
-      "Version": 0,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "3": {
       "Locales": [],
-      "Version": 0,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "stm": {
       "Locales": [],
-      "Version": 0,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "wid": {
       "Locales": [],
       "Version": 2,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "wms": {
       "Locales": [],
       "Version": 5,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "wpi": {
       "Locales": [],
       "Version": 3,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "gui": {
       "Locales": [],
       "Version": 340020,
-      "CanHaveX64": false,
+      "CanHaveStm": true,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "340020": {
       "Locales": [],
-      "Version": 0,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "oft": {
       "Locales": [],
       "Version": 1,
-      "CanHaveX64": false,
+      "CanHaveStm": true,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "tean": {
       "Locales": [],
       "Version": 1,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "190820018": {
       "Locales": [],
-      "Version": 0,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "ift": {
       "Locales": [],
       "Version": 1,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "uvs": {
       "Locales": [],
       "Version": 7,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "mmtr": {
       "Locales": [],
       "Version": 1905100741,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "efx": {
       "Locales": [],
       "Version": 2228526,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "lfa": {
       "Locales": [],
       "Version": 4,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "psop": {
       "Locales": [],
       "Version": 1,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "def": {
       "Locales": [],
       "Version": 5,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "clip": {
       "Locales": [],
       "Version": 34,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "lod": {
       "Locales": [],
       "Version": 3,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "ncf": {
       "Locales": [],
       "Version": 4,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "sss": {
       "Locales": [],
       "Version": 1,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "aimapattr": {
       "Locales": [],
       "Version": 34,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "gcf": {
       "Locales": [],
       "Version": 19,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "sdf": {
       "Locales": [],
       "Version": 1905100741,
-      "CanHaveX64": false,
+      "CanHaveStm": true,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "1905100741": {
       "Locales": [],
-      "Version": 0,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
       "CanNotHaveLang": true
     },
     "fxct": {
       "Locales": [],
       "Version": 3,
-      "CanHaveX64": false,
       "CanNotHaveX64": true,
-      "CanHaveLang": false,
+      "CanNotHaveLang": true
+    },
+    "mov": {
+      "Locales": [],
+      "Version": 1,
+      "CanHaveStm": true,
+      "CanNotHaveLang": true
+    },
+    "bnk": {
+      "Locales": [],
+      "Version": 2,
+      "CanHaveStm": true,
+      "CanNotHaveLang": true
+    },
+    "pck": {
+      "Locales": [],
+      "Version": 3,
+      "CanHaveStm": true,
       "CanNotHaveLang": true
     }
   }

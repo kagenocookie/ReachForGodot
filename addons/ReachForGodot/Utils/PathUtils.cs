@@ -186,6 +186,7 @@ public static partial class PathUtils
         public List<string> Locales { get; set; } = new();
         public int Version { get; set; }
         public bool CanHaveX64 { get; set; }
+        public bool CanHaveStm { get; set; }
         public bool CanNotHaveX64 { get; set; }
         public bool CanHaveLang { get; set; }
         public bool CanNotHaveLang { get; set; }
@@ -320,14 +321,18 @@ public static partial class PathUtils
 
             var isLocalized = false;
             string? locale = null;
+            var hasStm = false;
             var hasX64 = false;
             if (IsLocalizedFileRegex().IsMatch(line)) {
                 hasX64 = true;
                 isLocalized = true;
                 locale = IsLocalizedFileRegex().Match(line).Groups[1].Value;
                 line = line.GetBaseName().GetBaseName();
-            } else if (line.EndsWith("x64")) {
+            } else if (line.EndsWith(".x64")) {
                 hasX64 = true;
+                line = line.GetBaseName();
+            } else if (line.EndsWith(".stm")) {
+                hasStm = true;
                 line = line.GetBaseName();
             }
 
@@ -338,7 +343,8 @@ public static partial class PathUtils
                     extensions.Info[ext] = info = new FileExtensionInfo();
                 }
                 info.CanHaveX64 = hasX64 || info.CanHaveX64;
-                info.CanNotHaveX64 = !hasX64 || info.CanNotHaveX64;
+                info.CanHaveStm = hasStm || info.CanHaveStm;
+                info.CanNotHaveX64 = !hasX64 && !hasStm || info.CanNotHaveX64;
                 info.CanHaveLang = isLocalized || info.CanHaveLang;
                 info.CanNotHaveLang = !isLocalized || info.CanNotHaveLang;
                 if (locale != null && !info.Locales.Contains(locale)) {
@@ -467,6 +473,10 @@ public static partial class PathUtils
 
         if (extInfo.CanNotHaveLang && extInfo.CanHaveX64) {
             yield return AppendFileVersion($"{path}.{ext}", config) + ".x64";
+        }
+
+        if (extInfo.CanNotHaveLang && extInfo.CanHaveStm) {
+            yield return AppendFileVersion($"{path}.{ext}", config) + ".stm";
         }
 
         if (extInfo.CanHaveLang) {
