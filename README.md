@@ -38,7 +38,7 @@ Other RE Engine games should still work but may have issues in some cases, as I 
 - [Godot 4.4+](https://godotengine.org/download/windows/) (.NET build, not the standard one)
 - [.NET 8 SDK](https://dotnet.microsoft.com/en-us/download)
 - [Blender](https://www.blender.org/download/) and [RE Mesh Editor](https://github.com/NSACloud/RE-Mesh-Editor) - used for mesh and texture import; data editing will still work without it, but no meshes will be generated.
-- Either pre-extract all resources somewhere ([guide](https://github.com/Modding-Haven/REEngine-Modding-Documentation/wiki/Extracting-Game-Files)), or configure the **Game path** setting to extract required files on the fly
+- If you don't already have all resources extracted somewhere, you can configure the **Game path** setting to extract files automatically as needed
 - Download the latest RSZ json for the game you're trying to edit, place it wherever. For RE4, it's recommended to use the [REasy template](https://github.com/seifhassine/REasy/tree/master/resources/data/dumps) as it has complete names for everything.
 - The addon stores its own cache of relevant il2cpp json data (`addons/ReachForGodot/game_settings/{game}/il2cpp_cache.json`), but for games that aren't fully supported yet or if the game gets updated, the il2cpp dump json for the game you're trying to edit is required to (re-)generate the cache file.
 

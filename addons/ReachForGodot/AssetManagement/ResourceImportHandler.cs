@@ -1,7 +1,5 @@
 #nullable enable
 
-using System.Diagnostics.CodeAnalysis;
-using System.Reflection.Metadata;
 using System.Threading.Tasks;
 using Godot;
 

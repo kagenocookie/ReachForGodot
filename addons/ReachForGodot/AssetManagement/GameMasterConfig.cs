@@ -1,5 +1,3 @@
-using Godot;
-
 namespace ReaGE;
 
 public class GameMasterConfig

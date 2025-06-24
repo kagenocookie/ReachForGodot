@@ -1,6 +1,5 @@
 namespace ReaGE;
 
-using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using Godot;
 using RszTool;
