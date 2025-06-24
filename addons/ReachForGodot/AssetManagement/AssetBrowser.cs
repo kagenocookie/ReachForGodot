@@ -129,12 +129,20 @@ public partial class AssetBrowser : Resource
         var importPaths = files.Select(f => PathUtils.GetLocalizedImportPath(f, config));
         GD.Print("Files imported to:\n" + string.Join('\n', importPaths));
 
-        if (importPaths.FirstOrDefault(x => x != null) is string str && ResourceLoader.Exists(str)) {
-            var fmt = PathUtils.GetFileFormat(files.First(x => x != null));
-            if (fmt.format == SupportedFileFormats.Scene || fmt.format == SupportedFileFormats.Prefab) {
-                EditorInterface.Singleton.CallDeferred(EditorInterface.MethodName.OpenSceneFromPath, str);
+        var firstImport = importPaths.FirstOrDefault(x => x != null);
+        if (!string.IsNullOrEmpty(firstImport) && File.Exists(ProjectSettings.GlobalizePath(firstImport))) {
+            var imported = await ResourceImportHandler.ImportAsset<REResource>(firstImport).Await();
+            if (imported != null) {
+                var fmt = PathUtils.GetFileFormat(files.First(x => x != null));
+                EditorInterface.Singleton.CallDeferred(EditorInterface.MethodName.SelectFile, imported.ResourcePath);
+                if (fmt.format is SupportedFileFormats.Scene or SupportedFileFormats.Prefab or SupportedFileFormats.Efx or SupportedFileFormats.Rcol) {
+                    var scenePath = PathUtils.GetAssetImportPath(imported.Asset, config);
+                    if (scenePath != null) {
+                        EditorInterface.Singleton.CallDeferred(EditorInterface.MethodName.OpenSceneFromPath, scenePath);
+                    }
+                }
             } else {
-                EditorInterface.Singleton.CallDeferred(EditorInterface.MethodName.SelectFile, str);
+                GD.PrintErr("File may not have imported correctly, check in case there's any issues: " + firstImport);
             }
         }
     }
