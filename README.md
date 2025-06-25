@@ -65,6 +65,7 @@ https://github.com/user-attachments/assets/4ac201b6-41ae-46c4-9772-13dbcc10242a
 
         <ItemGroup>
             <Reference Include="RszTool" HintPath="$(ProjectDir)/addons/ReachForGodot/Plugins/RszTool.dll"></Reference>
+            <Reference Include="ZstdSharp" HintPath="$(ProjectDir)/addons/ReachForGodot/Plugins/ZstdSharp.dll"></Reference>
         </ItemGroup>
         ```
 - Enable the ReachForGodot plugin in Project Settings > Plugins
