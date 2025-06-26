@@ -27,7 +27,7 @@ public class TextureConverter : BlenderResourceConverter<TextureResource, Textur
             .Replace("__FILEDIR__", sourceFilePath.GetBaseDir())
             .Replace("__FILENAME__", sourceFilePath.GetFile());
 
-        return ExecuteBlenderScript(script, true).ContinueWith((t) => {
+        return ExecuteBlenderScript(script, true, convertedFilepath).ContinueWith((t) => {
             if (t.IsCompletedSuccessfully && File.Exists(convertedFilepath)) {
                 PostprocessDDS(convertedFilepath);
                 if (convertedFilepath != outputPath) {

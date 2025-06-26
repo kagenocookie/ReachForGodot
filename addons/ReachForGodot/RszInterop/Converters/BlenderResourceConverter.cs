@@ -1,6 +1,7 @@
 namespace ReaGE;
 
 using System.Diagnostics;
+using System.Text;
 using System.Threading.Tasks;
 using Godot;
 
@@ -53,7 +54,7 @@ public abstract class BlenderResourceConverter<TResource, TAsset> : ConverterBas
         return updatedResource;
     }
 
-    protected async Task ExecuteBlenderScript(string script, bool background)
+    protected async Task ExecuteBlenderScript(string script, bool background, string outputFilepath)
     {
         var blenderPath = ReachForGodot.BlenderPath;
         if (string.IsNullOrEmpty(blenderPath)) {
@@ -64,21 +65,44 @@ public abstract class BlenderResourceConverter<TResource, TAsset> : ConverterBas
             return;
         }
 
-        var process = Process.Start(new ProcessStartInfo() {
+        var process = new Process() { StartInfo = new ProcessStartInfo() {
             UseShellExecute = false,
             FileName = blenderPath,
             WindowStyle = background ? ProcessWindowStyle.Hidden : ProcessWindowStyle.Normal,
             Arguments = background
                 ? $"\"{EmptyBlend}\" --background --python-expr \"{script}\""
                 : $"\"{EmptyBlend}\" --python-expr \"{script}\"",
-        });
+            RedirectStandardOutput = true,
+            RedirectStandardError = true,
+        }};
 
         if (cancellationTokenSource == null || cancellationTokenSource.IsCancellationRequested) {
             cancellationTokenSource = new();
         }
 
+        var output = new StringBuilder();
+        process!.OutputDataReceived += (sender, e) => {
+            if (!string.IsNullOrWhiteSpace(e.Data)) {
+                output.AppendLine(e.Data.Trim());
+            }
+        };
+        process.ErrorDataReceived += (sender, e) => {
+            if (!string.IsNullOrWhiteSpace(e.Data)) {
+                output.AppendLine("ERROR:" + e.Data.Trim());
+            }
+        };
+
         var delay = Task.Delay(blenderTimeoutMs, cancellationTokenSource.Token);
-        var completedTask = await Task.WhenAny(process!.WaitForExitAsync(cancellationTokenSource.Token), delay);
+        process.Start();
+        process.BeginOutputReadLine();
+        process.BeginErrorReadLine();
+        var exitTask = process!.WaitForExitAsync(cancellationTokenSource.Token).ContinueWith(t => {
+            if (!t.IsCompletedSuccessfully || !File.Exists(outputFilepath)) {
+                GD.PrintErr("Blender conversion failed. Output:\n" + output.ToString());
+                throw t.Exception ?? new Exception("Process failed");
+            }
+        });
+        var completedTask = await Task.WhenAny(exitTask, delay);
         if (completedTask == delay) {
             cancellationTokenSource.Cancel();
             cancellationTokenSource = null;

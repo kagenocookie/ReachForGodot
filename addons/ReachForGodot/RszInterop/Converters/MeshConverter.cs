@@ -48,7 +48,7 @@ public class MeshConverter : BlenderResourceConverter<MeshResource, PackedScene>
             .Replace("__INCLUDE_MATERIALS__", includeMaterials ? "True" : "False")
             ;
 
-        return ExecuteBlenderScript(importScript, true).ContinueWith((t) => {
+        return ExecuteBlenderScript(importScript, true, outputPath).ContinueWith((t) => {
             if (!t.IsCompletedSuccessfully || !File.Exists(outputPath)) {
                 GD.Print("Unsuccessfully imported asset " + sourceFilePath);
                 return false;
