@@ -21,18 +21,18 @@ jobs:
         dotnet-version: 8.0.x
     - name: Restore REE-Lib dependencies
       run: |
-        cd addons/ReachForGodot/ReeLib/ReeLib
+        cd addons/ReachForGodot/REE-Lib/REE-Lib
         dotnet restore
     - name: Build REE-Lib
       run: |
-        cd addons/ReachForGodot/ReeLib/ReeLib
+        cd addons/ReachForGodot/REE-Lib/REE-Lib
         dotnet publish --no-restore -f net8.0 -c Release -o _out
         mkdir ../../Plugins -f
         mv _out/*.dll ../../Plugins/
 
     - name: Prepare files
       run: |
-        rm addons/ReachForGodot/ReeLib/ -r -force
+        rm addons/ReachForGodot/REE-Lib/ -r -force
         mkdir output
         mv addons output/
 
