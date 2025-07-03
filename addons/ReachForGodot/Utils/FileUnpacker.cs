@@ -1,7 +1,7 @@
 namespace ReaGE;
 
 using System.Text.RegularExpressions;
-using RszTool;
+using ReeLib;
 
 public class FileUnpacker
 {
@@ -29,11 +29,11 @@ public class FileUnpacker
 
     public static bool TryExtractFilteredFiles(string regexFilter, AssetConfig config, List<string>? missingFiles = null)
     {
-        var listfile = config.Paths.FilelistPath;
-        if (string.IsNullOrEmpty(listfile)) return false;
+        var list = config.Workspace.ListFile;
+        if (list == null) return false;
 
         var reader = SetupPakReader(config.Paths.PakFiles);
-        reader.AddFilesFromListFile(listfile);
+        reader.AddFiles(list.Files);
         reader.Filter = new Regex(regexFilter);
 
         var count = reader.UnpackFilesTo(ResolveOutput(config), missingFiles);

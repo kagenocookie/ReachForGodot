@@ -1,11 +1,12 @@
 namespace ReaGE;
 
 using Godot;
+using ReeLib;
 
-[GlobalClass, Tool, ResourceHolder("cdef", SupportedFileFormats.CollisionDefinition)]
+[GlobalClass, Tool, ResourceHolder("cdef", KnownFileFormats.CollisionDefinition)]
 public partial class CollisionDefinitionResource : REResource, IImportableAsset
 {
-    public CollisionDefinitionResource() : base(SupportedFileFormats.CollisionDefinition)
+    public CollisionDefinitionResource() : base(KnownFileFormats.CollisionDefinition)
     {
     }
 

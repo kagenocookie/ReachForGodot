@@ -1,5 +1,7 @@
 namespace ReaGE;
 
+using ReeLib;
+
 public enum SupportedGame
 {
     Unknown = 0,
@@ -16,42 +18,6 @@ public enum SupportedGame
     MonsterHunterRise = 11,
     StreetFighter6 = 12,
     MonsterHunterWilds = 13,
-}
-
-public enum SupportedFileFormats
-{
-    Unknown,
-    Mesh,
-    Texture,
-    Scene,
-    Prefab,
-    Userdata,
-    MaterialDefinition,
-    Rcol,
-    Uvar,
-    MotionList,
-    MotionBank,
-    CollisionFilter,
-    CollisionDefinition,
-    CollisionMaterial,
-    Foliage,
-    MasterMaterial,
-    GpuBuffer,
-    RenderTexture,
-    Efx,
-    Timeline,
-    UVSequence,
-    Gui,
-    MeshCollider,
-    MotionFsm,
-    MotionFsm2,
-    Chain,
-    Chain2,
-    LightProbe,
-    Probe,
-    AiMap,
-    HeightField,
-    ColliderHeightField,
 }
 
 public static class EnumExtensions
@@ -78,5 +44,22 @@ public static class EnumExtensions
         SupportedGame.StreetFighter6 => "sf6",
         SupportedGame.MonsterHunterWilds => "mhwilds",
         _ => game.ToString(),
+    };
+
+    public static SupportedGame FromReeLibEnum(this GameName game) => game switch {
+        GameName.dd2 => SupportedGame.DragonsDogma2,
+        GameName.dmc5 => SupportedGame.DevilMayCry5,
+        GameName.re2 => SupportedGame.ResidentEvil2,
+        GameName.re2rt => SupportedGame.ResidentEvil2RT,
+        GameName.re3 => SupportedGame.ResidentEvil3,
+        GameName.re3rt => SupportedGame.ResidentEvil3RT,
+        GameName.re4 => SupportedGame.ResidentEvil4,
+        GameName.re7 => SupportedGame.ResidentEvil7,
+        GameName.re7rt => SupportedGame.ResidentEvil7RT,
+        GameName.re8 => SupportedGame.ResidentEvil8,
+        GameName.mhrise => SupportedGame.MonsterHunterRise,
+        GameName.sf6 => SupportedGame.StreetFighter6,
+        GameName.mhwilds => SupportedGame.MonsterHunterWilds,
+        _ => SupportedGame.Unknown,
     };
 }

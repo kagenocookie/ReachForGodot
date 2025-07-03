@@ -10,14 +10,14 @@ public partial class KeyFrame : Resource
     [Export] public uint inNormal;
     [Export] public uint outNormal;
 
-    public static implicit operator KeyFrame(RszTool.via.KeyFrame rszValue) => new KeyFrame() {
+    public static implicit operator KeyFrame(ReeLib.via.KeyFrame rszValue) => new KeyFrame() {
         value = rszValue.value,
         time_type = rszValue.time_type,
         inNormal = rszValue.inNormal,
         outNormal = rszValue.outNormal,
     };
 
-    public RszTool.via.KeyFrame ToRsz() => new() {
+    public ReeLib.via.KeyFrame ToRsz() => new() {
         value = value,
         time_type = time_type,
         inNormal = inNormal,

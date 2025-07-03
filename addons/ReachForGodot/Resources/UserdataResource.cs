@@ -1,11 +1,12 @@
 namespace ReaGE;
 
 using Godot;
+using ReeLib;
 
-[GlobalClass, Tool, ResourceHolder("user", SupportedFileFormats.Userdata)]
+[GlobalClass, Tool, ResourceHolder("user", KnownFileFormats.UserData)]
 public partial class UserdataResource : REResource, IRszContainer, IImportableAsset
 {
-    public UserdataResource() : base(SupportedFileFormats.Userdata)
+    public UserdataResource() : base(KnownFileFormats.UserData)
     {
     }
 

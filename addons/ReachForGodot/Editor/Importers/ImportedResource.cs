@@ -1,4 +1,5 @@
 using Godot;
+using ReeLib;
 
 namespace ReaGE;
 
@@ -9,10 +10,10 @@ namespace ReaGE;
 public partial class ImportedResource : REResource, IExportableAsset
 {
     [Export] public Resource? Resource { get; set; }
-    [Export] public SupportedFileFormats FileFormat {
+    [Export] public KnownFileFormats FileFormat {
         get => _fileFormat;
         set => base.ResourceType = _fileFormat = value;
     }
 
-    private SupportedFileFormats _fileFormat;
+    private KnownFileFormats _fileFormat;
 }

@@ -2,7 +2,8 @@ namespace ReaGE;
 
 using System;
 using Godot;
-using RszTool;
+using ReeLib;
+using ReeLib.Data;
 
 public class ClassInfo
 {
@@ -52,19 +53,7 @@ public class ClassInfo
             if (f.RszField.array) {
                 var sourceType = f.RszField.original_type;
                 if (!string.IsNullOrEmpty(sourceType)) {
-                    // need to decipher field.RszField.original_type into a singular element type
-                    // (can be empty, List`1<...>, ...[], maybe even Dictionary?)
-                    // TODO should this be cached instead of re-computed each time?
-                    if (sourceType.EndsWith("[]")){
-                        f.ElementType = sourceType[..^2];
-                    } else if (sourceType.StartsWith("System.Collections.Generic.List`1<")) {
-                        f.ElementType = sourceType["System.Collections.Generic.List`1<".Length..^1];
-                    } else {
-                        // GD.Print("Unhandled array type " + sourceType);
-                        // specifically via.motion.MotionFsm2Layer seems to get detected as original_type == element type
-                        // may break other non-standard collections
-                        f.ElementType = sourceType;
-                    }
+                    f.ElementType = RszInstance.GetElementType(sourceType);
                 }
             }
         }

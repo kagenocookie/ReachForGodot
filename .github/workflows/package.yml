@@ -19,20 +19,20 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.0.x
-    - name: Restore RszTool dependencies
+    - name: Restore REE-Lib dependencies
       run: |
-        cd addons/ReachForGodot/RszTool/RszTool
+        cd addons/ReachForGodot/ReeLib/ReeLib
         dotnet restore
-    - name: Build RszTool
+    - name: Build REE-Lib
       run: |
-        cd addons/ReachForGodot/RszTool/RszTool
+        cd addons/ReachForGodot/ReeLib/ReeLib
         dotnet publish --no-restore -f net8.0 -c Release -o _out
         mkdir ../../Plugins -f
         mv _out/*.dll ../../Plugins/
 
     - name: Prepare files
       run: |
-        rm addons/ReachForGodot/RszTool/ -r -force
+        rm addons/ReachForGodot/ReeLib/ -r -force
         mkdir output
         mv addons output/
 

@@ -2,6 +2,7 @@ namespace ReaGE;
 
 using System.Threading.Tasks;
 using Godot;
+using ReeLib;
 
 /// <summary>
 /// Proxy placeholder resource for resources that have a non-REResource compatible representation in engine (e.g. meshes)
@@ -13,7 +14,7 @@ public partial class REResourceProxy : REResource, IImportableAsset
     public bool IsEmpty => ImportedResource == null;
 
     public REResourceProxy() { }
-    protected REResourceProxy(SupportedFileFormats format) => ResourceType = format;
+    protected REResourceProxy(KnownFileFormats format) => ResourceType = format;
 
     public async Task<Resource?> Import(bool forceReload)
     {

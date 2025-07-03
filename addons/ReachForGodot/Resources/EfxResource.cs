@@ -4,11 +4,12 @@ using System.Threading.Tasks;
 using Godot;
 using Godot.Collections;
 using ReaGE.EFX;
+using ReeLib;
 
-[GlobalClass, Tool, ResourceHolder("efx", SupportedFileFormats.Efx), Icon("res://addons/ReachForGodot/icons/Efx.png")]
+[GlobalClass, Tool, ResourceHolder("efx", KnownFileFormats.Effect), Icon("res://addons/ReachForGodot/icons/Efx.png")]
 public partial class EfxResource : REResourceProxy, IExportableAsset
 {
-    public EfxResource() : base(SupportedFileFormats.Efx) { }
+    public EfxResource() : base(KnownFileFormats.Effect) { }
 
     public PackedScene? EfxScene => ImportedResource as PackedScene;
     public EfxRootNode? Instantiate() => EfxScene?.Instantiate<EfxRootNode>();

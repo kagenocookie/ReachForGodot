@@ -4,9 +4,9 @@ using System.Collections;
 using System.Threading.Tasks;
 using Godot;
 using ReaGE.EFX;
-using RszTool;
-using RszTool.Efx;
-using RszTool.Efx.Structs.Basic;
+using ReeLib;
+using ReeLib.Efx;
+using ReeLib.Efx.Structs.Basic;
 
 public class EfxConverter : SceneResourceConverter<EfxResource, EfxFile, EfxRootNode>
 {
@@ -167,7 +167,7 @@ public class EfxConverter : SceneResourceConverter<EfxResource, EfxFile, EfxRoot
         }
     }
 
-    public EfxObject ImportObject(EfxObject target, object source, EfxClassInfo? info = null)
+    public EfxObject ImportObject(EfxObject target, object source, ExtendedEfxClassInfo? info = null)
     {
         info ??= target.TypeInfo;
         foreach (var f in info.FieldInfos) {

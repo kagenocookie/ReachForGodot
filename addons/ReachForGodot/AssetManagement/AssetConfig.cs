@@ -1,4 +1,5 @@
 using Godot;
+using ReeLib;
 
 namespace ReaGE;
 
@@ -22,6 +23,25 @@ public partial class AssetConfig : Resource
         }
     }
 
+    private Workspace? env;
+    public Workspace Workspace => env ??= CreateWorkspace();
+
+    private Workspace CreateWorkspace()
+    {
+        var config = GameConfig.CreateFromRepository(Game.ToShortName());
+        config.GamePath = Paths.Gamedir ?? string.Empty;
+        config.PakFiles = Paths.PakFiles;
+        config.ChunkPath = Paths.ChunkPath;
+        var ws = new Workspace(config);
+        return ws;
+    }
+
+    public void ClearWorkspace()
+    {
+        env?.Dispose();
+        env = null;
+    }
+
     public bool IsValid => ReachForGodot.GetPaths(Game) != null;
     private GamePaths? _overridePaths;
 
@@ -43,7 +63,7 @@ public partial class AssetConfig : Resource
     private Callable BrowserBtn => Callable.From(() => ReachForGodotPlugin.Instance.OpenPackedAssetBrowser(this));
 
     [ExportToolButton("DEV: Build all RSZ data")]
-    private Callable InferRszData => Callable.From(() => { _ = ReachForGodotPlugin.Instance.FetchInferrableRszData(this); });
+    private Callable InferRszData => Callable.From(() => ReachForGodotPlugin.Instance.CheckInferrableRszData(this));
 #endif
 
     private void InvokeCallback(Callable callable)

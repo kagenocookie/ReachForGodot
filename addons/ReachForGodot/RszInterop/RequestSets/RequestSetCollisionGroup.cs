@@ -2,7 +2,7 @@ namespace ReaGE;
 
 using System;
 using Godot;
-using RszTool;
+using ReeLib;
 
 [GlobalClass, Tool, FieldAccessorProvider]
 public partial class RequestSetCollisionGroup : AnimatableBody3D
@@ -29,9 +29,9 @@ public partial class RequestSetCollisionGroup : AnimatableBody3D
         set => layerGuid = value.ToString();
     }
 
-    public RszTool.Rcol.RcolGroup ToRsz()
+    public ReeLib.Rcol.RcolGroup ToRsz()
     {
-        var group = new RszTool.Rcol.RcolGroup();
+        var group = new ReeLib.Rcol.RcolGroup();
         group.Info.guid = Guid;
         group.Info.Name = Name;
         group.Info.MaskBits = CollisionMask;

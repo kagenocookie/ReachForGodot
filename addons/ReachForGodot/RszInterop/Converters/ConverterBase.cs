@@ -75,7 +75,7 @@ public abstract class ConverterBase<TResource, TExported, TAsset>
     {
         root.Name = path.BaseFilename.StringOrDefault("Unnamed");
         var scene = root.ToPackedScene(false);
-        var importFilepath = PathUtils.GetAssetImportPath(path.AssetFilename, PathUtils.GetFileFormat(path.AssetFilename).format, Config);
+        var importFilepath = PathUtils.GetAssetImportPath(path.AssetFilename, PathUtils.ParseFileFormat(path.AssetFilename).format, Config);
         if (importFilepath == null) return scene;
 
         if (Convert.Options.allowWriting) {

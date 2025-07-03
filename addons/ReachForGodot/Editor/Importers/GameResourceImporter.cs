@@ -1,6 +1,7 @@
 #if TOOLS
 using Godot;
 using Godot.Collections;
+using ReeLib;
 
 namespace ReaGE;
 
@@ -23,14 +24,13 @@ public partial class GameResourceImporter : EditorImportPlugin
 
     public override Array<Dictionary> _GetImportOptions(string path, int presetIndex)
     {
-        var configuredGames = ReachForGodot.ConfiguredGames;
-        var format = PathUtils.GetFileFormat(path);
-        if (format.version != -1 && format.format != SupportedFileFormats.Unknown) {
+        var configs = ReachForGodot.ConfiguredAssetConfigs;
+        var format = PathUtils.ParseFileFormat(path);
+        if (format.version != -1 && format.format != KnownFileFormats.Unknown) {
             var ext = PathUtils.GetFilepathWithoutVersion(path).GetExtension();
-            configuredGames = configuredGames.Where(game =>
-                PathUtils.GuessFileVersion(ext, format.format, ReachForGodot.GetAssetConfig(game)) == format.version);
+            configs = configs.Where(config => config.Workspace.GetFileVersion(ext) == format.version);
         }
-        var count = configuredGames.Count();
+        var count = configs.Count();
 
         return [
             new Godot.Collections.Dictionary
@@ -40,8 +40,8 @@ public partial class GameResourceImporter : EditorImportPlugin
                 { "property_hint", (int)PropertyHint.Enum },
                 { "hint_string", count switch {
                     0 => "Unsupported",
-                    1 => configuredGames.First().ToString(),
-                    _ => "Auto-detect:0," + string.Join(",", configuredGames.Select((g) => g + ":" + (int)g ))
+                    1 => configs.First().ToString(),
+                    _ => "Auto-detect:0," + string.Join(",", configs.Select((g) => g + ":" + (int)g.Game ))
                 } },
             },
         ];
@@ -63,7 +63,7 @@ public partial class GameResourceImporter : EditorImportPlugin
             return Error.CantResolve;
         }
 
-        var format = PathUtils.GetFileFormat(sourceFile);
+        var format = PathUtils.ParseFileFormat(sourceFile);
         if (format.version == -1) return Error.CantResolve;
 
         var importedSavePath = $"{savePath}.{_GetSaveExtension()}";
@@ -78,7 +78,7 @@ public partial class GameResourceImporter : EditorImportPlugin
             : null;
         if (resource != null) {
             var isOk = false;
-            if (resource is REResourceProxy proxy && proxy.ImportedResource is PackedScene pack) {
+            if (resource is REResourceProxy proxy && resource is not MeshResource && proxy.ImportedResource is PackedScene pack) {
                 // should we really instantiate for this, or just trust that it's correct?
                 isOk = pack.Instantiate<IAssetPointer>()?.Game == config.Game;
             } else {

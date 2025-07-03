@@ -2,14 +2,15 @@ namespace ReaGE;
 
 using System.Threading.Tasks;
 using Godot;
+using ReeLib;
 
-[GlobalClass, Tool, ResourceHolder("pfb", SupportedFileFormats.Prefab)]
+[GlobalClass, Tool, ResourceHolder("pfb", KnownFileFormats.Prefab)]
 public partial class PrefabResource : REResourceProxy, IImportableAsset, IExportableAsset
 {
     public PackedScene? Scene => ImportedResource as PackedScene;
     public PrefabNode? Instantiate() => Scene?.Instantiate<PrefabNode>();
 
-    public PrefabResource() : base(SupportedFileFormats.Prefab)
+    public PrefabResource() : base(KnownFileFormats.Prefab)
     {
     }
 

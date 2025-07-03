@@ -5,8 +5,8 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using Godot;
 using Godot.Collections;
-using RszTool;
-using RszTool.Efx;
+using ReeLib;
+using ReeLib.Efx;
 
 [GlobalClass, Tool]
 public partial class EfxObject : Resource
@@ -65,7 +65,7 @@ public partial class EfxObject : Resource
 
     public bool IsEmpty => __Data.Count == 0;
     public bool IsValid => Version != EfxVersion.Unknown && !string.IsNullOrEmpty(Classname) && (cache != null || TypeCache.EfxStructExists(Version, Classname));
-    public EfxClassInfo TypeInfo => cache ??= SetupTypeInfo(Classname ?? throw new Exception("Missing classname at " + ResourcePath));
+    public ExtendedEfxClassInfo TypeInfo => cache ??= SetupTypeInfo(Classname ?? throw new Exception("Missing classname at " + ResourcePath));
 
     private static Dictionary<string, string[]> classTags = new();
     public const string ClassTagExpressionContainer = "ExpressionContainer";
@@ -74,7 +74,7 @@ public partial class EfxObject : Resource
 
     public readonly static float ClipFps = 30;
 
-    private EfxClassInfo? cache;
+    private ExtendedEfxClassInfo? cache;
 
     public EfxObject()
     {
@@ -87,7 +87,7 @@ public partial class EfxObject : Resource
         UpdateResourceName();
     }
 
-    public EfxObject(EfxVersion game, EfxClassInfo cacheInfo)
+    public EfxObject(EfxVersion game, ExtendedEfxClassInfo cacheInfo)
     {
         Version = game;
         _classname = cacheInfo.Info.Classname;
@@ -359,7 +359,7 @@ public partial class EfxObject : Resource
         return base._Set(property, value);
     }
 
-    protected EfxClassInfo SetupTypeInfo(string cls)
+    protected ExtendedEfxClassInfo SetupTypeInfo(string cls)
     {
         cache = TypeCache.GetEfxStructInfo(Version, cls);
         return cache;

@@ -4,8 +4,8 @@ using System;
 using Godot;
 using Godot.Collections;
 using ReaGE.EFX;
-using RszTool.Efx;
-using RszTool.Efx.Structs.Common;
+using ReeLib.Efx;
+using ReeLib.Efx.Structs.Common;
 
 [GlobalClass, Tool]
 public partial class EfxClipAnimationPlayer : AnimationPlayer

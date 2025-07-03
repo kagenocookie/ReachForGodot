@@ -5,7 +5,7 @@ using Godot;
 public abstract class SceneRszAssetConverter<TResource, TFile, TRootNode> : RszAssetConverter<TResource, TFile, PackedScene, TRootNode>
     where TRootNode : Node, IImportableAsset, new()
     where TResource : REResourceProxy, new()
-    where TFile : RszTool.BaseFile
+    where TFile : ReeLib.BaseFile
 {
     public override PackedScene? GetImportedAssetFromResource(TResource resource) => resource.ImportedResource as PackedScene;
     public override TRootNode? GetInstanceFromAsset(PackedScene? asset) => asset?.Instantiate<TRootNode>();

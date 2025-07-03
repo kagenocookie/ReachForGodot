@@ -139,7 +139,7 @@ public partial class AssetImportInspectorPlugin : EditorInspectorPlugin, ISerial
         var converter = new AssetConverter(config, options);
         sourceFilepath ??= PathUtils.FindSourceFilePath(root.Asset?.AssetFilename, config);
         if (sourceFilepath == null) {
-            GD.PrintErr("Source file not found");
+            GD.PrintErr("Source file not found: " + root.Asset?.AssetFilename);
             return;
         }
         var importFilepath = PathUtils.GetAssetImportPath(sourceFilepath, config);

@@ -1,11 +1,12 @@
 namespace ReaGE;
 
 using Godot;
+using ReeLib;
 
-[GlobalClass, Tool, ResourceHolder("motfsm", SupportedFileFormats.MotionFsm)]
+[GlobalClass, Tool, ResourceHolder("motfsm", KnownFileFormats.MotionFsm)]
 public partial class MotionFsmResource : REResource
 {
-    public MotionFsmResource() : base(SupportedFileFormats.MotionFsm)
+    public MotionFsmResource() : base(KnownFileFormats.MotionFsm)
     {
     }
 }

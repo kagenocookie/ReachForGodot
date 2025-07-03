@@ -2,14 +2,15 @@ namespace ReaGE;
 
 using System.Threading.Tasks;
 using Godot;
+using ReeLib;
 
-[GlobalClass, Tool, ResourceHolder("rcol", SupportedFileFormats.Rcol)]
+[GlobalClass, Tool, ResourceHolder("rcol", KnownFileFormats.RequestSetCollider)]
 public partial class RcolResource : REResourceProxy, IExportableAsset
 {
     public PackedScene? RcolScene => ImportedResource as PackedScene;
     public RcolRootNode? Instantiate() => RcolScene?.Instantiate<RcolRootNode>();
 
-    public RcolResource() : base(SupportedFileFormats.Rcol)
+    public RcolResource() : base(KnownFileFormats.RequestSetCollider)
     {
     }
 

@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Threading.Tasks;
 using CustomFileBrowser;
 using Godot;
+using ReeLib;
 
 namespace ReaGE;
 
@@ -80,7 +81,7 @@ public partial class AssetBrowser : Resource
 
     public void ShowFileBrowser()
     {
-        if (string.IsNullOrEmpty(Assets?.Paths.FilelistPath)) {
+        if (Assets?.Workspace.ListFile == null) {
             GD.PrintErr("File list setting not defined");
             return;
         }
@@ -102,7 +103,7 @@ public partial class AssetBrowser : Resource
                 var tmpConfig = (AssetConfig)Assets.Duplicate();
                 // create a new temp config with no additional paths to ensure we fetch PAK sourced files here and not get distracted by whatever other modded files we may already have
                 // maybe add more action buttons to the file picker UI so we can specify Get original or Get whichever files or Find in project file system
-                tmpConfig.Paths = new GamePaths(tmpConfig.Game, tmpConfig.Paths.ChunkPath, tmpConfig.Paths.Gamedir, tmpConfig.Paths.Il2cppPath, tmpConfig.Paths.RszJsonPath, tmpConfig.Paths.FilelistPath, Array.Empty<LabelledPathSetting>(), tmpConfig.Paths.PakFiles);
+                tmpConfig.Paths = new GamePaths(tmpConfig.Game, tmpConfig.Paths.ChunkPath, tmpConfig.Paths.Gamedir, Array.Empty<LabelledPathSetting>(), tmpConfig.Paths.PakFiles);
 
                 var importList = relativeFilepaths
                     .Select(f => PathUtils.FindSourceFilePath(PathUtils.GetFilepathWithoutNativesFolder(f), tmpConfig)!)
@@ -133,9 +134,9 @@ public partial class AssetBrowser : Resource
         if (!string.IsNullOrEmpty(firstImport) && File.Exists(ProjectSettings.GlobalizePath(firstImport))) {
             var imported = await ResourceImportHandler.ImportAsset<REResource>(firstImport).Await();
             if (imported != null) {
-                var fmt = PathUtils.GetFileFormat(files.First(x => x != null));
+                var fmt = PathUtils.ParseFileFormat(files.First(x => x != null));
                 EditorInterface.Singleton.CallDeferred(EditorInterface.MethodName.SelectFile, imported.ResourcePath);
-                if (fmt.format is SupportedFileFormats.Scene or SupportedFileFormats.Prefab or SupportedFileFormats.Efx or SupportedFileFormats.Rcol) {
+                if (fmt.format is KnownFileFormats.Scene or KnownFileFormats.Prefab or KnownFileFormats.Effect or KnownFileFormats.RequestSetCollider) {
                     var scenePath = PathUtils.GetAssetImportPath(imported.Asset, config);
                     if (scenePath != null) {
                         EditorInterface.Singleton.CallDeferred(EditorInterface.MethodName.OpenSceneFromPath, scenePath);

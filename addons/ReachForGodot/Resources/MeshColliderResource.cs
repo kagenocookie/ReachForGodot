@@ -1,8 +1,9 @@
 namespace ReaGE;
 
 using Godot;
+using ReeLib;
 
-[GlobalClass, Tool, ResourceHolder("mcol", SupportedFileFormats.MeshCollider)]
+[GlobalClass, Tool, ResourceHolder("mcol", KnownFileFormats.CollisionMesh)]
 public partial class MeshColliderResource : REResourceProxy, IExportableAsset
 {
     public PackedScene? ImportedMesh => ImportedResource as PackedScene;
@@ -34,7 +35,7 @@ public partial class MeshColliderResource : REResourceProxy, IExportableAsset
         return ImportedResource ??= CreateImporter(options).Mcol.CreateScenePlaceholder(this);
     }
 
-    public MeshColliderResource() : base(SupportedFileFormats.MeshCollider)
+    public MeshColliderResource() : base(KnownFileFormats.CollisionMesh)
     {
     }
 

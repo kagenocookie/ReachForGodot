@@ -2,7 +2,7 @@ namespace ReaGE;
 
 using System.Threading.Tasks;
 using Godot;
-using RszTool;
+using ReeLib;
 
 [GlobalClass, Tool, REComponentClass("via.landscape.Foliage")]
 public partial class Foliage : REComponent

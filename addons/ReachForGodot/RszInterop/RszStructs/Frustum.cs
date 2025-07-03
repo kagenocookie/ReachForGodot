@@ -12,7 +12,7 @@ public partial class Frustum : Resource
     [Export] public Plane? plane4;
     [Export] public Plane? plane5;
 
-    public static implicit operator Frustum(RszTool.via.Frustum rszValue) => new Frustum() {
+    public static implicit operator Frustum(ReeLib.via.Frustum rszValue) => new Frustum() {
         plane0 = (Plane)rszValue.plane0,
         plane1 = (Plane)rszValue.plane1,
         plane2 = (Plane)rszValue.plane2,
@@ -21,7 +21,7 @@ public partial class Frustum : Resource
         plane5 = (Plane)rszValue.plane5,
     };
 
-    public RszTool.via.Frustum ToRsz() => new() {
+    public ReeLib.via.Frustum ToRsz() => new() {
         plane0 = plane0?.ToRsz() ?? default,
         plane1 = plane1?.ToRsz() ?? default,
         plane2 = plane2?.ToRsz() ?? default,

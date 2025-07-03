@@ -2,13 +2,14 @@ namespace ReaGE;
 
 using System.Threading.Tasks;
 using Godot;
+using ReeLib;
 
-[GlobalClass, Tool, ResourceHolder("mdf2", SupportedFileFormats.MaterialDefinition)]
+[GlobalClass, Tool, ResourceHolder("mdf2", KnownFileFormats.MaterialDefinition)]
 public partial class MaterialDefinitionResource : REResource, IImportableAsset, IExportableAsset
 {
     [Export] public MaterialResource[]? Materials { get; set; }
 
-    public MaterialDefinitionResource() : base(SupportedFileFormats.MaterialDefinition)
+    public MaterialDefinitionResource() : base(KnownFileFormats.MaterialDefinition)
     {
     }
 

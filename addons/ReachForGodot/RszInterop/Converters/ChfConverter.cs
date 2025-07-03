@@ -2,7 +2,7 @@ namespace ReaGE;
 
 using System.Threading.Tasks;
 using Godot;
-using RszTool;
+using ReeLib;
 
 public class ChfConverter : ResourceConverter<ColliderHeightFieldResource, CHFFile>, ISynchronousConverter<ColliderHeightFieldResource, CHFFile>
 {

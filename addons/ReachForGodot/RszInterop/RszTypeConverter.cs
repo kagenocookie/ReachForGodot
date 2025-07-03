@@ -3,8 +3,8 @@ namespace ReaGE;
 using System;
 using System.Globalization;
 using Godot;
-using RszTool;
-using RszTool.via;
+using ReeLib;
+using ReeLib.via;
 
 public static class RszTypeConverter
 {
@@ -159,25 +159,25 @@ public static class RszTypeConverter
             case RszFieldType.Point:
                 return ((System.Numerics.Vector2)value).ToGodot();
             case RszFieldType.Size:
-                return new Vector2(((RszTool.via.Size)value).w, ((RszTool.via.Size)value).h);
+                return new Vector2(((ReeLib.via.Size)value).w, ((ReeLib.via.Size)value).h);
             case RszFieldType.Rect:
-                return ((RszTool.via.Rect)value).ToGodot();
+                return ((ReeLib.via.Rect)value).ToGodot();
             case RszFieldType.Range:
-                return ((System.Numerics.Vector2)((RszTool.via.Range)value)).ToGodot();
+                return ((System.Numerics.Vector2)((ReeLib.via.Range)value)).ToGodot();
             case RszFieldType.RangeI:
-                return new Vector2I(((RszTool.via.RangeI)value).r, ((RszTool.via.RangeI)value).s);
+                return new Vector2I(((ReeLib.via.RangeI)value).r, ((ReeLib.via.RangeI)value).s);
             case RszFieldType.Vec3:
             case RszFieldType.Float3:
                 return ((System.Numerics.Vector3)value).ToGodot();
             case RszFieldType.Position:
-                return ((RszTool.via.Position)value).ToGodot();
+                return ((ReeLib.via.Position)value).ToGodot();
             case RszFieldType.Vec4:
             case RszFieldType.Float4:
                 return ((System.Numerics.Vector4)value).ToGodot();
             case RszFieldType.Quaternion:
                 return ((System.Numerics.Quaternion)value).ToGodot();
             case RszFieldType.Color:
-                return ((RszTool.via.Color)value).ToGodot();
+                return ((ReeLib.via.Color)value).ToGodot();
             case RszFieldType.Guid:
                 return ((Guid)value).ToString();
             case RszFieldType.Uri:
@@ -185,47 +185,47 @@ public static class RszTypeConverter
             case RszFieldType.GameObjectRef:
                 return new GameObjectRef((Guid)value);
             case RszFieldType.AABB:
-                return ((RszTool.via.AABB)value).ToGodot();
+                return ((ReeLib.via.AABB)value).ToGodot();
             case RszFieldType.Mat4:
-                return ((RszTool.via.mat4)value).ToProjection();
+                return ((ReeLib.via.mat4)value).ToProjection();
             case RszFieldType.OBB:
-                return OrientedBoundingBox.FromRsz(((RszTool.via.OBB)value));
+                return OrientedBoundingBox.FromRsz(((ReeLib.via.OBB)value));
             case RszFieldType.Sphere:
-                return ((RszTool.via.Sphere)value).ToVector4();
+                return ((ReeLib.via.Sphere)value).ToVector4();
             case RszFieldType.LineSegment:
-                return (LineSegment)((RszTool.via.LineSegment)value);
+                return (LineSegment)((ReeLib.via.LineSegment)value);
             case RszFieldType.Plane:
-                return (Plane)((RszTool.via.Plane)value);
+                return (Plane)((ReeLib.via.Plane)value);
             case RszFieldType.PlaneXZ:
-                return ((RszTool.via.PlaneXZ)value).dist;
+                return ((ReeLib.via.PlaneXZ)value).dist;
             case RszFieldType.Ray:
-                return (Ray)((RszTool.via.Ray)value);
+                return (Ray)((ReeLib.via.Ray)value);
             case RszFieldType.RayY:
-                return (RayY)((RszTool.via.RayY)value);
+                return (RayY)((ReeLib.via.RayY)value);
             case RszFieldType.Triangle:
-                return (Triangle)((RszTool.via.Triangle)value);
+                return (Triangle)((ReeLib.via.Triangle)value);
             case RszFieldType.Cylinder:
-                return (Cylinder)((RszTool.via.Cylinder)value);
+                return (Cylinder)((ReeLib.via.Cylinder)value);
             case RszFieldType.Ellipsoid:
-                return (Ellipsoid)((RszTool.via.Ellipsoid)value);
+                return (Ellipsoid)((ReeLib.via.Ellipsoid)value);
             case RszFieldType.Frustum:
-                return (Frustum)((RszTool.via.Frustum)value);
+                return (Frustum)((ReeLib.via.Frustum)value);
             case RszFieldType.KeyFrame:
-                return (KeyFrame)((RszTool.via.KeyFrame)value);
+                return (KeyFrame)((ReeLib.via.KeyFrame)value);
             case RszFieldType.Rect3D:
-                return (Rect3D)((RszTool.via.Rect3D)value);
+                return (Rect3D)((ReeLib.via.Rect3D)value);
             case RszFieldType.Capsule:
-                return (Capsule)((RszTool.via.Capsule)value);
+                return (Capsule)((ReeLib.via.Capsule)value);
             case RszFieldType.Area:
-                return (Area)((RszTool.via.Area)value);
+                return (Area)((ReeLib.via.Area)value);
             case RszFieldType.TaperedCapsule:
-                return (TaperedCapsule)((RszTool.via.TaperedCapsule)value);
+                return (TaperedCapsule)((ReeLib.via.TaperedCapsule)value);
             case RszFieldType.Cone:
-                return (Cone)((RszTool.via.Cone)value);
+                return (Cone)((ReeLib.via.Cone)value);
             case RszFieldType.Line:
-                return (Line)((RszTool.via.Line)value);
+                return (Line)((ReeLib.via.Line)value);
             case RszFieldType.Segment:
-                return (Segment)((RszTool.via.Segment)value);
+                return (Segment)((ReeLib.via.Segment)value);
         }
 
         GD.PrintErr("Unhandled conversion for rsz type " + type + " with value type " + value.GetType().FullName);
@@ -265,6 +265,7 @@ public static class RszTypeConverter
                 RszFieldType.Uint4 => ConvertArray(variant.AsGodotArray<Vector4I>(), static v => v.ToRsz()),
                 RszFieldType.Bool => ConvertArray(variant.AsGodotArray<bool>(), static v => v),
                 RszFieldType.Range => ConvertArray(variant.AsGodotArray<Vector2>(), static v => v.ToRszRange()),
+                RszFieldType.Size => ConvertArray(variant.AsGodotArray<Vector2>(), static v => v.ToRszSize()),
                 RszFieldType.RangeI => ConvertArray(variant.AsGodotArray<Vector2I>(), static v => v.ToRszRange()),
                 RszFieldType.OBB => ConvertArray(variant.AsGodotArray<OrientedBoundingBox>(), v => v.ToRsz()),
                 RszFieldType.Guid or RszFieldType.Uri => ConvertArray(variant.AsStringArray(), v => Guid.TryParse(v, out var guid) ? guid : Guid.Empty),
@@ -318,22 +319,22 @@ public static class RszTypeConverter
             RszFieldType.Vec3 or RszFieldType.Float3 => variant.AsVector3().ToRsz(),
             RszFieldType.Position => variant.AsVector3().ToRszPosition(),
             RszFieldType.Vec4 or RszFieldType.Float4 => variant.AsVector4().ToRsz(),
-            RszFieldType.Int2 => (RszTool.via.Int2)variant.AsVector2I().ToRsz(),
-            RszFieldType.Int3 => (RszTool.via.Int3)variant.AsVector3I().ToRsz(),
-            RszFieldType.Int4 => (RszTool.via.Int4)variant.AsVector4I().ToRsz(),
-            RszFieldType.Uint2 => (RszTool.via.Uint2)variant.AsVector2I().ToRszU(),
-            RszFieldType.Uint3 => (RszTool.via.Uint3)variant.AsVector3I().ToRszU(),
-            RszFieldType.Uint4 => (RszTool.via.Uint4)variant.AsVector4I().ToRszU(),
+            RszFieldType.Int2 => (ReeLib.via.Int2)variant.AsVector2I().ToRsz(),
+            RszFieldType.Int3 => (ReeLib.via.Int3)variant.AsVector3I().ToRsz(),
+            RszFieldType.Int4 => (ReeLib.via.Int4)variant.AsVector4I().ToRsz(),
+            RszFieldType.Uint2 => (ReeLib.via.Uint2)variant.AsVector2I().ToRszU(),
+            RszFieldType.Uint3 => (ReeLib.via.Uint3)variant.AsVector3I().ToRszU(),
+            RszFieldType.Uint4 => (ReeLib.via.Uint4)variant.AsVector4I().ToRszU(),
             RszFieldType.OBB => variant.As<OrientedBoundingBox>().ToRsz(),
-            RszFieldType.AABB => (RszTool.via.AABB)variant.AsAabb().ToRsz(),
+            RszFieldType.AABB => (ReeLib.via.AABB)variant.AsAabb().ToRsz(),
             RszFieldType.Guid => Guid.TryParse(variant.AsString(), out var guid) ? guid : Guid.Empty,
             RszFieldType.Uri => variant.VariantType == Variant.Type.String
                 ? Guid.TryParse(variant.AsString(), out var guid) ? guid : Guid.Empty
                 : variant.As<GameObjectRef>().TargetGuid,
             RszFieldType.GameObjectRef => variant.As<GameObjectRef>().TargetGuid,
-            RszFieldType.Color => (RszTool.via.Color)variant.AsColor().ToRsz(),
-            RszFieldType.Range => (RszTool.via.Range)variant.AsVector2().ToRszRange(),
-            RszFieldType.RangeI => (RszTool.via.RangeI)variant.AsVector2I().ToRszRange(),
+            RszFieldType.Color => (ReeLib.via.Color)variant.AsColor().ToRsz(),
+            RszFieldType.Range => (ReeLib.via.Range)variant.AsVector2().ToRszRange(),
+            RszFieldType.RangeI => (ReeLib.via.RangeI)variant.AsVector2I().ToRszRange(),
             RszFieldType.Quaternion => variant.AsQuaternion().ToRsz(),
             RszFieldType.Sphere => variant.AsVector4().ToSphere(),
             RszFieldType.Capsule => variant.As<Capsule>().ToRsz(),
@@ -343,8 +344,8 @@ public static class RszTypeConverter
             RszFieldType.Line => variant.As<Line>().ToRsz(),
             RszFieldType.LineSegment => variant.As<LineSegment>().ToRsz(),
             RszFieldType.Plane => variant.As<Plane>().ToRsz(),
-            RszFieldType.PlaneXZ => new RszTool.via.PlaneXZ { dist = variant.AsSingle() },
-            RszFieldType.Size => new RszTool.via.Size() { w = variant.AsVector2().X, h = variant.AsVector2().Y },
+            RszFieldType.PlaneXZ => new ReeLib.via.PlaneXZ { dist = variant.AsSingle() },
+            RszFieldType.Size => new ReeLib.via.Size() { w = variant.AsVector2().X, h = variant.AsVector2().Y },
             RszFieldType.Ray => variant.As<Ray>().ToRsz(),
             RszFieldType.RayY => variant.As<RayY>().ToRsz(),
             RszFieldType.Segment => variant.As<Segment>().ToRsz(),
@@ -356,7 +357,7 @@ public static class RszTypeConverter
             RszFieldType.Rect3D => variant.As<Rect3D>().ToRsz(),
             RszFieldType.Frustum => variant.As<Frustum>().ToRsz(),
             RszFieldType.KeyFrame => variant.As<KeyFrame>().ToRsz(),
-            RszFieldType.Sfix => new RszTool.via.sfix() { v = variant.AsInt32() },
+            RszFieldType.Sfix => new ReeLib.via.sfix() { v = variant.AsInt32() },
             RszFieldType.Sfix2 => variant.AsVector2I().ToSfix(),
             RszFieldType.Sfix3 => variant.AsVector3I().ToSfix(),
             RszFieldType.Sfix4 => variant.AsVector4I().ToSfix(),
@@ -370,34 +371,34 @@ public static class RszTypeConverter
     public static Vector2 ToGodot(this System.Numerics.Vector2 val) => new Vector2(val.X, val.Y);
     public static Vector3 ToGodot(this System.Numerics.Vector3 val) => new Vector3(val.X, val.Y, val.Z);
     // not ideal but we can't use double positions nicely in godot so, hopefully not to lossy
-    public static Vector3 ToGodot(this RszTool.via.Position val) => new Vector3((float)val.x, (float)val.y, (float)val.z);
-    public static Vector2I ToGodot(this RszTool.via.Int2 val) => new Vector2I(val.x, val.y);
-    public static Vector3I ToGodot(this RszTool.via.Int3 val) => new Vector3I(val.x, val.y, val.z);
+    public static Vector3 ToGodot(this ReeLib.via.Position val) => new Vector3((float)val.x, (float)val.y, (float)val.z);
+    public static Vector2I ToGodot(this ReeLib.via.Int2 val) => new Vector2I(val.x, val.y);
+    public static Vector3I ToGodot(this ReeLib.via.Int3 val) => new Vector3I(val.x, val.y, val.z);
     public static Vector4 ToGodot(this System.Numerics.Vector4 val) => new Vector4(val.X, val.Y, val.Z, val.W);
-    public static Vector4 ToGodot(this RszTool.via.Rect val) => new Vector4(val.t, val.r, val.b, val.l);
-    public static Vector4 ToVector4(this RszTool.via.Sphere val) => new Vector4(val.pos.X, val.pos.Y, val.Pos.Z, val.R);
+    public static Vector4 ToGodot(this ReeLib.via.Rect val) => new Vector4(val.t, val.r, val.b, val.l);
+    public static Vector4 ToVector4(this ReeLib.via.Sphere val) => new Vector4(val.pos.X, val.pos.Y, val.Pos.Z, val.R);
     public static Vector4 ToVector4(this Vector3 val) => new Vector4(val.X, val.Y, val.Z, 0);
     public static Vector4 ToVector4(this Quaternion val) => new Vector4(val.X, val.Y, val.Z, val.W);
-    public static Transform3D ToGodot(this RszTool.via.Transform transform) => new Transform3D(new Basis(transform.rot.ToGodot()).Scaled(transform.scale.ToGodot()), transform.pos.ToGodot());
+    public static Transform3D ToGodot(this ReeLib.via.Transform transform) => new Transform3D(new Basis(transform.rot.ToGodot()).Scaled(transform.scale.ToGodot()), transform.pos.ToGodot());
     public static Quaternion ToGodot(this System.Numerics.Quaternion val) => new Quaternion(val.X, val.Y, val.Z, val.W);
-    public static Aabb ToGodot(this RszTool.via.AABB val) => new Aabb(val.minpos.ToGodot(), val.maxpos.ToGodot() - val.minpos.ToGodot());
-    public static Godot.Color ToGodot(this RszTool.via.Color val) => new Godot.Color(SwapEndianness(val.rgba));  // godot's interpretation of RGBA is 0xff000000 = R and 0xff = A
+    public static Aabb ToGodot(this ReeLib.via.AABB val) => new Aabb(val.minpos.ToGodot(), val.maxpos.ToGodot() - val.minpos.ToGodot());
+    public static Godot.Color ToGodot(this ReeLib.via.Color val) => new Godot.Color(SwapEndianness(val.rgba));  // godot's interpretation of RGBA is 0xff000000 = R and 0xff = A
 
-    public static RszTool.via.Sfix2 ToSfix(this Vector2I vec) => new() { x = new sfix() { v = vec.X }, y = new sfix() { v = vec.Y } };
-    public static RszTool.via.Sfix3 ToSfix(this Vector3I vec) => new() { x = new sfix() { v = vec.X }, y = new sfix() { v = vec.Y }, z = new sfix() { v = vec.Z } };
-    public static RszTool.via.Sfix4 ToSfix(this Vector4I vec) => new() { x = new sfix() { v = vec.X }, y = new sfix() { v = vec.Y }, z = new sfix() { v = vec.Z }, w = new sfix() { v = vec.W } };
-    public static RszTool.via.Sphere ToSphere(this Vector4 val) => new RszTool.via.Sphere { pos = val.ToVector3().ToRsz(), r = val.W };
-    public static RszTool.via.Rect ToRect(this Vector4 val) => new RszTool.via.Rect { t = val.X, r = val.Y, b = val.Z, l = val.W  };
-    public static RszTool.via.AABB ToRsz(this Aabb val) => new() {
+    public static ReeLib.via.Sfix2 ToSfix(this Vector2I vec) => new() { x = new sfix() { v = vec.X }, y = new sfix() { v = vec.Y } };
+    public static ReeLib.via.Sfix3 ToSfix(this Vector3I vec) => new() { x = new sfix() { v = vec.X }, y = new sfix() { v = vec.Y }, z = new sfix() { v = vec.Z } };
+    public static ReeLib.via.Sfix4 ToSfix(this Vector4I vec) => new() { x = new sfix() { v = vec.X }, y = new sfix() { v = vec.Y }, z = new sfix() { v = vec.Z }, w = new sfix() { v = vec.W } };
+    public static ReeLib.via.Sphere ToSphere(this Vector4 val) => new ReeLib.via.Sphere { pos = val.ToVector3().ToRsz(), r = val.W };
+    public static ReeLib.via.Rect ToRect(this Vector4 val) => new ReeLib.via.Rect { t = val.X, r = val.Y, b = val.Z, l = val.W  };
+    public static ReeLib.via.AABB ToRsz(this Aabb val) => new() {
         minpos = val.Position.ToRsz(),
         maxpos = val.End.ToRsz(),
     };
-    public static RszTool.via.Transform ToRszTransform(this Transform3D transform) => new Transform() {
+    public static ReeLib.via.Transform ToRszTransform(this Transform3D transform) => new Transform() {
         pos = transform.Origin.ToRsz(),
         rot = transform.Basis.GetRotationQuaternion().ToRsz(),
         scale = transform.Basis.Scale.ToRsz(),
     };
-    public static Projection ToProjection(this RszTool.via.mat4 mat)
+    public static Projection ToProjection(this ReeLib.via.mat4 mat)
     {
         return new Projection(
             new Vector4(mat.m00, mat.m01, mat.m02, mat.m03),
@@ -408,20 +409,21 @@ public static class RszTypeConverter
     }
 
     public static System.Numerics.Vector2 ToRsz(this Vector2 val) => new System.Numerics.Vector2(val.X, val.Y);
-    public static RszTool.via.Range ToRszRange(this Vector2 val) => new RszTool.via.Range { r = val.X, s = val.Y };
-    public static RszTool.via.RangeI ToRszRange(this Vector2I val) => new RszTool.via.RangeI { r = val.X, s = val.Y };
+    public static ReeLib.via.Range ToRszRange(this Vector2 val) => new ReeLib.via.Range { r = val.X, s = val.Y };
+    public static ReeLib.via.Size ToRszSize(this Vector2 val) => new ReeLib.via.Size { w = val.X, h = val.Y };
+    public static ReeLib.via.RangeI ToRszRange(this Vector2I val) => new ReeLib.via.RangeI { r = val.X, s = val.Y };
     public static System.Numerics.Vector3 ToRsz(this Vector3 val) => new System.Numerics.Vector3(val.X, val.Y, val.Z);
-    public static RszTool.via.Position ToRszPosition(this Vector3 val) => new Position  { x = val.X, y = val.Y, z = val.Z };
+    public static ReeLib.via.Position ToRszPosition(this Vector3 val) => new Position  { x = val.X, y = val.Y, z = val.Z };
     public static System.Numerics.Vector4 ToRsz(this Vector4 val) => new System.Numerics.Vector4(val.X, val.Y, val.Z, val.W);
-    public static RszTool.via.Int2 ToRsz(this Vector2I val) => new RszTool.via.Int2 { x = val.X, y = val.Y };
-    public static RszTool.via.Int3 ToRsz(this Vector3I val) => new RszTool.via.Int3 { x = val.X, y = val.Y, z = val.Z };
-    public static RszTool.via.Int4 ToRsz(this Vector4I val) => new RszTool.via.Int4 { x = val.X, y = val.Y, z = val.Z, w = val.W };
-    public static RszTool.via.Color ToRsz(this Godot.Color val) => new RszTool.via.Color { rgba = val.ToAbgr32() };
+    public static ReeLib.via.Int2 ToRsz(this Vector2I val) => new ReeLib.via.Int2 { x = val.X, y = val.Y };
+    public static ReeLib.via.Int3 ToRsz(this Vector3I val) => new ReeLib.via.Int3 { x = val.X, y = val.Y, z = val.Z };
+    public static ReeLib.via.Int4 ToRsz(this Vector4I val) => new ReeLib.via.Int4 { x = val.X, y = val.Y, z = val.Z, w = val.W };
+    public static ReeLib.via.Color ToRsz(this Godot.Color val) => new ReeLib.via.Color { rgba = val.ToAbgr32() };
     public static System.Numerics.Quaternion ToRsz(this Quaternion val) => new System.Numerics.Quaternion(val.X, val.Y, val.Z, val.W);
-    public static RszTool.via.Uint2 ToRszU(this Vector2I val) => new RszTool.via.Uint2 { x = (uint)val.X, y = (uint)val.Y };
-    public static RszTool.via.Uint3 ToRszU(this Vector3I val) => new RszTool.via.Uint3 { x = (uint)val.X, y = (uint)val.Y, z = (uint)val.Z };
-    public static RszTool.via.Uint4 ToRszU(this Vector4I val) => new RszTool.via.Uint4 { x = (uint)val.X, y = (uint)val.Y, z = (uint)val.Z, w = (uint)val.W };
-    public static RszTool.via.mat4 ToRsz(this Projection val)
+    public static ReeLib.via.Uint2 ToRszU(this Vector2I val) => new ReeLib.via.Uint2 { x = (uint)val.X, y = (uint)val.Y };
+    public static ReeLib.via.Uint3 ToRszU(this Vector3I val) => new ReeLib.via.Uint3 { x = (uint)val.X, y = (uint)val.Y, z = (uint)val.Z };
+    public static ReeLib.via.Uint4 ToRszU(this Vector4I val) => new ReeLib.via.Uint4 { x = (uint)val.X, y = (uint)val.Y, z = (uint)val.Z, w = (uint)val.W };
+    public static ReeLib.via.mat4 ToRsz(this Projection val)
     {
         return new mat4() {
             m00 = val.X.X,

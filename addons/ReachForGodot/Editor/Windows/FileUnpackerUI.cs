@@ -1,5 +1,6 @@
 using CustomFileBrowser;
 using Godot;
+using ReeLib;
 
 namespace ReaGE;
 
@@ -76,17 +77,19 @@ public partial class FileUnpackerUI : Window
     {
         var config = ReachForGodot.GetAssetConfig(Game);
         if (!config.IsValid) return;
+
         ExtensionButtonsContainer?.QueueFreeRemoveChildrenWhere(c => c is CheckButton);
-        if (string.IsNullOrEmpty(config.Paths.FilelistPath)) {
+
+        if (!config.Workspace.CanUseListFile) {
             FileSystem = new FileListFileSystem(Array.Empty<string>());
             return;
         }
 
-        FileSystem = new FileListFileSystem(config.Paths.FilelistPath);
+        FileSystem = new FileListFileSystem(config.Workspace.ListFile!.Files);
         if (ExtensionButtonsContainer != null) {
-            var orderedFormats = PathUtils.GetGameFileExtensions(Game)
-                .OrderBy(ext => PathUtils.GetFileFormatFromExtension(ext) is SupportedFileFormats fmt
-                    && fmt != SupportedFileFormats.Unknown ? ((int)fmt, string.Empty) : (99, ext));
+            var orderedFormats = config.Workspace.GameFileExtensions
+                .OrderBy(ext => PathUtils.GetFileFormatFromExtension(ext) is KnownFileFormats fmt
+                    && fmt.IsSupportedFileFormat() ? ((int)fmt, string.Empty) : (500, ext));
 
             foreach (var ext in orderedFormats) {
                 var btn = new CheckButton() { Text = ext };
@@ -201,7 +204,7 @@ public partial class FileUnpackerUI : Window
     private void SelectAllExtensions()
     {
         SelectedExtensions.Clear();
-        SelectedExtensions.AddRange(PathUtils.GetGameFileExtensions(Game));
+        SelectedExtensions.AddRange(ReachForGodot.GetAssetConfig(Game).Workspace.GameFileExtensions);
         RefreshExtensionButtons();
     }
 

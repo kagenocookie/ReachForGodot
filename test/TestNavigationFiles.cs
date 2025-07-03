@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Chickensoft.GoDotTest;
 using Godot;
-using RszTool;
+using ReeLib;
 
 namespace ReaGE.Tests;
 
@@ -14,9 +14,10 @@ public partial class TestNavigationFiles : TestBase
     private static HashSet<(float, float)> boundsUkns = new();
     private static HashSet<(int, string)> uknIDs = new();
 
-    private static AimpFile HandleAimpFile(SupportedGame game, RszFileOption fileOption, string filepath)
+    private static AimpFile HandleAimpFile(SupportedGame game, string filepath, Stream stream)
     {
-        var file = new AimpFile(fileOption, new FileHandler(filepath));
+        var fileOption = ReachForGodot.GetAssetConfig(game).Workspace.RszFileOption;
+        var file = new AimpFile(fileOption, new FileHandler(stream, filepath));
         file.Read();
         var ext = PathUtils.GetFilenameExtensionWithoutSuffixes(filepath).ToString();
 
@@ -52,48 +53,48 @@ public partial class TestNavigationFiles : TestBase
     [Test]
     public async Task NavmeshReadTest()
     {
-        await ExecuteFullReadTest("ainvm", (game, fileOption, filepath) => {
-            using var file = HandleAimpFile(game, fileOption, filepath);
+        await ExecuteFullReadTest("ainvm", (game, filepath, stream) => {
+            using var file = HandleAimpFile(game, filepath, stream);
         });
     }
 
     [Test]
     public async Task AIMapReadTest()
     {
-        await ExecuteFullReadTest("aimap", (game, fileOption, filepath) => {
-            using var file = HandleAimpFile(game, fileOption, filepath);
+        await ExecuteFullReadTest("aimap", (game, filepath, stream) => {
+            using var file = HandleAimpFile(game, filepath, stream);
         });
     }
 
     [Test]
     public async Task WaypointReadTest()
     {
-        await ExecuteFullReadTest("aiwayp", (game, fileOption, filepath) => {
-            using var file = HandleAimpFile(game, fileOption, filepath);
+        await ExecuteFullReadTest("aiwayp", (game, filepath, stream) => {
+            using var file = HandleAimpFile(game, filepath, stream);
         });
     }
 
     [Test]
     public async Task VolumeSpaceReadTest()
     {
-        await ExecuteFullReadTest("aivspc", (game, fileOption, filepath) => {
-            using var file = HandleAimpFile(game, fileOption, filepath);
+        await ExecuteFullReadTest("aivspc", (game, filepath, stream) => {
+            using var file = HandleAimpFile(game, filepath, stream);
         });
     }
 
     [Test]
     public async Task WaypointManagerReadTest()
     {
-        await ExecuteFullReadTest("aiwaypmgr", (game, fileOption, filepath) => {
-            using var file = HandleAimpFile(game, fileOption, filepath);
+        await ExecuteFullReadTest("aiwaypmgr", (game, filepath, stream) => {
+            using var file = HandleAimpFile(game, filepath, stream);
         });
     }
 
     [Test]
     public async Task NavmeshManagerReadTest()
     {
-        await ExecuteFullReadTest("ainvmmgr", (game, fileOption, filepath) => {
-            using var file = HandleAimpFile(game, fileOption, filepath);
+        await ExecuteFullReadTest("ainvmmgr", (game, filepath, stream) => {
+            using var file = HandleAimpFile(game, filepath, stream);
         });
 
         GD.Print("AimpCombinations:\n" + string.Join("\n", AimpCombinations));

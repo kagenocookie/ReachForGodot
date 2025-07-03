@@ -2,9 +2,9 @@ namespace ReaGE;
 
 using System.Threading.Tasks;
 using Godot;
-using RszTool;
-using RszTool.Aimp;
-using RszTool.via;
+using ReeLib;
+using ReeLib.Aimp;
+using ReeLib.via;
 
 public class AimpConverter : RszAssetConverter<AiMapResource, AimpFile, AiMapResource, AiMapResource>
 {

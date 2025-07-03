@@ -2,9 +2,9 @@ namespace ReaGE;
 
 using System.Threading.Tasks;
 using Godot;
-using RszTool;
+using ReeLib;
 
-public abstract class RszToolConverter<TResource, TExported, TAsset, TAssetInstance> : DataConverter<TResource, TExported, TAsset, TAssetInstance>
+public abstract class ReeLibConverter<TResource, TExported, TAsset, TAssetInstance> : DataConverter<TResource, TExported, TAsset, TAssetInstance>
     where TAsset : GodotObject
     where TAssetInstance : GodotObject
     where TExported : BaseFile
@@ -123,11 +123,12 @@ public abstract class RszToolConverter<TResource, TExported, TAsset, TAssetInsta
 
     public TExported CreateFile(string absoluteFilepath) => CreateFile(new FileHandler(absoluteFilepath));
     public TExported CreateFile(Stream stream, int fileVersion) => CreateFile(new FileHandler(stream) { FileVersion = fileVersion });
+    public TExported CreateFile(Stream stream, string filepath) => CreateFile(new FileHandler(stream, filepath));
 
     public abstract TExported CreateFile(FileHandler fileHandler);
 }
 
-public abstract class ResourceConverter<TResource, TExported> : RszToolConverter<TResource, TExported, TResource, TResource>
+public abstract class ResourceConverter<TResource, TExported> : ReeLibConverter<TResource, TExported, TResource, TResource>
     where TResource : REResource, new()
     where TExported : BaseFile
 {

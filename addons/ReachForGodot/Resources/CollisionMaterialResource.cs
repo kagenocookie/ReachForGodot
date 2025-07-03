@@ -1,8 +1,9 @@
 namespace ReaGE;
 
 using Godot;
+using ReeLib;
 
-[GlobalClass, Tool, ResourceHolder("cmat", SupportedFileFormats.CollisionMaterial)]
+[GlobalClass, Tool, ResourceHolder("cmat", KnownFileFormats.CollisionMaterial)]
 public partial class CollisionMaterialResource : REResource, IImportableAsset
 {
     [Export] public string? material;
@@ -19,7 +20,7 @@ public partial class CollisionMaterialResource : REResource, IImportableAsset
         set => attributes = value.Select(guid => guid.ToString()).ToArray();
     }
 
-    public CollisionMaterialResource() : base(SupportedFileFormats.CollisionMaterial)
+    public CollisionMaterialResource() : base(KnownFileFormats.CollisionMaterial)
     {
     }
 

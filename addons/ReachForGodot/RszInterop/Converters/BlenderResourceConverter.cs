@@ -82,13 +82,15 @@ public abstract class BlenderResourceConverter<TResource, TAsset> : ConverterBas
 
         var output = new StringBuilder();
         process!.OutputDataReceived += (sender, e) => {
-            if (!string.IsNullOrWhiteSpace(e.Data)) {
-                output.AppendLine(e.Data.Trim());
+            var data = e.Data;
+            if (!string.IsNullOrWhiteSpace(data)) {
+                output.AppendLine(data.Trim());
             }
         };
         process.ErrorDataReceived += (sender, e) => {
-            if (!string.IsNullOrWhiteSpace(e.Data)) {
-                output.AppendLine("ERROR:" + e.Data.Trim());
+            var data = e.Data;
+            if (!string.IsNullOrWhiteSpace(data)) {
+                output.Append("ERROR:").AppendLine(data.Trim());
             }
         };
 

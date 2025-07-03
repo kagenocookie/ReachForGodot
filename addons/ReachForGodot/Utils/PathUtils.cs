@@ -3,6 +3,8 @@ using System.Globalization;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using Godot;
+using ReeLib;
+using ReeLib.Common;
 
 namespace ReaGE;
 
@@ -10,15 +12,15 @@ public static partial class PathUtils
 {
     private static readonly Dictionary<SupportedGame, FileExtensionCache> extensionInfo = new();
 
-    private sealed record FormatDescriptor(string extension, Type resourceType, SupportedFileFormats format);
+    private sealed record FormatDescriptor(string extension, Type resourceType, KnownFileFormats format);
 
     private static readonly List<FormatDescriptor> formats = new();
-    private static readonly Dictionary<SupportedFileFormats, FormatDescriptor> formatToDescriptor = new();
+    private static readonly Dictionary<KnownFileFormats, FormatDescriptor> formatToDescriptor = new();
     private static readonly Dictionary<int, FormatDescriptor> extensionToDescriptor = new();
     private static readonly Dictionary<SupportedGame, HashSet<string>> ignoredFilepaths = new();
 
-    private static readonly Dictionary<SupportedFileFormats, Func<REResource>> resourceFactory = new();
-    public static void RegisterFileFormat(SupportedFileFormats format, string extension, Type resourceType)
+    private static readonly Dictionary<KnownFileFormats, Func<REResource>> resourceFactory = new();
+    public static void RegisterFileFormat(KnownFileFormats format, string extension, Type resourceType)
     {
         var desc = new FormatDescriptor(extension, resourceType, format);
 
@@ -32,25 +34,9 @@ public static partial class PathUtils
         return CultureInfo.InvariantCulture.CompareInfo.GetHashCode(span, CompareOptions.Ordinal);
     }
 
-    public static REFileFormat GetFileFormat(ReadOnlySpan<char> filename)
+    public static REFileFormat ParseFileFormat(ReadOnlySpan<char> filename)
     {
-        filename = GetFilenameExtensionWithSuffixes(filename);
-        if (filename.IsEmpty) return REFileFormat.Unknown;
-        // filename: ".mesh" OR ".mesh.123" OR ".sbnk.1.x64" OR ".sbnk.1.x64.en"
-
-        var versionDot = filename.IndexOf('.');
-        if (versionDot == -1) return new REFileFormat(GetFileFormatFromExtension(filename), -1);
-
-        var versionEnd = filename[(versionDot + 1)..].IndexOf('.');
-        if (versionEnd == -1) versionEnd = filename.Length;
-        else versionEnd += versionDot + 1;
-
-        if (!int.TryParse(filename[(versionDot + 1)..versionEnd], out var version)) {
-            return new REFileFormat(GetFileFormatFromExtension(filename), -1);
-        }
-
-        var fmt = GetFileFormatFromExtension(filename[..versionDot]);
-        return new REFileFormat(fmt, version);
+        return ReeLib.PathUtils.ParseFileFormat(filename);
     }
 
     [return: NotNullIfNotNull(nameof(filepath))]
@@ -128,33 +114,33 @@ public static partial class PathUtils
         return filename[extIndex] == '.' ? filename[..extIndex] : filename[..(extIndex + 1)];
     }
 
-    public static SupportedFileFormats GetFileFormatFromExtension(ReadOnlySpan<char> extension)
+    public static KnownFileFormats GetFileFormatFromExtension(ReadOnlySpan<char> extension)
     {
-        return extensionToDescriptor.GetValueOrDefault(GetSpanHash(extension))?.format ?? SupportedFileFormats.Unknown;
+        return FileFormatExtensions.ExtensionHashToEnum(MurMur3HashUtils.GetHash(extension));
     }
 
-    public static string? GetFileExtensionFromFormat(SupportedFileFormats format) => formatToDescriptor.GetValueOrDefault(format)?.extension;
-    public static Type GetResourceTypeFromFormat(SupportedFileFormats format) => formatToDescriptor.TryGetValue(format, out var desc) ? desc.resourceType : typeof(REResource);
+    public static string? GetFileExtensionFromFormat(KnownFileFormats format) => formatToDescriptor.GetValueOrDefault(format)?.extension;
+    public static Type GetResourceTypeFromFormat(KnownFileFormats format) => formatToDescriptor.TryGetValue(format, out var desc) ? desc.resourceType : typeof(REResource);
 
     private static string[]? _fileVersions;
     public static string[] GetKnownImportableFileVersions()
     {
         if (_fileVersions != null) return _fileVersions;
         _fileVersions = ReachForGodot.ConfiguredGames
-            .Select(game => GetVersionDict(game))
-            .SelectMany(kv => kv
-                .Where(kv => GetFileFormatFromExtension(kv.Key) != SupportedFileFormats.Unknown)
-                .Select(v => v.Value.ToString()))
+            .Select(game => ReachForGodot.GetAssetConfig(game))
+            .SelectMany(conf => conf.Workspace.GameFileFormats
+                .Where(fmt => fmt.format != KnownFileFormats.Unknown)
+                .Select(v => v.version.ToString()))
             .ToHashSet()
             .ToArray();
 
         return _fileVersions;
     }
-    public static int GetFileFormatVersion(SupportedFileFormats format, GamePaths config)
+    public static int GetFileFormatVersion(KnownFileFormats format, AssetConfig config)
     {
         var ext = GetFileExtensionFromFormat(format);
         if (ext == null) return 0;
-        if (TryGetFileExtensionVersion(config.Game, ext, out var version)) {
+        if (config.Workspace.TryGetFileExtensionVersion(ext, out var version)) {
             return version;
         }
 
@@ -192,82 +178,9 @@ public static partial class PathUtils
         public bool CanNotHaveLang { get; set; }
     }
 
-    private static FileExtensionCache GetExtensionInfo(SupportedGame game)
-    {
-        if (!extensionInfo.TryGetValue(game, out var info)) {
-            if (File.Exists(GamePaths.GetExtensionVersionsCacheFilepath(game))) {
-                using var fs = File.OpenRead(GamePaths.GetExtensionVersionsCacheFilepath(game));
-                info = JsonSerializer.Deserialize<FileExtensionCache>(fs, TypeCache.jsonOptions) ?? new();
-            }
-            extensionInfo[game] = info ??= new FileExtensionCache();
-        }
-        return info;
-    }
-
-    private static Dictionary<string, int> GetVersionDict(SupportedGame game)
-    {
-        return GetExtensionInfo(game).Versions;
-    }
-
-    public static bool TryGetFileExtensionVersion(SupportedGame game, string extension, out int version)
-    {
-        return GetVersionDict(game).TryGetValue(extension, out version);
-    }
-
-    public static IEnumerable<string> GetGameFileExtensions(SupportedGame game)
-    {
-        return GetVersionDict(game).Keys;
-    }
-
-    private static void UpdateFileExtension(GamePaths config, string extension, int version)
-    {
-        var info = GetExtensionInfo(config.Game);
-        info.Versions[extension] = version;
-        SerializeExtensionInfo(config, info);
-    }
-
-    private static void SerializeExtensionInfo(GamePaths config, FileExtensionCache info)
-    {
-        var path = GamePaths.GetExtensionVersionsCacheFilepath(config.Game);
-        Directory.CreateDirectory(path.GetBaseDir());
-        using var fs = File.Create(path);
-        JsonSerializer.Serialize(fs, info, TypeCache.jsonOptions);
-    }
-
-    public static int GuessFileVersion(string relativePath, SupportedFileFormats format, AssetConfig config)
-    {
-        if (format == SupportedFileFormats.Unknown) {
-            format = GetFileFormat(relativePath).format;
-        }
-
-        var ext = GetFileExtensionFromFormat(format) ?? relativePath.GetExtension();
-        if (TryGetFileExtensionVersion(config.Game, ext, out var version)) {
-            return version;
-        }
-
-        if (relativePath.StartsWith('@')) {
-            // IDK what these @'s are, but so far I've only found them for sounds at the root folder
-            // seems to be safe to ignore, though we may need to handle them when putting the files back
-            relativePath = relativePath.Substring(1);
-        }
-
-        // see if there's any files at all with the same file ext in whatever dir the file in question is located in
-        var dir = RelativeToFullPath(relativePath, config).GetBaseDir();
-        if (Directory.Exists(dir)) {
-            var first = Directory.EnumerateFiles(dir, $"*.{ext}.*").FirstOrDefault();
-            if (first != null && int.TryParse(first.GetExtension(), out version)) {
-                UpdateFileExtension(config.Paths, ext, version);
-                return version;
-            }
-        }
-
-        GD.PrintErr("Could not determine file version for file: " + relativePath);
-        return -1;
-    }
-
     public static string? GetLocalizedImportPath(string sourcePath, AssetConfig config)
     {
-        var path = FullOrRelativePathToImportPath(sourcePath, GetFileFormat(sourcePath).format, config, true);
+        var path = FullOrRelativePathToImportPath(sourcePath, ParseFileFormat(sourcePath).format, config, true);
         return string.IsNullOrEmpty(path) ? null : path;
     }
 
@@ -276,13 +189,13 @@ public static partial class PathUtils
     /// </summary>
     public static string? GetAssetImportPath(string? sourcePath, AssetConfig config)
     {
-        var format = GetFileFormat(sourcePath).format;
+        var format = ParseFileFormat(sourcePath).format;
         return GetAssetImportPath(sourcePath, format, config);
     }
     /// <summary>
     /// Gets the path that a resource's asset file will get imported to. This is the mesh/texture/audio/other linked resource, and not the main resource file.
     /// </summary>
-    public static string? GetAssetImportPath(string? sourcePath, SupportedFileFormats format, AssetConfig config)
+    public static string? GetAssetImportPath(string? sourcePath, KnownFileFormats format, AssetConfig config)
     {
         if (sourcePath == null) return null;
         return FullOrRelativePathToImportPath(sourcePath, format, config, false);
@@ -290,12 +203,12 @@ public static partial class PathUtils
 
     public static string AppendFileVersion(string filename, AssetConfig config)
     {
-        var fmt = GetFileFormat(filename);
+        var fmt = ParseFileFormat(filename);
         if (fmt.version != -1) {
             return filename;
         }
 
-        var version = GuessFileVersion(filename, fmt.format, config);
+        var version = config.Workspace.GetFileVersion(filename);
         if (version == -1) {
             return filename;
         }
@@ -305,66 +218,6 @@ public static partial class PathUtils
 
     [GeneratedRegex("\\.x64\\.([a-z]{2,})$")]
     private static partial Regex IsLocalizedFileRegex();
-
-    public static void ExtractFileVersionsFromList(SupportedGame game, string listFilepath)
-    {
-        if (!File.Exists(listFilepath)) {
-            GD.PrintErr("List file '" + listFilepath + "' not found");
-            return;
-        }
-        var paths = ReachForGodot.GetPaths(game) ?? new GamePaths(game) { FilelistPath = listFilepath };
-        using var file = new StreamReader(File.OpenRead(listFilepath));
-        var extensions = GetExtensionInfo(game);
-        while (!file.EndOfStream) {
-            var line = file.ReadLine();
-            if (string.IsNullOrEmpty(line)) continue;
-
-            var isLocalized = false;
-            string? locale = null;
-            var hasStm = false;
-            var hasX64 = false;
-            if (IsLocalizedFileRegex().IsMatch(line)) {
-                hasX64 = true;
-                isLocalized = true;
-                locale = IsLocalizedFileRegex().Match(line).Groups[1].Value;
-                line = line.GetBaseName().GetBaseName();
-            } else if (line.EndsWith(".x64")) {
-                hasX64 = true;
-                line = line.GetBaseName();
-            } else if (line.EndsWith(".stm")) {
-                hasStm = true;
-                line = line.GetBaseName();
-            }
-
-            var versionStr = line.GetExtension();
-            var ext = line.GetBaseName()?.GetExtension();
-            if (!string.IsNullOrEmpty(ext)) {
-                if (!extensions.Info.TryGetValue(ext, out var info)) {
-                    extensions.Info[ext] = info = new FileExtensionInfo();
-                }
-                info.CanHaveX64 = hasX64 || info.CanHaveX64;
-                info.CanHaveStm = hasStm || info.CanHaveStm;
-                info.CanNotHaveX64 = !hasX64 && !hasStm || info.CanNotHaveX64;
-                info.CanHaveLang = isLocalized || info.CanHaveLang;
-                info.CanNotHaveLang = !isLocalized || info.CanNotHaveLang;
-                if (locale != null && !info.Locales.Contains(locale)) {
-                    if (locale == "en") {
-                        info.Locales.Insert(0, locale);
-                    } else {
-                        info.Locales.Add(locale);
-                    }
-                }
-                if (int.TryParse(versionStr, out var version)) {
-                    if (info.Version != 0 && info.Version != version) {
-                        GD.PrintErr($"Warning: updating .{ext} file version from {info.Version} to {version}");
-                    }
-                    info.Version = version;
-                    extensions.Versions[ext] = version;
-                }
-            }
-        }
-        SerializeExtensionInfo(paths, extensions);
-    }
 
     public static string GetFilepathWithoutNativesFolder(string path)
     {
@@ -408,28 +261,6 @@ public static partial class PathUtils
 
     private static bool IsNativesX64(SupportedGame game) => game is SupportedGame.DevilMayCry5 or SupportedGame.ResidentEvil2 or SupportedGame.ResidentEvil7;
 
-    public static IEnumerable<string> GetFilesByExtensionFromListFile(string? listFilepath, string extension, string? basePath)
-    {
-        if (!File.Exists(listFilepath)) {
-            GD.PrintErr("List file '" + listFilepath + "' not found");
-            yield break;
-        }
-
-        if (basePath != null) {
-            basePath = GetFilepathWithoutNativesFolder(basePath);
-        }
-
-        using var file = new StreamReader(File.OpenRead(listFilepath));
-        while (!file.EndOfStream) {
-            var line = file.ReadLine();
-            if (string.IsNullOrEmpty(line)) continue;
-
-            if (line.EndsWith(extension)) {
-                yield return basePath == null ? line : Path.Combine(basePath, line);
-            }
-        }
-    }
-
     public static bool IsIgnoredFilepath(string filepath, AssetConfig config)
     {
         if (!ignoredFilepaths.TryGetValue(config.Game, out var list)) {
@@ -451,39 +282,7 @@ public static partial class PathUtils
     /// </summary>
     public static IEnumerable<string> GetCandidateFilepaths(string filepath, AssetConfig config)
     {
-        var basepath = GetFilepathWithoutExtensionOrVersion(filepath);
-        var extensionSpan = filepath[(basepath.Length + 1)..];
-        var extIndex = extensionSpan.IndexOf('.');
-        FileExtensionInfo? extInfo = null;
-        string? ext = null;
-        if (extIndex != -1) {
-            ext = extensionSpan[..extIndex];
-            extInfo = GetExtensionInfo(config.Game).Info.GetValueOrDefault(ext);
-        }
-
-        var path = GetFilepathWithNativesFolderPrefix(basepath.ToString(), config.Game);
-        if (extInfo == null || ext == null) {
-            yield return AppendFileVersion(path, config);
-            yield break;
-        }
-
-        if (extInfo.CanNotHaveX64) {
-            yield return AppendFileVersion($"{path}.{ext}", config);
-        }
-
-        if (extInfo.CanNotHaveLang && extInfo.CanHaveX64) {
-            yield return AppendFileVersion($"{path}.{ext}", config) + ".x64";
-        }
-
-        if (extInfo.CanNotHaveLang && extInfo.CanHaveStm) {
-            yield return AppendFileVersion($"{path}.{ext}", config) + ".stm";
-        }
-
-        if (extInfo.CanHaveLang) {
-            foreach (var locale in extInfo.Locales) {
-                yield return AppendFileVersion($"{path}.{ext}", config) + $".x64.{locale}";
-            }
-        }
+        return config.Workspace.FindPossibleFilepaths(filepath);
     }
 
     /// <summary>
@@ -501,11 +300,14 @@ public static partial class PathUtils
 
         if (sourceFilePath == null) return null;
         sourceFilePath = AppendFileVersion(sourceFilePath, config);
+        sourceFilePath = GetFilepathWithoutNativesFolder(sourceFilePath);
 
         if (sourceFilePath.StartsWith('@')) {
             // what are these?
             sourceFilePath = sourceFilePath.Substring(1);
         }
+        var defaultExtractedPath = Path.Combine(config.Paths.SourcePathOverride.NullIfEmpty() ?? config.Paths.ChunkPath, sourceFilePath);
+        if (File.Exists(defaultExtractedPath)) return defaultExtractedPath;
 
         string? attemptedPath;
         foreach (var candidate in GetCandidateFilepaths(sourceFilePath, config)) {
@@ -704,7 +506,7 @@ public static partial class PathUtils
         return null;
     }
 
-    private static string? FullOrRelativePathToImportPath(string sourcePath, SupportedFileFormats fmt, AssetConfig config, bool resource)
+    private static string? FullOrRelativePathToImportPath(string sourcePath, KnownFileFormats fmt, AssetConfig config, bool resource)
     {
         var relativePath = Path.IsPathRooted(sourcePath) ? FullToRelativePath(sourcePath, config) : sourcePath;
         if (relativePath == null) return null;
@@ -716,15 +518,15 @@ public static partial class PathUtils
         }
         if (!resource) {
             switch (fmt) {
-                case SupportedFileFormats.Mesh:
+                case KnownFileFormats.Mesh:
                     return sourcePath + ".glb";
-                case SupportedFileFormats.Texture:
+                case KnownFileFormats.Texture:
                     return sourcePath + ".dds";
-                case SupportedFileFormats.MeshCollider:
-                case SupportedFileFormats.Rcol:
-                case SupportedFileFormats.Scene:
-                case SupportedFileFormats.Prefab:
-                case SupportedFileFormats.Efx:
+                case KnownFileFormats.CollisionMesh:
+                case KnownFileFormats.RequestSetCollider:
+                case KnownFileFormats.Scene:
+                case KnownFileFormats.Prefab:
+                case KnownFileFormats.Effect:
                     return sourcePath + ".tscn";
                 default:
                     return sourcePath + ".tres";

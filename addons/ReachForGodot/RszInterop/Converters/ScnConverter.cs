@@ -3,7 +3,7 @@ namespace ReaGE;
 using System;
 using System.Threading.Tasks;
 using Godot;
-using RszTool;
+using ReeLib;
 
 public class ScnConverter : SceneRszAssetConverter<SceneResource, ScnFile, SceneFolder>
 {
@@ -46,7 +46,7 @@ public class ScnConverter : SceneRszAssetConverter<SceneResource, ScnFile, Scene
 
         foreach (var go in source.ChildObjects) {
             if (go is PrefabNode pfbGo) {
-                file.PrefabInfoList.Add(new RszTool.Scn.ScnPrefabInfo() {
+                file.PrefabInfoList.Add(new ReeLib.Scn.ScnPrefabInfo() {
                     Path = pfbGo.Asset?.ExportedFilename ?? pfbGo.Prefab,
                     parentId = 0,
                 });
@@ -86,7 +86,7 @@ public class ScnConverter : SceneRszAssetConverter<SceneResource, ScnFile, Scene
         file.RSZ.InstanceList.Add(folderInstance);
         file.RSZ.AddToObjectTable(folderInstance);
 
-        file.FolderInfoList.Add(new StructModel<RszTool.Scn.ScnFolderInfo>() { Data = new RszTool.Scn.ScnFolderInfo() {
+        file.FolderInfoList.Add(new StructModel<ReeLib.Scn.ScnFolderInfo>() { Data = new ReeLib.Scn.ScnFolderInfo() {
             objectId = folderInstance.ObjectTableIndex,
             parentId = parentFolderId,
         } });
@@ -139,14 +139,14 @@ public class ScnConverter : SceneRszAssetConverter<SceneResource, ScnFile, Scene
             pfbIndex = file.PrefabInfoList.FindIndex(pfb => pfb.Path == pfbNode.Prefab);
             if (pfbIndex == -1) {
                 pfbIndex = file.PrefabInfoList.Count;
-                file.PrefabInfoList.Add(new RszTool.Scn.ScnPrefabInfo() {
+                file.PrefabInfoList.Add(new ReeLib.Scn.ScnPrefabInfo() {
                     parentId = 0,
                     Path = pfbNode.Prefab,
                 });
             }
         }
 
-        var info = new RszTool.Scn.ScnGameObjectInfo() {
+        var info = new ReeLib.Scn.ScnGameObjectInfo() {
             objectId = objectId,
             parentId = parentId,
             componentCount = (short)gameObject.Components.Count,
@@ -157,15 +157,13 @@ public class ScnConverter : SceneRszAssetConverter<SceneResource, ScnFile, Scene
         file.GameObjectInfoList.Add(info);
 
         file.GameObjects ??= new();
-        file.GameObjects.Add(new RszTool.Scn.ScnGameObject() {
+        file.GameObjects.Add(new ReeLib.Scn.ScnGameObject() {
             Info = info,
         });
     }
 
     public override async Task<bool> Import(ScnFile file, SceneFolder target)
     {
-        TypeCache.StoreInferredRszTypes(file.RSZ, Config);
-
         if (Convert.Options.folders == RszImportType.ForceReimport) {
             target.Clear();
         }
@@ -265,7 +263,7 @@ public class ScnConverter : SceneRszAssetConverter<SceneResource, ScnFile, Scene
         return Import(file, folder);
     }
 
-    private void PrepareFolderBatch(AssetConverter.FolderBatch batch, IEnumerable<RszTool.Scn.ScnGameObject> gameobjects, IEnumerable<RszTool.Scn.ScnFolderData> folders)
+    private void PrepareFolderBatch(AssetConverter.FolderBatch batch, IEnumerable<ReeLib.Scn.ScnGameObject> gameobjects, IEnumerable<ReeLib.Scn.ScnFolderData> folders)
     {
         var dupeDict = new Dictionary<string, int>();
         foreach (var gameObj in gameobjects) {
@@ -297,7 +295,7 @@ public class ScnConverter : SceneRszAssetConverter<SceneResource, ScnFile, Scene
         }
     }
 
-    private void PrepareSubfolderPlaceholders(SceneFolder root, RszTool.Scn.ScnFolderData folder, SceneFolder parent, AssetConverter.FolderBatch batch, int dedupeIndex)
+    private void PrepareSubfolderPlaceholders(SceneFolder root, ReeLib.Scn.ScnFolderData folder, SceneFolder parent, AssetConverter.FolderBatch batch, int dedupeIndex)
     {
         Debug.Assert(folder.Info != null);
         var name = !string.IsNullOrEmpty(folder.Name) ? folder.Name : "UnnamedFolder";
@@ -348,7 +346,7 @@ public class ScnConverter : SceneRszAssetConverter<SceneResource, ScnFile, Scene
         subfolder.Draw = System.Convert.ToBoolean(folder.Instance!.GetFieldValue("Draw"));
         subfolder.Active = System.Convert.ToBoolean(folder.Instance!.GetFieldValue("Select"));
         if (folder.Instance.TryGetFieldValue("UniversalOffset", out var position)) {
-            subfolder.UniversalOffset = ((RszTool.via.Position)position!).ToGodot();
+            subfolder.UniversalOffset = ((ReeLib.via.Position)position!).ToGodot();
         }
     }
 

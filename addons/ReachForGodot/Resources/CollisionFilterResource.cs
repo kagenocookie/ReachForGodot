@@ -1,8 +1,9 @@
 namespace ReaGE;
 
 using Godot;
+using ReeLib;
 
-[GlobalClass, Tool, ResourceHolder("cfil", SupportedFileFormats.CollisionFilter)]
+[GlobalClass, Tool, ResourceHolder("cfil", KnownFileFormats.CollisionFilter)]
 public partial class CollisionFilterResource : REResource, IImportableAsset
 {
     [Export] public string? Layer;
@@ -19,7 +20,7 @@ public partial class CollisionFilterResource : REResource, IImportableAsset
         set => Masks = value.Select(guid => guid.ToString()).ToArray();
     }
 
-    public CollisionFilterResource() : base(SupportedFileFormats.CollisionFilter)
+    public CollisionFilterResource() : base(KnownFileFormats.CollisionFilter)
     {
     }
 

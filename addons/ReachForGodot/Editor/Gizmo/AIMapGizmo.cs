@@ -1,6 +1,6 @@
 using Godot;
-using RszTool;
-using RszTool.Aimp;
+using ReeLib;
+using ReeLib.Aimp;
 
 namespace ReaGE;
 

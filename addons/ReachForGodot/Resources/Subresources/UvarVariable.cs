@@ -2,14 +2,14 @@ namespace ReaGE;
 
 using Godot;
 using Godot.Collections;
-using static RszTool.UVar.Variable;
+using static ReeLib.UVar.Variable;
 
 [GlobalClass, Tool]
 public partial class UvarVariable : Resource
 {
     [Export] public SupportedGame Game { get; set; }
-    [Export] public RszTool.UVar.Variable.TypeKind Type { get; set; }
-    [Export] public RszTool.UVar.Variable.UvarFlags Flags { get; set; }
+    [Export] public ReeLib.UVar.Variable.TypeKind Type { get; set; }
+    [Export] public ReeLib.UVar.Variable.UvarFlags Flags { get; set; }
     [Export] public Variant Value { get; set; }
     [Export] public string GuidString { get; set; } = string.Empty;
     [Export] public UvarExpression? Expression { get; set; }
@@ -68,7 +68,7 @@ public partial class UvarVariable : Resource
         TypeKind.Vec2 => (Vector2)value,
         TypeKind.Vec3 => (Vector3)value,
         TypeKind.Vec4 => (Vector4)value,
-        TypeKind.Matrix => ((RszTool.via.mat4)value).ToProjection(),
+        TypeKind.Matrix => ((ReeLib.via.mat4)value).ToProjection(),
         TypeKind.GUID => ((Guid)value).ToString(),
         _ => throw new Exception("Unhandled UVAR variable type " + type),
     };

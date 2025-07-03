@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Godot;
 using ReaGE.EditorLogic;
+using ReeLib;
 
 namespace ReaGE;
 
@@ -71,7 +72,7 @@ public partial class SceneFolderInspectorPlugin : EditorInspectorPlugin, ISerial
                         return;
                     }
 
-                    var importPath = PathUtils.GetAssetImportPath(instanceScene.Asset, SupportedFileFormats.Scene, ReachForGodot.GetAssetConfig(instanceScene.Game));
+                    var importPath = PathUtils.GetAssetImportPath(instanceScene.Asset, KnownFileFormats.Scene, ReachForGodot.GetAssetConfig(instanceScene.Game));
                     if (importPath == null) {
                         GD.PrintErr("Could not determine filepath");
                         return;

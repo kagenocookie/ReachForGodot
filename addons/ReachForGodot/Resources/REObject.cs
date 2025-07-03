@@ -5,7 +5,7 @@ using System.Globalization;
 using System.Runtime.CompilerServices;
 using Godot;
 using Godot.Collections;
-using RszTool;
+using ReeLib;
 
 [GlobalClass, Tool]
 public partial class REObject : Resource

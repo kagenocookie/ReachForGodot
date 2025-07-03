@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Chickensoft.GoDotTest;
 using Godot;
-using RszTool;
+using ReeLib;
 
 namespace ReaGE.Tests;
 

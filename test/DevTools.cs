@@ -1,7 +1,7 @@
 using Godot;
-using RszTool;
-using RszTool.Efx;
-using RszTool.Tools;
+using ReeLib;
+using ReeLib.Efx;
+using ReeLib.Tools;
 
 namespace ReaGE.Tests;
 
@@ -34,8 +34,7 @@ public static class DevTools
                 continue;
             }
 
-            var outputPath = ReachForGodot.GetPaths(game)?.EfxStructsFilepath;
-            if (outputPath == null) continue;
+            var outputPath = ProjectSettings.GlobalizePath($"res://userdata/output-efx/{game.ToShortName()}/efx_structs.json");
 
             if (efxVersion == EfxVersion.MHRise) {
                 outputPath = outputPath.Replace(".json", "_base.json");
@@ -97,27 +96,12 @@ public static class DevTools
         if (games.Length == 0) games = ReachForGodot.ConfiguredGames.ToArray();
 
         return games.SelectMany(g => FindEfxWhere(filter, g)).ToList();
-        // return ReachForGodotPlugin.SelectFilesWhere(game, "efx", (g, opt, filepath) => {
-        //     var file = new EfxFile(new FileHandler(filepath));
-        //     try {
-        //         file.Read();
-        //         if (filter.Invoke(file, true)) {
-        //             return file;
-        //         }
-        //     } catch (Exception) {
-        //         if (filter.Invoke(file, false)) {
-        //             return file;
-        //         }
-        //     }
-
-        //     return null;
-        // }).Select(a => a.Item1).ToList();
     }
 
     public static List<EfxFile> FindEfxWhere(Func<EfxFile, bool> filter, SupportedGame game)
     {
-        return ReachForGodotPlugin.SelectFilesWhere(game, "efx", (g, opt, filepath) => {
-            var file = new EfxFile(new FileHandler(filepath));
+        return ReachForGodotPlugin.SelectFilesWhere(game, "efx", (g, filepath, stream) => {
+            var file = new EfxFile(new FileHandler(stream, filepath));
             try {
                 file.Read();
                 if (filter.Invoke(file)) {

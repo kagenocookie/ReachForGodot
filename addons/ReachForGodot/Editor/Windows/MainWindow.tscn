@@ -1,0 +1,50 @@
+[gd_scene load_steps=3 format=3 uid="uid://4ek67umqho4r"]
+
+[ext_resource type="Script" uid="uid://s7ouh6wdh0fn" path="res://addons/ReachForGodot/Editor/Windows/MainWindow.cs" id="1_aw0ng"]
+[ext_resource type="Script" uid="uid://dqifhevfnwy6c" path="res://addons/ReachForGodot/Editor/Windows/ImportPanel.cs" id="2_37o2f"]
+
+[node name="ReachForGodot" type="MarginContainer" node_paths=PackedStringArray("filedropPanel", "savedFileListContainer")]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_aw0ng")
+filedropPanel = NodePath("HSplitContainer/Panel/ColorRect")
+savedFileListContainer = NodePath("HSplitContainer/Panel/VBoxContainer")
+
+[node name="HSplitContainer" type="HSplitContainer" parent="."]
+layout_mode = 2
+split_offset = 375
+
+[node name="Panel" type="Panel" parent="HSplitContainer"]
+layout_mode = 2
+
+[node name="ColorRect" type="ColorRect" parent="HSplitContainer/Panel"]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+grow_horizontal = 2
+script = ExtResource("2_37o2f")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HSplitContainer/Panel"]
+layout_mode = 1
+anchors_preset = -1
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 50.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel2" type="Panel" parent="HSplitContainer"]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="HSplitContainer/Panel2"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Button" type="Button" parent="HSplitContainer/Panel2/VBoxContainer"]
+layout_mode = 2
+text = "Test btn"

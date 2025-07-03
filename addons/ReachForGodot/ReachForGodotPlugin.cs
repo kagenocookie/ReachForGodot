@@ -1,5 +1,5 @@
 using Godot;
-using RszTool;
+using ReeLib;
 using GC = Godot.Collections;
 using System.Diagnostics;
 using System.Threading.Tasks;
@@ -7,6 +7,7 @@ using ReaGE.Tools;
 using ReaGE.ContentEditorIntegration;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using ReeLib.Tools;
 
 #if REAGE_DEV
 using Chickensoft.GoDotTest;
@@ -36,6 +37,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
     private const string Setting_ImportMeshMaterials = $"{SettingBase}/general/import_mesh_materials";
     private const string Setting_SceneFolderProxyThreshold = $"{SettingBase}/general/create_scene_proxy_node_threshold";
     private const string Setting_UnpackMaxThreads = $"{SettingBase}/general/unpack_max_threads";
+    private const string Setting_RemoteResourceSource = $"{SettingBase}/general/REE_Lib_Resource_Source";
 
     public static string? BlenderPath
         => EditorInterface.Singleton.GetEditorSettings().GetSetting(Setting_BlenderPathOverrides).AsString().NullIfEmpty()
@@ -44,6 +46,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
     public static bool IncludeMeshMaterial { get; private set; }
     public static int SceneFolderProxyThreshold { get; private set; }
     public static int UnpackerMaxThreads { get; private set; }
+    public static string? ReeLibResourceSource { get; private set; }
 
     private static string GameDirSetting(SupportedGame game) => Setting_GameDir.Replace("{game}", game.ToString());
     private static string ChunkPathSetting(SupportedGame game) => Setting_GameChunkPath.Replace("{game}", game.ToString());
@@ -66,13 +69,9 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
     private PopupMenu toolMenu = null!;
     private PopupMenu? toolMenuDev;
     private AssetBrowser? browser;
+    private MainWindow? mainWindowNode;
 
     private ResourceImportHandler importHandler = null!;
-
-    static ReachForGodotPlugin()
-    {
-        System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(TypeCache).TypeHandle);
-    }
 
 
     public override void _EnterTree()
@@ -94,7 +93,6 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
 
         EditorInterface.Singleton.GetEditorSettings().SettingsChanged += OnProjectSettingsChanged;
         ProjectSettings.SettingsChanged += OnProjectSettingsChanged;
-        OnProjectSettingsChanged();
 
         inspectors = [
             new REObjectInspectorPlugin(),
@@ -127,13 +125,40 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
         importers = new EditorImportPlugin[] { new GameResourceImporter() };
         foreach (var i in importers) AddImportPlugin(i);
 
-        RefreshToolMenu();
+        // This is a bit of a hack.
+        // note to self: TypeCache static constructor ends up calling OnProjectSettingsChanged, which then ends up calling RefreshToolMenu()
+        // which is why we don't need to do it ourselves currently
+        System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(TypeCache).TypeHandle);
         toolMenu.IdPressed += HandleToolMenu;
+        // mainWindowNode = ResourceLoader.Load<PackedScene>("res://addons/ReachForGodot/Editor/Windows/MainWindow.tscn").Instantiate<MainWindow>();
+        // EditorInterface.Singleton.GetEditorMainScreen().AddChild(mainWindowNode);
+        // _MakeVisible(false);
     }
 
     private void OpenDonationPage()
     {
         Process.Start(new ProcessStartInfo("https://ko-fi.com/shadowcookie") { UseShellExecute = true });
+    }
+
+    public override bool _HasMainScreen()
+    {
+        return false;
+    }
+
+    public override void _MakeVisible(bool visible)
+    {
+        if (mainWindowNode == null) return;
+        if (visible) {
+            mainWindowNode.SizeFlagsVertical = Control.SizeFlags.ExpandFill;
+            mainWindowNode.Visible = true;
+        } else {
+            mainWindowNode.Visible = false;
+        }
+    }
+
+    public override string _GetPluginName()
+    {
+        return "ReachForGodot";
     }
 
     public override void _ShortcutInput(InputEvent @event)
@@ -204,15 +229,8 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
             foreach (var game in ReachForGodot.PathSetupGames) ReachForGodot.GetAssetConfig(game);
             RefreshToolMenu();
         }
-        if (id == 200) ExtractFileVersions();
+        if (id == 200) FileExtensionTools.ExtractAllFileExtensionCacheData();
 
-        if (id == 300) {
-            foreach (var cfg in ReachForGodot.AssetConfigs.Where(c => c.IsValid)) {
-                if (cfg.Paths.Gamedir == null) continue;
-                var ce = new ContentEditor(cfg, cfg.Paths.Gamedir);
-                ce.ParseDumpedEnumDisplayLabels();
-            }
-        }
 #if REAGE_DEV
         if (id >= 1000) {
             var tests = GoTest.Adapter.CreateProvider().GetTestSuites(System.Reflection.Assembly.GetExecutingAssembly());
@@ -253,7 +271,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
     {
         foreach (var (file, current) in FindUpgradeableResources($"*.*.tres",
             (current) => current.GetType() == typeof(REResource) &&
-            PathUtils.GetFileFormatFromExtension(Path.GetExtension(Path.GetFileNameWithoutExtension(current.ResourcePath.AsSpan())).Slice(1)) != SupportedFileFormats.Unknown)
+            PathUtils.GetFileFormatFromExtension(Path.GetExtension(Path.GetFileNameWithoutExtension(current.ResourcePath.AsSpan())).Slice(1)) != KnownFileFormats.Unknown)
         ) {
             Importer.ImportResource(current.Asset!.AssetFilename, ReachForGodot.GetAssetConfig(current.Game), file);
         }
@@ -261,7 +279,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
 
     private void UpgradeResources<TResource>(string extension) where TResource : REResource, new()
     {
-        foreach (var (file, current) in FindUpgradeableResources($"*.{extension}.tres", (current) => current is not TResource || current.ResourceType == SupportedFileFormats.Unknown)) {
+        foreach (var (file, current) in FindUpgradeableResources($"*.{extension}.tres", (current) => current is not TResource || current.ResourceType == KnownFileFormats.Unknown)) {
             Importer.ImportResource(current.Asset!.AssetFilename, ReachForGodot.GetAssetConfig(current.Game), file);
         }
     }
@@ -297,63 +315,32 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
     }
 #endif
 
-    internal async Task FetchInferrableRszData(AssetConfig config)
+    internal void CheckInferrableRszData(AssetConfig config)
     {
-        var fileOption = TypeCache.CreateRszFileOptions(config);
         var sourcePath = config.Paths.ChunkPath;
+        var env = config.Workspace;
 
-        GD.Print("Checking for duplicate field names...");
-        TypeCache.VerifyDuplicateFields(fileOption.RszParser.ClassDict.Values, config);
+        if (string.IsNullOrEmpty(config.Workspace.Config.GamePath)) {
+            GD.PrintErr("Game path must be configured");
+            return;
+        }
 
-        var scnTotal = PathUtils.GetFilesByExtensionFromListFile(config.Paths.FilelistPath, PathUtils.AppendFileVersion(".scn", config), sourcePath).Count();
-        var pfbTotal = PathUtils.GetFilesByExtensionFromListFile(config.Paths.FilelistPath, PathUtils.AppendFileVersion(".pfb", config), sourcePath).Count();
-        var rcolTotal = PathUtils.GetFilesByExtensionFromListFile(config.Paths.FilelistPath, PathUtils.AppendFileVersion(".rcol", config), sourcePath).Count();
-
-        var resourceFinder = new ResourceFieldFinder();
-
-        int success, failed;
-
-        GD.Print($"Expecting {scnTotal} scn files");
-        (success, failed) = await ExecuteOnAllSourceFiles(config.Game, "scn", (game, fileOption, filepath) => {
-            using var file = new ScnFile(fileOption, new FileHandler(filepath));
-            file.Read();
-            ReaGETools.FindDuplicateRszObjectInstances(game, file.RSZ, filepath);
-            resourceFinder.CheckInstances(game, file.RSZ, file.ResourceInfoList);
-        });
-        GD.Print($"Finished {success + failed} scn out of expected {scnTotal}");
-
-        GD.Print($"Expecting {pfbTotal} pfb files");
-        (success, failed) = await ExecuteOnAllSourceFiles(config.Game, "pfb", (game, fileOption, filepath) => {
-            using var file = new PfbFile(fileOption, new FileHandler(filepath));
-            file.Read();
-            file.SetupGameObjects();
-            resourceFinder.CheckInstances(game, file.RSZ, file.ResourceInfoList);
-            ReaGETools.FindDuplicateRszObjectInstances(game, file.RSZ, filepath);
-            GameObjectRefResolver.CheckInstances(game, file);
-        });
-        GD.Print($"Finished {success + failed} pfb out of expected {pfbTotal}");
-        resourceFinder.ApplyRszPatches();
-        resourceFinder.DumpFindings(config.Paths.ShortName);
-
-        GD.Print($"Expecting {rcolTotal} rcol files");
-        (success, failed) = await ExecuteOnAllSourceFiles(config.Game, "rcol", (game, fileOption, filepath) => {
-            using var file = new RcolFile(fileOption, new FileHandler(filepath));
-            file.Read();
-        });
-        GD.Print($"Finished {success + failed} rcol out of expected {rcolTotal}");
-
-        TypeCache.StoreInferredRszTypes(fileOption.RszParser.ClassDict.Values, config);
+        // int success, failed;
+        var rszInferrer = new ResourceTools(config.Workspace) {
+            BaseOutputPath = $"userdata/output/{config.Game.ToShortName()}"
+        };
+        rszInferrer.InferRszData();
     }
 
-    internal static IEnumerable<(T, string)> SelectFilesWhere<T>(SupportedGame game, string extension, Func<SupportedGame, RszFileOption, string, T?> condition) where T : class
+    internal static IEnumerable<(T, string, Stream)> SelectFilesWhere<T>(SupportedGame game, string extension, Func<SupportedGame, string, Stream, T?> condition) where T : class
     {
-        foreach (var (curgame, fileOption, filepath) in FindOrExtractAllRszFilesOfType(game, extension)) {
+        foreach (var (curgame, filepath, stream) in FindOrExtractAllRszFilesOfType(game, extension)) {
             var success = false;
             int retryCount = 10;
             T? result = default;
             do {
                 try {
-                    result = condition(curgame, fileOption, filepath);
+                    result = condition(curgame, filepath, stream);
                     success = true;
                 } catch (RszRetryOpenException) {
                     retryCount--;
@@ -364,12 +351,12 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
                 }
             } while (!success && retryCount > 0);
             if (success && result != null) {
-                yield return (result, filepath);
+                yield return (result, filepath, stream);
             }
         }
     }
 
-    internal static Task<(int successes, int failures)> ExecuteOnAllSourceFiles(SupportedGame game, string extension, Action<SupportedGame, RszFileOption, string> action)
+    internal static Task<(int successes, int failures)> ExecuteOnAllSourceFiles(SupportedGame game, string extension, Action<SupportedGame, string, Stream> action)
     {
         return ExecuteOnAllSourceFiles(game, extension, (a, b, c) => {
             action.Invoke(a, b, c);
@@ -377,17 +364,17 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
         });
     }
 
-    internal static async Task<(int successes, int failures)> ExecuteOnAllSourceFiles(SupportedGame game, string extension, Func<SupportedGame, RszFileOption, string, Task> action)
+    internal static async Task<(int successes, int failures)> ExecuteOnAllSourceFiles(SupportedGame game, string extension, Func<SupportedGame, string, Stream, Task> action)
     {
         var count = 0;
         var countSuccess = 0;
         var fails = new List<string>();
-        foreach (var (curgame, fileOption, filepath) in FindOrExtractAllRszFilesOfType(game, extension)) {
+        foreach (var (curgame, filepath, file) in FindOrExtractAllRszFilesOfType(game, extension)) {
             var success = false;
             int retryCount = 10;
             do {
                 try {
-                    await action(curgame, fileOption, filepath);
+                    await action(curgame, filepath, file);
                     success = true;
                 } catch (RszRetryOpenException) {
                     retryCount--;
@@ -411,69 +398,35 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
         return (countSuccess, fails.Count);
     }
 
-    private static IEnumerable<(SupportedGame game, RszFileOption fileOption, string filepath)> FindOrExtractAllRszFilesOfType(SupportedGame game, string extension)
+    private static IEnumerable<(SupportedGame game, string filepath, Stream stream)> FindOrExtractAllRszFilesOfType(SupportedGame game, string extension)
     {
         SupportedGame? lastGame = null;
-        RszFileOption? fileOption = null;
-        foreach (var (curgame, filepath) in FindOrExtractAllFilesOfType(game, extension)) {
+        foreach (var (curgame, filepath, stream) in FindOrExtractAllFilesOfType(game, extension)) {
             if (lastGame != curgame) {
                 lastGame = curgame;
-                fileOption = TypeCache.CreateRszFileOptions(ReachForGodot.GetAssetConfig(curgame));
             }
-            yield return (curgame, fileOption!, filepath);
+            yield return (curgame, filepath, stream);
         }
     }
 
-    private static IEnumerable<(SupportedGame game, string filepath)> FindOrExtractAllFilesOfType(SupportedGame game, string extension)
+    private static IEnumerable<(SupportedGame game, string filepath, Stream stream)> FindOrExtractAllFilesOfType(SupportedGame game, string extension)
     {
         var games = game == SupportedGame.Unknown ? ReachForGodot.GameList : [game];
         foreach (var curgame in games) {
             var config = ReachForGodot.GetAssetConfig(curgame);
             if (!config.IsValid) continue;
-            // game doesn't use the requested file extension
-            if (!PathUtils.TryGetFileExtensionVersion(game, extension, out _)) continue;
+            // check if game doesn't use the requested file extension
+            if (!config.Workspace.TryGetFileExtensionVersion(extension, out _)) continue;
 
-            var hasAttemptedFullExtract = false;
-            var extWithVersion = PathUtils.AppendFileVersion(extension, config);
-            foreach (var relativeFilepath in PathUtils.GetFilesByExtensionFromListFile(config.Paths.FilelistPath, extWithVersion, null)) {
-                if (PathUtils.IsIgnoredFilepath(relativeFilepath, config)) continue;
-
-                var resolvedFile = PathUtils.FindSourceFilePath(PathUtils.GetFilepathWithoutNativesFolder(relativeFilepath), config, false);
-
-                if (!hasAttemptedFullExtract && string.IsNullOrEmpty(resolvedFile)) {
-                    hasAttemptedFullExtract = true;
-                    GD.Print($"Failed to resolve {relativeFilepath}. Attempting unpack of all {curgame} {extension} files if configured");
-                    var missing = new List<string>();
-                    FileUnpacker.TryExtractFilteredFiles($"\\.{extWithVersion}(?:\\.[^\\/]*)?$", config, missing);
-
-                    if (missing.Count > 0) {
-                        Directory.CreateDirectory(ProjectSettings.GlobalizePath(ReachForGodot.GetUserdataBasePath("")));
-                        var missingFilelistPath = ProjectSettings.GlobalizePath(ReachForGodot.GetUserdataBasePath(config.Paths.ShortName + "_missing_files.list"));
-                        File.WriteAllLines(missingFilelistPath, missing.Select(m => PathUtils.GetFilepathWithoutNativesFolder(m)));
-                        GD.PrintErr("List of missing files has been written to " + missingFilelistPath);
-                    }
-
-                    resolvedFile = PathUtils.FindSourceFilePath(PathUtils.GetFilepathWithoutNativesFolder(relativeFilepath), config, false);
-                }
-                if (!string.IsNullOrEmpty(resolvedFile))
-                    yield return (curgame, resolvedFile);
-            }
-        }
-    }
-
-    private static void ExtractFileVersions()
-    {
-        foreach (var game in ReachForGodot.GameList) {
-            var filelist = EditorInterface.Singleton.GetEditorSettings().GetSetting(FilelistPathSetting(game)).AsString();
-            if (!string.IsNullOrEmpty(filelist)) {
-                GD.Print($"Extracting extensions for {game} from {filelist} ...");
-                PathUtils.ExtractFileVersionsFromList(game, filelist);
+            foreach (var (path, strm) in config.Workspace.GetFilesWithExtension(extension)) {
+                yield return (game, path, strm);
             }
         }
     }
 
     public override void _ExitTree()
     {
+        mainWindowNode?.QueueFree();
         importHandler.Cleanup();
         RemoveToolMenuItem(toolMenu.Title);
         if (toolMenuDev != null) RemoveToolMenuItem(toolMenuDev.Title);
@@ -491,18 +444,21 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
     {
         AddEditorSetting(Setting_ImportMeshMaterials, Variant.Type.Bool, true);
         AddEditorSetting(Setting_SceneFolderProxyThreshold, Variant.Type.Int, 500, PropertyHint.Range, "50,5000,or_greater,hide_slider");
-        AddEditorSetting(Setting_UnpackMaxThreads, Variant.Type.Int, 16, PropertyHint.Range, "1,64");
-        AddEditorSetting(Setting_BlenderPathOverrides, Variant.Type.String, string.Empty, PropertyHint.GlobalFile);
+        AddEditorSetting(Setting_UnpackMaxThreads, Variant.Type.Int, 8, PropertyHint.Range, "1,64");
+        AddEditorSetting(Setting_BlenderPathOverrides, Variant.Type.String, string.Empty, PropertyHint.GlobalFile, "*.exe");
+        AddEditorSetting(Setting_RemoteResourceSource, Variant.Type.String, "https://raw.githubusercontent.com/kagenocookie/REE-Lib-Resources/refs/heads/master/resource-info.json");
         foreach (var game in ReachForGodot.GameList) {
             AddEditorSetting(ChunkPathSetting(game), Variant.Type.String, string.Empty, PropertyHint.GlobalDir);
-            AddEditorSetting(Il2cppPathSetting(game), Variant.Type.String, string.Empty, PropertyHint.GlobalFile, "*.json");
-            AddEditorSetting(RszPathSetting(game), Variant.Type.String, string.Empty, PropertyHint.GlobalFile, "*.json");
-            AddEditorSetting(FilelistPathSetting(game), Variant.Type.String, string.Empty, PropertyHint.GlobalFile);
             AddEditorSetting(GameDirSetting(game), Variant.Type.String, string.Empty, PropertyHint.GlobalDir);
             AddEditorSetting(AdditionalPathSetting(game), Variant.Type.PackedStringArray, string.Empty, PropertyHint.GlobalDir);
             AddEditorSetting(PakFilepathSetting(game), Variant.Type.PackedStringArray, string.Empty, PropertyHint.GlobalFile, "*.pak");
 
             AddProjectSetting(AdditionalPathSetting(game), Variant.Type.PackedStringArray, string.Empty, PropertyHint.GlobalDir);
+
+            // obsolete settings
+            EditorInterface.Singleton.GetEditorSettings().Erase(RszPathSetting(game));
+            EditorInterface.Singleton.GetEditorSettings().Erase(FilelistPathSetting(game));
+            EditorInterface.Singleton.GetEditorSettings().Erase(Il2cppPathSetting(game));
         }
     }
 
@@ -517,6 +473,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
         IncludeMeshMaterial = settings.GetSetting(Setting_ImportMeshMaterials).AsBool();
         SceneFolderProxyThreshold = settings.GetSetting(Setting_SceneFolderProxyThreshold).AsInt32();
         UnpackerMaxThreads = settings.GetSetting(Setting_UnpackMaxThreads).AsInt32();
+        ReeLibResourceSource = settings.GetSetting(Setting_RemoteResourceSource).AsString()?.NullIfEmpty();
         foreach (var game in ReachForGodot.GameList) {
             var pathChunks = PathUtils.GetFilepathWithNativesFolderSuffix(settings.GetSetting(ChunkPathSetting(game)).AsString() ?? string.Empty, game);
             if (string.IsNullOrWhiteSpace(pathChunks)) {
@@ -526,9 +483,6 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
 
             pathChunks = PathUtils.NormalizeSourceFolderPath(pathChunks);
             var gamedir = settings.GetSetting(GameDirSetting(game)).AsString();
-            var pathIl2cpp = settings.GetSetting(Il2cppPathSetting(game)).AsString();
-            var pathRsz = settings.GetSetting(RszPathSetting(game)).AsString();
-            var pathFilelist = settings.GetSetting(FilelistPathSetting(game)).AsString();
             var additional = ProjectSettings.GetSetting(AdditionalPathSetting(game)).AsStringArray()
                 .Concat(settings.GetSetting(AdditionalPathSetting(game)).AsStringArray())
                 .Select(path => {
@@ -537,8 +491,6 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
                     var filepath = PathUtils.NormalizeSourceFolderPath((parts.Length >= 2 ? parts[1] : parts[0]));
                     return new LabelledPathSetting(filepath, label);
                 }).ToArray();
-
-            VerifyRszSource(ref pathRsz, game);
 
             var paks = settings.GetSetting(PakFilepathSetting(game)).AsStringArray().Select(path => PathUtils.NormalizeFilePath(path)).ToList();
             var masterConfigPath = GamePaths.GetMasterConfigFilepath(game);
@@ -563,79 +515,11 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
                     paks.InsertRange(0, PakUtils.ScanPakFiles(gamedir));
                 }
             }
-            ReachForGodot.SetPaths(game, new GamePaths(game, pathChunks, gamedir, pathIl2cpp, pathRsz, pathFilelist, additional, paks.Distinct().ToArray()) {
+            ReachForGodot.SetPaths(game, new GamePaths(game, pathChunks, gamedir, additional, paks.Distinct().ToArray()) {
                 MasterConfig = masterConfig,
             });
         }
         RefreshToolMenu();
-    }
-
-    private static void VerifyRszSource(ref string pathRsz, SupportedGame game)
-    {
-        if (!pathRsz.Contains("reasy", StringComparison.OrdinalIgnoreCase) || !File.Exists(pathRsz)) {
-            return;
-        }
-
-        var cleanRszPath = ProjectSettings.GlobalizePath(ReachForGodot.GetUserdataPath("rsz.json", game));
-        if (File.Exists(cleanRszPath) && new FileInfo(cleanRszPath).LastWriteTimeUtc > new FileInfo(pathRsz).LastWriteTimeUtc) {
-            pathRsz = cleanRszPath;
-            return;
-        }
-
-        GD.Print("Detected REasy sourced rsz dump json file. Attempting to clean up for ReachForGodot use...");
-        using var fs = File.OpenRead(pathRsz);
-        var jsondoc = JsonSerializer.Deserialize<JsonObject>(fs);
-        if (jsondoc == null) {
-            GD.PrintErr("Failed to deserialize file");
-            return;
-        }
-        if (jsondoc.ContainsKey("metadata")) {
-            jsondoc.Remove("metadata");
-        }
-        foreach (var prop in jsondoc) {
-            var item = prop.Value!.AsObject();
-            if (!item.ContainsKey("fields")) continue;
-
-            var name = item["name"]!.GetValue<string>();
-            if (name == "via.physics.SphereShape") {
-                // our tooling expects 1 shape == 1 object, otherwise things get complicated and messy
-                var sphereField = item["fields"]!.AsArray().Where(f => f!["name"]!.GetValue<string>() == "Center").FirstOrDefault();
-                var radiusField = item["fields"]!.AsArray().Where(f => f!["name"]!.GetValue<string>() == "Radius").FirstOrDefault();
-                if (radiusField != null) {
-                    item["fields"]!.AsArray().Remove(radiusField);
-                }
-                if (sphereField != null) {
-                    if (sphereField["size"]!.GetValue<int>() == 12) {
-                        sphereField["name"] = "Sphere";
-                        sphereField["size"] = 16;
-                        sphereField["type"] = "Vec4";
-                        sphereField["original_type"] = "via.vec4";
-                    }
-                }
-            }
-
-            // reasy defines some custom types that we don't care about, remap them to default types
-            foreach (var field in item["fields"]!.AsArray()) {
-                var type = field!["type"]!.GetValue<string>();
-                if (type == "MlShape" || type == "RawBytes") {
-                    field["type"] = "Data";
-                } else if (type == "Bits") {
-                    var size = field["size"]!.GetValue<int>();
-                    if (size == 4) {
-                        field["type"] = "U32";
-                    } else {
-                        throw new Exception("Unhandled Bits type size");
-                    }
-                } else if (type == "Float") {
-                    field["type"] = "F32";
-                }
-            }
-        }
-        Directory.CreateDirectory(Path.GetDirectoryName(cleanRszPath)!);
-        using var outfs = File.OpenWrite(cleanRszPath);
-        JsonSerializer.Serialize(outfs, jsondoc);
-        GD.Print("Saved cleaned RSZ template to " + cleanRszPath);
-        pathRsz = cleanRszPath;
     }
 
     private void AddProjectSetting(string name, Variant.Type type, Variant initialValue, PropertyHint hint = PropertyHint.None, string? hintstring = null)

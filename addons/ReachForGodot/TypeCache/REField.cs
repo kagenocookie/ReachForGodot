@@ -1,6 +1,6 @@
 namespace ReaGE;
 using Godot;
-using RszTool;
+using ReeLib;
 
 public class REField
 {
@@ -10,7 +10,7 @@ public class REField
     public PropertyHint Hint { get; set; }
     public string? HintString { get; set; }
     public string? ElementType { get; set; }
-    public SupportedFileFormats ResourceType {
+    public KnownFileFormats ResourceType {
         set => HintString = PathUtils.GetResourceTypeFromFormat(value).Name;
     }
 
@@ -33,4 +33,6 @@ public class REField
         Hint = PropertyHint.ResourceType;
         HintString = godotResourceTypeName;
     }
+
+    public override string ToString() => RszField.ToString();
 }

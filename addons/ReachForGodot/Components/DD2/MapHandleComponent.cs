@@ -2,7 +2,7 @@ namespace ReaGE.Components.RE2;
 
 using System.Threading.Tasks;
 using Godot;
-using RszTool;
+using ReeLib;
 
 [GlobalClass, Tool, REComponentClass("via.navigation.AIMapSection", SupportedGame.DragonsDogma2)]
 public partial class MapHandleComponent : REComponent, IAIMapComponent

@@ -1,6 +1,7 @@
 namespace ReaGE;
 
 using Godot;
+using ReeLib;
 
 [GlobalClass, Tool]
 public partial class REResource : Resource, IAssetPointer
@@ -9,11 +10,11 @@ public partial class REResource : Resource, IAssetPointer
     [Export] public AssetReference? Asset { get; set; }
 
     public AssetConfig Config => ReachForGodot.GetAssetConfig(Game);
-    public SupportedFileFormats ResourceType { get; protected set; } = SupportedFileFormats.Unknown;
+    public KnownFileFormats ResourceType { get; protected set; } = KnownFileFormats.Unknown;
 
     protected AssetConverter CreateImporter() => CreateImporter(GodotImportOptions.importTreeChanges);
     protected AssetConverter CreateImporter(GodotImportOptions options) => new AssetConverter(Game, options);
 
     public REResource() { }
-    protected REResource(SupportedFileFormats format) => ResourceType = format;
+    protected REResource(KnownFileFormats format) => ResourceType = format;
 }

@@ -1,11 +1,12 @@
 namespace ReaGE;
 
 using Godot;
+using ReeLib;
 
-[GlobalClass, Tool, ResourceHolder("lprb", SupportedFileFormats.LightProbe)]
+[GlobalClass, Tool, ResourceHolder("lprb", KnownFileFormats.LightProbes)]
 public partial class LightProbeResource : REResource
 {
-    public LightProbeResource() : base(SupportedFileFormats.LightProbe)
+    public LightProbeResource() : base(KnownFileFormats.LightProbes)
     {
     }
 }

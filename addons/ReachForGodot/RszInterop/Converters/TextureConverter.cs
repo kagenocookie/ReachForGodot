@@ -3,7 +3,7 @@ namespace ReaGE;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using Godot;
-using RszTool.Common;
+using ReeLib.Common;
 
 public class TextureConverter : BlenderResourceConverter<TextureResource, Texture2D>
 {

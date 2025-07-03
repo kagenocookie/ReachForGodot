@@ -4,46 +4,30 @@ using System;
 using System.Reflection;
 using System.Text.Json;
 using Godot;
-using RszTool;
-using RszTool.Efx;
+using ReeLib;
+using ReeLib.Data;
+using ReeLib.Efx;
+using ReeLib.Il2cpp;
 
-public class EfxClassInfo
+public class ExtendedEfxClassInfo
 {
-    public EfxStructInfo Info { get; set; } = null!;
-    public Dictionary<string, EfxFieldInfo> Fields { get; set; } = new();
     public Godot.Collections.Array<Godot.Collections.Dictionary> PropertyList { get; } = new();
-    public bool HasVersionedConstructor { get; set; }
+    public EfxClassInfo BaseInfo { get; set; } = null!;
 
-    private FieldInfo[]? _fieldInfos;
-    public FieldInfo[] FieldInfos => _fieldInfos ??= GetFieldInfos();
-
-    private FieldInfo[] GetFieldInfos()
-    {
-        var arr = new FieldInfo[Fields.Count];
-
-        var targetType = typeof(EFXAttribute).Assembly.GetType(Info.Classname)
-            ?? throw new Exception("Invalid efx target type " + Info.Classname);
-
-        int i = 0;
-        foreach (var f in Fields) {
-            arr[i++] = targetType.GetField(f.Key, BindingFlags.Instance|BindingFlags.Public|BindingFlags.NonPublic)
-                ?? throw new Exception("Invalid efx field " + f.Value.Name);
-        }
-
-        return arr;
-    }
+    public EfxStructInfo Info => BaseInfo.Info;
+    public Dictionary<string, EfxFieldInfo> Fields => BaseInfo.Fields;
+    public bool HasVersionedConstructor => BaseInfo.HasVersionedConstructor;
+    public FieldInfo[] FieldInfos => BaseInfo.FieldInfos;
 }
 
 public static partial class TypeCache
 {
-    private static readonly Dictionary<EfxVersion, EfxCacheData> efxCache = new();
+    private static readonly Dictionary<EfxVersion, ExtendedEfxCache> efxCache = new();
 
-    private sealed class EfxCacheData
+    private sealed class ExtendedEfxCache
     {
-        public Dictionary<string, EfxClassInfo> AttributeTypes = new();
-        public Dictionary<string, EfxClassInfo> Structs = new();
-        public Dictionary<string, EnumDescriptor> Enums = new();
-        public GameClassCache classCache = null!;
+        public EfxCacheData sourceCache = null!;
+        public Dictionary<string, ExtendedEfxClassInfo> ExtendedCache = new();
     }
 
     public static SupportedGame GetGameForEfxVersion(this EfxVersion version)
@@ -83,48 +67,35 @@ public static partial class TypeCache
         };
     }
 
-    private static EfxCacheData GetEfxCacheRoot(EfxVersion version)
+    private static ExtendedEfxCache GetEfxCacheRoot(EfxVersion version)
     {
         if (!efxCache.TryGetValue(version, out var data)) {
             var game = GetGameForEfxVersion(version);
-            var cacheFile = ReachForGodot.GetPaths(game)?.EfxStructsFilepath;
-            if (cacheFile != null) {
-                if (version == EfxVersion.MHRise) {
-                    cacheFile = cacheFile.Replace(".json", "_base.json");
-                }
-
-                if (File.Exists(cacheFile)) {
-                    data = ReadEfxCache(cacheFile);
-                }
-            }
-            efxCache[version] = data ??= new();
+            var config = ReachForGodot.GetAssetConfig(game);
+            var baseData = config.Workspace.EfxCacheData;
+            efxCache[version] = data = ReadEfxCache(config.Workspace, baseData);
         }
         return data;
     }
 
-    private static EfxCacheData? ReadEfxCache(string cacheFile)
+    private static ExtendedEfxCache ReadEfxCache(Workspace env, EfxCacheData baseData)
     {
-        EfxCacheData? data;
-        using var f = File.OpenRead(cacheFile);
-        var cache = JsonSerializer.Deserialize<EfxStructCache>(f, jsonOptions);
-        data = new EfxCacheData();
-        if (cache == null) return null;
-        data.classCache = new (SupportedGame.Unknown);
-        data.classCache.SetupEfxData(cache);
+        ExtendedEfxCache data = new();
 
-        foreach (var (name, attr) in cache.AttributeTypes) {
-            EfxClassInfo info = GenerateEfxClassInfo(attr, data);
-            data.AttributeTypes[name] = info;
-            data.Structs.Add(attr.Classname, info);
+        foreach (var (name, attr) in baseData.AttributeTypes) {
+            var info = GenerateEfxClassInfo(env, attr, data);
+            data.ExtendedCache[info.BaseInfo.Info.Classname] = info;
+            // data.cache.Structs.Add(attr.Classname, info);
         }
-        foreach (var (name, obj) in cache.Structs) {
-            EfxClassInfo info = GenerateEfxClassInfo(obj, data);
-            data.Structs.Add(obj.Classname, info);
+        foreach (var (name, obj) in baseData.Structs) {
+            var info = GenerateEfxClassInfo(env, obj, data);
+            data.ExtendedCache[info.BaseInfo.Info.Classname] = info;
+            // data.cache.Structs.Add(obj.Classname, info);
         }
         return data;
     }
 
-    private static EfxClassInfo GenerateEfxClassInfo(EfxStructInfo attr, EfxCacheData data)
+    private static ExtendedEfxClassInfo GenerateEfxClassInfo(Workspace env, EfxClassInfo classInfo, ExtendedEfxCache data)
     {
         static void UpdateEfxFieldProperty(REField field, string name, Godot.Collections.Dictionary dict)
         {
@@ -136,16 +107,12 @@ public static partial class TypeCache
         }
 
         var fieldDict = new Dictionary<string, EfxFieldInfo>();
-        var info = new EfxClassInfo() {
-            Fields = fieldDict,
-            Info = attr,
-            HasVersionedConstructor =
-                !string.IsNullOrEmpty(attr.Classname) &&
-                typeof(EFXAttribute).Assembly.GetType(attr.Classname)?.GetConstructor([typeof(EfxVersion)]) != null,
+        var info = new ExtendedEfxClassInfo() {
+            BaseInfo = classInfo,
         };
 
         var rf = new REField() { RszField = null!, FieldIndex = 0 };
-        foreach (var field in attr.Fields) {
+        foreach (var field in classInfo.Info.Fields) {
             if (field.Flag == EfxFieldFlags.BitSet) {
                 var props = new Godot.Collections.Dictionary();
                 rf.VariantType = Variant.Type.PackedInt32Array;
@@ -170,7 +137,7 @@ public static partial class TypeCache
 
             fieldDict.Add(field.Name, field);
             var genFieldType = field.FieldType == RszFieldType.Struct ? RszFieldType.Object : field.FieldType;
-            RszFieldToGodotProperty(rf, data.classCache, genFieldType, field.IsArray, field.Classname ?? string.Empty);
+            RszFieldToGodotProperty(rf, env, genFieldType, field.IsArray, field.Classname ?? string.Empty);
             var propertyDict = new Godot.Collections.Dictionary();
             UpdateEfxFieldProperty(rf, field.Name, propertyDict);
             info.PropertyList.Add(propertyDict);
@@ -183,16 +150,16 @@ public static partial class TypeCache
         return GetEfxStructInfo(version, classname) != null;
     }
 
-    public static EfxClassInfo GetEfxStructInfo(EfxVersion version, string classname)
+    public static ExtendedEfxClassInfo GetEfxStructInfo(EfxVersion version, string classname)
     {
         var cache = GetEfxCacheRoot(version);
 
-        if (cache.Structs.TryGetValue(classname, out var info)) {
+        if (cache.ExtendedCache.TryGetValue(classname, out var info)) {
             return info;
         }
 
         GD.PrintErr($"Unknown efx struct classname {classname}. A file may be out of date.");
-        return new EfxClassInfo();
+        return new ExtendedEfxClassInfo();
     }
 
 }

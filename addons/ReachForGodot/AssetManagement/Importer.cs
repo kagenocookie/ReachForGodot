@@ -1,10 +1,11 @@
 using Godot;
+using ReeLib;
 
 namespace ReaGE;
 
 public class Importer
 {
-    private static readonly Dictionary<SupportedFileFormats, Type> resourceTypes = new();
+    private static readonly Dictionary<KnownFileFormats, Type> resourceTypes = new();
 
     private static readonly GodotImportOptions writeImport = new(RszImportType.Placeholders, RszImportType.Placeholders, RszImportType.Placeholders, RszImportType.Placeholders) { allowWriting = true };
     private static readonly GodotImportOptions nowriteImport = new(RszImportType.Placeholders, RszImportType.Placeholders, RszImportType.Placeholders, RszImportType.Placeholders) { allowWriting = false };
@@ -101,7 +102,7 @@ public class Importer
         importFilepath ??= PathUtils.GetLocalizedImportPath(sourceFilePath, config);
         if (string.IsNullOrEmpty(importFilepath)) return null;
 
-        var format = PathUtils.GetFileFormat(sourceFilePath).format;
+        var format = PathUtils.ParseFileFormat(sourceFilePath).format;
         var outputFilePath = ProjectSettings.GlobalizePath(importFilepath);
 
         var resolvedPath = PathUtils.FindSourceFilePath(sourceFilePath, config);
@@ -130,7 +131,7 @@ public class Importer
         }
     }
 
-    private static REResource? CreateResource(SupportedFileFormats format, string sourceFilePath, string outputFilePath, AssetConfig config)
+    private static REResource? CreateResource(KnownFileFormats format, string sourceFilePath, string outputFilePath, AssetConfig config)
     {
         var relativePath = PathUtils.FullToRelativePath(sourceFilePath, config);
         if (relativePath == null) {
@@ -141,20 +142,15 @@ public class Importer
         var newres = resourceTypes.GetValueOrDefault(format) is Type rt ? (REResource)Activator.CreateInstance(rt)! : new REResource();
         newres.Asset = new AssetReference(relativePath);
         newres.Game = config.Game;
-        newres.ResourceName = newres.ResourceType is SupportedFileFormats.Prefab or SupportedFileFormats.Scene or SupportedFileFormats.Rcol or SupportedFileFormats.Efx
+        newres.ResourceName = newres.ResourceType is KnownFileFormats.Prefab or KnownFileFormats.Scene or KnownFileFormats.RequestSetCollider or KnownFileFormats.Effect
             ? newres.Asset.BaseFilename.ToString()
             : PathUtils.GetFilepathWithoutVersion(relativePath).GetFile();
 
         return newres;
     }
 
-    internal static void RegisterResource(SupportedFileFormats format, Type type)
+    internal static void RegisterResource(KnownFileFormats format, Type type)
     {
         resourceTypes[format] = type;
     }
-}
-
-public record struct REFileFormat(SupportedFileFormats format, int version)
-{
-    public static readonly REFileFormat Unknown = new REFileFormat(SupportedFileFormats.Unknown, -1);
 }

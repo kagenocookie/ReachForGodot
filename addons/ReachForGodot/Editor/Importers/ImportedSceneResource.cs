@@ -1,4 +1,5 @@
 using Godot;
+using ReeLib;
 
 namespace ReaGE;
 
@@ -14,5 +15,5 @@ public partial class ImportedSceneResource : ImportedResource
         set => base.Resource = value;
     }
 
-    private SupportedFileFormats _fileFormat;
+    private KnownFileFormats _fileFormat;
 }

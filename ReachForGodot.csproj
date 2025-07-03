@@ -25,10 +25,10 @@
     <!-- Don't include unit tests in release builds. -->
     <DefaultItemExcludes>
       $(DefaultItemExcludes);
-      addons/ReachForGodot/RszTool/RszTool.App/**/*;
-      addons/ReachForGodot/RszTool/RszTool.Test/**/*;
-      addons/ReachForGodot/RszTool/RszTool.Tools/obj/**/*;
-      addons/ReachForGodot/RszTool/*/obj/**/*;
+      addons/ReachForGodot/REE-Lib/REE-Lib.App/**/*;
+      addons/ReachForGodot/REE-Lib/REE-Lib.Test/**/*;
+      addons/ReachForGodot/REE-Lib/REE-Lib.Tools/obj/**/*;
+      addons/ReachForGodot/REE-Lib/*/obj/**/*;
     </DefaultItemExcludes>
     <DefaultItemExcludes Condition="'$(Configuration)' == 'ExportRelease'">
       $(DefaultItemExcludes);test/**/*;
@@ -57,7 +57,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="./addons/ReachForGodot/RszTool/RszTool.Generators/RszTool.Generators.csproj"
+    <ProjectReference Include="./addons/ReachForGodot/REE-Lib/REE-Lib.Generators/REE-Lib.Generators.csproj"
                       OutputItemType="Analyzer"
                       ReferenceOutputAssembly="false" />
   </ItemGroup>

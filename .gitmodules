@@ -1,3 +1,6 @@
 [submodule "addons/ReachForGodot/RszTool"]
 	path = addons/ReachForGodot/RszTool
 	url = https://github.com/kagenocookie/RszTool.git
+[submodule "addons/ReachForGodot/REE-Lib"]
+	path = addons/ReachForGodot/REE-Lib
+	url = https://github.com/kagenocookie/RE-Engine-Lib

@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using Chickensoft.GoDotTest;
 using Godot;
+using ReeLib;
 using Shouldly;
 
 namespace ReaGE.Tests;
@@ -13,9 +14,9 @@ public partial class TestRcol : TestBase
     public async Task FullReadTest()
     {
         var converter = new AssetConverter(GodotImportOptions.testImport);
-        await ExecuteFullReadTest("rcol", async (game, fileOption, filepath) => {
+        await ExecuteFullReadTest("rcol", async (game, filepath, stream) => {
             converter.Game = game;
-            using var file = converter.Rcol.CreateFile(filepath);
+            using var file = new RcolFile(converter.FileOption, new FileHandler(stream, filepath));
             converter.Rcol.LoadFile(file).ShouldBe(true);
 
             if (file.FileHandler.FileVersion >= 25) {

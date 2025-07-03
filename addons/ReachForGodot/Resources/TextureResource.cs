@@ -2,15 +2,16 @@ namespace ReaGE;
 
 using System.Threading.Tasks;
 using Godot;
+using ReeLib;
 
-[GlobalClass, Tool, ResourceHolder("tex", SupportedFileFormats.Texture)]
+[GlobalClass, Tool, ResourceHolder("tex", KnownFileFormats.Texture)]
 public partial class TextureResource : REResourceProxy
 {
-    public TextureResource() : base(SupportedFileFormats.Texture)
+    public TextureResource() : base(KnownFileFormats.Texture)
     {
     }
 
-    protected TextureResource(SupportedFileFormats texformat) : base (texformat) { }
+    protected TextureResource(KnownFileFormats texformat) : base (texformat) { }
 
     protected override async Task<Resource?> Import()
     {

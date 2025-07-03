@@ -2,10 +2,10 @@ namespace ReaGE;
 
 using Godot;
 
-public abstract class SceneResourceConverter<TResource, TFile, TRootNode> : RszToolConverter<TResource, TFile, PackedScene, TRootNode>
+public abstract class SceneResourceConverter<TResource, TFile, TRootNode> : ReeLibConverter<TResource, TFile, PackedScene, TRootNode>
     where TRootNode : Node, IImportableAsset, new()
     where TResource : REResourceProxy, new()
-    where TFile : RszTool.BaseFile
+    where TFile : ReeLib.BaseFile
 {
     public override PackedScene? GetImportedAssetFromResource(TResource resource) => resource.ImportedResource as PackedScene;
     public override TRootNode? GetInstanceFromAsset(PackedScene? asset) => asset?.Instantiate<TRootNode>();

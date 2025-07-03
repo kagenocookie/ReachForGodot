@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Chickensoft.GoDotTest;
 using Godot;
 using GodotTestDriver;
-using RszTool;
+using ReeLib;
 using Shouldly;
 
 namespace ReaGE.Tests;
@@ -31,14 +31,6 @@ public abstract partial class TestBase : TestClass
 
     protected static SupportedGame[] GamesExcept(params SupportedGame[] excluded) => ReachForGodot.GameList.Except(excluded).ToArray();
 
-    protected static (string, RszFileOption) ResolveRszFile(SupportedGame game, string filepath)
-    {
-        var path = PathUtils.FindSourceFilePath(filepath, GetConfig(game));
-        path.ShouldNotBeNullOrEmpty();
-        var opt = TypeCache.CreateRszFileOptions(GetConfig(game));
-        return (path, opt);
-    }
-
     protected static TResource CreateTempResource<TResource, TExported, TImported>(
         AssetConverter converter,
         ConverterBase<TResource, TExported, TImported> fileConverter,
@@ -61,7 +53,7 @@ public abstract partial class TestBase : TestClass
     }
 
     protected static async Task<TExported?> ExportToMemory<TResource, TExported, TImported, TImportedInstance>(
-        RszToolConverter<TResource, TExported, TImported, TImportedInstance> converter,
+        ReeLibConverter<TResource, TExported, TImported, TImportedInstance> converter,
         TImportedInstance resource,
         int fileVersion
     )
@@ -76,19 +68,19 @@ public abstract partial class TestBase : TestClass
 
     protected static Task ExecuteFullReadTest(
         string extension,
-        Action<SupportedGame, RszFileOption, string> action,
+        Action<SupportedGame, string, Stream> action,
         Dictionary<SupportedGame, int>? expectedFails = null,
         params SupportedGame[] whitelistGames)
     {
-        return ExecuteFullReadTest(extension, (g, o, f) => {
-            action.Invoke(g, o, f);
+        return ExecuteFullReadTest(extension, (g, f, s) => {
+            action.Invoke(g, f, s);
             return Task.CompletedTask;
         }, expectedFails, whitelistGames);
     }
 
     protected static async Task ExecuteFullReadTest(
         string extension,
-        Func<SupportedGame, RszFileOption, string, Task> action,
+        Func<SupportedGame, string, Stream, Task> action,
         Dictionary<SupportedGame, int>? expectedFails = null,
         params SupportedGame[] whitelistGames)
     {
@@ -99,25 +91,26 @@ public abstract partial class TestBase : TestClass
         var fails = new Dictionary<SupportedGame, int>();
         var gamelist = whitelistGames.Length != 0 ? whitelistGames : ReachForGodot.GameList;
         foreach (var game in gamelist) {
-            if (!PathUtils.TryGetFileExtensionVersion(game, extension, out _)) {
-                // game doesn't use the requested file extension
-                continue;
-            }
-
             var config = ReachForGodot.GetAssetConfig(game);
             if (!config.IsValid) {
                 unconfigured++;
                 continue;
             }
 
+            if (!config.Workspace.TryGetFileExtensionVersion(extension, out _)) {
+                // game doesn't use the requested file extension
+                continue;
+            }
+
             var (successCount, failedCount) = await ReachForGodotPlugin.ExecuteOnAllSourceFiles(game, extension, action);
             if (successCount + failedCount == 0) {
-                if (!File.Exists(config.Paths.FilelistPath) || config.Paths.PakFiles.Length == 0) {
+                if (!(config.Workspace.ListFile?.Files.Length > 0) || config.Paths.PakFiles.Length == 0) {
                     unconfigured++;
                     continue;
                 }
-
-                if (!PathUtils.GetFilesByExtensionFromListFile(config.Paths.FilelistPath, PathUtils.AppendFileVersion($".{extension}", config), null).Any()) {
+                // var list = config.Workspace.TryGetFileExtensionVersion();
+                // config.Workspace.Config.Resources.fil
+                if (!config.Workspace.TryGetFileExtensionVersion(extension, out _)) {
                     // game does not use this file format
                     continue;
                 }
@@ -144,11 +137,11 @@ public abstract partial class TestBase : TestClass
         unexpectedFailCount.ShouldBe(0);
     }
 
-    internal static int FindMatchingFiles(SupportedGame game, string extension, Func<SupportedGame, RszFileOption, string, string?> condition)
+    internal static int FindMatchingFiles(SupportedGame game, string extension, Func<SupportedGame, string, Stream, string?> condition)
     {
         var count = 0;
-        var matches = ReachForGodotPlugin.SelectFilesWhere(SupportedGame.Unknown, ".rcol", (game, fileOption, filepath) => {
-            var result = condition(game, fileOption, filepath);
+        var matches = ReachForGodotPlugin.SelectFilesWhere(SupportedGame.Unknown, ".rcol", (game, filepath, stream) => {
+            var result = condition(game, filepath, stream);
             count++;
             if (!string.IsNullOrEmpty(result)) {
                 return filepath + ": " + result;

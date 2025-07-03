@@ -12,7 +12,7 @@ public partial class Area : Resource
     [Export] public float height;
     [Export] public float bottom;
 
-    public static implicit operator Area(RszTool.via.Area rszValue) => new Area() {
+    public static implicit operator Area(ReeLib.via.Area rszValue) => new Area() {
         p0 = rszValue.p0.ToGodot(),
         p1 = rszValue.p1.ToGodot(),
         p2 = rszValue.p2.ToGodot(),
@@ -21,7 +21,7 @@ public partial class Area : Resource
         bottom = rszValue.bottom,
     };
 
-    public RszTool.via.Area ToRsz() => new() {
+    public ReeLib.via.Area ToRsz() => new() {
         p0 = p0.ToRsz(),
         p1 = p1.ToRsz(),
         p2 = p2.ToRsz(),

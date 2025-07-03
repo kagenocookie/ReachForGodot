@@ -1,11 +1,12 @@
 namespace ReaGE;
 
 using Godot;
+using ReeLib;
 
-[GlobalClass, Tool, ResourceHolder("motbank", SupportedFileFormats.MotionBank)]
+[GlobalClass, Tool, ResourceHolder("motbank", KnownFileFormats.MotionBank)]
 public partial class MotionBankResource : REResource, IImportableAsset, IExportableAsset
 {
-    public MotionBankResource() : base(SupportedFileFormats.MotionBank)
+    public MotionBankResource() : base(KnownFileFormats.MotionBank)
     {
     }
 

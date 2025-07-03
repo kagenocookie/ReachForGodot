@@ -3,9 +3,9 @@ namespace ReaGE;
 using System;
 using System.Threading.Tasks;
 using Godot;
-using RszTool;
-using RszTool.Common;
-using RszTool.Rcol;
+using ReeLib;
+using ReeLib.Common;
+using ReeLib.Rcol;
 
 public class RcolConverter : SceneRszAssetConverter<RcolResource, RcolFile, RcolRootNode>
 {
@@ -136,9 +136,6 @@ public class RcolConverter : SceneRszAssetConverter<RcolResource, RcolFile, Rcol
 
     public bool RebuildRcol(RcolFile file, RcolRootNode rcolRoot)
     {
-        // var fileVersion = PathUtils.GetFileFormatVersion(RESupportedFileFormats.Rcol, config.Paths);
-        // using var file = new RcolFile(TypeCache.CreateRszFileOptions(config), new FileHandler(new MemoryStream()) { FileVersion = fileVersion });
-
         file.RSZ.ClearInstances();
 
         var groupsNode = rcolRoot.FindChild("Groups");
@@ -163,7 +160,7 @@ public class RcolConverter : SceneRszAssetConverter<RcolResource, RcolFile, Rcol
         var setIndex = 0;
         Dictionary<RequestSetCollisionGroup, int> offsetCounts = new();
         foreach (var sourceSet in rcolRoot.Sets) {
-            var set = new RszTool.Rcol.RequestSet();
+            var set = new ReeLib.Rcol.RequestSet();
             set.Info.ID = sourceSet.ID;
             set.Info.Name = sourceSet.OriginalName ?? string.Empty;
             set.Info.NameHash = MurMur3HashUtils.GetHash(set.Info.Name);
@@ -266,7 +263,7 @@ public class RcolConverter : SceneRszAssetConverter<RcolResource, RcolFile, Rcol
         var setIndex = 0;
         Dictionary<RequestSetCollisionGroup, int> offsetCounts = new();
         foreach (var sourceSet in rcolRoot.Sets) {
-            var set = new RszTool.Rcol.RequestSet();
+            var set = new ReeLib.Rcol.RequestSet();
             set.Info.ID = sourceSet.ID;
             set.Info.Name = sourceSet.OriginalName ?? string.Empty;
             set.Info.NameHash = MurMur3HashUtils.GetHash(set.Info.Name);

@@ -2,8 +2,8 @@
 using System.Reflection;
 using Godot;
 using ReaGE.EFX;
-using RszTool.Efx;
-using RszTool.Efx.Structs.Common;
+using ReeLib.Efx;
+using ReeLib.Efx.Structs.Common;
 
 namespace ReaGE;
 
@@ -75,7 +75,7 @@ public partial class EfxInspectorPlugin : CommonInspectorPluginBase
 
             AssetConverter.Instance.Game = target.Version.GetGameForEfxVersion();
             if (attr.Expression == null) {
-                attr.Expression = new RszTool.Efx.Structs.Common.EFXExpressionList(target.Version);
+                attr.Expression = new ReeLib.Efx.Structs.Common.EFXExpressionList(target.Version);
                 AssetConverter.Instance.Efx.ExportObject(attr, target);
             }
 

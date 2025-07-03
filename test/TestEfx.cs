@@ -3,18 +3,18 @@ using System.Text;
 using System.Threading.Tasks;
 using Chickensoft.GoDotTest;
 using Godot;
-using RszTool;
-using RszTool.Efx;
-using RszTool.Efx.Structs.Basic;
-using RszTool.Efx.Structs.Common;
-using RszTool.Efx.Structs.Field;
-using RszTool.Efx.Structs.Main;
-using RszTool.Efx.Structs.Misc;
-using RszTool.Efx.Structs.Transforms;
-using RszTool.Tools;
+using ReeLib;
+using ReeLib.Efx;
+using ReeLib.Efx.Structs.Basic;
+using ReeLib.Efx.Structs.Common;
+using ReeLib.Efx.Structs.Field;
+using ReeLib.Efx.Structs.Main;
+using ReeLib.Efx.Structs.Misc;
+using ReeLib.Efx.Structs.Transforms;
+using ReeLib.Tools;
 using Shouldly;
 
-using Ukn = RszTool.UndeterminedFieldType;
+using Ukn = ReeLib.UndeterminedFieldType;
 
 namespace ReaGE.Tests;
 
@@ -22,7 +22,7 @@ public partial class TestEfx : TestBase
 {
     public TestEfx(Node testScene) : base(testScene) { }
 
-    // file notes: tests with commented out [Test] attributes are more of a RszTool efx struct development assistance thing
+    // file notes: tests with commented out [Test] attributes are more of a ReeLib efx struct development assistance thing
 
     // [Test]
     // public async Task BasicImportExportTest()
@@ -30,7 +30,7 @@ public partial class TestEfx : TestBase
     //     Thread.CurrentThread.CurrentCulture = System.Globalization.CultureInfo.InvariantCulture;
     //     var converter = new AssetConverter(GodotImportOptions.testImport);
     //     var gameCounts = new Dictionary<SupportedGame, int>();
-    //     await ExecuteFullReadTest("efx", async (game, fileOption, filepath) => {
+    //     await ExecuteFullReadTest("efx", async (game, filepath, stream) => {
     //         converter.Game = game;
     //         if (!gameCounts.TryGetValue(game, out var count)) {
     //             gameCounts[game] = count = 1;
@@ -268,8 +268,8 @@ public partial class TestEfx : TestBase
     private static async Task FullReadTest()
     {
         var converter = new AssetConverter(GodotImportOptions.testImport);
-        await ExecuteFullReadTest("efx", (game, fileOption, filepath) => {
-            using var file = new EfxFile(new FileHandler(filepath));
+        await ExecuteFullReadTest("efx", (game, filepath, stream) => {
+            using var file = new EfxFile(new FileHandler(stream, filepath));
             try {
                 file.Read();
                 file.FileHandler.Position.ShouldBe(file.FileHandler.Stream.Length, "File was not fully read");
@@ -294,8 +294,8 @@ public partial class TestEfx : TestBase
     private static async Task FullExpressionParseTest()
     {
         var converter = new AssetConverter(GodotImportOptions.testImport);
-        await ExecuteFullReadTest("efx", (game, fileOption, filepath) => {
-            using var file = new EfxFile(new FileHandler(filepath));
+        await ExecuteFullReadTest("efx", (game, filepath, stream) => {
+            using var file = new EfxFile(new FileHandler(stream, filepath));
             try {
                 file.Read();
                 file.ParseExpressions();
@@ -362,8 +362,8 @@ public partial class TestEfx : TestBase
         }
 
         var converter = new AssetConverter(GodotImportOptions.testImport);
-        await ExecuteFullReadTest("efx", (game, fileOption, filepath) => {
-            using var file = new EfxFile(new FileHandler(filepath));
+        await ExecuteFullReadTest("efx", (game, filepath, stream) => {
+            using var file = new EfxFile(new FileHandler(stream, filepath));
             try {
                 file.Read();
                 file.FileHandler.Position.ShouldBe(file.FileHandler.Stream.Length, "File was not fully read");
@@ -410,8 +410,8 @@ public partial class TestEfx : TestBase
     private static async Task DumpEfxAttributeUsageList()
     {
         var attributeTypeUsages = new Dictionary<EfxVersion, Dictionary<EfxAttributeType, HashSet<string>>>();
-        await ExecuteFullReadTest("efx", (game, fileOption, filepath) => {
-            using var file = new EfxFile(new FileHandler(filepath));
+        await ExecuteFullReadTest("efx", (game, filepath, stream) => {
+            using var file = new EfxFile(new FileHandler(stream, filepath));
             try {
                 file.Read();
             } catch (Exception e) {
@@ -470,8 +470,8 @@ public partial class TestEfx : TestBase
     private static async Task DumpEfxStructValueLists(Type? targetType = null)
     {
         var dict = new Dictionary<Type, Dictionary<string, Dictionary<EfxVersion, HashSet<string>>>>();
-        await ExecuteFullReadTest("efx", (game, fileOption, filepath) => {
-            using var file = new EfxFile(new FileHandler(filepath));
+        await ExecuteFullReadTest("efx", (game, filepath, stream) => {
+            using var file = new EfxFile(new FileHandler(stream, filepath));
             try {
                 file.Read();
             } catch (Exception e) {
@@ -511,7 +511,7 @@ public partial class TestEfx : TestBase
                     if (value is int i) fieldValues.Add(new Ukn(i).GetMostLikelyValueTypeString());
                     else if (value is uint u) fieldValues.Add(new Ukn(u).GetMostLikelyValueTypeString());
                     else if (value is float f) fieldValues.Add(new Ukn(f).GetMostLikelyValueTypeString());
-                    else if (value is RszTool.via.Color c) fieldValues.Add(new Ukn(c.rgba).GetMostLikelyValueTypeString());
+                    else if (value is ReeLib.via.Color c) fieldValues.Add(new Ukn(c.rgba).GetMostLikelyValueTypeString());
                     else if (value is Ukn uu) fieldValues.Add(uu.GetMostLikelyValueTypeString());
                     else {
                         fieldValues.Add(value?.ToString() ?? "NULL");

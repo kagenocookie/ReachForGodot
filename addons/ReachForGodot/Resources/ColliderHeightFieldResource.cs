@@ -1,8 +1,9 @@
 namespace ReaGE;
 
 using Godot;
+using ReeLib;
 
-[GlobalClass, Tool, ResourceHolder("chf", SupportedFileFormats.ColliderHeightField)]
+[GlobalClass, Tool, ResourceHolder("chf", KnownFileFormats.CollisionHeightField)]
 public partial class ColliderHeightFieldResource : REResource, IImportableAsset, IExportableAsset
 {
     [Export] public HeightMapShape3D? HeightMap { get; set; }
@@ -14,7 +15,7 @@ public partial class ColliderHeightFieldResource : REResource, IImportableAsset,
     [Export] public string[] CollisionPresets { get; set; } = Array.Empty<string>();
     [Export] public Vector2 TileSize { get; set; }
 
-    public ColliderHeightFieldResource() : base(SupportedFileFormats.ColliderHeightField)
+    public ColliderHeightFieldResource() : base(KnownFileFormats.CollisionHeightField)
     {
     }
 

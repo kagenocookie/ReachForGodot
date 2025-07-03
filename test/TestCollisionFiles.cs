@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Chickensoft.GoDotTest;
 using Godot;
-using RszTool;
+using ReeLib;
 using Shouldly;
 
 namespace ReaGE.Tests;
@@ -14,8 +14,8 @@ public partial class TestCollisionFiles : TestBase
     public async Task CdefReadTest()
     {
         var converter = new AssetConverter(GodotImportOptions.testImport);
-        await ExecuteFullReadTest("cdef", async (game, fileOption, filepath) => {
-            using var file = new CdefFile(new FileHandler(filepath));
+        await ExecuteFullReadTest("cdef", async (game, filepath, stream) => {
+            using var file = new CdefFile(new FileHandler(stream, filepath));
             file.Read();
 
             file.Masks.Select(p => p.padding1).ShouldAllBe(n => n == 0);
@@ -34,8 +34,8 @@ public partial class TestCollisionFiles : TestBase
     public async Task DefReadTest()
     {
         var converter = new AssetConverter(GodotImportOptions.testImport);
-        await ExecuteFullReadTest("def", (game, fileOption, filepath) => {
-            using var file = new DefFile(new FileHandler(filepath));
+        await ExecuteFullReadTest("def", (game, filepath, stream) => {
+            using var file = new DefFile(new FileHandler(stream, filepath));
             file.Read();
         });
     }
@@ -44,8 +44,8 @@ public partial class TestCollisionFiles : TestBase
     public async Task CfilReadTest()
     {
         var converter = new AssetConverter(GodotImportOptions.testImport);
-        await ExecuteFullReadTest("cfil", async (game, fileOption, filepath) => {
-            using var file = new CfilFile(new FileHandler(filepath));
+        await ExecuteFullReadTest("cfil", async (game, filepath, stream) => {
+            using var file = new CfilFile(new FileHandler(stream, filepath));
             file.Read();
 
             (file.uknOffset == 0 || file.uknOffset == file.FileHandler.Position).ShouldBeTrue("Found unknown data in CFIL");
@@ -71,8 +71,8 @@ public partial class TestCollisionFiles : TestBase
     public async Task CmatReadTest()
     {
         var converter = new AssetConverter(GodotImportOptions.testImport);
-        await ExecuteFullReadTest("cmat", async (game, fileOption, filepath) => {
-            using var file = new CmatFile(new FileHandler(filepath));
+        await ExecuteFullReadTest("cmat", async (game, filepath, stream) => {
+            using var file = new CmatFile(new FileHandler(stream, filepath));
             file.Read();
             var res = new CollisionMaterialResource();
             (await converter.Cmat.Import(file, res)).ShouldBe(true);
@@ -85,8 +85,8 @@ public partial class TestCollisionFiles : TestBase
     public async Task CollisionHFReadTest()
     {
         var converter = new AssetConverter(GodotImportOptions.testImport);
-        await ExecuteFullReadTest("chf", (game, fileOption, filepath) => {
-            using var file = new CHFFile(new FileHandler(filepath));
+        await ExecuteFullReadTest("chf", (game, filepath, stream) => {
+            using var file = new CHFFile(new FileHandler(stream, filepath));
             file.Read();
         });
     }
@@ -95,8 +95,8 @@ public partial class TestCollisionFiles : TestBase
     public async Task HFReadTest()
     {
         var converter = new AssetConverter(GodotImportOptions.testImport);
-        await ExecuteFullReadTest("hf", (game, fileOption, filepath) => {
-            using var file = new HFFile(new FileHandler(filepath));
+        await ExecuteFullReadTest("hf", (game, filepath, stream) => {
+            using var file = new HFFile(new FileHandler(stream, filepath));
             file.Read();
         });
     }

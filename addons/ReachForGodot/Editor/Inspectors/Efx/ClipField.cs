@@ -1,7 +1,7 @@
 namespace ReaGE;
 
 using Godot;
-using RszTool.Efx.Structs.Common;
+using ReeLib.Efx.Structs.Common;
 
 [GlobalClass, Tool]
 public partial class ClipField : Control

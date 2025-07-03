@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Chickensoft.GoDotTest;
 using Godot;
-using RszTool;
+using ReeLib;
 using Shouldly;
 
 namespace ReaGE.Tests;
@@ -14,9 +14,9 @@ public partial class TestScn : TestBase
     public async Task FullReadTest()
     {
         var converter = new AssetConverter(GodotImportOptions.testImport);
-        await ExecuteFullReadTest("scn", async (game, fileOption, filepath) => {
+        await ExecuteFullReadTest("scn", async (game, filepath, stream) => {
             converter.Game = game;
-            using var file = new ScnFile(fileOption, new FileHandler(filepath));
+            using var file = new ScnFile(converter.FileOption, new FileHandler(stream, filepath));
             file.Read();
             file.SetupGameObjects();
             var version = file.FileHandler.FileVersion;

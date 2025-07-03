@@ -4,7 +4,7 @@ namespace ReaGE;
 using System;
 using System.Threading.Tasks;
 using Godot;
-using RszTool;
+using ReeLib;
 
 [GlobalClass, Tool, REComponentClass("via.render.CompositeMesh")]
 public partial class CompositeMeshComponent : REComponent, IVisualREComponent

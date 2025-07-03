@@ -2,7 +2,7 @@ namespace ReaGE;
 
 using System.Threading.Tasks;
 using Godot;
-using RszTool;
+using ReeLib;
 
 public class UvarConverter : ResourceConverter<UvarResource, UVarFile>
 {
@@ -82,7 +82,7 @@ public class UvarConverter : ResourceConverter<UvarResource, UVarFile>
 
         file.Variables.Clear();
         foreach (var srcVar in source.Variables!) {
-            var outVar = new RszTool.UVar.Variable();
+            var outVar = new ReeLib.UVar.Variable();
             outVar.guid = srcVar.Guid;
             outVar.Name = srcVar.ResourceName;
             outVar.flags = srcVar.Flags;
@@ -90,12 +90,12 @@ public class UvarConverter : ResourceConverter<UvarResource, UVarFile>
             outVar.type = srcVar.Type;
             file.Variables.Add(outVar);
             if (srcVar.Expression != null) {
-                outVar.Expression = new RszTool.UVar.UvarExpression();
+                outVar.Expression = new ReeLib.UVar.UvarExpression();
                 int n = 0;
                 outVar.Expression.outputNodeId = (short)srcVar.Expression.OutputNodeId;
                 outVar.Expression.unknownCount = (short)srcVar.Expression.UnknownId;
                 foreach (var srcNode in srcVar.Expression.Nodes) {
-                    var node = new RszTool.UVar.UvarNode() {
+                    var node = new ReeLib.UVar.UvarNode() {
                         Name = srcNode.NodeType,
                         uknCount = srcNode.UnknownNumber,
                         nodeId = (short)n++,
@@ -104,7 +104,7 @@ public class UvarConverter : ResourceConverter<UvarResource, UVarFile>
                     if (srcNode.Parameters == null) continue;
 
                     foreach (var srcParam in srcNode.Parameters) {
-                        node.Parameters.Add(new RszTool.UVar.NodeParameter() {
+                        node.Parameters.Add(new ReeLib.UVar.NodeParameter() {
                             nameHash = srcParam.SlotNameHash,
                             type = srcParam.ValueType,
                             value = UvarExpressionNodeParameter.VariantToNodeVar(srcParam.Value, srcParam.ValueType),
@@ -113,7 +113,7 @@ public class UvarConverter : ResourceConverter<UvarResource, UVarFile>
                 }
 
                 foreach (var conn in srcVar.Expression.Connections!) {
-                    outVar.Expression.Connections.Add(new RszTool.UVar.UvarExpression.NodeConnection() {
+                    outVar.Expression.Connections.Add(new ReeLib.UVar.UvarExpression.NodeConnection() {
                         nodeId = (short)conn.X,
                         inputSlot = (short)conn.Y,
                         node2 = (short)conn.Z,

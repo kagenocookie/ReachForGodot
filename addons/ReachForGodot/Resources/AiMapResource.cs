@@ -1,10 +1,11 @@
 namespace ReaGE;
 
 using Godot;
-using RszTool.Aimp;
+using ReeLib;
+using ReeLib.Aimp;
 
 // TODO: this resource class could probably store all the different ai** formats
-[GlobalClass, Tool, ResourceHolder("aimap", SupportedFileFormats.AiMap)]
+[GlobalClass, Tool, ResourceHolder("aimap", KnownFileFormats.AIMap)]
 public partial class AiMapResource : REResource
 {
     [Export] public MapType mapType;
@@ -17,7 +18,7 @@ public partial class AiMapResource : REResource
     [Export] public float DefaultAgentRadius;
     // TODO embedded maps
 
-    public AiMapResource() : base(SupportedFileFormats.AiMap)
+    public AiMapResource() : base(KnownFileFormats.AIMap)
     {
     }
 }

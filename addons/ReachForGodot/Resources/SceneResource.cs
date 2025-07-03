@@ -2,14 +2,15 @@ namespace ReaGE;
 
 using System.Threading.Tasks;
 using Godot;
+using ReeLib;
 
-[GlobalClass, Tool, ResourceHolder("scn", SupportedFileFormats.Scene)]
+[GlobalClass, Tool, ResourceHolder("scn", KnownFileFormats.Scene)]
 public partial class SceneResource : REResourceProxy, IImportableAsset, IExportableAsset
 {
     public PackedScene? Scene => ImportedResource as PackedScene;
     public SceneFolder? Instantiate() => Scene?.Instantiate<SceneFolder>();
 
-    public SceneResource() : base(SupportedFileFormats.Scene)
+    public SceneResource() : base(KnownFileFormats.Scene)
     {
     }
 

@@ -2,8 +2,8 @@ namespace ReaGE;
 
 using System.Threading.Tasks;
 using Godot;
-using RszTool;
-using RszTool.Bvh;
+using ReeLib;
+using ReeLib.Bvh;
 
 public class McolConverter :
     SceneResourceConverter<MeshColliderResource, McolFile, McolRoot>,
@@ -334,7 +334,7 @@ public class McolConverter :
 
     public BvhData RebuildBvhFromMesh(Mesh? mesh, McolRoot root)
     {
-        var bvh = new BvhData(new FileHandler() { FileVersion = PathUtils.GetFileFormatVersion(SupportedFileFormats.MeshCollider, Config.Paths) });
+        var bvh = new BvhData(new FileHandler() { FileVersion = PathUtils.GetFileFormatVersion(KnownFileFormats.CollisionMesh, Config) });
         bvh.tree = new BvhTree();
 
         // mcol shapes need to be added in sorted by type since the bounds contain indexes

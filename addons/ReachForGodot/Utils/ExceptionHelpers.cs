@@ -1,7 +1,7 @@
 namespace ReaGE;
 
 using Godot;
-using RszTool;
+using ReeLib;
 
 public static class ExceptionHelpers
 {

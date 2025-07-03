@@ -2,7 +2,7 @@ namespace ReaGE;
 
 using System;
 using Godot;
-using RszTool.Efx.Structs.Common;
+using ReeLib.Efx.Structs.Common;
 
 [GlobalClass, Tool]
 public partial class ExpressionField : Control

@@ -1,7 +1,7 @@
 namespace ReaGE;
 
 using System.Threading.Tasks;
-using RszTool;
+using ReeLib;
 
 public class CfilConverter : ResourceConverter<CollisionFilterResource, CfilFile>
 {

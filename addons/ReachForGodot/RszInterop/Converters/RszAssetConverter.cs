@@ -1,10 +1,10 @@
 namespace ReaGE;
 
 using Godot;
-using RszTool;
-using RszTool.Common;
+using ReeLib;
+using ReeLib.Common;
 
-public abstract class RszAssetConverter<TResource, TFile, TAsset, TAssetInstance> : RszToolConverter<TResource, TFile, TAsset, TAssetInstance>
+public abstract class RszAssetConverter<TResource, TFile, TAsset, TAssetInstance> : ReeLibConverter<TResource, TFile, TAsset, TAssetInstance>
     where TAsset : GodotObject
     where TAssetInstance : GodotObject
     where TFile : BaseFile
@@ -399,7 +399,7 @@ public abstract class RszAssetConverter<TResource, TFile, TAsset, TAssetInstance
 
         string? prefabPath = null;
 
-        if (data is RszTool.Scn.ScnGameObject scnData) {
+        if (data is ReeLib.Scn.ScnGameObject scnData) {
             // note: some PFB files aren't shipped with the game, hence the CheckResourceExists check
             // presumably they are only used directly within scn files and not instantiated during runtime
             prefabPath = scnData.Prefab?.Path;
@@ -437,7 +437,7 @@ public abstract class RszAssetConverter<TResource, TFile, TAsset, TAssetInstance
         }
         batch.GameObject = gameobj;
 
-        if (data is RszTool.Scn.ScnGameObject scnData2) {
+        if (data is ReeLib.Scn.ScnGameObject scnData2) {
             var guid = scnData2.Info!.guid;
             gameobj.Uuid = guid.ToString();
             gameObjects[guid] = gameobj;

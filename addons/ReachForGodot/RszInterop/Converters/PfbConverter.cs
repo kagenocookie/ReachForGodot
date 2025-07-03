@@ -4,7 +4,8 @@ using System;
 using System.Threading.Tasks;
 using Godot;
 using ReaGE.Tools;
-using RszTool;
+using ReeLib;
+using ReeLib.Data;
 
 public class PfbConverter : SceneRszAssetConverter<PrefabResource, PfbFile, PrefabNode>
 {
@@ -22,7 +23,7 @@ public class PfbConverter : SceneRszAssetConverter<PrefabResource, PfbFile, Pref
 
     public override Task<bool> Export(PrefabNode source, PfbFile file)
     {
-        var fileOption = TypeCache.CreateRszFileOptions(Config);
+        var fileOption = Config.Workspace.RszFileOption;
 
         source.PreExport();
         foreach (var go in source.AllChildrenIncludingSelf) {
@@ -98,8 +99,8 @@ public class PfbConverter : SceneRszAssetConverter<PrefabResource, PfbFile, Pref
                             pfb.RSZ!.AddToObjectTable(dataInst);
                         }
 
-                        var refEntry = new StructModel<RszTool.Pfb.PfbGameObjectRefInfo>() {
-                            Data = new RszTool.Pfb.PfbGameObjectRefInfo() {
+                        var refEntry = new StructModel<ReeLib.Pfb.PfbGameObjectRefInfo>() {
+                            Data = new ReeLib.Pfb.PfbGameObjectRefInfo() {
                                 objectId = (uint)dataInst.ObjectTableIndex,
                                 arrayIndex = arrayIndex,
                                 propertyId = propInfo.PropertyId,
@@ -139,8 +140,8 @@ public class PfbConverter : SceneRszAssetConverter<PrefabResource, PfbFile, Pref
 
     private static void AddPfbGameObject(int objectId, PfbFile file, int componentCount, int parentId)
     {
-        file.GameObjectInfoList.Add(new StructModel<RszTool.Pfb.PfbGameObjectInfo>() {
-            Data = new RszTool.Pfb.PfbGameObjectInfo() {
+        file.GameObjectInfoList.Add(new StructModel<ReeLib.Pfb.PfbGameObjectInfo>() {
+            Data = new ReeLib.Pfb.PfbGameObjectInfo() {
                 objectId = objectId,
                 parentId = parentId,
                 componentCount = componentCount,
@@ -152,8 +153,6 @@ public class PfbConverter : SceneRszAssetConverter<PrefabResource, PfbFile, Pref
     {
         GenerateResources(target, file.ResourceInfoList);
         var batch = Convert.CreatePrefabBatch(target, target.Asset!.AssetFilename);
-
-        TypeCache.StoreInferredRszTypes(file.RSZ, Config);
 
         if (Convert.Options.prefabs == RszImportType.ForceReimport) {
             target.Clear();
@@ -188,15 +187,12 @@ public class PfbConverter : SceneRszAssetConverter<PrefabResource, PfbFile, Pref
         var cache = TypeCache.GetClassInfo(Game, obj.Classname!);
         var propInfoDict = cache.PfbRefs;
         if (!propInfoDict.TryGetValue(field.SerializedName, out var propInfo)) {
-            GameObjectRefResolver.CheckInstances(Game, file);
-            if (!propInfoDict.TryGetValue(field.SerializedName, out propInfo)) {
-                // if any refs from this object do not have a known property Id; this way we only print error if we actually found an unmapped ref
-                if (file.GameObjectRefInfoList.Any(info => info.Data.objectId == idx
-                    && !propInfoDict.Values.Any(entry => entry.PropertyId == info.Data.propertyId))) {
-                    ErrorLog($"Found unknown GameObjectRef property {field.SerializedName} in class {obj.Classname}. It might not be imported correctly.");
-                }
-                return default;
+            // if any refs from this object do not have a known property Id; this way we only print error if we actually found an unmapped ref
+            if (file.GameObjectRefInfoList.Any(info => info.Data.objectId == idx
+                && !propInfoDict.Values.Any(entry => entry.PropertyId == info.Data.propertyId))) {
+                ErrorLog($"Found unknown GameObjectRef property {field.SerializedName} in class {obj.Classname}. It might not be imported correctly.");
             }
+            return default;
         }
 
         var objref = fieldRefs.FirstOrDefault(rr => rr.Data.propertyId == propInfo.PropertyId);

@@ -1,7 +1,7 @@
 namespace ReaGE;
 
 using System.Threading.Tasks;
-using RszTool;
+using ReeLib;
 
 public class MotbankConverter : ResourceConverter<MotionBankResource, MotbankFile>
 {
@@ -36,7 +36,7 @@ public class MotbankConverter : ResourceConverter<MotionBankResource, MotbankFil
         file.motlistCount = source.MotionList.Length;
         for (int i = 0; i < file.motlistCount; ++i) {
             var importItem = source.MotionList[i];
-            var exportItem = new RszTool.Motbank.MotlistItem(file.FileHandler.FileVersion);
+            var exportItem = new ReeLib.Motbank.MotlistItem(file.FileHandler.FileVersion);
 
             exportItem.BankID = importItem.BankID;
             exportItem.BankType = importItem.BankType;

@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Reference Include="RszTool" HintPath="$(ProjectDir)/addons/ReachForGodot/Plugins/RszTool.dll"></Reference>
+    <Reference Include="ReeLib" HintPath="$(ProjectDir)/addons/ReachForGodot/Plugins/ReeLib.dll"></Reference>
     <Reference Include="ZstdSharp" HintPath="$(ProjectDir)/addons/ReachForGodot/Plugins/ZstdSharp.dll"></Reference>
   </ItemGroup>
 </Project>

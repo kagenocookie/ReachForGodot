@@ -2,6 +2,7 @@ namespace ReaGE;
 
 using Godot;
 using Godot.Collections;
+using ReeLib;
 
 public partial class ReaGEPreviewGenerator : EditorResourcePreviewGenerator
 {
@@ -18,7 +19,7 @@ public partial class ReaGEPreviewGenerator : EditorResourcePreviewGenerator
     {
         if (resource is not REResource res) return null;
 
-        if (res.ResourceType == SupportedFileFormats.Texture) {
+        if (res.ResourceType == KnownFileFormats.Texture) {
             return (res as REResourceProxy)?.ImportedResource as Texture2D;
         }
 

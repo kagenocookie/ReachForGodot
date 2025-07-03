@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Chickensoft.GoDotTest;
 using Godot;
-using RszTool;
+using ReeLib;
 using Shouldly;
 
 namespace ReaGE.Tests;
@@ -14,9 +14,9 @@ public partial class TestUvar : TestBase
     public async Task FullReadWriteTest()
     {
         var converter = new AssetConverter(GodotImportOptions.testImport);
-        await ExecuteFullReadTest("uvar", async (game, fileOption, filepath) => {
+        await ExecuteFullReadTest("uvar", async (game, filepath, stream) => {
             converter.Game = game;
-            using var file = converter.Uvar.CreateFile(filepath);
+            using var file = new UVarFile(new FileHandler(filepath));
             converter.Uvar.LoadFile(file);
 
             var imported = CreateTempResource(converter, converter.Uvar, filepath);
@@ -60,10 +60,10 @@ public partial class TestUvar : TestBase
     // [Test]
     // public void VerifyData()
     // {
-    //     var uvars = new HashSet<(RszTool.UvarFile.Variable.TypeKind kind, RszTool.UvarFile.UvarFlags flags, string val)>();
-    //     var nodevars = new HashSet<(RszTool.UvarFile.UvarExpression.NodeValueType type, string val)>();
-    //     ExecuteFullReadTest("uvar", (game, fileOption, filepath) => {
-    //         using var file = new UvarFile(new FileHandler(filepath));
+    //     var uvars = new HashSet<(ReeLib.UvarFile.Variable.TypeKind kind, ReeLib.UvarFile.UvarFlags flags, string val)>();
+    //     var nodevars = new HashSet<(ReeLib.UvarFile.UvarExpression.NodeValueType type, string val)>();
+    //     ExecuteFullReadTest("uvar", (game, filepath, stream) => {
+    //         using var file = new UvarFile(new FileHandler(stream));
     //         file.Read();
 
     //         foreach (var uvar in GetAllUvars(file)) {

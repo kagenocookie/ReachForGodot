@@ -4,7 +4,8 @@ using System;
 using System.Threading.Tasks;
 using Godot;
 using ReaGE.Tools;
-using RszTool.Efx;
+using ReeLib;
+using ReeLib.Efx;
 
 [GlobalClass, Tool]
 public partial class CustomSearchWindow : Window
@@ -323,28 +324,46 @@ public partial class CustomSearchWindow : Window
     {
         tokenSource.Cancel();
         tokenSource = new();
+        var token = tokenSource.Token;
 
         var conv = new AssetConverter(GodotImportOptions.testImport);
-        foreach (var (game, filepath) in ReaGETools.FindFilesByFormat(SupportedFileFormats.Rcol, null, tokenSource.Token)) {
-            conv.Game = game;
+        foreach (var config in ReachForGodot.AssetConfigs) {
+            if (!config.IsValid || string.IsNullOrEmpty(config.Paths.Gamedir)) {
+                continue;
+            }
+            conv.Game = config.Game;
 
-            using var f = conv.Rcol.CreateFile(new RszTool.FileHandler(filepath));
-            f.Read();
-            foreach (var set in f.RequestSets) {
-                if (Results.Count >= resultLimit) {
-                    return;
-                }
+            // ensure we cache the pak entries first to avoid race conditions
+            config.Workspace.PakReader.CacheEntries();
+            if (token.IsCancellationRequested) return;
 
-                if (set.Info.Name.StartsWith(name, StringComparison.OrdinalIgnoreCase)) {
-                    var ui = CreateSearchResultItem(filepath, null);
-                    ui.Pressed += () => {
-                        FileSystemUtils.ShowFileInExplorer(filepath);
-                    };
-                    resultsContainer.CallDeferred(Node.MethodName.AddChild, ui);
+            foreach (var (filepath, stream) in config.Workspace.GetFilesWithExtension("rcol", token)) {
+                if (token.IsCancellationRequested) return;
+
+                var f = conv.Rcol.CreateFile(new ReeLib.FileHandler(stream, filepath));
+                f.Read();
+                foreach (var set in f.RequestSets) {
+                    if (Results.Count >= resultLimit) {
+                        return;
+                    }
+
+                    if (set.Info.Name.StartsWith(name, StringComparison.OrdinalIgnoreCase)) {
+                        var ui = CreateSearchResultItem(config.Game + ": " + filepath, null);
+                        ui.Pressed += () => {
+                            var file = config.Workspace.GetExtractedFilepath(filepath, config.Paths.ChunkPath);
+                            if (file == null) {
+                                GD.PrintErr("Failed to extract file");
+                                return;
+                            }
+                            FileSystemUtils.ShowFileInExplorer(file);
+                        };
+                        resultsContainer.CallDeferred(Node.MethodName.AddChild, ui);
+                    }
                 }
             }
         }
     }
+
     private void SearchFilesEFX(string attributeType)
     {
         tokenSource.Cancel();

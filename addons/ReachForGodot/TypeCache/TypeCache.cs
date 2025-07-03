@@ -6,7 +6,8 @@ using System.Reflection;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Godot;
-using RszTool;
+using ReeLib;
+using ReeLib.Il2cpp;
 
 public static partial class TypeCache
 {
@@ -17,17 +18,17 @@ public static partial class TypeCache
             var updateHandlerType = assembly.GetType("System.Text.Json.JsonSerializerOptionsUpdateHandler");
             var clearCacheMethod = updateHandlerType?.GetMethod("ClearCache", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public);
             clearCacheMethod!.Invoke(null, new object?[] { null });
-
-            allCacheData.Clear();
         };
+        ResourceRepository.LocalResourceRepositoryFilepath = ProjectSettings.GlobalizePath("res://userdata/resources/cache.json");
+        if (ReachForGodot.ReeLibResourceSource != null) {
+            ResourceRepository.MetadataRemoteSource = ReachForGodot.ReeLibResourceSource;
+        }
         InitResourceFormats(typeof(TypeCache).Assembly);
         InitComponents(typeof(TypeCache).Assembly);
-        jsonOptions.Converters.Add(new JsonStringEnumConverter<SupportedFileFormats>(allowIntegerValues: false));
+        jsonOptions.Converters.Add(new JsonStringEnumConverter<KnownFileFormats>(allowIntegerValues: false));
         jsonOptions.Converters.Add(new JsonStringEnumConverter<RszFieldType>(allowIntegerValues: false));
         jsonOptions.Converters.Add(new JsonStringEnumConverter<EfxFieldFlags>(allowIntegerValues: false));
     }
-
-    private static readonly Dictionary<SupportedGame, GameClassCache> allCacheData = new();
 
     public static readonly JsonSerializerOptions jsonOptions = new() {
         WriteIndented = true,
@@ -126,228 +127,60 @@ public static partial class TypeCache
         return false;
     }
 
-    public static RszFileOption CreateRszFileOptions(AssetConfig config)
-    {
-        _ = GetCacheRoot(config.Game).Parser;
-        return new RszFileOption(
-            config.Paths.GetRszToolGameEnum(),
-            config.Paths.RszJsonPath ?? throw new Exception("Rsz json file not specified for game " + config.Game));
-    }
-
     public static ClassInfo GetClassInfo(SupportedGame game, string classname)
     {
-        var cache = GetCacheRoot(game);
+        var cache = GetWorkspace(game);
 
-        if (!cache.serializationCache.TryGetValue(classname, out var data)) {
-            var cls = cache.Parser.GetRSZClass(classname);
+        var cacheKey = (game, classname);
+        if (!serializationCache.TryGetValue(cacheKey, out var data)) {
+            var cls = cache.RszParser.GetRSZClass(classname);
             if (cls != null) {
-                cache.serializationCache[classname] = data = GenerateObjectCache(cache, cls);
+                serializationCache[cacheKey] = data = GenerateObjectCache(cache, cls);
             } else {
-                cache.serializationCache[classname] = data = ClassInfo.Empty;
+                serializationCache[cacheKey] = data = ClassInfo.Empty;
             }
         }
         return data;
     }
 
+    public static string GetResourceType(string resourceHolderClassname)
+    {
+        var format = ReeLib.Il2cpp.TypeCache.GetResourceFormat(resourceHolderClassname);
+        if (format != KnownFileFormats.Unknown) {
+            return PathUtils.GetResourceTypeFromFormat(format)?.Name ?? nameof(REResource);
+        }
+        return nameof(REResource);
+    }
+
+    private static Dictionary<(SupportedGame, string), ClassInfo> serializationCache = new();
+    private static Dictionary<(SupportedGame, string), List<REFieldAccessor>> fieldOverrides = new();
+
     public static bool ClassExists(SupportedGame game, string classname)
     {
-        return GetCacheRoot(game).Parser.GetRSZClass(classname) != null;
+        return GetWorkspace(game).RszParser.GetRSZClass(classname) != null;
     }
 
     public static List<string> GetSubclasses(SupportedGame game, string baseclass)
     {
-        var cache = GetCacheRoot(game).Il2cppCache;
-        if (cache.subclasses.TryGetValue(baseclass, out var list)) {
-            return list;
-        }
-
-        return cache.subclasses[baseclass] = new List<string>() { baseclass };
+        return GetWorkspace(game).TypeCache.GetSubclasses(baseclass);
     }
 
-    public static void UpdatePfbGameObjectRefCache(SupportedGame game, string classname, Dictionary<string, PrefabGameObjectRefProperty> propInfoDict)
+    private static Workspace GetWorkspace(SupportedGame game)
     {
-        var cache = GetCacheRoot(game);
-        GetClassInfo(game, classname).PfbRefs = propInfoDict;
-        cache.UpdateClassProps(classname, propInfoDict);
+        return ReachForGodot.GetAssetConfig(game).Workspace;
     }
 
-    public static void StoreInferredRszTypes(RSZFile rsz, AssetConfig config)
+    private static ClassInfo GenerateObjectCache(Workspace root, RszClass cls)
     {
-        var handled = new HashSet<RszClass>();
-        foreach (var inst in rsz.InstanceList) {
-            handled.Add(inst.RszClass);
-        }
-
-        if (handled.Count > 0) {
-            StoreInferredRszTypes(handled, config);
-        }
-    }
-
-    public static void MarkRSZResourceFields(IEnumerable<(string classname, string field, string resourceExtension)> fields, AssetConfig config)
-    {
-        var cache = GetCacheRoot(config.Game);
-        int changes = 0;
-        foreach (var (cls, field, ext) in fields) {
-            var typeinfo = cache.Parser.GetRSZClass(cls);
-            var rszType = typeinfo?.fields.FirstOrDefault(f => f.name == field);
-            if (rszType != null) {
-                if (rszType.type is not RszFieldType.String and not RszFieldType.Resource) {
-                    GD.PrintErr($"Attempted to change non-string field into resource: {cls} field {field} of type {rszType.type}");
-                    continue;
-                }
-                var fileFormat = PathUtils.GetFileFormatFromExtension(ext);
-                cache.TryFindClassPatch(cls, out var patch);
-                var fieldPatch = patch?.FieldPatches?.FirstOrDefault(f => f.Name == field);
-                var shouldAdd = rszType.type == RszFieldType.String ||
-                    fileFormat != SupportedFileFormats.Unknown && fileFormat != fieldPatch?.FileFormat;
-
-                if (shouldAdd) {
-                    if (patch == null) {
-                        patch = cache.FindOrCreateClassPatch(cls);
-                        fieldPatch = patch.FieldPatches?.FirstOrDefault(f => f.Name == field);
-                    }
-                    if (fieldPatch == null) {
-                        fieldPatch = new EnhancedRszFieldPatch() { Name = field };
-                        patch.FieldPatches = (patch.FieldPatches ?? Array.Empty<EnhancedRszFieldPatch>()).Append(fieldPatch).ToArray();
-                    }
-                    if (fileFormat == SupportedFileFormats.Unknown) fileFormat = fieldPatch.FileFormat;
-                    if (fieldPatch.FileFormat != SupportedFileFormats.Unknown && fieldPatch.FileFormat != fileFormat) {
-                        // handle conflicts
-                        if (fileFormat is SupportedFileFormats.Texture or SupportedFileFormats.RenderTexture && fieldPatch.FileFormat is SupportedFileFormats.Texture or SupportedFileFormats.RenderTexture) {
-                            fileFormat = SupportedFileFormats.Texture;
-                        } else {
-                            GD.PrintErr($"Warning: Resource type conflict on field {cls} {field}: {fieldPatch.FileFormat} and {fileFormat}. Manually verify please.");
-                        }
-                    }
-                    fieldPatch.FileFormat = fileFormat;
-                    if (fileFormat is SupportedFileFormats.Scene or SupportedFileFormats.Prefab) {
-                        // leave these as string
-                        fieldPatch.Type = RszFieldType.String;
-                    } else {
-                        fieldPatch.Type = RszFieldType.Resource;
-                    }
-                    changes++;
-                }
-            }
-        }
-
-        if (changes > 0) {
-            cache.UpdateRszPatches(config);
-            GD.Print($"Updating RSZ inferred resource fields in type cache with {changes} changes");
-        }
-    }
-
-    public static void StoreInferredRszTypes(IEnumerable<RszClass> classlist, AssetConfig config)
-    {
-        var cache = GetCacheRoot(config.Game);
-        int changes = 0;
-        foreach (var cls in classlist) {
-
-            foreach (var f in cls.fields) {
-                if (!f.IsTypeInferred) continue;
-                if (f.type <= RszFieldType.Undefined) {
-                    continue;
-                }
-                var props = cache.FindOrCreateClassPatch(cls.name);
-
-                var entry = props.FieldPatches?.FirstOrDefault(patch => patch.Name == f.name || patch.ReplaceName == f.name);
-                if (entry == null) {
-                    entry = new EnhancedRszFieldPatch() { Name = f.name, Type = f.type };
-                    props.FieldPatches = props.FieldPatches == null ? [entry] : props.FieldPatches.Append(entry).ToArray();
-                    changes++;
-                    RebuildSingleFieldCache(cache, cls.name, f.name);
-                } else if (entry.Type != f.type) {
-                    entry.Type = f.type;
-                    changes++;
-                    RebuildSingleFieldCache(cache, cls.name, f.name);
-                }
-            }
-        }
-        if (changes > 0) {
-            cache.UpdateRszPatches(config);
-            GD.Print($"Updating RSZ inferred field type cache with {changes} changes");
-        }
-    }
-
-    public static void VerifyDuplicateFields(IEnumerable<RszClass> classlist, AssetConfig config)
-    {
-        var cache = GetCacheRoot(config.Game);
-        var dupeDict = new Dictionary<string, int>();
-        int changes = 0;
-        RszClassPatch? patch;
-        foreach (var cls in classlist) {
-            dupeDict.Clear();
-            patch = null;
-            foreach (var f in cls.fields) {
-                if (dupeDict.TryGetValue(f.name, out var count)) {
-                    patch ??= cache.FindOrCreateClassPatch(cls.name);
-                    if (count == 1) {
-                        var prev = cls.fields.First(p => p.name == f.name);
-                        var entryPrev = new RszFieldPatch() { Name = f.name, ReplaceName = f.name + "1" };
-                        prev.name = entryPrev.ReplaceName;
-                        patch.FieldPatches = patch.FieldPatches == null ? [entryPrev] : patch.FieldPatches.Append(entryPrev).ToArray();
-                        changes++;
-                    }
-                    var nameOverride = f.name + (dupeDict[f.name] = ++count);
-                    var entry = new RszFieldPatch() { Name = f.name, ReplaceName = nameOverride };
-                    patch.FieldPatches = patch.FieldPatches == null ? [entry] : patch.FieldPatches.Append(entry).ToArray();
-                    changes++;
-                    f.name = nameOverride;
-                } else {
-                    dupeDict[f.name] = 1;
-                }
-            }
-        }
-        if (changes > 0) {
-            cache.UpdateRszPatches(config);
-            GD.Print($"Updating RSZ duplicate field names for {changes} fields");
-        }
-    }
-
-    private static GameClassCache GetCacheRoot(SupportedGame game)
-    {
-        if (!allCacheData.TryGetValue(game, out var data)) {
-            allCacheData[game] = data = new(game);
-        }
-        return data;
-    }
-
-    public static EnumDescriptor GetEnumDescriptor(SupportedGame game, string classname)
-        => GetEnumDescriptor(GetCacheRoot(game), classname);
-
-    private static EnumDescriptor GetEnumDescriptor(GameClassCache cache, string classname)
-    {
-        var il2cpp = cache.Il2cppCache;
-        if (il2cpp.enums.TryGetValue(classname, out var descriptor)) {
-            return descriptor;
-        }
-
-        return EnumDescriptor<int>.Default;
-    }
-
-    private static ClassInfo GenerateObjectCache(GameClassCache root, RszClass cls)
-    {
-        var cache = new ClassInfo(cls, GenerateFields(cls, root), root.GetClassProps(cls.name));
-        if (root.fieldOverrides.TryGetValue(cls.name, out var list) == true) {
+        var cache = new ClassInfo(cls, GenerateFields(cls, root), root.PfbRefProps.GetValueOrDefault(cls.name));
+        var game = root.Config.Game.GameEnum.FromReeLibEnum();
+        if (fieldOverrides.TryGetValue((game, cls.name), out var list) == true) {
             foreach (var accessor in list) {
-                var field = accessor.Get(root.game, cache);
+                var field = accessor.Get(game, cache);
                 if (field != null) {
                     accessor.Invoke(field);
                     var prop = cache.PropertyList.First(dict => dict["name"].AsString() == field.SerializedName);
-                    if (field.RszField.name != accessor.preferredName) {
-                        var props = root.FindOrCreateClassPatch(cls.name);
-                        var patch = props.FieldPatches?.FirstOrDefault(fp => fp.Name == field.RszField.name);
-                        if (patch == null) {
-                            patch = new EnhancedRszFieldPatch() {
-                                Name = field.RszField.name,
-                                Type = field.RszField.type,
-                            };
-                            props.FieldPatches = (props.FieldPatches ?? Array.Empty<EnhancedRszFieldPatch>()).Append(patch).ToArray();
-                        }
-                        patch.ReplaceName = accessor.preferredName;
-                        field.RszField.name = accessor.preferredName;
-                        root.UpdateRszPatches(ReachForGodot.GetAssetConfig(root.game));
-                    }
+                    field.RszField.name = accessor.preferredName;
                     cache.UpdateFieldProperty(field, prop);
                 }
             }
@@ -356,7 +189,7 @@ public static partial class TypeCache
         return cache;
     }
 
-    private static REField[] GenerateFields(RszClass cls, GameClassCache cache)
+    private static REField[] GenerateFields(RszClass cls, Workspace cache)
     {
         var fields = new REField[cls.fields.Length];
         for (int i = 0; i < cls.fields.Length; ++i) {
@@ -386,9 +219,11 @@ public static partial class TypeCache
                 var games = supportedGames.Length == 0 ? ReachForGodot.GameList : supportedGames;
 
                 foreach (var game in games) {
-                    var cache = GetCacheRoot(game);
-                    if (!cache.fieldOverrides.TryGetValue(curclass, out var pergame)) {
-                        cache.fieldOverrides[curclass] = pergame = new();
+                    // var config = ReachForGodot.GetAssetConfig(game);
+                    // if (!config.IsValid) continue;
+                    // // var cache = config.Workspace;
+                    if (!fieldOverrides.TryGetValue((game, curclass), out var pergame)) {
+                        fieldOverrides[(game, curclass)] = pergame = new();
                     }
                     pergame.Add(accessor);
                 }
@@ -396,12 +231,12 @@ public static partial class TypeCache
         }
     }
 
-    private static void RszFieldToGodotProperty(RszField srcField, REField refield, GameClassCache cache)
+    private static void RszFieldToGodotProperty(RszField srcField, REField refield, Workspace cache)
     {
         RszFieldToGodotProperty(refield, cache, srcField.type, srcField.array, srcField.original_type);
     }
 
-    private static void RszFieldToGodotProperty(REField refield, GameClassCache cache, RszFieldType type, bool array, string classname)
+    private static void RszFieldToGodotProperty(REField refield, Workspace cache, RszFieldType type, bool array, string classname)
     {
         static void ResourceHint(REField field, string resourceName)
         {
@@ -470,7 +305,7 @@ public static partial class TypeCache
                 case RszFieldType.Resource:
                     refield.VariantType = Variant.Type.Array;
                     refield.Hint = PropertyHint.TypeString;
-                    refield.HintString = $"{(int)Variant.Type.Object}/{(int)PropertyHint.ResourceType}:{cache.GetResourceType(refield.RszField.name, refield.SerializedName)}";
+                    refield.HintString = $"{(int)Variant.Type.Object}/{(int)PropertyHint.ResourceType}:{GetResourceType(refield.RszField.original_type)}";
                     return;
                 case RszFieldType.Data:
                     refield.VariantType = Variant.Type.Array;
@@ -502,7 +337,7 @@ public static partial class TypeCache
             case RszFieldType.Enum:
                 refield.VariantType = Variant.Type.Int;
                 if (!string.IsNullOrEmpty(classname)) {
-                    var desc = GetEnumDescriptor(cache, classname);
+                    var desc = cache.TypeCache.GetEnumDescriptor(classname);
                     if (desc != null && !desc.IsEmpty) {
                         // use Enum and not EnumSuggestion so we could still add custom values
                         refield.Hint = desc.IsFlags ? PropertyHint.Flags : PropertyHint.Enum;
@@ -659,7 +494,7 @@ public static partial class TypeCache
                 ResourceHint(refield, nameof(Line));
                 break;
             case RszFieldType.Resource:
-                ResourceHint(refield, cache.GetResourceType(refield.RszField.name, refield.SerializedName));
+                ResourceHint(refield, GetResourceType(refield.RszField.original_type));
                 break;
             default:
                 refield.VariantType = Variant.Type.Nil;
@@ -668,50 +503,18 @@ public static partial class TypeCache
         }
     }
 
-    private static void RebuildSingleFieldCache(GameClassCache cache, string classname, string field)
-    {
-        if (cache.serializationCache.TryGetValue(classname, out var cls)) {
-            var fieldObj = cls.GetFieldByName(field);
-            var prop = cls.PropertyList.First(dict => dict["name"].AsString() == field);
-            Debug.Assert(fieldObj != null);
-            Debug.Assert(prop != null);
-            RszFieldToGodotProperty(fieldObj.RszField, fieldObj, cache);
-            cls.UpdateFieldProperty(fieldObj, prop);
-        }
-    }
-
     public static string GetEnumHintString(SupportedGame game, string clasname)
     {
-        return GetEnumDescriptor(GetCacheRoot(game), clasname).HintstringLabels;
+        return GetWorkspace(game).TypeCache.GetEnumDescriptor(clasname).HintstringLabels;
     }
 
     public static string GetEnumLabel<T>(SupportedGame game, string clasname, T id) where T : struct, IBinaryInteger<T>
     {
-        var cache = GetCacheRoot(game);
-        var desc = GetEnumDescriptor(cache, clasname) as EnumDescriptor<T>;
+        var env = GetWorkspace(game);
+        var desc = env.TypeCache.GetEnumDescriptor(clasname) as EnumDescriptor<T>;
         if (desc != null && desc.ValueToLabels.TryGetValue(id, out var label)) {
             return label;
         }
         return id.ToString() ?? string.Empty;
     }
-}
-
-public class PrefabGameObjectRefProperty
-{
-    public int PropertyId { get; set; }
-    public bool? AutoDetected { get; set; }
-}
-
-public class EnhancedRszClassPatch : RszClassPatch
-{
-    private EnhancedRszFieldPatch[]? _fieldPatches;
-    public new EnhancedRszFieldPatch[]? FieldPatches {
-        get => _fieldPatches;
-        set => base.FieldPatches = _fieldPatches = value;
-    }
-}
-
-public class EnhancedRszFieldPatch : RszFieldPatch
-{
-    public SupportedFileFormats FileFormat { get; set; }
 }

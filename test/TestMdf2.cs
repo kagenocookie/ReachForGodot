@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Chickensoft.GoDotTest;
 using Godot;
-using RszTool;
+using ReeLib;
 using Shouldly;
 
 namespace ReaGE.Tests;
@@ -14,9 +14,9 @@ public partial class TestMdf2 : TestBase
     public async Task Mdf2ReadTest()
     {
         var converter = new AssetConverter(GodotImportOptions.testImport);
-        await ExecuteFullReadTest("mdf2", async (game, fileOption, filepath) => {
+        await ExecuteFullReadTest("mdf2", async (game, filepath, stream) => {
             converter.Game = game;
-            using var file = new MdfFile(fileOption, new FileHandler(filepath));
+            using var file = new MdfFile(converter.FileOption, new FileHandler(stream, filepath));
             file.Read().ShouldBe(true);
 
             var res = new MaterialDefinitionResource();

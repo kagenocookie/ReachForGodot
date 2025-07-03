@@ -1,11 +1,12 @@
 namespace ReaGE;
 
 using Godot;
+using ReeLib;
 
-[GlobalClass, Tool, ResourceHolder("hf", SupportedFileFormats.HeightField)]
+[GlobalClass, Tool, ResourceHolder("hf", KnownFileFormats.HeightField)]
 public partial class HeightFieldResource : REResource
 {
-    public HeightFieldResource() : base(SupportedFileFormats.HeightField)
+    public HeightFieldResource() : base(KnownFileFormats.HeightField)
     {
     }
 }

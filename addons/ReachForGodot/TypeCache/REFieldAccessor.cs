@@ -2,7 +2,7 @@ namespace ReaGE;
 
 using System;
 using Godot;
-using RszTool;
+using ReeLib;
 
 public class REFieldAccessor
 {

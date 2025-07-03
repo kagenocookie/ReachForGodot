@@ -2,9 +2,9 @@ namespace ReaGE;
 
 using System.Threading.Tasks;
 using Godot;
-using RszTool;
-using RszTool.Common;
-using RszTool.Mdf;
+using ReeLib;
+using ReeLib.Common;
+using ReeLib.Mdf;
 
 public class MdfConverter : RszAssetConverter<MaterialDefinitionResource, MdfFile, MaterialDefinitionResource, MaterialDefinitionResource>
 {

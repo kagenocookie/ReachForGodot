@@ -3,7 +3,7 @@ namespace ReaGE;
 using System.Threading.Tasks;
 using Godot;
 using ReaGE.EFX;
-using RszTool;
+using ReeLib;
 
 public class AssetConverter
 {
@@ -14,8 +14,8 @@ public class AssetConverter
         set {
             Context.Clear();
             if (value == AssetConfig?.Game) return;
+            AssetConfig?.ClearWorkspace();
             AssetConfig = ReachForGodot.GetAssetConfig(value);
-            _fileOption = null;
         }
     }
 
@@ -78,8 +78,7 @@ public class AssetConverter
     private AimpConverter? _aimp;
     public AimpConverter Aimp => _aimp ??= new AimpConverter() { Convert = this };
 
-    private RszFileOption? _fileOption;
-    public RszFileOption FileOption => _fileOption ??= TypeCache.CreateRszFileOptions(AssetConfig);
+    public RszFileOption FileOption => AssetConfig.Workspace.RszFileOption;
 
     public bool HasImportedResource(string relativePath) => Context.resolvedResources.ContainsKey(relativePath);
     public Resource? GetImportedResource(string relativePath) => Context.resolvedResources.TryGetValue(relativePath, out var r) ? r : null;
@@ -139,37 +138,37 @@ public class AssetConverter
     {
         if (asset is REResource reres) {
             switch (reres.ResourceType) {
-                case SupportedFileFormats.Scene:
+                case KnownFileFormats.Scene:
                     return Scn.ImportFromFile(filepath, (SceneResource)asset);
-                case SupportedFileFormats.Prefab:
+                case KnownFileFormats.Prefab:
                     return Pfb.ImportFromFile(filepath, (PrefabResource)asset);
-                case SupportedFileFormats.Rcol:
+                case KnownFileFormats.RequestSetCollider:
                     return Rcol.ImportFromFile(filepath, (RcolResource)asset);
-                case SupportedFileFormats.Efx:
+                case KnownFileFormats.Effect:
                     return Efx.ImportFromFile(filepath, (EfxResource)asset);
-                case SupportedFileFormats.Userdata:
+                case KnownFileFormats.UserData:
                     return User.ImportFromFile(filepath, (UserdataResource)asset);
-                case SupportedFileFormats.Foliage:
+                case KnownFileFormats.Foliage:
                     return Fol.ImportFromFile(filepath, (FoliageResource)asset);
-                case SupportedFileFormats.Mesh:
+                case KnownFileFormats.Mesh:
                     return Mesh.ImportAsset((MeshResource)reres, filepath);
-                case SupportedFileFormats.Texture:
+                case KnownFileFormats.Texture:
                     return Texture.ImportAsset((TextureResource)reres, filepath);
-                case SupportedFileFormats.MaterialDefinition:
+                case KnownFileFormats.MaterialDefinition:
                     return Mdf2.ImportFromFile(filepath, (MaterialDefinitionResource)asset);
-                case SupportedFileFormats.Uvar:
+                case KnownFileFormats.UserVariables:
                     return Uvar.ImportFromFile(filepath, (UvarResource)asset);
-                case SupportedFileFormats.MotionBank:
+                case KnownFileFormats.MotionBank:
                     return Motbank.ImportFromFile(filepath, (MotionBankResource)asset);
-                case SupportedFileFormats.CollisionDefinition:
+                case KnownFileFormats.CollisionDefinition:
                     return Cdef.ImportFromFile(filepath, (CollisionDefinitionResource)asset);
-                case SupportedFileFormats.CollisionFilter:
+                case KnownFileFormats.CollisionFilter:
                     return Cfil.ImportFromFile(filepath, (CollisionFilterResource)asset);
-                case SupportedFileFormats.CollisionMaterial:
+                case KnownFileFormats.CollisionMaterial:
                     return Cmat.ImportFromFile(filepath, (CollisionMaterialResource)asset);
-                case SupportedFileFormats.ColliderHeightField:
+                case KnownFileFormats.CollisionHeightField:
                     return Chf.ImportFromFile(filepath, (ColliderHeightFieldResource)asset);
-                case SupportedFileFormats.MeshCollider:
+                case KnownFileFormats.CollisionMesh:
                     return Mcol.ImportFromFile(filepath, (MeshColliderResource)asset);
                 default:
                     GD.PrintErr("Import currently unsupported for resource type " + reres.ResourceType);
@@ -205,33 +204,33 @@ public class AssetConverter
         Context.Clear();
         if (resource is REResource reres) {
             switch (reres.ResourceType) {
-                case SupportedFileFormats.Scene:
+                case KnownFileFormats.Scene:
                     return Scn.ExportToFile(((SceneResource)reres).Instantiate()!, outputPath);
-                case SupportedFileFormats.Prefab:
+                case KnownFileFormats.Prefab:
                     return Pfb.ExportToFile(((PrefabResource)reres).Instantiate()!, outputPath);
-                case SupportedFileFormats.Rcol:
+                case KnownFileFormats.RequestSetCollider:
                     return Rcol.ExportToFile(((RcolResource)reres).Instantiate()!, outputPath);
-                case SupportedFileFormats.Efx:
+                case KnownFileFormats.Effect:
                     return Efx.ExportToFile(((EfxResource)reres).Instantiate()!, outputPath);
-                case SupportedFileFormats.MeshCollider:
+                case KnownFileFormats.CollisionMesh:
                     return Mcol.ExportToFile(((MeshColliderResource)reres).Instantiate()!, outputPath);
-                case SupportedFileFormats.Userdata:
+                case KnownFileFormats.UserData:
                     return User.ExportToFile((UserdataResource)reres, outputPath);
-                case SupportedFileFormats.Foliage:
+                case KnownFileFormats.Foliage:
                     return Fol.ExportToFile((FoliageResource)reres, outputPath);
-                case SupportedFileFormats.MaterialDefinition:
+                case KnownFileFormats.MaterialDefinition:
                     return Mdf2.ExportToFile((MaterialDefinitionResource)reres, outputPath);
-                case SupportedFileFormats.Uvar:
+                case KnownFileFormats.UserVariables:
                     return Uvar.ExportToFile((UvarResource)reres, outputPath);
-                case SupportedFileFormats.MotionBank:
+                case KnownFileFormats.MotionBank:
                     return Motbank.ExportToFile((MotionBankResource)reres, outputPath);
-                case SupportedFileFormats.CollisionDefinition:
+                case KnownFileFormats.CollisionDefinition:
                     return Cdef.ExportToFile((CollisionDefinitionResource)reres, outputPath);
-                case SupportedFileFormats.CollisionFilter:
+                case KnownFileFormats.CollisionFilter:
                     return Cfil.ExportToFile((CollisionFilterResource)reres, outputPath);
-                case SupportedFileFormats.CollisionMaterial:
+                case KnownFileFormats.CollisionMaterial:
                     return Cmat.ExportToFile((CollisionMaterialResource)reres, outputPath);
-                case SupportedFileFormats.ColliderHeightField:
+                case KnownFileFormats.CollisionHeightField:
                     return Chf.ExportToFile((ColliderHeightFieldResource)reres, outputPath);
                 default:
                     GD.PrintErr("Currently unsupported export for resource type " + reres.ResourceType);
@@ -266,7 +265,7 @@ public class AssetConverter
     public void EndBatch(IBatchContext batch) => Context.EndBatch(batch);
     public GameObjectBatch CreatePrefabBatch(PrefabNode root, string? note) => Context.CreatePrefabBatch(root, note);
     public GameObjectBatch CreateGameObjectBatch(string? note) => Context.CreateGameObjectBatch(note);
-    public FolderBatch CreateFolderBatch(SceneFolder folder, RszTool.Scn.ScnFolderData? data, string? note) => Context.CreateFolderBatch(folder, data, note);
+    public FolderBatch CreateFolderBatch(SceneFolder folder, ReeLib.Scn.ScnFolderData? data, string? note) => Context.CreateFolderBatch(folder, data, note);
 
 #region Import context, batching
     public sealed class ImportContext
@@ -323,7 +322,7 @@ public class AssetConverter
             return batch;
         }
 
-        public FolderBatch CreateFolderBatch(SceneFolder folder, RszTool.Scn.ScnFolderData? data, string? note)
+        public FolderBatch CreateFolderBatch(SceneFolder folder, ReeLib.Scn.ScnFolderData? data, string? note)
         {
             var batch = new FolderBatch(this, folder, note) { scnData = data };
             QueueBatch(batch);
@@ -435,7 +434,7 @@ public class AssetConverter
         public readonly List<FolderBatch> folders = new();
         public readonly List<GameObjectBatch> gameObjects = new List<GameObjectBatch>();
         public readonly HashSet<SceneFolder> finishedFolders = new();
-        public RszTool.Scn.ScnFolderData? scnData;
+        public ReeLib.Scn.ScnFolderData? scnData;
         public SceneFolder folder;
         private readonly string? note;
         private readonly ImportContext ctx;

@@ -2,7 +2,7 @@ namespace ReaGE;
 
 using Godot;
 using Godot.Collections;
-using static RszTool.UVar.NodeParameter;
+using static ReeLib.UVar.NodeParameter;
 
 [GlobalClass, Tool]
 public partial class UvarExpressionNodeParameter : Resource

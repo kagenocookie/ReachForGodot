@@ -2,8 +2,8 @@ namespace ReaGE;
 
 using Godot;
 using Godot.Collections;
-using RszTool.Common;
-using RszTool.Efx;
+using ReeLib.Common;
+using ReeLib.Efx;
 
 [GlobalClass, Tool]
 public partial class EfxExpressionParameter : Resource

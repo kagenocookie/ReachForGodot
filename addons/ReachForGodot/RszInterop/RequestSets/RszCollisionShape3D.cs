@@ -20,7 +20,7 @@ public partial class RszCollisionShape3D : CollisionShape3D
         if (coll == null) return;
 
         if (MeshCollider != null) {
-            RequestSetCollisionShape3D.ApplyShape(this, RszTool.Rcol.ShapeType.Mesh, MeshCollider);
+            RequestSetCollisionShape3D.ApplyShape(this, ReeLib.Rcol.ShapeType.Mesh, MeshCollider);
         }
     }
 }

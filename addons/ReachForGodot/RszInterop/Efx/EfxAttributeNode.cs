@@ -2,7 +2,7 @@ namespace ReaGE.EFX;
 
 using Godot;
 using Godot.Collections;
-using RszTool.Efx;
+using ReeLib.Efx;
 
 [GlobalClass, Tool, Icon("res://addons/ReachForGodot/icons/efx_attr.png")]
 public partial class EfxAttributeNode : Node3D

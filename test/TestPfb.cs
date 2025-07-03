@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Chickensoft.GoDotTest;
 using Godot;
-using RszTool;
+using ReeLib;
 
 namespace ReaGE.Tests;
 
@@ -13,9 +13,9 @@ public partial class TestPfb : TestBase
     public async Task FullReadTest()
     {
         var converter = new AssetConverter(GodotImportOptions.testImport);
-        await ExecuteFullReadTest("pfb", async (game, fileOption, filepath) => {
+        await ExecuteFullReadTest("pfb", async (game, filepath, stream) => {
             converter.Game = game;
-            using var file = new PfbFile(fileOption, new FileHandler(filepath));
+            using var file = new PfbFile(converter.FileOption, new FileHandler(stream, filepath));
             file.Read();
             file.SetupGameObjects();
 

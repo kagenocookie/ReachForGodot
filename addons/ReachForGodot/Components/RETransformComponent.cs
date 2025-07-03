@@ -2,7 +2,7 @@ namespace ReaGE;
 
 using System.Threading.Tasks;
 using Godot;
-using RszTool;
+using ReeLib;
 
 [GlobalClass, Tool, REComponentClass("via.Transform")]
 public partial class RETransformComponent : REComponent

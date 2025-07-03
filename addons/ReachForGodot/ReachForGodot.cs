@@ -11,7 +11,8 @@ public static class ReachForGodot
     private static readonly Dictionary<SupportedGame, AssetConfig> assetConfigs = new();
     private static readonly Dictionary<SupportedGame, GamePaths> gamePaths = new();
     public static IEnumerable<AssetConfig> AssetConfigs => GetAllAssetConfigs();
-    public static IEnumerable<SupportedGame> ConfiguredGames => AssetConfigs.Where(c => c.IsValid).Select(c => c.Game);
+    public static IEnumerable<AssetConfig> ConfiguredAssetConfigs => AssetConfigs.Where(c => c.IsValid);
+    public static IEnumerable<SupportedGame> ConfiguredGames => ConfiguredAssetConfigs.Select(c => c.Game);
     public static IEnumerable<SupportedGame> PathSetupGames => gamePaths.Keys;
     private static bool didFullConfigScan = false;
 
@@ -31,6 +32,7 @@ public static class ReachForGodot
     public static bool IncludeMeshMaterial => ReachForGodotPlugin.IncludeMeshMaterial;
     public static int SceneFolderProxyThreshold => ReachForGodotPlugin.SceneFolderProxyThreshold;
     public static int UnpackerMaxThreads => ReachForGodotPlugin.UnpackerMaxThreads;
+    public static string? ReeLibResourceSource => ReachForGodotPlugin.ReeLibResourceSource;
 
     public static LabelledPathSetting? LastExportPath { get; set; }
 
