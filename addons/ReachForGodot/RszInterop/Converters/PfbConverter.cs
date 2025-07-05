@@ -217,8 +217,17 @@ public class PfbConverter : SceneRszAssetConverter<PrefabResource, PfbFile, Pref
             ErrorLog("Could not find actual gameobject instance");
             return default;
         }
+        var targetPath = component.GameObject.GetPathTo(targetGameobj);
+        if (targetGameobj.ObjectGuid != Guid.Empty) {
+            return new GameObjectRef(targetGameobj.ObjectGuid, targetPath);
+        }
 
-        return new GameObjectRef(targetGameobj.ObjectGuid == Guid.Empty ? (Guid)instance.Values[field.FieldIndex] : targetGameobj.ObjectGuid, component.GameObject.GetPathTo(targetGameobj));
+        if (field.RszField.array) {
+            var list = (IList<object>)instance.Values[field.FieldIndex];
+            return new GameObjectRef((Guid)list[arrayIndex], targetPath);
+        } else {
+            return new GameObjectRef((Guid)instance.Values[field.FieldIndex], targetPath);
+        }
     }
 
     private void ReconstructPfbGameObjectRefs(PfbFile file, REObject obj, REComponent component, GameObject root, int arrayIndex = 0)
