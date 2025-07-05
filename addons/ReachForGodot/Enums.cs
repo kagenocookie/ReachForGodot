@@ -62,6 +62,8 @@ public static class EnumExtensions
         GameName.mhwilds => SupportedGame.MonsterHunterWilds,
         _ => SupportedGame.Unknown,
     };
+
+    public static bool IsSceneResource(this KnownFileFormats format) => format is KnownFileFormats.Scene or KnownFileFormats.Prefab or KnownFileFormats.Effect or KnownFileFormats.RequestSetCollider;
 }
 
 public enum ImportMode

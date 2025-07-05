@@ -137,16 +137,7 @@ public partial class AssetBrowser : Resource
         var firstImport = importPaths.FirstOrDefault(x => x != null);
         if (!string.IsNullOrEmpty(firstImport) && File.Exists(ProjectSettings.GlobalizePath(firstImport))) {
             var imported = await ResourceImportHandler.ImportAsset<REResource>(firstImport).Await();
-            if (imported != null) {
-                var fmt = PathUtils.ParseFileFormat(files.First(x => x != null));
-                EditorInterface.Singleton.CallDeferred(EditorInterface.MethodName.SelectFile, imported.ResourcePath);
-                if (fmt.format is KnownFileFormats.Scene or KnownFileFormats.Prefab or KnownFileFormats.Effect or KnownFileFormats.RequestSetCollider) {
-                    var scenePath = PathUtils.GetAssetImportPath(imported.Asset, config);
-                    if (scenePath != null) {
-                        EditorInterface.Singleton.CallDeferred(EditorInterface.MethodName.OpenSceneFromPath, scenePath);
-                    }
-                }
-            } else {
+            if (imported == null) {
                 GD.PrintErr("File may not have imported correctly, check in case there's any issues: " + firstImport);
             }
         }
@@ -154,10 +145,13 @@ public partial class AssetBrowser : Resource
 
     private static Task ImportMultipleAssets(string[] files, AssetConfig config)
     {
-        return Task.WhenAll(files.Select(f => ImportSingleAsset(f, config)));
+        if (files.Length == 1) {
+            return ImportSingleAsset(files[0], config, true);
+        }
+        return Task.WhenAll(files.Select(f => ImportSingleAsset(f, config, false)));
     }
 
-    private static async Task ImportSingleAsset(string file, AssetConfig config)
+    private static async Task ImportSingleAsset(string file, AssetConfig config, bool open)
     {
         Debug.Assert(config != null);
         if (!file.StartsWith(config.Paths.ChunkPath)) {
@@ -166,8 +160,30 @@ public partial class AssetBrowser : Resource
         var converter = new AssetConverter(config, GodotImportOptions.forceReimportThisStructure);
         try {
             var res = Importer.ImportResource(file, config);
-            if (res is IImportableAsset importable) {
+            Node? resNode = null;
+            if (open && res != null) {
+                if (res.ResourceType.IsSceneResource()) {
+                    var scene = Importer.FindOrImportAsset<PackedScene>(res.Asset!.AssetFilename, config, true);
+                    if (scene != null) {
+                        EditorInterface.Singleton.SelectFile(scene.ResourcePath);
+                        EditorInterface.Singleton.OpenSceneFromPath(scene.ResourcePath);
+                        var rootNode = EditorInterface.Singleton.GetEditedSceneRoot();
+                        if (rootNode != null && rootNode.SceneFilePath == scene.ResourcePath) {
+                            resNode = rootNode;
+                        }
+                    }
+                } else {
+                    EditorInterface.Singleton.SelectFile(res.ResourcePath);
+                    EditorInterface.Singleton.EditResource(res);
+                }
+            }
+            if (resNode is IImportableAsset importableNode) {
+                await converter.ImportAssetAsync(importableNode, file);
+            } else if (res is IImportableAsset importable) {
                 await converter.ImportAssetAsync(importable, file);
+                if (!string.IsNullOrEmpty(res.ResourcePath)) {
+                    res.SaveOrReplaceResource(res.ResourcePath);
+                }
             }
         } finally {
             config.Paths.SourcePathOverride = null;
