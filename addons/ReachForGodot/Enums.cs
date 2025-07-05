@@ -63,3 +63,9 @@ public static class EnumExtensions
         _ => SupportedGame.Unknown,
     };
 }
+
+public enum ImportMode
+{
+    AlwaysExtractFiles,
+    PreferSourcePAK,
+}

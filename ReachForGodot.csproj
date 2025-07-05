@@ -25,7 +25,6 @@
     <!-- Don't include unit tests in release builds. -->
     <DefaultItemExcludes>
       $(DefaultItemExcludes);
-      addons/ReachForGodot/REE-Lib/REE-Lib.App/**/*;
       addons/ReachForGodot/REE-Lib/REE-Lib.Test/**/*;
       addons/ReachForGodot/REE-Lib/REE-Lib.Tools/obj/**/*;
       addons/ReachForGodot/REE-Lib/*/obj/**/*;

@@ -55,13 +55,13 @@ public partial class AssetConfig : Resource
     [Export] public SupportedGame Game = SupportedGame.Unknown;
     [Export(PropertyHint.Dir)] public string AssetDirectory = "assets/";
 
-#if TOOLS
     [ExportToolButton("Import assets...")]
     private Callable ImportBtn => Callable.From(() => ReachForGodotPlugin.Instance.OpenAssetImporterWindow(this));
 
     [ExportToolButton("Packed file browser")]
     private Callable BrowserBtn => Callable.From(() => ReachForGodotPlugin.Instance.OpenPackedAssetBrowser(this));
 
+#if REAGE_DEV
     [ExportToolButton("DEV: Build all RSZ data")]
     private Callable InferRszData => Callable.From(() => ReachForGodotPlugin.Instance.CheckInferrableRszData(this));
 #endif

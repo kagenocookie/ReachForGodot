@@ -3,13 +3,10 @@ using ReeLib;
 using GC = Godot.Collections;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using ReaGE.Tools;
-using ReaGE.ContentEditorIntegration;
 using System.Text.Json;
-using System.Text.Json.Nodes;
-using ReeLib.Tools;
 
 #if REAGE_DEV
+using ReeLib.Tools;
 using Chickensoft.GoDotTest;
 #endif
 
@@ -37,6 +34,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
     private const string Setting_ImportMeshMaterials = $"{SettingBase}/general/import_mesh_materials";
     private const string Setting_SceneFolderProxyThreshold = $"{SettingBase}/general/create_scene_proxy_node_threshold";
     private const string Setting_UnpackMaxThreads = $"{SettingBase}/general/unpack_max_threads";
+    private const string Setting_ImportUnpackPreference = $"{SettingBase}/general/import_mode_preference";
     private const string Setting_RemoteResourceSource = $"{SettingBase}/general/REE_Lib_Resource_Source";
 
     public static string? BlenderPath
@@ -47,6 +45,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
     public static int SceneFolderProxyThreshold { get; private set; }
     public static int UnpackerMaxThreads { get; private set; }
     public static string? ReeLibResourceSource { get; private set; }
+    public static ImportMode ImportPreference { get; private set; }
 
     private static string GameDirSetting(SupportedGame game) => Setting_GameDir.Replace("{game}", game.ToString());
     private static string ChunkPathSetting(SupportedGame game) => Setting_GameChunkPath.Replace("{game}", game.ToString());
@@ -234,9 +233,9 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
             foreach (var game in ReachForGodot.PathSetupGames) ReachForGodot.GetAssetConfig(game);
             RefreshToolMenu();
         }
-        if (id == 200) FileExtensionTools.ExtractAllFileExtensionCacheData();
 
 #if REAGE_DEV
+        if (id == 200) FileExtensionTools.ExtractAllFileExtensionCacheData();
         if (id >= 1000) {
             var tests = GoTest.Adapter.CreateProvider().GetTestSuites(System.Reflection.Assembly.GetExecutingAssembly());
             var test = tests[(int)(id - 1000)];
@@ -318,7 +317,6 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
             tmp.QueueFree();
         });
     }
-#endif
 
     internal void CheckInferrableRszData(AssetConfig config)
     {
@@ -336,6 +334,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
         };
         rszInferrer.InferRszData();
     }
+#endif
 
     internal static IEnumerable<(T, string, Stream)> SelectFilesWhere<T>(SupportedGame game, string extension, Func<SupportedGame, string, Stream, T?> condition) where T : class
     {
@@ -451,10 +450,11 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
         AddEditorSetting(Setting_SceneFolderProxyThreshold, Variant.Type.Int, 500, PropertyHint.Range, "50,5000,or_greater,hide_slider");
         AddEditorSetting(Setting_UnpackMaxThreads, Variant.Type.Int, 8, PropertyHint.Range, "1,64");
         AddEditorSetting(Setting_BlenderPathOverrides, Variant.Type.String, string.Empty, PropertyHint.GlobalFile, "*.exe");
+        // AddEditorSetting(Setting_ImportUnpackPreference, Variant.Type.Int, (int)ImportMode.PreferSourcePAK, PropertyHint.Enum, $"Always Extract:{(int)ImportMode.AlwaysExtractFiles},Prefer Source PAK:{(int)ImportMode.PreferSourcePAK}");
         AddEditorSetting(Setting_RemoteResourceSource, Variant.Type.String, "https://raw.githubusercontent.com/kagenocookie/REE-Lib-Resources/refs/heads/master/resource-info.json");
         foreach (var game in ReachForGodot.GameList) {
-            AddEditorSetting(ChunkPathSetting(game), Variant.Type.String, string.Empty, PropertyHint.GlobalDir);
             AddEditorSetting(GameDirSetting(game), Variant.Type.String, string.Empty, PropertyHint.GlobalDir);
+            AddEditorSetting(ChunkPathSetting(game), Variant.Type.String, string.Empty, PropertyHint.GlobalDir);
             AddEditorSetting(AdditionalPathSetting(game), Variant.Type.PackedStringArray, string.Empty, PropertyHint.GlobalDir);
             AddEditorSetting(PakFilepathSetting(game), Variant.Type.PackedStringArray, string.Empty, PropertyHint.GlobalFile, "*.pak");
 
@@ -480,6 +480,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
         SceneFolderProxyThreshold = settings.GetSetting(Setting_SceneFolderProxyThreshold).AsInt32();
         UnpackerMaxThreads = settings.GetSetting(Setting_UnpackMaxThreads).AsInt32();
         ReeLibResourceSource = settings.GetSetting(Setting_RemoteResourceSource).AsString()?.NullIfEmpty();
+        // ImportPreference = (ImportMode)settings.GetSetting(Setting_ImportUnpackPreference).AsInt32();
         foreach (var game in ReachForGodot.GameList) {
             var pathChunks = PathUtils.GetFilepathWithNativesFolderSuffix(settings.GetSetting(ChunkPathSetting(game)).AsString() ?? string.Empty, game);
             if (string.IsNullOrWhiteSpace(pathChunks)) {

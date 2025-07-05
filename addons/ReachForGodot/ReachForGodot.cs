@@ -33,6 +33,7 @@ public static class ReachForGodot
     public static int SceneFolderProxyThreshold => ReachForGodotPlugin.SceneFolderProxyThreshold;
     public static int UnpackerMaxThreads => ReachForGodotPlugin.UnpackerMaxThreads;
     public static string? ReeLibResourceSource => ReachForGodotPlugin.ReeLibResourceSource;
+    public static ImportMode ImportPreference => ReachForGodotPlugin.ImportPreference;
 
     public static LabelledPathSetting? LastExportPath { get; set; }
 
