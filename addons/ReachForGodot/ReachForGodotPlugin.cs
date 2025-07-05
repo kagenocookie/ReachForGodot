@@ -124,9 +124,8 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
         importers = new EditorImportPlugin[] { new GameResourceImporter() };
         foreach (var i in importers) AddImportPlugin(i);
 
-        // This is a bit of a hack.
-        // note to self: TypeCache static constructor ends up calling OnProjectSettingsChanged, which then ends up calling RefreshToolMenu()
-        // which is why we don't need to do it ourselves currently
+        // ensure we've read all configs before intializing types
+        OnProjectSettingsChanged();
         System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(TypeCache).TypeHandle);
         toolMenu.IdPressed += HandleToolMenu;
         mainWindowNode = ResourceLoader.Load<PackedScene>("res://addons/ReachForGodot/Editor/Windows/MainWindow.tscn").Instantiate<MainWindow>();
