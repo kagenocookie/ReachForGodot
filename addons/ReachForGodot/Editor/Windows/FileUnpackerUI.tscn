@@ -56,7 +56,7 @@ size_flags_horizontal = 3
 
 [node name="GamePicker" type="OptionButton" parent="Panel/VBoxContainer/MarginContainer/HSplitContainer/VBoxContainer/MarginContainer/FileExtensionFilter/VBoxContainer"]
 layout_mode = 2
-item_count = 5
+item_count = 10
 popup/item_0/text = "DragonsDogma2"
 popup/item_0/id = 1
 popup/item_1/text = "DevilMayCry5"
@@ -65,8 +65,18 @@ popup/item_2/text = "ResidentEvil2"
 popup/item_2/id = 3
 popup/item_3/text = "ResidentEvil2RT"
 popup/item_3/id = 4
-popup/item_4/text = "ResidentEvil4"
-popup/item_4/id = 7
+popup/item_4/text = "ResidentEvil3"
+popup/item_4/id = 5
+popup/item_5/text = "ResidentEvil3RT"
+popup/item_5/id = 6
+popup/item_6/text = "ResidentEvil4"
+popup/item_6/id = 7
+popup/item_7/text = "ResidentEvil7"
+popup/item_7/id = 8
+popup/item_8/text = "ResidentEvil7RT"
+popup/item_8/id = 9
+popup/item_9/text = "ResidentEvil8"
+popup/item_9/id = 10
 
 [node name="HBoxContainer" type="HBoxContainer" parent="Panel/VBoxContainer/MarginContainer/HSplitContainer/VBoxContainer/MarginContainer/FileExtensionFilter/VBoxContainer"]
 layout_mode = 2
@@ -156,7 +166,6 @@ text = "Close"
 [connection signal="item_selected" from="Panel/VBoxContainer/MarginContainer/HSplitContainer/VBoxContainer/MarginContainer/FileExtensionFilter/VBoxContainer/GamePicker" to="." method="OnSelectedGameChanged"]
 [connection signal="pressed" from="Panel/VBoxContainer/MarginContainer/HSplitContainer/VBoxContainer/MarginContainer/FileExtensionFilter/VBoxContainer/HBoxContainer/BtnSelectAll" to="." method="SelectAllExtensions"]
 [connection signal="pressed" from="Panel/VBoxContainer/MarginContainer/HSplitContainer/VBoxContainer/MarginContainer/FileExtensionFilter/VBoxContainer/HBoxContainer/BtnDeselectAll" to="." method="DeselectAllExtensions"]
-[connection signal="pressed" from="Panel/VBoxContainer/MarginContainer/HSplitContainer/VBoxContainer/MarginContainer/FileExtensionFilter/VBoxContainer/CheckButton" to="." method="DeselectAllExtensions"]
 [connection signal="FileSelected" from="Panel/VBoxContainer/MarginContainer/HSplitContainer/ScrollContainer/FilePickerPanel" to="." method="OnFileSelected"]
 [connection signal="FilesSelected" from="Panel/VBoxContainer/MarginContainer/HSplitContainer/ScrollContainer/FilePickerPanel" to="." method="OnFilesSelected"]
 [connection signal="pressed" from="Panel/VBoxContainer/MainButtonContainer/BtnExtractFiltered" to="." method="ExtractFilteredFiles"]

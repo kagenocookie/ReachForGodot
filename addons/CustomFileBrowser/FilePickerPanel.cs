@@ -93,12 +93,36 @@ public partial class FilePickerPanel : Control
         UpdateList();
     }
 
+    private void OnPathTextSubmitted(string text)
+    {
+        string? dir;
+        if (text.EndsWith('/')) {
+            dir = CustomFileDialog.NormalizeFilepath(text);
+        } else {
+            var ext = Path.GetExtension(text.AsSpan());
+            if (ext.IsEmpty) {
+                dir = CustomFileDialog.NormalizeFilepath(text);
+            } else {
+                dir = CustomFileDialog.NormalizeFilepath(Path.GetDirectoryName(text) ?? "/");
+            }
+        }
+
+        CurrentDir = dir;
+        if (items.Count == 0 && ItemContainer != null) {
+            ItemContainer.AddChild(new Label() { Text = "No results" });
+        }
+    }
+
     private void UpdateList()
     {
         if (ItemContainer == null || !IsInstanceValid(ItemContainer)) return;
 
         int itemIndex = 0;
         var selectedIndex = -1;
+        if (ItemContainer.GetChildOrNull<Label>(0) is Label label) {
+            ItemContainer.RemoveChild(label);
+            label.QueueFree();
+        }
         foreach (var item in items) {
             if (item == CurrentFile) {
                 selectedIndex = itemIndex;
@@ -198,9 +222,6 @@ public partial class FilePickerPanel : Control
             if (child == null) {
                 container.AddChild(child = CreateControl(col.field));
                 child.SetRecursiveOwner(Owner ?? this);
-            }
-            if (selected) {
-                value += " (S)";
             }
             child.CustomMinimumSize = new Vector2(col.width, 0);
             UpdateControl(col.field, value, child);

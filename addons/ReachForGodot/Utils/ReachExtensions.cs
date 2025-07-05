@@ -80,7 +80,7 @@ public static class ReachExtensions
         return resource as TResource;
     }
 
-    public static bool IsSupportedFileFormat(this KnownFileFormats format) => PathUtils.GetResourceTypeFromFormat(format) != null;
+    public static bool IsSupportedFileFormat(this KnownFileFormats format) => PathUtils.GetResourceTypeFromFormat(format) != typeof(REResource);
 
     public static Vector3 VariantToVector3(this Variant variant) => variant.VariantType == Variant.Type.Vector4 ? variant.AsVector4().ToVector3() : variant.AsVector3();
     public static Quaternion VariantToQuaternion(this Variant variant) => variant.VariantType == Variant.Type.Vector4 ? variant.AsVector4().ToQuaternion() : variant.AsQuaternion();

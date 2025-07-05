@@ -95,28 +95,32 @@ public partial class AssetBrowser : Resource
         dlg.Game = Assets.Game;
         dlg.FilesSelected += (files) => {
             Assets = ReachForGodot.GetAssetConfig(dlg.Game);
-
-            GD.Print($"Attempting to extract from {files.Length} paths...");
-            var relativeFilepaths = files
-                .SelectMany(f => !Path.GetExtension(f.AsSpan()).IsEmpty ? [f] : ((ICustomFileSystem)dlg.FileSystem!).GetRecursiveFileList(f));
-            if (dlg.ShouldImportFiles) {
-                var tmpConfig = (AssetConfig)Assets.Duplicate();
-                // create a new temp config with no additional paths to ensure we fetch PAK sourced files here and not get distracted by whatever other modded files we may already have
-                // maybe add more action buttons to the file picker UI so we can specify Get original or Get whichever files or Find in project file system
-                tmpConfig.Paths = new GamePaths(tmpConfig.Game, tmpConfig.Paths.ChunkPath, tmpConfig.Paths.Gamedir, Array.Empty<LabelledPathSetting>(), tmpConfig.Paths.PakFiles);
-
-                var importList = relativeFilepaths
-                    .Select(f => PathUtils.FindSourceFilePath(PathUtils.GetFilepathWithoutNativesFolder(f), tmpConfig)!)
-                    .ToArray();
-                _ = ImportAssetsAsync(importList, tmpConfig);
-            } else {
-                var success = FileUnpacker.TryExtractCustomFileList(relativeFilepaths, Assets);
-                GD.Print("Extraction finished, success: " + success);
-            }
+            TriggerFileAction(files, Assets, dlg.ShouldImportFiles, dlg.FileSystem!);
         };
         ((SceneTree)(Engine.GetMainLoop())).Root.AddChild(dlg);
         dlg.SetUnparentWhenInvisible(true);
         dlg.Show();
+    }
+
+    public static void TriggerFileAction(string[] files, AssetConfig config, bool import, ICustomFileSystem fileSystem)
+    {
+        GD.Print($"Attempting to extract from {files.Length} paths...");
+        var relativeFilepaths = files
+            .SelectMany(f => !Path.GetExtension(f.AsSpan()).IsEmpty ? [f] : fileSystem.GetRecursiveFileList(f));
+        if (import) {
+            var tmpConfig = (AssetConfig)config.Duplicate();
+            // create a new temp config with no additional paths to ensure we fetch PAK sourced files here and not get distracted by whatever other modded files we may already have
+            // maybe add more action buttons to the file picker UI so we can specify Get original or Get whichever files or Find in project file system
+            tmpConfig.Paths = new GamePaths(tmpConfig.Game, tmpConfig.Paths.ChunkPath, tmpConfig.Paths.Gamedir, Array.Empty<LabelledPathSetting>(), tmpConfig.Paths.PakFiles);
+
+            var importList = relativeFilepaths
+                .Select(f => PathUtils.FindSourceFilePath(PathUtils.GetFilepathWithoutNativesFolder(f), tmpConfig)!)
+                .ToArray();
+            _ = ImportAssetsAsync(importList, tmpConfig);
+        } else {
+            var success = FileUnpacker.TryExtractCustomFileList(relativeFilepaths, config);
+            GD.Print("Extraction finished, success: " + success);
+        }
     }
 
     private static async Task ImportAssetsAsync(string[] files, AssetConfig config)

@@ -215,7 +215,7 @@ public static class GodotObjectExtensions
     {
         var i = node.GetChildCount();
         while (--i >= 0) {
-            var child = node.GetChild(0);
+            var child = node.GetChild(i);
             if (filter.Invoke(child)) {
                 node.RemoveChild(child);
                 child.QueueFree();

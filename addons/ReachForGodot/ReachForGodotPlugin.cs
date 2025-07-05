@@ -130,9 +130,9 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
         // which is why we don't need to do it ourselves currently
         System.Runtime.CompilerServices.RuntimeHelpers.RunClassConstructor(typeof(TypeCache).TypeHandle);
         toolMenu.IdPressed += HandleToolMenu;
-        // mainWindowNode = ResourceLoader.Load<PackedScene>("res://addons/ReachForGodot/Editor/Windows/MainWindow.tscn").Instantiate<MainWindow>();
-        // EditorInterface.Singleton.GetEditorMainScreen().AddChild(mainWindowNode);
-        // _MakeVisible(false);
+        mainWindowNode = ResourceLoader.Load<PackedScene>("res://addons/ReachForGodot/Editor/Windows/MainWindow.tscn").Instantiate<MainWindow>();
+        EditorInterface.Singleton.GetEditorMainScreen().AddChild(mainWindowNode);
+        _MakeVisible(false);
     }
 
     private void OpenDonationPage()
@@ -142,8 +142,13 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
 
     public override bool _HasMainScreen()
     {
-        return false;
+        return true;
     }
+
+    private static Texture2D? _logo;
+    private static Texture2D Logo => _logo ??= ResourceLoader.Load<Texture2D>("res://addons/ReachForGodot/icons/logo-small.png");
+
+    public override Texture2D _GetPluginIcon() => Logo;
 
     public override void _MakeVisible(bool visible)
     {

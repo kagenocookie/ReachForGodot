@@ -94,7 +94,7 @@ public class FileListFileSystem : ICustomFileSystem
         var count = Files.Length;
         var list = new List<string>();
 
-        if (startIndex >= 0 && startIndex < Files.Length && Filter?.Invoke(Files[startIndex]) != false) {
+        if (startIndex >= 0 && startIndex < Files.Length && Files[startIndex].StartsWith(folderNormalized) && Filter?.Invoke(Files[startIndex]) != false) {
             list.Add(GetSubfolderPath(Files[startIndex], folderNormalized).ToString());
         }
         int endIndex = startIndex + 1;

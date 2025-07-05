@@ -123,6 +123,7 @@ layout_mode = 2
 size_flags_horizontal = 3
 
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/BtnUp" to="." method="MoveToParentFolder"]
+[connection signal="text_submitted" from="VBoxContainer/HBoxContainer/LineEdit" to="." method="OnPathTextSubmitted"]
 [connection signal="child_entered_tree" from="VBoxContainer/Panel/MarginContainer/VBoxContainer/ColumnHeaders" to="." method="OnColumnAdded"]
 [connection signal="child_exiting_tree" from="VBoxContainer/Panel/MarginContainer/VBoxContainer/ColumnHeaders" to="." method="OnColumnRemoved"]
 [connection signal="child_order_changed" from="VBoxContainer/Panel/MarginContainer/VBoxContainer/ColumnHeaders" to="." method="OnColumnsChanged"]
