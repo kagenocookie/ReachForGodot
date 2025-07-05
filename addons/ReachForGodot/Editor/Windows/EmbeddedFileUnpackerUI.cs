@@ -50,7 +50,9 @@ public partial class EmbeddedFileUnpackerUI : Control
                     GamePicker.AddItem(game.ToString(), (int)game);
                 }
             }
-            GamePicker.Selected = GamePicker.GetItemIndex((int)_game);
+            GamePicker.AddItem("Select game", 999);
+            GamePicker.SetItemDisabled(GamePicker.ItemCount - 1, true);
+            GamePicker.Selected = GamePicker.ItemCount - 1;
         }
 
         if (_game == SupportedGame.Unknown) {

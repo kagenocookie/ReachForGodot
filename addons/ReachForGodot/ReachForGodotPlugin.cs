@@ -465,6 +465,7 @@ public partial class ReachForGodotPlugin : EditorPlugin, ISerializationListener
             EditorInterface.Singleton.GetEditorSettings().Erase(FilelistPathSetting(game));
             EditorInterface.Singleton.GetEditorSettings().Erase(Il2cppPathSetting(game));
         }
+        EditorInterface.Singleton.GetEditorSettings().Erase("reach_for_godot/general/file_unpacker_executable");
     }
 
     public static void ReloadSettings()

@@ -25,13 +25,13 @@ theme_override_constants/margin_top = 4
 
 [node name="TabContainer" type="TabContainer" parent="Panel"]
 layout_mode = 2
-current_tab = 1
+current_tab = 0
 
 [node name="File Browser" parent="Panel/TabContainer" instance=ExtResource("2_37o2f")]
-visible = false
 layout_mode = 2
 
 [node name="Debugging" type="MarginContainer" parent="Panel/TabContainer"]
+visible = false
 layout_mode = 2
 theme_override_constants/margin_left = 8
 theme_override_constants/margin_top = 8
