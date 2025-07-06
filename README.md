@@ -10,7 +10,7 @@ Integrates various open source tools dealing with RE Engine games and packs them
 ![scene example](.gdignore/docs/images/scene.jpg)
 
 ## Main features
-- Integration of [RE Mesh Editor](https://github.com/NSACloud/RE-Mesh-Editor) for meshes, a [custom fork of RszTool](https://github.com/kagenocookie/RszTool) with additional file support and fixes as well as automatic PAK file extraction.
+- Integration of [RE Mesh Editor](https://github.com/NSACloud/RE-Mesh-Editor) for meshes and [REE-Lib](https://github.com/kagenocookie/RE-Engine-Lib) for all file editing and PAK file extraction.
 - Direct support for many RE Engine file formats: mesh, tex, scn, pfb, mdf2, efx, rcol, mcol, uvar, user, ...
 - Default Godot features (3d visualization and editing, resource pickers, data editing UI)
 - PAK content browser and extractor GUI
@@ -38,9 +38,6 @@ Other RE Engine games should still work but may have issues in some cases, as I 
 - [Godot 4.4+](https://godotengine.org/download/windows/) (.NET build, not the standard one)
 - [.NET 8 SDK](https://dotnet.microsoft.com/en-us/download)
 - [Blender](https://www.blender.org/download/) and [RE Mesh Editor](https://github.com/NSACloud/RE-Mesh-Editor) - used for mesh and texture import; data editing will still work without it, but no meshes will be generated.
-- If you don't already have all resources extracted somewhere, you can configure the **Game path** setting to extract files automatically as needed
-- Download the latest RSZ json for the game you're trying to edit, place it wherever. For RE4, it's recommended to use the [REasy template](https://github.com/seifhassine/REasy/tree/master/resources/data/dumps) as it has complete names for everything.
-- The addon stores its own cache of relevant il2cpp json data (`addons/ReachForGodot/game_settings/{game}/il2cpp_cache.json`), but for games that aren't fully supported yet or if the game gets updated, the il2cpp dump json for the game you're trying to edit is required to (re-)generate the cache file.
 
 ## Setup
 <details>
@@ -70,22 +67,23 @@ https://github.com/user-attachments/assets/4ac201b6-41ae-46c4-9772-13dbcc10242a
         ```
 - Enable the ReachForGodot plugin in Project Settings > Plugins
 - Restart the editor (menu: Project > Reload Current Project)
-- Configure the blender path in Godot's Editor Settings (filesystem/import/blender/blender_path)
+- Configure the blender path in Godot's Editor Settings (`filesystem/import/blender/blender_path` or `Reach for Godot/General/Blender Override Path`)
 - Configure any relevant Editor Settings > `Reach for Godot/General` and `Reach for Godot/Paths/{game name}`
-    - **Game chunk path** and **Rsz Json file** are required for most functionality
-    - **File list** and **il2cpp Dump file** are needed for new games that don't have cached data in the repository yet or when there's game updates
-    - **File list**, **File Unpacker Executable** and **Game path** are needed if you don't have all the assets already extracted and would like them to get auto extracted as needed.
+    - **Game chunk path** setting is required for most functionality, represents the path in which raw assets are to be extracted
+    - **Game path** are needed if you don't have all the assets already extracted and would like them to get auto extracted as needed. The addon can read files directly from the PAK files without extraction for some features.
     - Detailed information regarding every available setting is available [here](https://github.com/kagenocookie/ReachForGodot/wiki/Addon-editor-settings)
 
+The tool requires some game specific data that is (automatically) fetched from [REE-Lib-Resources](https://github.com/kagenocookie/REE-Lib-Resources), but if you'd rather have it locally (to avoid extra network requests), there's instructions in the linked repository; change the "Ree Lib Resource Source" editor setting to the `local-resource-info.json` filepath
+
 ### Development setup
-Mainly for developing or debugging the addon itself, but feel free to use the raw repository data if you prefer that.
+Mainly for developing or debugging the addon itself, but feel free to use the raw repository data if you prefer that, there is also some dev-only tooling available in this case.
 - Clone or download as ZIP
 - `git submodule init`
 - `git submodule update`
 - Open the project and setup editor settings as described in the normal setup section
 
 ## Usage
-Start by going into the top menu: Project > Tools > RE ENGINE > Import assets and pick a file. Something like the appdata/contents.scn.20 (DD2) might be a good start since it's basically the root scene for the world. Once you have a scene file imported, you can import any further child scenes and referenced resources from the inspector there.
+Files can be imported through the tool menu (Project > Tools > RE ENGINE > Import assets) or the addon's embedded file browser (button in the top center of the editor). Something like the appdata/contents.scn.20 (DD2) might be a good start since it's basically the root scene for the world. Once you have a scene file imported, you can import any further child scenes and referenced resources from the inspector there.
 
 If you've ever worked with a game engine before, the basic UI should be more or less familiar - scene node tree on the left, inspector with all the data for a selected node on the right (for the default layout at least). The addon provides some additional tools in the inspector and node context menu for dealing with RE Engine files and file formats.
 
@@ -104,7 +102,7 @@ See [the wiki](https://github.com/kagenocookie/ReachForGodot/wiki) for more deta
 
 ## Known issues
 - no MPLY format mesh support yet (meaning DD2 levels are mostly placeholder meshes aside from the occasional simple mesh) - waiting for RE Mesh Editor
-- some PFBs with `via.GameObjectRef` fields might not export correctly by default, as they rely on some arcane propertyId values that don't seem to have any direct correlation with RSZ or class data; some cases can be automated fairly accurately, but otherwise need to be manually reversed out of existing pfbs and defined in `addons/ReachForGodot/game_configs/{game}/pfb_ref_props.json` files. Feel free to make a PR adding more of these entries as you come across them
+- some PFBs with `via.GameObjectRef` fields might not export correctly by default, as they rely on some arcane propertyId values that don't seem to have any direct correlation with RSZ or class data; some cases can be automated fairly accurately, but otherwise need to be manually reversed out of existing pfbs and defined in [Resources](https://github.com/kagenocookie/REE-Lib-Resources) `{game}/pfb_ref_props.json` files. Feel free to make a PR adding more of these entries as you come across them
 - there tends to be some godot/c++ errors spewed out while it's doing mass importing of assets, most of them are safe to ignore
 - while the addon does support multiple games in one project, if you're going to import a lot of data, consider making separate projects, because Godot doesn't scale nicely with lots of files. The first time saving the project after opening (and re-opening) also takes a hot minute because from what I can tell, Godot rechecks _all_ files in the project just in case any of them changed.
 
