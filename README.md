@@ -45,7 +45,7 @@ Other RE Engine games should still work but may have issues in some cases, as I 
 
 (note: if you don't have all the assets unpacked, you can use "Open packed file browser" from the menu at 0:55 instead.)
 
-https://github.com/user-attachments/assets/4ac201b6-41ae-46c4-9772-13dbcc10242a
+https://github.com/user-attachments/assets/09653d5c-56af-48a2-a894-573f5f822813
 </details>
 
 - If unsure about any part of the setup, follow the setup video above
